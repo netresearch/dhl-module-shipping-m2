@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="carriers">
+            <group id="dhlversenden" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+
+                <!-- default fields -->
+                <label>DHL Versenden</label>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                </field>
+                <field id="name" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Method Name</label>
+                </field>
+
+                <!-- dhl versenden fields -->
+                <field id="sandbox_mode" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sandbox Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="logging_enabled" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Logging</label>
+                    <comment><![CDATA[Please ensure that the Magento-Log is also activated. Data will be written to <em>dhl_versenden.log</em>.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="log_level" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Log Level</label>
+                    <comment><![CDATA[Beware: Log level <em>Debug</em> will result in large log files.]]></comment>
+                    <source_model>Dhl\Versenden\Model\Adminhtml\System\Config\Source\Loglevel</source_model>
+                    <depends>
+                        <field id="logging_enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- default fields -->
+                <field id="sallowspecific" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Ship to Applicable Countries</label>
+                    <frontend_class>shipping-applicable-country</frontend_class>
+                    <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
+                </field>
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Ship to Specific Countries</label>
+                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+                <field id="showmethod" translate="label" type="select" sortOrder="103" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Show Method if Not Applicable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="specificerrmsg" translate="label" type="textarea" sortOrder="104" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Displayed Error Message</label>
+                </field>
+
+                <!-- dhl versenden fields -->
+                <field id="shipment_dhlmethods" translate="label" type="multiselect" sortOrder="105" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Shipping Methods for DHL Versenden</label>
+                    <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
+                    <comment>These shipping methods will be processed with DHL Versenden.</comment>
+                    <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+                </field>
+                <field id="shipment_dhlcodmethods" translate="label" type="multiselect" sortOrder="106" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cash On Delivery Payment Methods for DHL Versenden</label>
+                    <tooltip>These payment methods will be treated as COD methods during shipping order requests.</tooltip>
+                    <source_model>Magento\Payment\Model\Config\Source\Allmethods</source_model>
+                </field>
+
+                <!-- default fields -->
+                <field id="sort_order" translate="label" type="text" sortOrder="201" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Sort Order</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
