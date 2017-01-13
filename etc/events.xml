@@ -2,6 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_is_active">
-        <observer name ="disable_cod_payment" instance="Dhl\Versenden\Observer\DisableCodPaymentObserver"/>
+        <observer name="versenden_disable_cod_payment" instance="Dhl\Versenden\Observer\DisableCodPaymentObserver"/>
+    </event>
+    <event name="sales_order_place_after">
+        <observer name="versenden_update_carrier" instance="Dhl\Versenden\Observer\UpdateCarrierObserver" />
     </event>
 </config>
