@@ -1,0 +1,44 @@
+version: '2'
+services:
+  db:
+    image: "registry.netresearch.de/magento-ci/db:${MAGENTO_VERSION}"
+    container_name: magento_dbms
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "magento"
+      MYSQL_USER: "magento"
+      MYSQL_PASSWORD: "MagEC1"
+
+  testdb:
+    image: mysql:5.7
+    container_name: magento_dbms_test
+    environment:
+      MYSQL_ROOT_PASSWORD: "MagEC1"
+      MYSQL_DATABASE: "magento_integration_tests"
+      MYSQL_USER: "magento"
+      MYSQL_PASSWORD: "MagEC1"
+
+  app:
+    build: ./app
+    container_name: magento_app
+    links:
+      - db:mysql
+    environment:
+      PACKAGE_PATH: "${PACKAGE_PATH}"
+      PACKAGE_NAME: "${PACKAGE_NAME}"
+    volumes:
+      - ${PACKAGE_HOST_PATH}:${PACKAGE_PATH}
+
+  env:
+    image: "registry.netresearch.de/magento-ci/php-apache:${PHP_VERSION}"
+    container_name: magento_env
+    ports:
+      - 80
+    links:
+      - db:mysql
+      - testdb:mysql_test
+    volumes:
+      - ../../reports:/opt/reports
+    volumes_from:
+      - app
+

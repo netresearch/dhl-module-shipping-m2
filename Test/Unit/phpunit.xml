@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.8/phpunit.xsd"
+         colors="true"
+         bootstrap="../../../../../dev/tests/unit/framework/bootstrap.php">
+    <testsuites>
+        <testsuite name="DHL Versenden Unit Tests">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="date.timezone" value="Europe/Berlin"/>
+        <ini name="xdebug.max_nesting_level" value="200"/>
+    </php>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../../</directory>
+            <exclude>
+                <directory>../../build/</directory>
+                <directory>../../Setup/</directory>
+                <directory>../../Test/</directory>
+                <file>../../registration.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="../../build/reports/unit/coverage/html"/>
+        <log type="coverage-clover" target="../../build/reports/unit/coverage/clover.xml"/>
+        <log type="junit" target="../../build/reports/unit/coverage/junit.xml" logIncompleteSkipped="false"/>
+    </logging>
+</phpunit>

@@ -1,0 +1,25 @@
+{
+    "name": "dhl/module-versenden-m2",
+    "license": "OSL-3.0",
+    "type": "magento2-module",
+    "description": "DHL business customer shipping extension for Magento",
+    "require": {
+        "magento/framework": "^100.1.0",
+        "magento/module-shipping": "^100.1.0",
+        "netresearch/dhl-bcs-api-soap": "dev-master"
+    },
+    "authors":[
+        {
+            "name":"Christoph Aßmann",
+            "email":"christoph.assmann@netresearch.de"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Dhl\\Versenden\\": ""
+        }
+    }
+}

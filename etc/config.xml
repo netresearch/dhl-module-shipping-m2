@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <dhlversenden>
+                <active>1</active>
+                <title>DHL</title>
+                <name>Versenden</name>
+                <sandbox_mode>1</sandbox_mode>
+                <logging_enabled>1</logging_enabled>
+                <log_level>2</log_level>
+                <sallowspecific>0</sallowspecific>
+                <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
+                <model>Dhl\Versenden\Model\Shipping\Carrier</model>
+
+                <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
+            </dhlversenden>
+        </carriers>
+    </default>
+</config>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- models -->
+    <preference for="Dhl\Versenden\Api\ConfigInterface" type="Dhl\Versenden\Model\Config" />
+    <type name="Dhl\Versenden\Observer\DisableCodPaymentObserver">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="DHL Versenden for Magento 2" default="dist">
+
+    <target name="define" description="defines properties needed for build">
+        <taskdef name="extprops" classname="tasks.ExtensionProperties" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: prepare                               -->
+    <!-- ============================================  -->
+    <target name="prepare" depends="define">
+        <extprops />
+        <echo msg="Module Name: ${extension.name}" />
+        <echo msg="Module Version: ${extension.version}" />
+        <echo msg="create directory ./package" />
+        <mkdir dir="./package" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- (DEFAULT)  Target: dist                       -->
+    <!-- ============================================  -->
+    <target name="dist" depends="prepare">
+        <echo msg="Creating archive..." />
+        <zip destfile="./package/${extension.name}-${extension.version}.zip">
+            <fileset dir="../">
+                <exclude name="build/**"/>
+            </fileset>
+        </zip>
+        <echo msg="Files compressed in package directory OK!" />
+    </target>
+</project>
