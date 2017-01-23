@@ -1,11 +1,42 @@
 <?xml version="1.0"?>
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- models -->
     <preference for="Dhl\Versenden\Api\ConfigInterface" type="Dhl\Versenden\Model\Config" />
+    <preference for="Dhl\Versenden\Api\VersendenInfoOrderRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoOrderRepository"/>
+    <preference for="Dhl\Versenden\Api\VersendenInfoQuoteRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoQuoteRepository"/>
+    <!-- observer -->
     <type name="Dhl\Versenden\Observer\DisableCodPaymentObserver">
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
+    <!-- plugins -->
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="addVersendenInfoToAddress" type="Dhl\Versenden\Model\Plugin\AddVersendenInfoToQuoteAddress" />
+    </type>
+    <!-- passing arguments -->
+    <virtualType name="versendenInfoOrderMetadata" type="Dhl\Versenden\Model\ResourceModel\Metadata">
+        <arguments>
+            <argument name="resourceClassName" xsi:type="string">Dhl\Versenden\Model\ResourceModel\VersendenInfoOrder</argument>
+            <argument name="modelClassName" xsi:type="string">Dhl\Versenden\Model\VersendenInfoOrder</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="versendenInfoQuoteMetadata" type="Dhl\Versenden\Model\ResourceModel\Metadata">
+        <arguments>
+            <argument name="resourceClassName" xsi:type="string">Dhl\Versenden\Model\ResourceModel\VersendenInfoQuote</argument>
+            <argument name="modelClassName" xsi:type="string">Dhl\Versenden\Model\VersendenInfoQuote</argument>
+        </arguments>
+    </virtualType>
+    <type name="Dhl\Versenden\Model\VersendenInfoOrderRepository">
+        <arguments>
+            <argument name="metadata" xsi:type="object">versendenInfoOrderMetadata</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Versenden\Model\VersendenInfoQuoteRepository">
+        <arguments>
+            <argument name="metadata" xsi:type="object">versendenInfoQuoteMetadata</argument>
         </arguments>
     </type>
 </config>

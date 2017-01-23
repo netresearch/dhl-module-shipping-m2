@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_is_active">
@@ -6,5 +7,8 @@
     </event>
     <event name="sales_order_place_after">
         <observer name="versenden_update_carrier" instance="Dhl\Versenden\Observer\UpdateCarrierObserver" />
+    </event>
+    <event name="sales_model_service_quote_submit_success">
+        <observer name="versenden_persist_info_to_address" instance="Dhl\Versenden\Observer\PersistVersendenInfoToOrderAddressObserver" />
     </event>
 </config>
