@@ -1,0 +1,62 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shippingAdditional" xsi:type="array">
+                                                            <!--<item name="component" xsi:type="string">Netresearch_CustomStep/js/view/additional-data</item>-->
+                                                            <!--<item name="displayArea" xsi:type="string">shippingAdditional</item>-->
+                                                            <!--<item name="provider" xsi:type="string">checkoutProvider</item>-->
+                                                            <!--<item name="config" xsi:type="array">-->
+                                                                <!--<item name="template" xsi:type="string">Netresearch_CustomStep/additional-data</item>-->
+                                                            <!--</item>-->
+                                                            <!--<item name="children" xsi:type="array">-->
+                                                                <!--&lt;!&ndash; address-list-additional-addresses &ndash;&gt;-->
+                                                                <!--<item name="additional-additional-fieldsets" xsi:type="array">-->
+                                                                    <!--<item name="component" xsi:type="string">uiComponent</item>-->
+                                                                    <!--<item name="displayArea" xsi:type="string">additional-additional-fieldsets</item>-->
+                                                                    <!--<item name="children" xsi:type="array">-->
+                                                                        <!--<item name="companye" xsi:type="array">-->
+                                                                            <!--<item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>-->
+                                                                            <!--<item name="config" xsi:type="array">-->
+                                                                                <!--&lt;!&ndash; customScope is used to group elements within a single form (e.g. they can be validated separately) &ndash;&gt;-->
+                                                                                <!--<item name="customScope" xsi:type="string">shippingAddress</item>-->
+                                                                                <!--<item name="template" xsi:type="string">ui/form/field</item>-->
+                                                                                <!--<item name="elementTmpl" xsi:type="string">ui/form/element/input</item>-->
+                                                                            <!--</item>-->
+                                                                            <!--<item name="provider" xsi:type="string">checkoutProvider</item>-->
+                                                                            <!--<item name="dataScope" xsi:type="string">shippingAddress.companye</item>-->
+                                                                            <!--<item name="label" xsi:type="string">Text Field</item>-->
+                                                                            <!--<item name="sortOrder" xsi:type="string">1</item>-->
+                                                                            <!--<item name="validation" xsi:type="array">-->
+                                                                                <!--<item name="required-entry" xsi:type="string">true</item>-->
+                                                                            <!--</item>-->
+                                                                        <!--</item>-->
+                                                                    <!--</item>-->
+                                                                <!--</item>-->
+                                                            <!--</item>-->
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>
