@@ -6,6 +6,7 @@
     <preference for="Dhl\Versenden\Api\ConfigInterface" type="Dhl\Versenden\Model\Config" />
     <preference for="Dhl\Versenden\Api\VersendenInfoOrderRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoOrderRepository"/>
     <preference for="Dhl\Versenden\Api\VersendenInfoQuoteRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoQuoteRepository"/>
+    <preference for="Dhl\Versenden\Bcs\Api\Data\InfoInterface" type="Dhl\Versenden\Bcs\Api\Info"/>
     <!-- observer -->
     <type name="Dhl\Versenden\Observer\DisableCodPaymentObserver">
         <arguments>

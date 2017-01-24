@@ -26,7 +26,11 @@
 namespace Dhl\Versenden\Model\Plugin;
 
 use \Dhl\Versenden\Api\VersendenInfoQuoteRepositoryInterface;
+use \Dhl\Versenden\Bcs\Api\Info\SerializerFactory;
+use \Dhl\Versenden\Bcs\Api\Data\InfoInterface;
+use \Dhl\Versenden\Helper\Address;
 use \Dhl\Versenden\Model\VersendenInfoQuoteFactory;
+use Magento\Directory\Model\CountryFactory;
 use \Magento\Quote\Api\CartRepositoryInterface;
 
 /**
@@ -62,21 +66,60 @@ class AddVersendenInfoToQuoteAddress
     private $versendenInfoQuoteRepository;
 
     /**
+     * Versenden Info Entity
+     *
+     * @var InfoInterface
+     */
+    private $infoEntity;
+
+    /**
+     * Versenden Info Entity Serializer Factory
+     *
+     * @var SerializerFactory
+     */
+    private $serializerFactory;
+
+    /**
+     * Address Split Helper
+     *
+     * @var Address
+     */
+    private $addressHelper;
+
+    /**
+     * Country Model Factory
+     *
+     * @var CountryFactory
+     */
+    private $countryFactory;
+
+    /**
      * @param CartRepositoryInterface               $quoteRepository
      * @param VersendenInfoQuoteFactory             $versendenInfoQuoteFactory
      * @param VersendenInfoQuoteRepositoryInterface $versendenInfoQuoteRepository
+     * @param InfoInterface                         $infoEntity
+     * @param SerializerFactory                     $serializerFactory
+     * @param CountryFactory                        $countryFactory
+     * @param Address                               $addressHelper
      *
      * @codeCoverageIgnore
      */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
         VersendenInfoQuoteFactory $versendenInfoQuoteFactory,
-        VersendenInfoQuoteRepositoryInterface $versendenInfoQuoteRepository
-    )
-    {
+        VersendenInfoQuoteRepositoryInterface $versendenInfoQuoteRepository,
+        InfoInterface $infoEntity,
+        SerializerFactory $serializerFactory,
+        CountryFactory $countryFactory,
+        Address $addressHelper
+    ) {
         $this->quoteRepository              = $quoteRepository;
         $this->versendenInfoQuoteFactory    = $versendenInfoQuoteFactory;
         $this->versendenInfoQuoteRepository = $versendenInfoQuoteRepository;
+        $this->infoEntity                   = $infoEntity;
+        $this->serializerFactory            = $serializerFactory;
+        $this->countryFactory               = $countryFactory;
+        $this->addressHelper                = $addressHelper;
     }
 
     /**
@@ -92,9 +135,36 @@ class AddVersendenInfoToQuoteAddress
         \Magento\Checkout\Model\ShippingInformationManagement $subject,
         $cartId,
         \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
-    )
-    {
-        $versendenInfo = $addressInformation->getShippingAddress()->getExtensionAttributes()->getDhlVersendenInfo();
+    ) {
+        $shippingAddress = $addressInformation->getShippingAddress();
+
+        $versendenInfo = $this->infoEntity;
+        $country       = $this->countryFactory->create()->loadByCode($shippingAddress->getCountryId());
+        $street        = $this->addressHelper->splitStreet(implode(', ', $shippingAddress->getStreet()));
+        $name          = $shippingAddress->getFirstname()
+            . ' ' . $shippingAddress->getMiddlename()
+            . ' ' . $shippingAddress->getLastname();
+
+        $receiverInfo = [
+            'name1'           => $name,
+            'name2'           => $shippingAddress->getCompany(),
+            'streetName'      => $street['street_name'],
+            'streetNumber'    => $street['street_number'],
+            'addressAddition' => $street['supplement'],
+            'zip'             => $shippingAddress->getPostcode(),
+            'city'            => $shippingAddress->getCity(),
+            'country'         => $country->getName(),
+            'countryISOCode'  => $country->getData('iso2_code'),
+            'state'           => $shippingAddress->getRegion(),
+            'phone'           => $shippingAddress->getTelephone(),
+            'email'           => $shippingAddress->getEmail(),
+            'packstation'     => null,
+            'postfiliale'     => null,
+            'parcelShop'      => null,
+        ];
+        $versendenInfo->getReceiver()->fromArray($receiverInfo, false);
+        $versendenInfo = $this->serializerFactory->create()->serialize($versendenInfo);
+
         if ($versendenInfo) {
             $quoteAddressId = $this->quoteRepository->getActive($cartId)->getShippingAddress()->getId();
 
