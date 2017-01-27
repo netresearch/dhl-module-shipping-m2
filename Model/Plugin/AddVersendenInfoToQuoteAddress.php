@@ -30,7 +30,7 @@ use \Dhl\Versenden\Bcs\Api\Info\SerializerFactory;
 use \Dhl\Versenden\Bcs\Api\Data\InfoInterface;
 use \Dhl\Versenden\Helper\Address;
 use \Dhl\Versenden\Model\VersendenInfoQuoteFactory;
-use Magento\Directory\Model\CountryFactory;
+use \Magento\Directory\Model\CountryFactory;
 use \Magento\Quote\Api\CartRepositoryInterface;
 
 /**

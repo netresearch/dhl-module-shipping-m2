@@ -17,6 +17,9 @@
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
         <plugin name="addVersendenInfoToAddress" type="Dhl\Versenden\Model\Plugin\AddVersendenInfoToQuoteAddress" />
     </type>
+    <type name="Magento\Sales\Controller\Adminhtml\Order\AddressSave">
+        <plugin name="updateVersendenInfo" type="Dhl\Versenden\Model\Plugin\UpdateVersendenInfoOnAddressSave" />
+    </type>
     <!-- passing arguments -->
     <virtualType name="versendenInfoOrderMetadata" type="Dhl\Versenden\Model\ResourceModel\Metadata">
         <arguments>
