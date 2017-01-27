@@ -34,7 +34,6 @@ use Magento\Directory\Model\CountryFactory;
 use \Magento\Quote\Api\CartRepositoryInterface;
 
 /**
- * Config
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -126,7 +125,7 @@ class AddVersendenInfoToQuoteAddress
      * Will be called, the moment, the shipping address is saved
      *
      * @param \Magento\Checkout\Model\ShippingInformationManagement   $subject
-     * @param                                                         $cartId
+     * @param int                                                     $cartId
      * @param \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
      *
      * @return array|null
