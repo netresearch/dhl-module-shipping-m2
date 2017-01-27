@@ -11,4 +11,7 @@
     <event name="sales_model_service_quote_submit_success">
         <observer name="versenden_persist_info_to_address" instance="Dhl\Versenden\Observer\PersistVersendenInfoToOrderAddressObserver" />
     </event>
+    <event name="adminhtml_block_html_before">
+        <observer name="versenden_extend_address_form" instance="Dhl\Versenden\Observer\ExtendAddressFormObserver" />
+    </event>
 </config>
