@@ -45,7 +45,12 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     /**
      * @var \Magento\Framework\DataObjectFactory
      */
-    protected $dataObjectFactory;
+    private $dataObjectFactory;
+
+    /**
+     * @var \Dhl\Versenden\Api\Webservice\GatewayInterface
+     */
+    private $webserviceGateway;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -64,10 +69,13 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         \Magento\Directory\Helper\Data $directoryData,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        \Dhl\Versenden\Api\Webservice\GatewayInterface $webserviceGateway,
         array $data = []
     ) {
         $this->_code = self::CODE;
+
         $this->dataObjectFactory = $dataObjectFactory;
+        $this->webserviceGateway = $webserviceGateway;
 
         parent::__construct(
             $scopeConfig,
@@ -111,13 +119,38 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     }
 
     /**
-     * @param \Magento\Framework\DataObject $request
+     * Process ONE package and return label info or errors string.
+     * @see AbstractCarrierOnline::requestToShipment()
+     * @see \Magento\Shipping\Model\Shipping\LabelGenerator::create()
+     *
+     * @param \Magento\Shipping\Model\Shipment\Request $request
      * @return \Magento\Framework\DataObject
      */
     protected function _doShipmentRequest(\Magento\Framework\DataObject $request)
     {
+        $sequenceNumber = $request->getPackageId();
+
         $result = $this->dataObjectFactory->create();
-        $result->setData('info', []);
+        $response = $this->webserviceGateway->createShipmentOrder([$sequenceNumber => $request]);
+        if ($response->getStatus()->isError()) {
+            // plain string seems to be expected for errors
+            $errors = sprintf(
+                '%s: %s | %s',
+                $response->getStatus()->getStatusCode(),
+                $response->getStatus()->getStatusText(),
+                $response->getStatus()->getStatusMessage()
+            );
+            $result->setData('errors', $errors);
+        } else {
+            $info = [
+                [
+                    'tracking_number' => $response->getCreatedItem($sequenceNumber)->getTrackingNumber(),
+                    'label_content'   => $response->getCreatedItem($sequenceNumber)->getLabel(),
+                ]
+            ];
+            $result->setData('info', $info);
+        }
+
         return $result;
     }
 }
