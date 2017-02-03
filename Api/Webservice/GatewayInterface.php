@@ -38,7 +38,7 @@ interface GatewayInterface
 {
     /**
      * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
-     * @return \Dhl\Versenden\Api\Webservice\Response\Type\CreateShipmentResponseInterface
+     * @return \Dhl\Versenden\Api\Webservice\Response\Type\CreateShipmentResponseCollection|\Dhl\Versenden\Api\Webservice\Response\Type\CreateShipmentResponseInterface[]
      */
     public function createShipmentOrder(array $shipmentRequests);
 

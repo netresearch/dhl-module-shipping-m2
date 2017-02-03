@@ -41,5 +41,15 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertInstanceOf($className, $libObject);
+
+        $className = \Dhl\Versenden\Api\Webservice\Adapter\GkAdapter::class;
+
+        try {
+            $libObject = $this->objectManager->create($className);
+        } catch (\ReflectionException $e) {
+            $libObject = null;
+        }
+
+        $this->assertInstanceOf($className, $libObject);
     }
 }
