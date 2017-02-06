@@ -25,12 +25,11 @@
  */
 namespace Dhl\Versenden\Webservice;
 
-use \Dhl\Versenden\Api\Webservice\AdapterInterface;
+use \Dhl\Versenden\Api\Webservice\Adapter\AdapterInterface;
 use \Dhl\Versenden\Api\Webservice\GatewayInterface;
 use \Dhl\Versenden\Api\Webservice\Request;
 use \Dhl\Versenden\Api\Webservice\Response;
 use \Dhl\Versenden\Webservice\Adapter\AdapterFactory;
-use \Dhl\Versenden\Webservice\Response\Parser\CreateShipmentParserFactory;
 
 /**
  * Gateway
@@ -49,21 +48,21 @@ class Gateway implements GatewayInterface
     private $apiAdapterFactory;
 
     /**
-     * @var CreateShipmentParserFactory
+     * @var Request\Mapper\AppRequestMapperInterface
      */
-    private $apiResponseParserFactory;
+    private $requestMapper;
 
     /**
      * Gateway constructor.
      * @param AdapterFactory $apiAdapterFactory
-     * @param CreateShipmentParserFactory $apiResponseParserFactory
+     * @param Request\Mapper\AppRequestMapperInterface $requestMapper
      */
     public function __construct(
         AdapterFactory $apiAdapterFactory,
-        CreateShipmentParserFactory $apiResponseParserFactory
+        Request\Mapper\AppRequestMapperInterface $requestMapper
     ) {
         $this->apiAdapterFactory = $apiAdapterFactory;
-        $this->apiResponseParserFactory = $apiResponseParserFactory;
+        $this->requestMapper = $requestMapper;
     }
 
     /**
@@ -74,43 +73,30 @@ class Gateway implements GatewayInterface
     {
         /** @var AdapterInterface[] $apiAdapters */
         $apiAdapters = [];
-        /** @var Response\Parser\CreateShipmentParserInterface[] $apiResponseParsers */
-        $apiResponseParsers = [];
-
+        /** @var Request\Type\CreateShipmentRequestInterface[][] $apiRequests */
         $apiRequests = [];
+        /** @var Response\Type\CreateShipmentResponseInterface[] $apiResponses */
+        $apiResponses = [];
 
         // divide requests by target API
-        foreach ($shipmentRequests as $shipmentRequest) {
+        foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
+            $apiType = AdapterFactory::getAdapterType($shipmentRequest->getShipperAddressCountryCode());
+
             // prepare api adapter for current shipment request
-            $apiAdapter = $this->apiAdapterFactory->get($shipmentRequest->getShipperAddressCountryCode());
-            if (!isset($apiAdapters[$apiAdapter->getAdapterType()])) {
-                $apiAdapters[$apiAdapter->getAdapterType()] = $apiAdapter;
-            }
+            $apiAdapters[$apiType] = $this->apiAdapterFactory->get($apiType);
 
-            // prepare response parser for current shipment request
-            $apiResponseParser = $this->apiResponseParserFactory->get($shipmentRequest->getShipperAddressCountryCode());
-            if (!isset($apiResponseParsers[$apiAdapter->getAdapterType()])) {
-                $apiResponseParsers[$apiAdapter->getAdapterType()] = $apiResponseParser;
-            }
-
-            // convert shipment request to api request, add sequence number
-            //TODO(nr): implement shipment request conversion
-            $apiRequests[$apiAdapter->getAdapterType()][]= $shipmentRequest;
+            // convert M2 shipment request to api request, add sequence number
+            $apiRequests[$apiType][$sequenceNumber] = $this->requestMapper->mapShipmentRequest($shipmentRequest);
         }
-
 
         // send request(s) to target api(s) and merge responses
         //TODO(nr): implement response handling
-        $responses = [];
-        foreach ($apiAdapters as $apiAdapter) {
-            /** @var Request\Type\CreateShipmentRequestInterface[] $typedApiRequests */
-            $typedApiRequests = $apiRequests[$apiAdapter->getAdapterType()];
-            $responseParser = $apiResponseParsers[$apiAdapter->getAdapterType()];
-
-            array_merge($responses, $apiAdapter->createShipmentOrder($typedApiRequests, $responseParser));
+        foreach ($apiAdapters as $apiType => $apiAdapter) {
+            $apiTypeResponses = $apiAdapter->createShipmentOrder($apiRequests[$apiType]);
+            $apiResponses = array_merge($apiResponses, $apiTypeResponses);
         }
 
-        return $responses;
+        return $apiResponses;
     }
 
     /**

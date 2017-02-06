@@ -25,7 +25,7 @@
  */
 namespace Dhl\Versenden\Webservice\Adapter;
 
-use \Dhl\Versenden\Api\Webservice\AdapterInterface;
+use \Dhl\Versenden\Api\Webservice\Adapter\AdapterInterface;
 use \Dhl\Versenden\Api\Webservice\Adapter\GkAdapterFactory;
 use \Dhl\Versenden\Api\Webservice\Adapter\GlAdapterFactory;
 
@@ -40,6 +40,9 @@ use \Dhl\Versenden\Api\Webservice\Adapter\GlAdapterFactory;
  */
 class AdapterFactory
 {
+    const ADAPTER_TYPE_GK = 'Business Customer Shipping';
+    const ADAPTER_TYPE_GL = 'Global Label API';
+
     /**
      * @var GkAdapterFactory
      */
@@ -77,42 +80,40 @@ class AdapterFactory
         switch ($shipperAddressCountryCode) {
             case 'DE':
             case 'AT':
-                return AdapterInterface::ADAPTER_TYPE_GK;
+                return self::ADAPTER_TYPE_GK;
             default:
-                return AdapterInterface::ADAPTER_TYPE_GL;
+                return self::ADAPTER_TYPE_GL;
         }
     }
 
     /**
-     * @param string $shipperAddressCountryCode
+     * @param string $adapterType
      * @return AdapterInterface
      * @throws \Exception
      */
-    public function create($shipperAddressCountryCode)
+    public function create($adapterType)
     {
-        $type = self::getAdapterType($shipperAddressCountryCode);
-        switch ($type) {
-            case AdapterInterface::ADAPTER_TYPE_GK:
+        switch ($adapterType) {
+            case self::ADAPTER_TYPE_GK:
                 return $this->gkAdapterFactory->create();
-            case AdapterInterface::ADAPTER_TYPE_GL:
+            case self::ADAPTER_TYPE_GL:
                 return $this->glAdapterFactory->create();
         }
 
         //TODO(nr): introduce separate exception type
-        throw new \Exception("Could not create adapter for shipping origin $shipperAddressCountryCode");
+        throw new \Exception("Could not create adapter for $adapterType");
     }
 
     /**
      * @param string $shipperAddressCountryCode
      * @return AdapterInterface
      */
-    public function get($shipperAddressCountryCode)
+    public function get($adapterType)
     {
-        $type = self::getAdapterType($shipperAddressCountryCode);
-        if (!isset($this->sharedInstances[$type])) {
-            $this->sharedInstances[$type] = $this->create($shipperAddressCountryCode);
+        if (!isset($this->sharedInstances[$adapterType])) {
+            $this->sharedInstances[$adapterType] = $this->create($adapterType);
         }
 
-        return $this->sharedInstances[$type];
+        return $this->sharedInstances[$adapterType];
     }
 }
