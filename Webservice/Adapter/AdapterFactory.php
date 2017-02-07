@@ -26,8 +26,8 @@
 namespace Dhl\Versenden\Webservice\Adapter;
 
 use \Dhl\Versenden\Api\Webservice\Adapter\AdapterInterface;
-use \Dhl\Versenden\Api\Webservice\Adapter\GkAdapterFactory;
-use \Dhl\Versenden\Api\Webservice\Adapter\GlAdapterFactory;
+use \Dhl\Versenden\Webservice\Adapter\BcsAdapterFactory;
+use \Dhl\Versenden\Webservice\Adapter\GlAdapterFactory;
 
 /**
  * AdapterFactory
@@ -44,9 +44,9 @@ class AdapterFactory
     const ADAPTER_TYPE_GL = 'Global Label API';
 
     /**
-     * @var GkAdapterFactory
+     * @var BcsAdapterFactory
      */
-    private $gkAdapterFactory;
+    private $bcsAdapterFactory;
 
     /**
      * @var GlAdapterFactory
@@ -62,12 +62,12 @@ class AdapterFactory
 
     /**
      * AdapterFactory constructor.
-     * @param GkAdapterFactory $gkAdapterFactory
+     * @param BcsAdapterFactory $bcsAdapterFactory
      * @param GlAdapterFactory $glAdapterFactory
      */
-    public function __construct(GkAdapterFactory $gkAdapterFactory, GlAdapterFactory $glAdapterFactory)
+    public function __construct(BcsAdapterFactory $bcsAdapterFactory, GlAdapterFactory $glAdapterFactory)
     {
-        $this->gkAdapterFactory = $gkAdapterFactory;
+        $this->bcsAdapterFactory = $bcsAdapterFactory;
         $this->glAdapterFactory = $glAdapterFactory;
     }
 
@@ -75,7 +75,7 @@ class AdapterFactory
      * @param string $shipperAddressCountryCode
      * @return string
      */
-    public static function getAdapterType($shipperAddressCountryCode)
+    public function getAdapterType($shipperAddressCountryCode)
     {
         switch ($shipperAddressCountryCode) {
             case 'DE':
@@ -95,7 +95,7 @@ class AdapterFactory
     {
         switch ($adapterType) {
             case self::ADAPTER_TYPE_GK:
-                return $this->gkAdapterFactory->create();
+                return $this->bcsAdapterFactory->create();
             case self::ADAPTER_TYPE_GL:
                 return $this->glAdapterFactory->create();
         }
