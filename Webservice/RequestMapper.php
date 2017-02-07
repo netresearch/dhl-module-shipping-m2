@@ -42,7 +42,7 @@ class RequestMapper implements AppRequestMapperInterface
      * Convert M2 shipment request to platform independent request object.
      *
      * @param \Magento\Shipping\Model\Shipment\Request $request
-     * @return \Dhl\Versenden\Api\Webservice\Request\Type\CreateShipmentRequestInterface
+     * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipmentRequestInterface
      */
     public function mapShipmentRequest($request)
     {

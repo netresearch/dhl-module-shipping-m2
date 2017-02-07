@@ -29,7 +29,10 @@ use \Dhl\Versenden\Api\Webservice\Adapter\AdapterInterface;
 use \Dhl\Versenden\Api\Webservice\GatewayInterface;
 use \Dhl\Versenden\Api\Webservice\Request;
 use \Dhl\Versenden\Api\Webservice\Response;
+use \Dhl\Versenden\Api\Data\Webservice\Request as RequestData;
+use \Dhl\Versenden\Api\Data\Webservice\Response as ResponseData;
 use \Dhl\Versenden\Webservice\Adapter\AdapterFactory;
+use \Dhl\Versenden\Webservice\Response\Type\CreateShipmentResponseCollection;
 
 /**
  * Gateway
@@ -67,20 +70,20 @@ class Gateway implements GatewayInterface
 
     /**
      * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
-     * @return Response\Type\CreateShipmentResponseCollection|Response\Type\CreateShipmentResponseInterface[]
+     * @return CreateShipmentResponseCollection|ResponseData\Type\CreateShipmentResponseInterface[]
      */
     public function createShipmentOrder(array $shipmentRequests)
     {
         /** @var AdapterInterface[] $apiAdapters */
         $apiAdapters = [];
-        /** @var Request\Type\CreateShipmentRequestInterface[][] $apiRequests */
+        /** @var RequestData\Type\CreateShipmentRequestInterface[][] $apiRequests */
         $apiRequests = [];
-        /** @var Response\Type\CreateShipmentResponseInterface[] $apiResponses */
+        /** @var ResponseData\Type\CreateShipmentResponseInterface[] $apiResponses */
         $apiResponses = [];
 
         // divide requests by target API
         foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
-            $apiType = AdapterFactory::getAdapterType($shipmentRequest->getShipperAddressCountryCode());
+            $apiType = $this->apiAdapterFactory->getAdapterType($shipmentRequest->getShipperAddressCountryCode());
 
             // prepare api adapter for current shipment request
             $apiAdapters[$apiType] = $this->apiAdapterFactory->get($apiType);
@@ -101,7 +104,7 @@ class Gateway implements GatewayInterface
 
     /**
      * @param string[] $shipmentNumbers
-     * @return Response\Type\DeleteShipmentResponseInterface
+     * @return ResponseData\Type\DeleteShipmentResponseInterface
      */
     public function deleteShipmentOrder(array $shipmentNumbers)
     {
