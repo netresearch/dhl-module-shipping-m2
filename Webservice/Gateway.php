@@ -51,21 +51,21 @@ class Gateway implements GatewayInterface
     private $apiAdapterFactory;
 
     /**
-     * @var Request\Mapper\AppRequestMapperInterface
+     * @var Request\Mapper\AppDataMapperInterface
      */
-    private $requestMapper;
+    private $appDataMapper;
 
     /**
      * Gateway constructor.
      * @param AdapterFactory $apiAdapterFactory
-     * @param Request\Mapper\AppRequestMapperInterface $requestMapper
+     * @param Request\Mapper\AppDataMapperInterface $dataMapper
      */
     public function __construct(
         AdapterFactory $apiAdapterFactory,
-        Request\Mapper\AppRequestMapperInterface $requestMapper
+        Request\Mapper\AppDataMapperInterface $dataMapper
     ) {
         $this->apiAdapterFactory = $apiAdapterFactory;
-        $this->requestMapper = $requestMapper;
+        $this->appDataMapper = $dataMapper;
     }
 
     /**
@@ -89,7 +89,7 @@ class Gateway implements GatewayInterface
             $apiAdapters[$apiType] = $this->apiAdapterFactory->get($apiType);
 
             // convert M2 shipment request to api request, add sequence number
-            $apiRequests[$apiType][$sequenceNumber] = $this->requestMapper->mapShipmentRequest($shipmentRequest);
+            $apiRequests[$apiType][$sequenceNumber] = $this->appDataMapper->mapShipmentRequest($shipmentRequest);
         }
 
         // send request(s) to target api(s) and merge responses

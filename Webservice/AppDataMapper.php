@@ -25,10 +25,10 @@
  */
 namespace Dhl\Versenden\Webservice;
 
-use \Dhl\Versenden\Api\Webservice\Request\Mapper\AppRequestMapperInterface;
+use \Dhl\Versenden\Api\Webservice\Request\Mapper\AppDataMapperInterface;
 
 /**
- * RequestMapper
+ * AppDataMapper
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice
@@ -36,13 +36,13 @@ use \Dhl\Versenden\Api\Webservice\Request\Mapper\AppRequestMapperInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class RequestMapper implements AppRequestMapperInterface
+class AppDataMapper implements AppDataMapperInterface
 {
     /**
      * Convert M2 shipment request to platform independent request object.
      *
      * @param \Magento\Shipping\Model\Shipment\Request $request
-     * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipmentRequestInterface
+     * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterface
      */
     public function mapShipmentRequest($request)
     {

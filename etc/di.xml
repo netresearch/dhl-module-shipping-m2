@@ -7,12 +7,14 @@
     <preference for="Dhl\Versenden\Api\VersendenInfoOrderRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoOrderRepository"/>
     <preference for="Dhl\Versenden\Api\VersendenInfoQuoteRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoQuoteRepository"/>
     <preference for="Dhl\Versenden\Bcs\Api\Data\InfoInterface" type="Dhl\Versenden\Bcs\Api\Info"/>
+
     <!-- observer -->
     <type name="Dhl\Versenden\Observer\DisableCodPaymentObserver">
         <arguments>
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
         </arguments>
     </type>
+
     <!-- plugins -->
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
         <plugin name="addVersendenInfoToAddress" type="Dhl\Versenden\Model\Plugin\AddVersendenInfoToQuoteAddress" />
@@ -20,6 +22,7 @@
     <type name="Magento\Sales\Controller\Adminhtml\Order\AddressSave">
         <plugin name="updateVersendenInfo" type="Dhl\Versenden\Model\Plugin\UpdateVersendenInfoOnAddressSave" />
     </type>
+
     <!-- passing arguments -->
     <virtualType name="versendenInfoOrderMetadata" type="Dhl\Versenden\Model\ResourceModel\Metadata">
         <arguments>
