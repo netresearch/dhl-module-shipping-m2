@@ -74,10 +74,8 @@ class Gateway implements GatewayInterface
      */
     public function createShipmentOrder(array $shipmentRequests)
     {
-        /** @var AdapterInterface[] $apiAdapters */
-        $apiAdapters = [];
-        /** @var RequestData\Type\CreateShipmentRequestInterface[][] $apiRequests */
-        $apiRequests = [];
+        /** @var RequestData\Type\CreateShipmentRequestInterface[][] $shipmentOrders */
+        $shipmentOrders = [];
         /** @var ResponseData\Type\CreateShipmentResponseInterface[] $apiResponses */
         $apiResponses = [];
 
@@ -85,18 +83,16 @@ class Gateway implements GatewayInterface
         foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
             $apiType = $this->apiAdapterFactory->getAdapterType($shipmentRequest->getShipperAddressCountryCode());
 
-            // prepare api adapter for current shipment request
-            $apiAdapters[$apiType] = $this->apiAdapterFactory->get($apiType);
-
             // convert M2 shipment request to api request, add sequence number
-            $apiRequests[$apiType][$sequenceNumber] = $this->appDataMapper->mapShipmentRequest($shipmentRequest);
+            $shipmentOrders[$apiType][$sequenceNumber] = $this->appDataMapper
+                ->mapShipmentRequest($shipmentRequest, $sequenceNumber);
         }
 
-        // send request(s) to target api(s) and merge responses
-        //TODO(nr): implement response handling
-        foreach ($apiAdapters as $apiType => $apiAdapter) {
-            $apiTypeResponses = $apiAdapter->createShipmentOrder($apiRequests[$apiType]);
-            $apiResponses = array_merge($apiResponses, $apiTypeResponses);
+        // send shipment orders to APIs
+        foreach ($shipmentOrders as $apiType => $apiShipmentOrders) {
+            $apiAdapter = $this->apiAdapterFactory->get($apiType);
+            //TODO(nr): implement response handling
+            $apiResponses = array_merge($apiResponses, $apiAdapter->createShipmentOrder($apiShipmentOrders));
         }
 
         return $apiResponses;
