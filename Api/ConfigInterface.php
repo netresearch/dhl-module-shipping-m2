@@ -54,12 +54,6 @@ interface ConfigInterface
 
     /**
      * @param mixed $store
-     * @return mixed
-     */
-    public function getShipperCountry($store = null);
-
-    /**
-     * @param mixed $store
      * @return array
      */
     public function getEuCountryList($store = null);
