@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api;
+namespace Dhl\Versenden\Api\Config;
 
 /**
  * BcsConfigInterface
@@ -34,7 +34,7 @@ namespace Dhl\Versenden\Api;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface BcsConfigInterface extends ConfigInterface
+interface BcsConfigInterface extends ModuleConfigInterface
 {
     /**
      * Obtain DHL Business Customer Shipping contract data: username.

@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api;
+namespace Dhl\Versenden\Api\Config;
 
 /**
- * GlConfigInterface
+ * ConfigAccessorInterface
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -34,10 +34,24 @@ namespace Dhl\Versenden\Api;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface GlConfigInterface extends ConfigInterface
+interface ConfigAccessorInterface
 {
     /**
-     * @return string
+     * Save config value to storage.
+     *
+     * @param string $path
+     * @param string $value
+     * @param mixed $scopeId
      */
-    public function getPickupAccountNumber();
+    public function saveConfigValue($path, $value, $scopeId = 0);
+
+    /**
+     * Read config value from storage.
+     *
+     * @param $path
+     * @param int $scopeId
+     * @return mixed
+     */
+    public function getConfigValue($path, $scopeId = null);
+
 }

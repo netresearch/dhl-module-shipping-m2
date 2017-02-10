@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api;
+namespace Dhl\Versenden\Api\Config;
 
 /**
- * ConfigInterface
+ * ModuleConfigInterface
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -34,7 +34,7 @@ namespace Dhl\Versenden\Api;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface ConfigInterface
+interface ModuleConfigInterface
 {
     /**
      * Check if logging is enabled
