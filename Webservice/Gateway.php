@@ -76,8 +76,8 @@ class Gateway implements GatewayInterface
     {
         /** @var RequestData\Type\CreateShipmentRequestInterface[][] $shipmentOrders */
         $shipmentOrders = [];
-        /** @var ResponseData\Type\CreateShipmentResponseInterface[] $apiResponses */
-        $apiResponses = [];
+        /** @var ResponseData\Type\CreateShipmentResponseInterface[] $createdShipments */
+        $createdShipments = [];
 
         // divide requests by target API
         foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
@@ -92,10 +92,11 @@ class Gateway implements GatewayInterface
         foreach ($shipmentOrders as $apiType => $apiShipmentOrders) {
             $apiAdapter = $this->apiAdapterFactory->get($apiType);
             //TODO(nr): implement response handling
-            $apiResponses = array_merge($apiResponses, $apiAdapter->createShipmentOrder($apiShipmentOrders));
+            $createdShipments[$apiType] = $apiAdapter->createShipmentOrder($apiShipmentOrders);
         }
 
-        return $apiResponses;
+        //TODO(nr): merge responses from different adapters
+        return current($createdShipments);
     }
 
     /**

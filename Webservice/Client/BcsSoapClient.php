@@ -25,7 +25,8 @@
  */
 namespace Dhl\Versenden\Webservice\Client;
 
-use \Dhl\Versenden\Api\Webservice\BcsConfigInterface;
+use \Dhl\Versenden\Api\Webservice\ConfigInterface as ApiConfigInterface;
+use \Dhl\Versenden\Api\Config\BcsConfigInterface as ModuleConfigInterface;
 use \Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface;
 
 /**
@@ -46,15 +47,16 @@ class BcsSoapClient implements BcsSoapClientInterface
 
     /**
      * BcsSoapClient constructor.
-     * @param BcsConfigInterface $config
+     * @param ApiConfigInterface $apiConfig
+     * @param ModuleConfigInterface $bcsConfig
      */
-    public function __construct(BcsConfigInterface $config)
+    public function __construct(ApiConfigInterface $apiConfig, ModuleConfigInterface $bcsConfig)
     {
         //TODO(nr): maybe or maybe not use m2 factory
         $options = [
-            'location' => $config->getApiEndpoint(),
-            'login' => $config->getAuthUsername(),
-            'password' => $config->getAuthPassword(),
+            'location' => $apiConfig->getApiEndpoint(),
+            'login' => $apiConfig->getAuthUsername(),
+            'password' => $apiConfig->getAuthPassword(),
             'trace' => 1
         ];
         $client = new \Dhl\Versenden\Bcs\GVAPI_2_0_de($options);
@@ -63,8 +65,8 @@ class BcsSoapClient implements BcsSoapClientInterface
             'http://dhl.de/webservice/cisbase',
             'Authentification',
             [
-                'user' => $config->getAccountUser(),
-                'signature' => $config->getAccountSignature(),
+                'user' => $bcsConfig->getAccountUser(),
+                'signature' => $bcsConfig->getAccountSignature(),
             ]
         );
         $client->__setSoapHeaders($authHeader);

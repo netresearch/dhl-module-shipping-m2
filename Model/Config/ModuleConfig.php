@@ -24,16 +24,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model;
+namespace Dhl\Versenden\Model\Config;
 
-use \Dhl\Versenden\Api\ConfigInterface;
-use \Magento\Framework\App\Config\Storage\WriterInterface;
-use \Magento\Framework\App\Config\ScopeConfigInterface;
-use \Magento\Store\Model\ScopeInterface;
-use \Magento\Store\Model\StoreManagerInterface;
+use Dhl\Versenden\Api\Config\ConfigAccessorInterface;
+use Dhl\Versenden\Api\Config\ModuleConfigInterface;
 
 /**
- * Config
+ * ModuleConfig
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -41,7 +38,7 @@ use \Magento\Store\Model\StoreManagerInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Config implements ConfigInterface
+class ModuleConfig implements ModuleConfigInterface
 {
     const CONFIG_XML_PATH_TITLE = 'carriers/dhlversenden/title';
 
@@ -54,69 +51,17 @@ class Config implements ConfigInterface
     const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlversenden/shipment_dhlcodmethods';
 
     /**
-     * @var StoreManagerInterface
+     * @var ConfigAccessorInterface
      */
-    private $storeManager;
+    private $configAccessor;
 
     /**
-     * @var WriterInterface
+     * ModuleConfig constructor.
+     * @param ConfigAccessorInterface $configAccessor
      */
-    private $configWriter;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
-     * Config constructor.
-     * @param StoreManagerInterface $storeManager
-     * @param ScopeConfigInterface $scopeConfig
-     * @param WriterInterface $configWriter
-     */
-    public function __construct(
-        StoreManagerInterface $storeManager,
-        ScopeConfigInterface $scopeConfig,
-        WriterInterface $configWriter
-    ) {
-        $this->storeManager = $storeManager;
-        $this->scopeConfig  = $scopeConfig;
-        $this->configWriter = $configWriter;
-    }
-
-    /**
-     * Save config value to storage.
-     *
-     * @param string $path
-     * @param string $value
-     * @param mixed $scopeId
-     */
-    private function saveConfigValue($path, $value, $scopeId = 0)
+    public function __construct(ConfigAccessorInterface $configAccessor)
     {
-        $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
-        if ($scopeId) {
-            $scope = ScopeInterface::SCOPE_STORES;
-            $scopeId = $this->storeManager->getStore($scopeId)->getId();
-        }
-
-        $this->configWriter->save($path, $value, $scope, $scopeId);
-    }
-
-    /**
-     * Read config value from storage.
-     *
-     * @param $path
-     * @param int $scopeId
-     * @return mixed
-     */
-    private function getConfigValue($path, $scopeId = null)
-    {
-        $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
-        if ($scopeId) {
-            $scope = ScopeInterface::SCOPE_STORE;
-        }
-
-        return $this->scopeConfig->getValue($path, $scope, $scopeId);
+        $this->configAccessor = $configAccessor;
     }
 
     /**
@@ -129,8 +74,8 @@ class Config implements ConfigInterface
     {
         $level = ($level === null) ? \Monolog\Logger::DEBUG : $level;
 
-        $isEnabled = $this->getConfigValue(self::CONFIG_XML_PATH_LOGGING_ENABLED);
-        $isLevelEnabled = ($this->getConfigValue(self::CONFIG_XML_PATH_LOG_LEVEL) <= $level);
+        $isEnabled = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_LOGGING_ENABLED);
+        $isLevelEnabled = ($this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_LOG_LEVEL) <= $level);
 
         return ($isEnabled && $isLevelEnabled);
     }
@@ -143,7 +88,7 @@ class Config implements ConfigInterface
      */
     public function isSandboxModeEnabled($store = null)
     {
-        return (bool) $this->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
+        return (bool) $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
     }
 
     /**
@@ -154,7 +99,7 @@ class Config implements ConfigInterface
      */
     public function getShipperCountry($store = null)
     {
-        $shipperCountry = $this->getConfigValue(
+        $shipperCountry = $this->configAccessor->getConfigValue(
             \Magento\Shipping\Model\Config::XML_PATH_ORIGIN_COUNTRY_ID,
             $store
         );
@@ -168,7 +113,7 @@ class Config implements ConfigInterface
      */
     public function getEuCountryList($store = null)
     {
-        $euCountries = $this->getConfigValue(
+        $euCountries = $this->configAccessor->getConfigValue(
             \Magento\Shipping\Helper\Carrier::XML_PATH_EU_COUNTRIES_LIST,
             $store
         );
@@ -183,7 +128,7 @@ class Config implements ConfigInterface
      */
     public function getShippingMethods($store = null)
     {
-        $shippingMethods = $this->getConfigValue(self::CONFIG_XML_PATH_DHLMETHODS, $store);
+        $shippingMethods = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DHLMETHODS, $store);
         if (empty($shippingMethods)) {
             $shippingMethods = [];
         } else {
@@ -201,7 +146,7 @@ class Config implements ConfigInterface
      */
     public function getCodPaymentMethods($store = null)
     {
-        $codPaymentMethods = $this->getConfigValue(self::CONFIG_XML_PATH_CODMETHODS, $store);
+        $codPaymentMethods = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CODMETHODS, $store);
         if (empty($codPaymentMethods)) {
             $codPaymentMethods = [];
         } else {
