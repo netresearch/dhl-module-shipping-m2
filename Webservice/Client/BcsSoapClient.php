@@ -25,8 +25,7 @@
  */
 namespace Dhl\Versenden\Webservice\Client;
 
-use \Dhl\Versenden\Api\Webservice\ConfigInterface as ApiConfigInterface;
-use \Dhl\Versenden\Api\Config\BcsConfigInterface as ModuleConfigInterface;
+use Dhl\Versenden\Api\Config\BcsConfigInterface;
 use \Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface;
 
 /**
@@ -47,16 +46,15 @@ class BcsSoapClient implements BcsSoapClientInterface
 
     /**
      * BcsSoapClient constructor.
-     * @param ApiConfigInterface $apiConfig
-     * @param ModuleConfigInterface $bcsConfig
+     * @param BcsConfigInterface $bcsConfig
      */
-    public function __construct(ApiConfigInterface $apiConfig, ModuleConfigInterface $bcsConfig)
+    public function __construct(BcsConfigInterface $bcsConfig)
     {
         //TODO(nr): maybe or maybe not use m2 factory
         $options = [
-            'location' => $apiConfig->getApiEndpoint(),
-            'login' => $apiConfig->getAuthUsername(),
-            'password' => $apiConfig->getAuthPassword(),
+            'location' => $bcsConfig->getApiEndpoint(),
+            'login' => $bcsConfig->getAuthUsername(),
+            'password' => $bcsConfig->getAuthPassword(),
             'trace' => 1
         ];
         $client = new \Dhl\Versenden\Bcs\GVAPI_2_0_de($options);

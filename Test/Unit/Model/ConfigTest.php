@@ -25,7 +25,8 @@
  */
 namespace Dhl\Versenden\Model;
 
-use \Dhl\Versenden\Api\ConfigInterface;
+use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Dhl\Versenden\Model\Config\ModuleConfig;
 use \Magento\Framework\App\Config\ScopeConfigInterface;
 use \Magento\Framework\App\Config\Storage\WriterInterface;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
@@ -89,8 +90,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function loadConfigModel()
     {
-        $interface = ConfigInterface::class;
-        $className = Config::class;
+        $interface = ModuleConfigInterface::class;
+        $className = ModuleConfig::class;
 
         try {
             $config = $this->objectManager->getObject($className);
@@ -126,8 +127,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
                 $errorLogLevel
             );
 
-        /** @var \Dhl\Versenden\Model\Config $config */
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'scopeConfig' => $this->scopeConfig
         ]);
 
@@ -146,7 +147,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->willReturnOnConsecutiveCalls([true, false]);
 
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'scopeConfig'  => $this->scopeConfig
         ]);
 
@@ -172,8 +174,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->will($this->returnValueMap($returnValueMap));
 
-        /** @var ConfigInterface $config */
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'configWriter' => $this->configWriter,
             'scopeConfig' => $this->scopeConfig
         ]);
@@ -204,8 +206,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->will($this->returnValueMap($returnValueMap));
 
-        /** @var ConfigInterface $config */
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'configWriter' => $this->configWriter,
             'scopeConfig' => $this->scopeConfig
         ]);
@@ -232,9 +234,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $storeTwoMethods = null;
 
         $returnValueMap = [
-            [Config::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
-            [Config::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
-            [Config::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_two', $storeTwoMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_two', $storeTwoMethods],
         ];
 
         $this->scopeConfig
@@ -242,8 +244,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->will($this->returnValueMap($returnValueMap));
 
-        /** @var ConfigInterface $config */
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'configWriter' => $this->configWriter,
             'scopeConfig' => $this->scopeConfig
         ]);
@@ -273,9 +275,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $storeTwoMethods = null;
 
         $returnValueMap = [
-            [Config::CONFIG_XML_PATH_CODMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
-            [Config::CONFIG_XML_PATH_CODMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
-            [Config::CONFIG_XML_PATH_CODMETHODS, ScopeInterface::SCOPE_STORE, 'store_two', $storeTwoMethods],
+            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
+            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
+            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, ScopeInterface::SCOPE_STORE, 'store_two', $storeTwoMethods],
 
         ];
 
@@ -284,8 +286,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->will($this->returnValueMap($returnValueMap));
 
-        /** @var ConfigInterface $config */
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'configWriter' => $this->configWriter,
             'scopeConfig' => $this->scopeConfig
         ]);
@@ -319,8 +321,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $returnValueMap = [
             [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultShipperCountry],
             [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneShipperCountry],
-            [Config::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
-            [Config::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
         ];
 
         $this->scopeConfig
@@ -328,8 +330,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->will($this->returnValueMap($returnValueMap));
 
-        /** @var ConfigInterface $config */
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'configWriter' => $this->configWriter,
             'scopeConfig' => $this->scopeConfig
         ]);
@@ -352,7 +354,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $returnValueMap = [
             [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $validShipperCountry],
             [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeInterface::SCOPE_STORE, 'store_one', $invalidShipperCountry],
-            [Config::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $validMethod],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $validMethod],
         ];
 
         $this->scopeConfig
@@ -360,8 +362,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ->method('getValue')
             ->will($this->returnValueMap($returnValueMap));
 
-        /** @var ConfigInterface $config */
-        $config = $this->objectManager->getObject(Config::class, [
+        /** @var ModuleConfigInterface $config */
+        $config = $this->objectManager->getObject(ModuleConfig::class, [
             'configWriter' => $this->configWriter,
             'scopeConfig' => $this->scopeConfig
         ]);

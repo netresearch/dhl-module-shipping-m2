@@ -131,7 +131,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         $sequenceNumber = $request->getPackageId();
 
         $result = $this->dataObjectFactory->create();
-        $response = $this->webserviceGateway->createShipmentOrder([$sequenceNumber => $request]);
+        $response = $this->webserviceGateway->createLabels([$sequenceNumber => $request]);
         if ($response->getStatus()->isError()) {
             // plain string seems to be expected for errors
             $errors = sprintf(

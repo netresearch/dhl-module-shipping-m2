@@ -26,8 +26,9 @@
  */
 namespace Dhl\Versenden\Model\Config;
 
-use Dhl\Versenden\Api\Config\ConfigAccessorInterface;
-use Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Dhl\Versenden\Api\Config\ConfigAccessorInterface;
+use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Magento\Shipping\Model\Config as ShippingConfig;
 
 /**
  * ModuleConfig
@@ -99,12 +100,8 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function getShipperCountry($store = null)
     {
-        $shipperCountry = $this->configAccessor->getConfigValue(
-            \Magento\Shipping\Model\Config::XML_PATH_ORIGIN_COUNTRY_ID,
-            $store
-        );
-
-        return $shipperCountry;
+        $country = $this->configAccessor->getConfigValue(ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, $store);
+        return $country;
     }
 
     /**

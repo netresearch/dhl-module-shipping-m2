@@ -19,14 +19,19 @@
  * @category  Dhl
  * @package   Dhl\Versenden
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api\Config;
+namespace Dhl\Versenden\Model\Config;
+
+use \Dhl\Versenden\Api\Config\BcsConfigInterface;
+use \Dhl\Versenden\Api\Config\ConfigAccessorInterface;
+use Dhl\Versenden\Api\Config\ModuleConfigInterface;
 
 /**
- * BcsConfigInterface
+ * BcsConfig
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -34,29 +39,30 @@ namespace Dhl\Versenden\Api\Config;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface BcsConfigInterface
+class BcsConfig implements BcsConfigInterface
 {
-    const CONFIG_XML_PATH_ENDPOINT              = 'carriers/dhlversenden/bcs_api_endpoint';
-    const CONFIG_XML_PATH_AUTH_USERNAME         = 'carriers/dhlversenden/bcs_api_auth_username';
-    const CONFIG_XML_PATH_AUTH_PASSWORD         = 'carriers/dhlversenden/bcs_api_auth_password';
-    const CONFIG_XML_PATH_ACCOUNT_USER          = 'carriers/dhlversenden/bcs_account_user';
-    const CONFIG_XML_PATH_ACCOUNT_SIGNATURE     = 'carriers/dhlversenden/bcs_account_signature';
-    const CONFIG_XML_PATH_ACCOUNT_EKP           = 'carriers/dhlversenden/bcs_account_ekp';
-    const CONFIG_XML_PATH_ACCOUNT_PARTICIPATION = 'carriers/dhlversenden/bcs_account_participation';
+    /**
+     * @var ConfigAccessorInterface
+     */
+    private $configAccessor;
 
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT              = 'carriers/dhlversenden/bcs_sandbox_api_endpoint';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME         = 'carriers/dhlversenden/bcs_sandbox_api_auth_username';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD         = 'carriers/dhlversenden/bcs_sandbox_api_auth_password';
-    const CONFIG_XML_PATH_SANDBOX_ACCOUNT_USER          = 'carriers/dhlversenden/bcs_sandbox_account_user';
-    const CONFIG_XML_PATH_SANDBOX_ACCOUNT_SIGNATURE     = 'carriers/dhlversenden/bcs_sandbox_account_signature';
-    const CONFIG_XML_PATH_SANDBOX_ACCOUNT_EKP           = 'carriers/dhlversenden/bcs_sandbox_account_ekp';
-    const CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION = 'carriers/dhlversenden/bcs_sandbox_account_participation';
+    /**
+     * @var ModuleConfigInterface
+     */
+    private $moduleConfig;
 
-    const CONFIG_XML_PATH_SHIPMENT_PRINTONLYIFCODEABLE = 'carriers/dhlversenden/bcs_shipment_printonlyifcodeable';
-
-    const CONFIG_XML_PATH_SHIPPER_CONTACT_PERSON = 'carriers/dhlversenden/bcs_shipper_contact_person';
-    const CONFIG_XML_PATH_SHIPPER_CONTACT_COMPANY_ADDITION = 'carriers/dhlversenden/bcs_shipper_contact_company_addition';
-    const CONFIG_XML_PATH_SHIPPER_CONTACT_DISPATCHINFO = 'carriers/dhlversenden/bcs_shipper_contact_dispatchinfo';
+    /**
+     * BcsApiConfig constructor.
+     * @param ConfigAccessorInterface $configAccessor
+     * @param ModuleConfigInterface $moduleConfig
+     */
+    public function __construct(
+        ConfigAccessorInterface $configAccessor,
+        ModuleConfigInterface $moduleConfig
+    ) {
+        $this->configAccessor = $configAccessor;
+        $this->moduleConfig = $moduleConfig;
+    }
 
     /**
      * Obtain API endpoint.
@@ -64,7 +70,14 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getApiEndpoint($store = null);
+    public function getApiEndpoint($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ENDPOINT, $store);
+    }
 
     /**
      * Obtain auth credentials: username.
@@ -72,7 +85,14 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getAuthUsername($store = null);
+    public function getAuthUsername($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTH_USERNAME, $store);
+    }
 
     /**
      * Obtain auth credentials: password.
@@ -80,7 +100,14 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getAuthPassword($store = null);
+    public function getAuthPassword($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTH_PASSWORD, $store);
+    }
 
     /**
      * Obtain DHL Business Customer Shipping contract data: username.
@@ -88,7 +115,14 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getAccountUser($store = null);
+    public function getAccountUser($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_USER, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_USER, $store);
+    }
 
     /**
      * Obtain DHL Business Customer Shipping contract data: signature.
@@ -96,7 +130,14 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getAccountSignature($store = null);
+    public function getAccountSignature($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_SIGNATURE, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_SIGNATURE, $store);
+    }
 
     /**
      * Obtain DHL Business Customer Shipping contract data: ekp.
@@ -104,7 +145,14 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getAccountEkp($store = null);
+    public function getAccountEkp($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_EKP, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_EKP, $store);
+    }
 
     /**
      * Obtain DHL Business Customer Shipping contract data: participation numbers.
@@ -112,13 +160,23 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string[]
      */
-    public function getAccountParticipation($store = null);
+    public function getAccountParticipation($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION, $store);
+    }
 
     /**
      * @param mixed $store
      * @return bool
      */
-    public function isPrintOnlyIfCodeable($store = null);
+    public function isPrintOnlyIfCodeable($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPMENT_PRINTONLYIFCODEABLE, $store);
+    }
 
     /**
      * Obtain communication contact person.
@@ -126,7 +184,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getContactPerson($store = null);
+    public function getContactPerson($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPPER_CONTACT_PERSON, $store);
+    }
 
     /**
      * Obtain name of shipper (first name part)
@@ -138,7 +199,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperName($store = null);
+    public function getShipperName($store = null)
+    {
+        return null;
+    }
 
     /**
      * Obtain shipper company name (second name part)
@@ -150,7 +214,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperCompany($store = null);
+    public function getShipperCompany($store = null)
+    {
+        return null;
+    }
 
     /**
      * Obtain shipper company name (third name part)
@@ -158,7 +225,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperCompanyAddition($store = null);
+    public function getShipperCompanyAddition($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPPER_CONTACT_COMPANY_ADDITION, $store);
+    }
 
     /**
      * @deprecated Shipment request uses config general/store_information/name
@@ -168,7 +238,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperPhone($store = null);
+    public function getShipperPhone($store = null)
+    {
+        return null;
+    }
 
     /**
      * @deprecated Shipment request uses email of currently logged in admin
@@ -178,7 +251,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperEmail($store = null);
+    public function getShipperEmail($store = null)
+    {
+        return null;
+    }
 
     /**
      * @deprecated Shipment request uses config shipping/origin/street_line1
@@ -188,7 +264,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperStreet($store = null);
+    public function getShipperStreet($store = null)
+    {
+        return null;
+    }
 
     /**
      * @deprecated Shipment request uses config shipping/origin/street_line1
@@ -198,7 +277,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperStreetNumber($store = null);
+    public function getShipperStreetNumber($store = null)
+    {
+        return null;
+    }
 
     /**
      * @deprecated Shipment request uses config shipping/origin/postcode
@@ -208,7 +290,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperPostalCode($store = null);
+    public function getShipperPostalCode($store = null)
+    {
+        return null;
+    }
 
     /**
      * @deprecated Shipment request uses config shipping/origin/city
@@ -218,7 +303,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperCity($store = null);
+    public function getShipperCity($store = null)
+    {
+        return null;
+    }
 
     /**
      * @deprecated Shipment request uses config shipping/origin/region_id
@@ -228,7 +316,10 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperRegion($store = null);
+    public function getShipperRegion($store = null)
+    {
+        return null;
+    }
 
     /**
      * @deprecated Shipment request uses config shipping/origin/country_id
@@ -238,11 +329,17 @@ interface BcsConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getShipperCountryISOCode($store = null);
+    public function getShipperCountryISOCode($store = null)
+    {
+        return null;
+    }
 
     /**
      * @param mixed $store
      * @return string
      */
-    public function getDispatchingInformation($store = null);
+    public function getDispatchingInformation($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPPER_CONTACT_DISPATCHINFO, $store);
+    }
 }

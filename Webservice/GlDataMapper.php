@@ -23,32 +23,44 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api\Webservice;
+namespace Dhl\Versenden\Webservice;
 
 use \Dhl\Versenden\Api\Data\Webservice\Request;
-use \Dhl\Versenden\Api\Data\Webservice\Response;
-use \Dhl\Versenden\Webservice\Response\Type\CreateShipmentResponseCollection;
+use \Dhl\Versenden\Api\Webservice\Request\Mapper\GlDataMapperInterface;
 
 /**
- * GatewayInterface
+ * GlDataMapper
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
+ *
+ * @SuppressWarnings(MEQP2.Classes.ObjectInstantiation)
  */
-interface GatewayInterface
+class GlDataMapper implements GlDataMapperInterface
 {
     /**
-     * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
-     * @return CreateShipmentResponseCollection|Response\Type\CreateShipmentResponseInterface[]
+     * Create api specific request object from framework standardized object.
+     *
+     * @param \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterface $shipmentOrder
+     * @return object The "BCS shipment order" or "GL API shipment" entity
      */
-    public function createLabels(array $shipmentRequests);
+    public function mapShipmentOrder(Request\Type\CreateShipment\ShipmentOrderInterface $shipmentOrder)
+    {
+        // TODO: Implement mapShipmentOrder() method.
+    }
 
     /**
-     * @param string[] $shipmentNumbers
-     * @return Response\Type\DeleteShipmentResponseInterface
+     * Create api specific request object from framework standardized object.
+     *
+     * @param \Dhl\Versenden\Api\Data\Webservice\Request\Type\GetTokenRequestInterface $request
+     * @return object
      */
-    public function cancelLabels(array $shipmentNumbers);
+    public function mapGetTokenRequest(Request\Type\GetTokenRequestInterface $request)
+    {
+        // TODO: Implement mapGetTokenRequest() method.
+    }
+
 }

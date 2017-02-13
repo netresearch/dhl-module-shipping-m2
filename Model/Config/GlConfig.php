@@ -24,11 +24,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model;
+namespace Dhl\Versenden\Model\Config;
 
 use \Dhl\Versenden\Api\Config\ConfigAccessorInterface;
-use Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Api\Webservice\ConfigInterface;
+use \Dhl\Versenden\Api\Config\GlConfigInterface;
+use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
 
 /**
  * GlApiConfig
@@ -39,8 +39,10 @@ use \Dhl\Versenden\Api\Webservice\ConfigInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class GlApiConfig implements ConfigInterface
+class GlConfig implements GlConfigInterface
 {
+    const CONFIG_XML_PATH_PICKUP_NUMBER = 'carriers/dhlversenden/gl_pickup_number';
+
     const CONFIG_XML_PATH_ENDPOINT      = 'carriers/dhlversenden/api_gl_endpoint';
     const CONFIG_XML_PATH_AUTH_USERNAME = 'carriers/dhlversenden/api_gl_auth_username';
     const CONFIG_XML_PATH_AUTH_PASSWORD = 'carriers/dhlversenden/api_gl_auth_password';
@@ -115,5 +117,14 @@ class GlApiConfig implements ConfigInterface
         }
 
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTH_PASSWORD, $store);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getPickupAccountNumber($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER, $store);
     }
 }

@@ -34,10 +34,11 @@ namespace Dhl\Versenden\Api\Config;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface GlConfigInterface extends ModuleConfigInterface
+interface GlConfigInterface
 {
     /**
+     * @param mixed $store
      * @return string
      */
-    public function getPickupAccountNumber();
+    public function getPickupAccountNumber($store = null);
 }

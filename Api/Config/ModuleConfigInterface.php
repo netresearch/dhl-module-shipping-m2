@@ -75,6 +75,14 @@ interface ModuleConfigInterface
     public function getCodPaymentMethods($store = null);
 
     /**
+     * Obtain shipper country from shipping origin configuration.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getShipperCountry($store = null);
+
+    /**
      * Check if the given shipping method should be processed with DHL Versenden.
      *
      * @param string $shippingMethod

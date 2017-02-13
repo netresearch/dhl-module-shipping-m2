@@ -26,7 +26,7 @@
  */
 namespace Dhl\Versenden\Observer;
 
-use Dhl\Versenden\Api\ConfigInterface;
+use Dhl\Versenden\Api\Config\ModuleConfigInterface;
 use Dhl\Versenden\Model\Shipping\Carrier;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -43,15 +43,15 @@ use Magento\Framework\Event\ObserverInterface;
 class UpdateCarrierObserver implements ObserverInterface
 {
     /**
-     * @var ConfigInterface
+     * @var ModuleConfigInterface
      */
     private $config;
 
     /**
      * UpdateCarrierObserver constructor.
-     * @param ConfigInterface $config
+     * @param ModuleConfigInterface $config
      */
-    public function __construct(ConfigInterface $config)
+    public function __construct(ModuleConfigInterface $config)
     {
         $this->config = $config;
     }

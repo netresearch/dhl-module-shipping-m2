@@ -25,11 +25,11 @@
  */
 namespace Dhl\Versenden\Observer;
 
-use \Dhl\Versenden\Api\ConfigInterface;
-use \Dhl\Versenden\Model\Config;
+use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Dhl\Versenden\Model\Config\ModuleConfig;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\DataObject;
-use Magento\Framework\Event;
+use \Magento\Framework\Event;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use \PHPUnit_Framework_MockObject_MockObject as MockObject;
@@ -52,7 +52,7 @@ class UpdateCarrierObserverTest extends \PHPUnit_Framework_TestCase
     private $objectManager;
 
     /**
-     * @var ConfigInterface|MockObject
+     * @var ModuleConfigInterface|MockObject
      */
     private $config;
 
@@ -62,7 +62,7 @@ class UpdateCarrierObserverTest extends \PHPUnit_Framework_TestCase
 
         $this->objectManager = new ObjectManager($this);
 
-        $this->config = $this->getMock(Config::class, ['canProcessMethod'], [], '', false);
+        $this->config = $this->getMock(ModuleConfig::class, ['canProcessMethod'], [], '', false);
     }
 
     /**
