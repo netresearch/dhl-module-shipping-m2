@@ -26,7 +26,7 @@
  */
 namespace Dhl\Versenden\Observer;
 
-use \Dhl\Versenden\Api\ConfigInterface;
+use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
 use \Dhl\Versenden\Bcs\Api\Product;
 use \Dhl\Versenden\Bcs\Api\Service\Cod;
 use \Dhl\Versenden\Bcs\Api\Service\Filter\ProductFilter;
@@ -50,7 +50,7 @@ use \Magento\Framework\Session\SessionManagerInterface;
 class DisableCodPaymentObserver implements ObserverInterface
 {
     /**
-     * @var ConfigInterface
+     * @var ModuleConfigInterface
      */
     private $config;
 
@@ -66,12 +66,12 @@ class DisableCodPaymentObserver implements ObserverInterface
 
     /**
      * DisableCodPaymentObserver constructor.
-     * @param ConfigInterface $config
+     * @param ModuleConfigInterface $config
      * @param SessionManagerInterface $checkoutSession
      * @param ServiceCollectionFactory $serviceCollectionFactory
      */
     public function __construct(
-        ConfigInterface $config,
+        ModuleConfigInterface $config,
         SessionManagerInterface $checkoutSession,
         ServiceCollectionFactory $serviceCollectionFactory
     ) {

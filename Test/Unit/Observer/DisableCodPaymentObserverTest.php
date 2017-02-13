@@ -25,12 +25,12 @@
  */
 namespace Dhl\Versenden\Observer;
 
-use \Dhl\Versenden\Api\ConfigInterface;
+use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
 use \Dhl\Versenden\Bcs\Api\Service\Cod;
 use \Dhl\Versenden\Bcs\Api\Service\ServiceCollection;
 use \Dhl\Versenden\Bcs\Api\Service\ServiceCollectionFactory;
 use \Dhl\Versenden\Bcs\Api\Service\ServiceFactory;
-use \Dhl\Versenden\Model\Config;
+use \Dhl\Versenden\Model\Config\ModuleConfig;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\DataObject;
 use \Magento\Framework\Event;
@@ -63,7 +63,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
     private $checkoutSession;
 
     /**
-     * @var ConfigInterface|MockObject
+     * @var ModuleConfigInterface|MockObject
      */
     private $config;
 
@@ -80,7 +80,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
 
         $this->checkoutSession = $this->getMock(CheckoutSession::class, ['start', 'getQuote', 'destroy'], [], '', false);
         $this->config = $this->getMock(
-            Config::class,
+            ModuleConfig::class,
             ['getShipperCountry', 'canProcessMethod', 'isCodPaymentMethod', 'getEuCountryList'],
             [],
             '',

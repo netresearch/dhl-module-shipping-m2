@@ -25,13 +25,12 @@
  */
 namespace Dhl\Versenden\Webservice;
 
-use \Dhl\Versenden\Api\Webservice\Adapter\AdapterInterface;
+use \Dhl\Versenden\Api\Webservice\Adapter\AdapterChainInterface;
 use \Dhl\Versenden\Api\Webservice\GatewayInterface;
 use \Dhl\Versenden\Api\Webservice\Request;
 use \Dhl\Versenden\Api\Webservice\Response;
 use \Dhl\Versenden\Api\Data\Webservice\Request as RequestData;
 use \Dhl\Versenden\Api\Data\Webservice\Response as ResponseData;
-use \Dhl\Versenden\Webservice\Adapter\AdapterFactory;
 use \Dhl\Versenden\Webservice\Response\Type\CreateShipmentResponseCollection;
 
 /**
@@ -46,9 +45,9 @@ use \Dhl\Versenden\Webservice\Response\Type\CreateShipmentResponseCollection;
 class Gateway implements GatewayInterface
 {
     /**
-     * @var AdapterFactory
+     * @var AdapterChainInterface
      */
-    private $apiAdapterFactory;
+    private $apiAdapters;
 
     /**
      * @var Request\Mapper\AppDataMapperInterface
@@ -57,54 +56,46 @@ class Gateway implements GatewayInterface
 
     /**
      * Gateway constructor.
-     * @param AdapterFactory $apiAdapterFactory
+     * @param AdapterChainInterface $apiAdapters
      * @param Request\Mapper\AppDataMapperInterface $dataMapper
      */
     public function __construct(
-        AdapterFactory $apiAdapterFactory,
+        AdapterChainInterface $apiAdapters,
         Request\Mapper\AppDataMapperInterface $dataMapper
     ) {
-        $this->apiAdapterFactory = $apiAdapterFactory;
+        $this->apiAdapters = $apiAdapters;
         $this->appDataMapper = $dataMapper;
     }
 
     /**
+     * @api
      * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
      * @return CreateShipmentResponseCollection|ResponseData\Type\CreateShipmentResponseInterface[]
      */
-    public function createShipmentOrder(array $shipmentRequests)
+    public function createLabels(array $shipmentRequests)
     {
-        /** @var RequestData\Type\CreateShipmentRequestInterface[][] $shipmentOrders */
+        /** @var RequestData\Type\CreateShipment\ShipmentOrderInterface[] $shipmentOrders */
         $shipmentOrders = [];
-        /** @var ResponseData\Type\CreateShipmentResponseInterface[] $createdShipments */
-        $createdShipments = [];
 
-        // divide requests by target API
-        foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
-            $apiType = $this->apiAdapterFactory->getAdapterType($shipmentRequest->getShipperAddressCountryCode());
-
-            // convert M2 shipment request to api request, add sequence number
-            $shipmentOrders[$apiType][$sequenceNumber] = $this->appDataMapper
-                ->mapShipmentRequest($shipmentRequest, $sequenceNumber);
+        // convert M2 shipment request to api request, add sequence number
+        foreach ($shipmentRequests as $sequenceNumber => $request) {
+            $shipmentOrders[$sequenceNumber] = $this->appDataMapper->mapShipmentRequest($request, $sequenceNumber);
         }
 
         // send shipment orders to APIs
-        foreach ($shipmentOrders as $apiType => $apiShipmentOrders) {
-            $apiAdapter = $this->apiAdapterFactory->get($apiType);
-            //TODO(nr): implement response handling
-            $createdShipments[$apiType] = $apiAdapter->createShipmentOrder($apiShipmentOrders);
-        }
-
-        //TODO(nr): merge responses from different adapters
-        return current($createdShipments);
+        $response = $this->apiAdapters->createLabels($shipmentOrders);
+        return $response;
     }
 
     /**
+     * @api
      * @param string[] $shipmentNumbers
      * @return ResponseData\Type\DeleteShipmentResponseInterface
      */
-    public function deleteShipmentOrder(array $shipmentNumbers)
+    public function cancelLabels(array $shipmentNumbers)
     {
-        throw new \Exception('Not yet implemented.');
+        // send shipment orders to APIs
+        $response = $this->apiAdapters->cancelLabels($shipmentNumbers);
+        return $response;
     }
 }

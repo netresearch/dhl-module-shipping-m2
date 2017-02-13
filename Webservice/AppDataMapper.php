@@ -28,12 +28,12 @@ namespace Dhl\Versenden\Webservice;
 use \Dhl\Versenden\Api\Config\BcsConfigInterface;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ServiceInterface;
 use \Dhl\Versenden\Api\Config\GlConfigInterface;
+use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\DimensionsInterfaceFactory;
+use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\MonetaryValueInterfaceFactory;
+use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\WeightInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\Contact\IdInterfaceFactory;
+use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetailsInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\Package\DeclaredValueInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\Package\DimensionsInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\Package\WeightInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\PackageInterface;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ReceiverInterfaceFactory;
@@ -81,7 +81,7 @@ class AppDataMapper implements AppDataMapperInterface
     private $addressFactory;
 
     /**
-     * @var IdInterfaceFactory
+     * @var IdCardInterfaceFactory
      */
     private $identityFactory;
 
@@ -116,7 +116,7 @@ class AppDataMapper implements AppDataMapperInterface
     private $packageDimensionsFactory;
 
     /**
-     * @var DeclaredValueInterfaceFactory
+     * @var MonetaryValueInterfaceFactory
      */
     private $packageValueFactory;
 
@@ -138,14 +138,14 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipmentDetailsInterfaceFactory $shipmentDetailsFactory
      * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
      * @param AddressInterfaceFactory $addressFactory
-     * @param IdInterfaceFactory $identityFactory
+     * @param IdCardInterfaceFactory $identityFactory
      * @param ShipperInterfaceFactory $shipperFactory
      * @param ReceiverInterfaceFactory $receiverFactory
      * @param ReturnReceiverInterfaceFactory $returnReceiverFactory
      * @param CustomsDetailsInterfaceFactory $customsDetailsFactory
      * @param WeightInterfaceFactory $packageWeightFactory
      * @param DimensionsInterfaceFactory $packageDimensionsFactory,
-     * @param DeclaredValueInterfaceFactory $packageValueFactory
+     * @param MonetaryValueInterfaceFactory $packageValueFactory
      * @param PackageInterfaceFactory $packageFactory
      */
     public function __construct(
@@ -155,14 +155,14 @@ class AppDataMapper implements AppDataMapperInterface
         ShipmentDetailsInterfaceFactory $shipmentDetailsFactory,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
         AddressInterfaceFactory $addressFactory,
-        IdInterfaceFactory $identityFactory,
+        IdCardInterfaceFactory $identityFactory,
         ShipperInterfaceFactory $shipperFactory,
         ReceiverInterfaceFactory $receiverFactory,
         ReturnReceiverInterfaceFactory $returnReceiverFactory,
         CustomsDetailsInterfaceFactory $customsDetailsFactory,
         WeightInterfaceFactory $packageWeightFactory,
         DimensionsInterfaceFactory $packageDimensionsFactory,
-        DeclaredValueInterfaceFactory $packageValueFactory,
+        MonetaryValueInterfaceFactory $packageValueFactory,
         PackageInterfaceFactory $packageFactory
     ) {
         $this->bcsConfig = $bcsConfig;
@@ -214,6 +214,7 @@ class AppDataMapper implements AppDataMapperInterface
     {
         $storeId = $request->getOrderShipment()->getStoreId();
 
+        //TODO(nr): split street
         $address = $this->addressFactory->create([
             'streetName' => $request->getShipperAddressStreet(),
             'postalCode' => $request->getShipperAddressPostalCode(),
