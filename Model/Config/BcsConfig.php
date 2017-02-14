@@ -179,6 +179,63 @@ class BcsConfig implements BcsConfigInterface
     }
 
     /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getBankDataAccountOwner($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_ACCOUNT_OWNER, $store);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getBankDataBankName($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_BANKNAME, $store);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getBankDataIban($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_IBAN, $store);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getBankDataBic($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_BIC, $store);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string[]
+     */
+    public function getBankDataNote($store = null)
+    {
+        return [
+            $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_NOTE1, $store),
+            $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_NOTE2, $store),
+        ];
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getBankDataAccountReference($store = null)
+    {
+        $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_ACCOUNT_REFERENCE, $store);
+    }
+
+    /**
      * Obtain communication contact person.
      *
      * @param mixed $store

@@ -128,7 +128,11 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      */
     protected function _doShipmentRequest(\Magento\Framework\DataObject $request)
     {
-        $sequenceNumber = $request->getPackageId();
+        $sequenceNumber = sprintf(
+            '%s-%s',
+            $request->getOrderShipment()->getIncrementId(),
+            $request->getData('package_id')
+        );
 
         $result = $this->dataObjectFactory->create();
         $response = $this->webserviceGateway->createLabels([$sequenceNumber => $request]);
@@ -136,9 +140,9 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             // plain string seems to be expected for errors
             $errors = sprintf(
                 '%s: %s | %s',
-                $response->getStatus()->getStatusCode(),
-                $response->getStatus()->getStatusText(),
-                $response->getStatus()->getStatusMessage()
+                $response->getStatus()->getCode(),
+                $response->getStatus()->getText(),
+                $response->getStatus()->getMessage()
             );
             $result->setData('errors', $errors);
         } else {
