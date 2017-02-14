@@ -15,7 +15,20 @@
                 <model>Dhl\Versenden\Model\Shipping\Carrier</model>
 
                 <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
-                <account_participation_numbers backend_model="Dhl\Versenden\Model\Adminhtml\System\Config\Serialized\ArraySerialized"><![CDATA[a:8:{s:18:"_1485789382230_230";a:2:{s:9:"procedure";s:2:"01";s:13:"participation";s:2:"04";}s:18:"_1485789931170_170";a:2:{s:9:"procedure";s:2:"53";s:13:"participation";s:2:"01";}s:18:"_1485789932261_261";a:2:{s:9:"procedure";s:2:"86";s:13:"participation";s:2:"02";}s:18:"_1485789932731_731";a:2:{s:9:"procedure";s:2:"87";s:13:"participation";s:2:"02";}s:18:"_1485789933215_215";a:2:{s:9:"procedure";s:2:"82";s:13:"participation";s:2:"02";}s:18:"_1485789933729_729";a:2:{s:9:"procedure";s:2:"07";s:13:"participation";s:2:"01";}s:17:"_1485789955040_40";a:2:{s:9:"procedure";s:2:"83";s:13:"participation";s:2:"02";}s:18:"_1485789964896_896";a:2:{s:9:"procedure";s:2:"85";s:13:"participation";s:2:"02";}}]]></account_participation_numbers>
+                <bcs_account_participation backend_model="Dhl\Versenden\Model\Adminhtml\System\Config\Serialized\ArraySerialized"><![CDATA[a:8:{s:18:"_1485789382230_230";a:2:{s:9:"procedure";s:2:"01";s:13:"participation";s:2:"04";}s:18:"_1485789931170_170";a:2:{s:9:"procedure";s:2:"53";s:13:"participation";s:2:"01";}s:18:"_1485789932261_261";a:2:{s:9:"procedure";s:2:"86";s:13:"participation";s:2:"02";}s:18:"_1485789932731_731";a:2:{s:9:"procedure";s:2:"87";s:13:"participation";s:2:"02";}s:18:"_1485789933215_215";a:2:{s:9:"procedure";s:2:"82";s:13:"participation";s:2:"02";}s:18:"_1485789933729_729";a:2:{s:9:"procedure";s:2:"07";s:13:"participation";s:2:"01";}s:17:"_1485789955040_40";a:2:{s:9:"procedure";s:2:"83";s:13:"participation";s:2:"02";}s:18:"_1485789964896_896";a:2:{s:9:"procedure";s:2:"85";s:13:"participation";s:2:"02";}}]]></bcs_account_participation>
+
+                <webservice_auth_username>NRMAG_1</webservice_auth_username>
+                <webservice_auth_password>UlWwlRXgmQre9AP0irEF98MAVX8tCv</webservice_auth_password>
+
+                <bcs_sandbox_api_endpoint>https://cig.dhl.de/services/sandbox/soap</bcs_sandbox_api_endpoint>
+                <bcs_sandbox_api_auth_username>magento_1</bcs_sandbox_api_auth_username>
+                <bcs_sandbox_api_auth_password>2de26b775e59279464d1c2f8546432e62413372421c672db36eaacfc2f</bcs_sandbox_api_auth_password>
+
+                <bcs_sandbox_account_user>2222222222_01</bcs_sandbox_account_user>
+                <bcs_sandbox_account_signature>pass</bcs_sandbox_account_signature>
+                <bcs_sandbox_account_ekp>2222222222</bcs_sandbox_account_ekp>
+                <bcs_sandbox_account_participation backend_model="Dhl\Versenden\Model\Adminhtml\System\Config\Serialized\ArraySerialized"><![CDATA[a:8:{s:18:"_1485789382230_230";a:2:{s:9:"procedure";s:2:"01";s:13:"participation";s:2:"04";}s:18:"_1485789931170_170";a:2:{s:9:"procedure";s:2:"53";s:13:"participation";s:2:"01";}s:18:"_1485789932261_261";a:2:{s:9:"procedure";s:2:"86";s:13:"participation";s:2:"02";}s:18:"_1485789932731_731";a:2:{s:9:"procedure";s:2:"87";s:13:"participation";s:2:"02";}s:18:"_1485789933215_215";a:2:{s:9:"procedure";s:2:"82";s:13:"participation";s:2:"02";}s:18:"_1485789933729_729";a:2:{s:9:"procedure";s:2:"07";s:13:"participation";s:2:"01";}s:17:"_1485789955040_40";a:2:{s:9:"procedure";s:2:"83";s:13:"participation";s:2:"02";}s:18:"_1485789964896_896";a:2:{s:9:"procedure";s:2:"85";s:13:"participation";s:2:"02";}}]]></bcs_sandbox_account_participation>
+
             </dhlversenden>
         </carriers>
     </default>

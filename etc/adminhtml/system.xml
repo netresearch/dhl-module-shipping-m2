@@ -7,7 +7,7 @@
 
                 <!-- dhl versenden fields - general -->
                 <label>DHL Versenden</label>
-                <field id="fields_general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="fields_general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>General Settings</label>
                     <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
@@ -44,22 +44,54 @@
                 </field>
 
                 <!-- dhl versenden fields - account -->
-                <field id="fields_account" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="fields_account" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Account Data</label>
                     <comment>Basic account data as required in production mode</comment>
                     <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="sandbox_mode">0</field>
+                    </depends>
                 </field>
 
-                <field id="account_participation_numbers" type="select" translate="label" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_account_user" translate="label tooltip" type="text" sortOrder="81" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>User</label>
+                    <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                    <depends>
+                        <field id="sandbox_mode">0</field>
+                    </depends>
+                </field>
+                <field id="bcs_account_signature" translate="label tooltip" type="text" sortOrder="82" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Signature</label>
+                    <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                    <depends>
+                        <field id="sandbox_mode">0</field>
+                    </depends>
+                </field>
+                <field id="bcs_account_ekp" translate="label tooltip" type="text" sortOrder="83" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>EKP</label>
+                    <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                    <depends>
+                        <field id="sandbox_mode">0</field>
+                    </depends>
+                </field>
+                <field id="bcs_account_participation" type="select" translate="label" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Participation Numbers</label>
                     <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Participation</frontend_model>
                     <backend_model>Dhl\Versenden\Model\Adminhtml\System\Config\Serialized\ArraySerialized</backend_model>
+                    <depends>
+                        <field id="sandbox_mode">0</field>
+                    </depends>
                 </field>
 
                 <!-- dhl versenden fields - shipment -->
-                <field id="fields_shipment_orders" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="fields_shipment_orders" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Shipment Orders</label>
                     <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+                <field id="bcs_shipment_printonlyifcodeable" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Print Only If Codeable</label>
+                    <tooltip><![CDATA[If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
                 <!-- default fields - shipment -->
@@ -77,7 +109,7 @@
                     <label>Show Method if Not Applicable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="specificerrmsg" translate="label" type="textarea" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="specificerrmsg" translate="label" type="textarea" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Displayed Error Message</label>
                 </field>
 
@@ -99,34 +131,34 @@
                     <label>Contact Information</label>
                     <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
-                <field id="sender_name" translate="label" type="text" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sender_name" translate="label" type="text" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Name of Sender</label>
                 </field>
-                <field id="sender_company_fst" translate="label" type="text" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sender_company_fst" translate="label" type="text" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Name of Company Name</label>
                 </field>
-                <field id="sender_company_snd" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_shipper_contact_company_addition" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Name of Company (2)</label>
                 </field>
-                <field id="sender_street_name" translate="label" type="text" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sender_street_name" translate="label" type="text" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Street Name</label>
                 </field>
-                <field id="sender_house_number" translate="label" type="text" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sender_house_number" translate="label" type="text" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>House number</label>
                 </field>
-                <field id="sender_addition" translate="label" type="text" sortOrder="230" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sender_addition" translate="label" type="text" sortOrder="230" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Address Addition</label>
                 </field>
-                <field id="sender_dispatch_info" translate="label" type="text" sortOrder="240" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_shipper_contact_dispatchinfo" translate="label" type="text" sortOrder="240" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Dispatching Information</label>
                 </field>
-                <field id="sender_phone" translate="label" type="text" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sender_phone" translate="label" type="text" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Phone Number</label>
                 </field>
-                <field id="sender_mail" translate="label" type="text" sortOrder="260" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sender_mail" translate="label" type="text" sortOrder="260" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Email Address</label>
                 </field>
-                <field id="sender_contact_person" translate="label" type="text" sortOrder="270" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_shipper_contact_person" translate="label" type="text" sortOrder="270" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>First Name and Last Name of Contact Person</label>
                 </field>
 
@@ -137,31 +169,31 @@
                     <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
 
-                <field id="bank_data_owner" translate="label" type="text" sortOrder="290" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_bankdata_account_owner" translate="label" type="text" sortOrder="290" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Account Owner</label>
                 </field>
 
-                <field id="bank_data_bankname" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_bankdata_bankname" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Bank Name</label>
                 </field>
 
-                <field id="bank_data_iban" translate="label" type="text" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_bankdata_iban" translate="label" type="text" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>IBAN</label>
                 </field>
 
-                <field id="bank_data_bic" translate="label" type="text" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_bankdata_bic" translate="label" type="text" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>BIC</label>
                 </field>
 
-                <field id="bank_data_note1" translate="label" type="text" sortOrder="330" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_bankdata_note1" translate="label" type="text" sortOrder="330" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Reason for Payment</label>
                 </field>
 
-                <field id="bank_data_note2" translate="label" type="text" sortOrder="340" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_bankdata_note2" translate="label" type="text" sortOrder="340" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Reason for Payment (2)</label>
                 </field>
 
-                <field id="bank_data_accountreference" translate="label" type="text" sortOrder="350" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="bcs_bankdata_account_reference" translate="label" type="text" sortOrder="350" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Account Reference to Customer Profile</label>
                 </field>
 
