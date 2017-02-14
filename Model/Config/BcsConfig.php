@@ -68,7 +68,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain API endpoint.
      *
      * @param mixed $store
-     * @return string
+     * @return string | null
      */
     public function getApiEndpoint($store = null)
     {
@@ -76,7 +76,7 @@ class BcsConfig implements BcsConfigInterface
             return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
         }
 
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ENDPOINT, $store);
+        return null;
     }
 
     /**
