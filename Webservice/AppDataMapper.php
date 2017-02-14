@@ -190,17 +190,26 @@ class AppDataMapper implements AppDataMapperInterface
     {
         $storeId = $request->getOrderShipment()->getStoreId();
 
+        $bankData = $this->bankDataFactory->create([
+            'accountOwner' => $this->bcsConfig->getBankDataAccountOwner($storeId),
+            'bankName' => $this->bcsConfig->getBankDataBankName($storeId),
+            'iban' => $this->bcsConfig->getBankDataIban($storeId),
+            'bic' => $this->bcsConfig->getBankDataBic($storeId),
+            'notes' => $this->bcsConfig->getBankDataNote($storeId),
+            'accountReference' => $this->bcsConfig->getBankDataAccountReference($storeId),
+        ]);
+
         $shipmentDetails = $this->shipmentDetailsFactory->create([
             //TODO(nr): read from shipment request or config
             'isPrintOnlyIfCodeable' => $this->bcsConfig->isPrintOnlyIfCodeable($storeId), //TODO(nr): override with packaging settings
             'product' => 'V01PAK',
             'accountNumber' => '22222222220101',
             'returnShipmentAccountNumber' => '22222222220701',
-            'pickupAccountNumber' => null,
-            'reference' => null,
-            'returnShipmentReference' => null,
+            'pickupAccountNumber' => $this->glConfig->getPickupAccountNumber($storeId),
+            'reference' => $request->getOrderShipment()->getIncrementId(),
+            'returnShipmentReference' => $request->getOrderShipment()->getIncrementId(),
             'shipmentDate' => date("Y-m-d"),
-            'bankData' => null,
+            'bankData' => $bankData,
         ]);
 
         return $shipmentDetails;
