@@ -28,6 +28,7 @@ namespace Dhl\Versenden\Webservice;
 use \Dhl\Versenden\Api\Config\BcsConfigInterface;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ServiceInterface;
 use \Dhl\Versenden\Api\Config\GlConfigInterface;
+use \Dhl\Versenden\Api\Data\BcsProductProviderInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\DimensionsInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\MonetaryValueInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\WeightInterfaceFactory;
@@ -131,6 +132,11 @@ class AppDataMapper implements AppDataMapperInterface
     private $shipmentOrderFactory;
 
     /**
+     * @var BcsProductProviderInterfaceFactory
+     */
+    private $bcsProductProviderInterfaceFactory;
+
+    /**
      * AppDataMapper constructor.
      * @param BcsConfigInterface $bcsConfig
      * @param GlConfigInterface $glConfig
@@ -147,6 +153,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param DimensionsInterfaceFactory $packageDimensionsFactory,
      * @param MonetaryValueInterfaceFactory $packageValueFactory
      * @param PackageInterfaceFactory $packageFactory
+     * @param BcsProductProviderInterfaceFactory $bcsProductProviderInterfaceFactory
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
@@ -163,7 +170,8 @@ class AppDataMapper implements AppDataMapperInterface
         WeightInterfaceFactory $packageWeightFactory,
         DimensionsInterfaceFactory $packageDimensionsFactory,
         MonetaryValueInterfaceFactory $packageValueFactory,
-        PackageInterfaceFactory $packageFactory
+        PackageInterfaceFactory $packageFactory,
+        BcsProductProviderInterfaceFactory $bcsProductProviderInterfaceFactory
     ) {
         $this->bcsConfig = $bcsConfig;
         $this->glConfig = $glConfig;
@@ -180,6 +188,7 @@ class AppDataMapper implements AppDataMapperInterface
         $this->packageDimensionsFactory = $packageDimensionsFactory;
         $this->packageValueFactory = $packageValueFactory;
         $this->packageFactory = $packageFactory;
+        $this->bcsProductProviderInterfaceFactory = $bcsProductProviderInterfaceFactory;
     }
 
     /**

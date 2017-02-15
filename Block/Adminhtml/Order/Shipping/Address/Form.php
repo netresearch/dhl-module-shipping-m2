@@ -25,8 +25,8 @@
  */
 namespace Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address;
 
-use \Dhl\Versenden\Bcs\Api\Info;
-use \Dhl\Versenden\Bcs\Api\InfoFactory;
+use \Dhl\Versenden\Api\Info;
+use \Dhl\Versenden\Api\InfoFactory;
 use \Dhl\Versenden\Model\VersendenInfoOrderRepository;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Backend\Model\Session\Quote;

@@ -26,10 +26,10 @@
 namespace Dhl\Versenden\Observer;
 
 use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Bcs\Api\Service\Cod;
-use \Dhl\Versenden\Bcs\Api\Service\ServiceCollection;
-use \Dhl\Versenden\Bcs\Api\Service\ServiceCollectionFactory;
-use \Dhl\Versenden\Bcs\Api\Service\ServiceFactory;
+use \Dhl\Versenden\Api\Service\Cod;
+use \Dhl\Versenden\Api\Service\ServiceCollection;
+use \Dhl\Versenden\Api\Service\ServiceCollectionFactory;
+use \Dhl\Versenden\Api\Service\ServiceFactory;
 use \Dhl\Versenden\Model\Config\ModuleConfig;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\DataObject;
@@ -86,7 +86,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
             '',
             false
         );
-        $this->serviceCollectionFactory = $this->getMockBuilder('\Dhl\Versenden\Bcs\Api\Service\ServiceCollectionFactory')
+        $this->serviceCollectionFactory = $this->getMockBuilder('\Dhl\Versenden\Api\Service\ServiceCollectionFactory')
             ->setMethods(['create'])
             ->disableOriginalConstructor()
             ->getMock();

@@ -26,8 +26,8 @@
 namespace Dhl\Versenden\Model\Plugin;
 
 use \Dhl\Versenden\Api\VersendenInfoQuoteRepositoryInterface;
-use \Dhl\Versenden\Bcs\Api\Info\SerializerFactory;
-use \Dhl\Versenden\Bcs\Api\Data\InfoInterface;
+use \Dhl\Versenden\Api\Info\SerializerFactory;
+use \Dhl\Versenden\Api\Data\InfoInterface;
 use \Dhl\Versenden\Helper\Address;
 use \Dhl\Versenden\Model\VersendenInfoQuoteFactory;
 use \Magento\Directory\Model\CountryFactory;

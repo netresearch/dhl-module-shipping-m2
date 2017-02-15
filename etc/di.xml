@@ -13,7 +13,8 @@
     <preference for="Dhl\Versenden\Api\Config\ConfigAccessorInterface" type="Dhl\Versenden\Model\Config\ConfigAccessor" />
 
     <!-- library preferences -->
-    <preference for="Dhl\Versenden\Bcs\Api\Data\InfoInterface" type="Dhl\Versenden\Bcs\Api\Info"/>
+    <preference for="Dhl\Versenden\Api\Data\BcsProductProviderInterface" type="Dhl\Versenden\Api\BcsProductProvider" />
+    <preference for="Dhl\Versenden\Api\Data\InfoInterface" type="Dhl\Versenden\Api\Info"/>
 
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\DimensionsInterface" type="Dhl\Versenden\Webservice\Request\Type\Generic\Package\Dimensions" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\MonetaryValueInterface" type="Dhl\Versenden\Webservice\Request\Type\Generic\Package\MonetaryValue" />
