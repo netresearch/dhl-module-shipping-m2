@@ -25,7 +25,7 @@
  */
 namespace Dhl\Versenden\Model\Adminhtml\System\Config\Source;
 
-use Dhl\Versenden\Bcs\Api\Product;
+use Dhl\Versenden\Api\BcsProductProvider;
 
 /**
  * Procedure
@@ -61,16 +61,16 @@ class Procedure implements \Magento\Framework\Option\ArrayInterface
      * @return array
      */
     public function toArray()
-    {
+    { // TODO change option array to new structure
         return [
-            Product::PROCEDURE_PAKET_NATIONAL          => __('DHL Paket: V01PAK'),
-            Product::PROCEDURE_WELTPAKET               => __('DHL Paket International: V53WPAK'),
-            Product::PROCEDURE_PAKET_AUSTRIA           => __('DHL Paket Austria: V86PARCEL'),
-            Product::PROCEDURE_PAKET_CONNECT           => __('DHL PAKET Connect: V87PARCEL'),
-            Product::PROCEDURE_PAKET_INTERNATIONAL     => __('DHL PAKET International: V82PARCEL'),
-            Product::PROCEDURE_RETURNSHIPMENT_NATIONAL => __('Retoure DHL Paket: V01PAK'),
-            Product::PROCEDURE_RETURNSHIPMENT_AUSTRIA  => __('Retoure DHL Paket Austria: V86PARCEL'),
-            Product::PROCEDURE_RETURNSHIPMENT_CONNECT  => __('Retoure DHL Paket Connect: V87PARCEL'),
+            BcsProductProvider::PROCEDURE_PAKET_NATIONAL          => __('DHL Paket: V01PAK'),
+            BcsProductProvider::PROCEDURE_WELTPAKET               => __('DHL Paket International: V53WPAK'),
+            BcsProductProvider::PROCEDURE_PAKET_AUSTRIA           => __('DHL Paket Austria: V86PARCEL'),
+            BcsProductProvider::PROCEDURE_PAKET_CONNECT           => __('DHL PAKET Connect: V87PARCEL'),
+            BcsProductProvider::PROCEDURE_PAKET_INTERNATIONAL     => __('DHL PAKET International: V82PARCEL'),
+            BcsProductProvider::PROCEDURE_RETURNSHIPMENT_NATIONAL => __('Retoure DHL Paket: V01PAK'),
+            BcsProductProvider::PROCEDURE_RETURNSHIPMENT_AUSTRIA  => __('Retoure DHL Paket Austria: V86PARCEL'),
+            BcsProductProvider::PROCEDURE_RETURNSHIPMENT_CONNECT  => __('Retoure DHL Paket Connect: V87PARCEL'),
         ];
     }
 }

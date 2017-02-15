@@ -27,12 +27,12 @@
 namespace Dhl\Versenden\Observer;
 
 use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Bcs\Api\Product;
-use \Dhl\Versenden\Bcs\Api\Service\Cod;
-use \Dhl\Versenden\Bcs\Api\Service\Filter\ProductFilter;
-use \Dhl\Versenden\Bcs\Api\Service\ServiceCollection;
-use \Dhl\Versenden\Bcs\Api\Service\ServiceCollectionFactory;
-use \Dhl\Versenden\Bcs\Api\Service\ServiceFactory;
+use \Dhl\Versenden\Api\BcsProductProvider;
+use \Dhl\Versenden\Api\Service\Cod;
+use \Dhl\Versenden\Api\Service\Filter\ProductFilter;
+use \Dhl\Versenden\Api\Service\ServiceCollection;
+use \Dhl\Versenden\Api\Service\ServiceCollectionFactory;
+use \Dhl\Versenden\Api\Service\ServiceFactory;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
@@ -124,7 +124,8 @@ class DisableCodPaymentObserver implements ObserverInterface
         $recipientCountry = $quote->getShippingAddress()->getCountryId();
         $euCountries      = $this->config->getEuCountryList();
 
-        $availableProducts = Product::getCodesByCountry(
+        // TODO change method to new structure
+        $availableProducts = BcsProductProvider::getCodesByCountry(
             $shipperCountry,
             $recipientCountry,
             $euCountries

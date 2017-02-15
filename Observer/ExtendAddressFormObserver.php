@@ -26,8 +26,8 @@
 namespace Dhl\Versenden\Observer;
 
 use \Dhl\Versenden\Api\VersendenInfoOrderRepositoryInterface;
-use \Dhl\Versenden\Bcs\Api\InfoFactory;
-use Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Form;
+use \Dhl\Versenden\Api\InfoFactory;
+use \Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Form;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
 use \Magento\Framework\Exception\NoSuchEntityException;
@@ -119,7 +119,7 @@ class ExtendAddressFormObserver implements ObserverInterface
             return;
         }
 
-        if (!$info instanceof \Dhl\Versenden\Bcs\Api\Info) {
+        if (!$info instanceof \Dhl\Versenden\Api\Info) {
             return;
         }
 

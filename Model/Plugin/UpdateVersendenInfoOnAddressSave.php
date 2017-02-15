@@ -26,9 +26,9 @@
 namespace Dhl\Versenden\Model\Plugin;
 
 use \Dhl\Versenden\Api\VersendenInfoOrderRepositoryInterface;
-use \Dhl\Versenden\Bcs\Api\Info\SerializerFactory;
-use \Dhl\Versenden\Bcs\Api\Data\InfoInterface;
-use \Dhl\Versenden\Bcs\Api\InfoFactory;
+use \Dhl\Versenden\Api\Info\SerializerFactory;
+use \Dhl\Versenden\Api\Data\InfoInterface;
+use \Dhl\Versenden\Api\InfoFactory;
 use \Magento\Directory\Model\CountryFactory;
 use \Magento\Framework\Exception\NoSuchEntityException;
 use \Magento\Sales\Controller\Adminhtml\Order\AddressSave;
