@@ -54,12 +54,14 @@ class BcsDataMapper implements BcsDataMapperInterface
         $package = current($packages);
 
         //TODO(nr): convert to KG
-        $shipmentItemType = new BcsApi\ShipmentItemType($package->getWeight()->getValue());
+        $shipmentItemType = new BcsApi\ShipmentItemType(
+            $package->getWeight()->getValue('KILOGRAM')
+        );
 
         //TODO(nr): convert to CM
-        $shipmentItemType->setWidthInCM($package->getDimensions()->getWidth());
-        $shipmentItemType->setHeightInCM($package->getDimensions()->getHeight());
-        $shipmentItemType->setLengthInCM($package->getDimensions()->getLength());
+        $shipmentItemType->setWidthInCM($package->getDimensions()->getWidth('KILOGRAM'));
+        $shipmentItemType->setHeightInCM($package->getDimensions()->getHeight('KILOGRAM'));
+        $shipmentItemType->setLengthInCM($package->getDimensions()->getLength('KILOGRAM'));
 
         $shipmentDetailsType = new BcsApi\ShipmentDetailsTypeType(
             $shipmentDetails->getProduct(),
@@ -120,13 +122,13 @@ class BcsDataMapper implements BcsDataMapperInterface
         $countryType->setCountry($receiver->getAddress()->getCountryCode());
         $countryType->setState($receiver->getAddress()->getState());
         //TODO(nr): split address
-        $receiverStreet = $receiver->getAddress()->getStreet();
-        $receiverStreetNumber = $receiver->getAddress()->getStreet();
-        $receiverStreetSupplement = '';
+        $receiverStreet = $receiver->getAddress()->getStreetName();
+        $receiverStreetNumber = $receiver->getAddress()->getStreetNumber();
+        $receiverStreetSupplement = $receiver->getAddress()->getAddressAddition();
 
         $addressType = new BcsApi\ReceiverNativeAddressType(
+            $receiverName[0],
             $receiverName[1],
-            $receiverName[2],
             $receiverStreet,
             $receiverStreetNumber,
             $receiver->getAddress()->getPostalCode(),
