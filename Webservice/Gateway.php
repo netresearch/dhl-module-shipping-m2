@@ -79,7 +79,7 @@ class Gateway implements GatewayInterface
 
         // convert M2 shipment request to api request, add sequence number
         foreach ($shipmentRequests as $sequenceNumber => $request) {
-            $shipmentOrders[$sequenceNumber] = $this->appDataMapper->mapShipmentRequest($request, $sequenceNumber);
+            $shipmentOrders[] = $this->appDataMapper->mapShipmentRequest($request, $sequenceNumber);
         }
 
         // send shipment orders to APIs

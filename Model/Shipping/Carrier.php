@@ -130,7 +130,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     {
         $sequenceNumber = sprintf(
             '%s-%s',
-            $request->getOrderShipment()->getIncrementId(),
+            $request->getOrderShipment()->getOrder()->getIncrementId(),
             $request->getData('package_id')
         );
 
@@ -146,13 +146,12 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             );
             $result->setData('errors', $errors);
         } else {
-            $info = [
+            $result->setData(
                 [
                     'tracking_number' => $response->getCreatedItem($sequenceNumber)->getTrackingNumber(),
-                    'label_content'   => $response->getCreatedItem($sequenceNumber)->getLabel(),
+                    'shipping_label_content'   => $response->getCreatedItem($sequenceNumber)->getLabel(),
                 ]
-            ];
-            $result->setData('info', $info);
+            );
         }
 
         return $result;
