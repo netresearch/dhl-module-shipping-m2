@@ -87,12 +87,10 @@ class BcsDataMapper implements BcsDataMapperInterface
         //TODO(nr): obtain country name
         $countryType->setCountry($shipper->getAddress()->getCountryCode());
         $countryType->setState($shipper->getAddress()->getState());
-        //TODO(nr): split address
-        $shipperStreet = $shipper->getAddress()->getStreet();
-        $shipperStreetNumber = $shipper->getAddress()->getStreet();
+
         $addressType = new BcsApi\NativeAddressType(
-            $shipperStreet,
-            $shipperStreetNumber,
+            $shipper->getAddress()->getStreetName(),
+            $shipper->getAddress()->getStreetNumber(),
             $shipper->getAddress()->getPostalCode(),
             $shipper->getAddress()->getCity(),
             $countryType
@@ -121,21 +119,17 @@ class BcsDataMapper implements BcsDataMapperInterface
         //TODO(nr): obtain country name
         $countryType->setCountry($receiver->getAddress()->getCountryCode());
         $countryType->setState($receiver->getAddress()->getState());
-        //TODO(nr): split address
-        $receiverStreet = $receiver->getAddress()->getStreetName();
-        $receiverStreetNumber = $receiver->getAddress()->getStreetNumber();
-        $receiverStreetSupplement = $receiver->getAddress()->getAddressAddition();
 
         $addressType = new BcsApi\ReceiverNativeAddressType(
             $receiverName[0],
             $receiverName[1],
-            $receiverStreet,
-            $receiverStreetNumber,
+            $receiver->getAddress()->getStreetName(),
+            $receiver->getAddress()->getStreetNumber(),
             $receiver->getAddress()->getPostalCode(),
             $receiver->getAddress()->getCity(),
             $countryType
         );
-        $addressType->setAddressAddition([$receiverStreetSupplement]);
+        $addressType->setAddressAddition([$receiver->getAddress()->getAddressAddition()]);
 
         // receiver communication
         $communicationType = new BcsApi\CommunicationType();
@@ -169,12 +163,10 @@ class BcsDataMapper implements BcsDataMapperInterface
         //TODO(nr): obtain country name
         $countryType->setCountry($returnReceiver->getAddress()->getCountryCode());
         $countryType->setState($returnReceiver->getAddress()->getState());
-        //TODO(nr): split address
-        $shipperStreet = $returnReceiver->getAddress()->getStreet();
-        $shipperStreetNumber = $returnReceiver->getAddress()->getStreet();
+
         $addressType = new BcsApi\NativeAddressType(
-            $shipperStreet,
-            $shipperStreetNumber,
+            $returnReceiver->getAddress()->getStreetName(),
+            $returnReceiver->getAddress()->getStreetNumber(),
             $returnReceiver->getAddress()->getPostalCode(),
             $returnReceiver->getAddress()->getCity(),
             $countryType
@@ -260,6 +252,11 @@ class BcsDataMapper implements BcsDataMapperInterface
             $shipmentOrder->getSequenceNumber(),
             $shipmentType
         );
+
+        $printOnlyIfCodeable = new BcsApi\Serviceconfiguration(true);
+        $shipmentOrderType->setLabelResponseType('B64');
+        $shipmentOrderType->setPrintOnlyIfCodeable($printOnlyIfCodeable);
+
         return $shipmentOrderType;
     }
 
