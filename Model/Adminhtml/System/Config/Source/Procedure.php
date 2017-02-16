@@ -61,7 +61,7 @@ class Procedure implements \Magento\Framework\Option\ArrayInterface
      * @return array
      */
     public function toArray()
-    { // TODO change option array to new structure
+    {
         return [
             BcsProductProvider::PROCEDURE_PAKET_NATIONAL          => __('DHL Paket: V01PAK'),
             BcsProductProvider::PROCEDURE_WELTPAKET               => __('DHL Paket International: V53WPAK'),

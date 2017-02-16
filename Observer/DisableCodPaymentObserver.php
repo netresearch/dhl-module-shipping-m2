@@ -27,7 +27,7 @@
 namespace Dhl\Versenden\Observer;
 
 use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Api\BcsProductProvider;
+use \Dhl\Versenden\Api\Data\BcsProductProviderInterfaceFactory;
 use \Dhl\Versenden\Api\Service\Cod;
 use \Dhl\Versenden\Api\Service\Filter\ProductFilter;
 use \Dhl\Versenden\Api\Service\ServiceCollection;
@@ -63,21 +63,28 @@ class DisableCodPaymentObserver implements ObserverInterface
      * @var ServiceCollectionFactory
      */
     private $serviceCollectionFactory;
+    /**
+     * @var ServiceCollectionFactory
+     */
+    private $bcsProductProviderInterfaceFactory;
 
     /**
      * DisableCodPaymentObserver constructor.
-     * @param ModuleConfigInterface $config
-     * @param SessionManagerInterface $checkoutSession
+     *
+     * @param ModuleConfigInterface    $config
+     * @param SessionManagerInterface  $checkoutSession
      * @param ServiceCollectionFactory $serviceCollectionFactory
      */
     public function __construct(
         ModuleConfigInterface $config,
         SessionManagerInterface $checkoutSession,
-        ServiceCollectionFactory $serviceCollectionFactory
+        ServiceCollectionFactory $serviceCollectionFactory,
+        BcsProductProviderInterfaceFactory $bcsProductProviderInterfaceFactory
     ) {
-        $this->config = $config;
-        $this->checkoutSession = $checkoutSession;
-        $this->serviceCollectionFactory = $serviceCollectionFactory;
+        $this->config                             = $config;
+        $this->checkoutSession                    = $checkoutSession;
+        $this->serviceCollectionFactory           = $serviceCollectionFactory;
+        $this->bcsProductProviderInterfaceFactory = $bcsProductProviderInterfaceFactory;
     }
 
     /**
@@ -124,15 +131,14 @@ class DisableCodPaymentObserver implements ObserverInterface
         $recipientCountry = $quote->getShippingAddress()->getCountryId();
         $euCountries      = $this->config->getEuCountryList();
 
-        // TODO change method to new structure
-        $availableProducts = BcsProductProvider::getCodesByCountry(
+        $usedProduct = $this->bcsProductProviderInterfaceFactory->create()->getProductName(
             $shipperCountry,
             $recipientCountry,
             $euCountries
         );
 
         $codService = ServiceFactory::get(Cod::CODE);
-        $productFilter = ProductFilter::create(['code' => $availableProducts[0]]);
+        $productFilter = ProductFilter::create(['code' => $usedProduct]);
 
         /** @var ServiceCollection $collection */
         $collection = $this->serviceCollectionFactory->create(['services' => [$codService]]);

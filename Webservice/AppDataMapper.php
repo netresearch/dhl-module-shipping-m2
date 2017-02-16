@@ -23,9 +23,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Versenden\Webservice;
 
 use \Dhl\Versenden\Api\Config\BcsConfigInterface;
+use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetails\ExportTypeInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ServiceInterface;
 use \Dhl\Versenden\Api\Config\GlConfigInterface;
 use \Dhl\Versenden\Api\Data\BcsProductProviderInterfaceFactory;
@@ -44,6 +47,7 @@ use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipperInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterfaceFactory;
 use \Dhl\Versenden\Api\Webservice\Request\Mapper\AppDataMapperInterface;
+use \Dhl\Versenden\Helper\Address;
 
 /**
  * AppDataMapper
@@ -65,6 +69,16 @@ class AppDataMapper implements AppDataMapperInterface
      * @var GlConfigInterface
      */
     private $glConfig;
+
+    /**
+     * @var ModuleConfigInterface
+     */
+    private $moduleConfig;
+
+    /**
+     * @var Address
+     */
+    private $addressHelper;
 
     /**
      * @var BankDataInterfaceFactory
@@ -137,27 +151,38 @@ class AppDataMapper implements AppDataMapperInterface
     private $bcsProductProviderInterfaceFactory;
 
     /**
+     * @var ExportTypeInterfaceFactory
+     */
+    private $exportTypeInterfaceFactory;
+
+    /**
      * AppDataMapper constructor.
-     * @param BcsConfigInterface $bcsConfig
-     * @param GlConfigInterface $glConfig
-     * @param BankDataInterfaceFactory $bankDataFactory
-     * @param ShipmentDetailsInterfaceFactory $shipmentDetailsFactory
-     * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
-     * @param AddressInterfaceFactory $addressFactory
-     * @param IdCardInterfaceFactory $identityFactory
-     * @param ShipperInterfaceFactory $shipperFactory
-     * @param ReceiverInterfaceFactory $receiverFactory
-     * @param ReturnReceiverInterfaceFactory $returnReceiverFactory
-     * @param CustomsDetailsInterfaceFactory $customsDetailsFactory
-     * @param WeightInterfaceFactory $packageWeightFactory
-     * @param DimensionsInterfaceFactory $packageDimensionsFactory,
-     * @param MonetaryValueInterfaceFactory $packageValueFactory
-     * @param PackageInterfaceFactory $packageFactory
+     *
+     * @param BcsConfigInterface                 $bcsConfig
+     * @param GlConfigInterface                  $glConfig
+     * @param ModuleConfigInterface              $moduleConfig
+     * @param Address                            $addressHelper
+     * @param BankDataInterfaceFactory           $bankDataFactory
+     * @param ShipmentDetailsInterfaceFactory    $shipmentDetailsFactory
+     * @param ShipmentOrderInterfaceFactory      $shipmentOrderFactory
+     * @param AddressInterfaceFactory            $addressFactory
+     * @param IdCardInterfaceFactory             $identityFactory
+     * @param ShipperInterfaceFactory            $shipperFactory
+     * @param ReceiverInterfaceFactory           $receiverFactory
+     * @param ReturnReceiverInterfaceFactory     $returnReceiverFactory
+     * @param CustomsDetailsInterfaceFactory     $customsDetailsFactory
+     * @param WeightInterfaceFactory             $packageWeightFactory
+     * @param DimensionsInterfaceFactory         $packageDimensionsFactory ,
+     * @param MonetaryValueInterfaceFactory      $packageValueFactory
+     * @param PackageInterfaceFactory            $packageFactory
      * @param BcsProductProviderInterfaceFactory $bcsProductProviderInterfaceFactory
+     * @param ExportTypeInterfaceFactory         $exportTypeInterfaceFactory
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
         GlConfigInterface $glConfig,
+        ModuleConfigInterface $moduleConfig,
+        Address $addressHelper,
         BankDataInterfaceFactory $bankDataFactory,
         ShipmentDetailsInterfaceFactory $shipmentDetailsFactory,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
@@ -171,28 +196,34 @@ class AppDataMapper implements AppDataMapperInterface
         DimensionsInterfaceFactory $packageDimensionsFactory,
         MonetaryValueInterfaceFactory $packageValueFactory,
         PackageInterfaceFactory $packageFactory,
-        BcsProductProviderInterfaceFactory $bcsProductProviderInterfaceFactory
-    ) {
-        $this->bcsConfig = $bcsConfig;
-        $this->glConfig = $glConfig;
-        $this->bankDataFactory = $bankDataFactory;
-        $this->shipmentDetailsFactory = $shipmentDetailsFactory;
-        $this->shipmentOrderFactory = $shipmentOrderFactory;
-        $this->identityFactory = $identityFactory;
-        $this->addressFactory = $addressFactory;
-        $this->shipperFactory = $shipperFactory;
-        $this->receiverFactory = $receiverFactory;
-        $this->returnReceiverFactory = $returnReceiverFactory;
-        $this->customsDetailsFactory = $customsDetailsFactory;
-        $this->packageWeightFactory = $packageWeightFactory;
-        $this->packageDimensionsFactory = $packageDimensionsFactory;
-        $this->packageValueFactory = $packageValueFactory;
-        $this->packageFactory = $packageFactory;
+        BcsProductProviderInterfaceFactory $bcsProductProviderInterfaceFactory,
+        ExportTypeInterfaceFactory $exportTypeInterfaceFactory
+    )
+    {
+        $this->bcsConfig                          = $bcsConfig;
+        $this->glConfig                           = $glConfig;
+        $this->moduleConfig                       = $moduleConfig;
+        $this->addressHelper                      = $addressHelper;
+        $this->bankDataFactory                    = $bankDataFactory;
+        $this->shipmentDetailsFactory             = $shipmentDetailsFactory;
+        $this->shipmentOrderFactory               = $shipmentOrderFactory;
+        $this->identityFactory                    = $identityFactory;
+        $this->addressFactory                     = $addressFactory;
+        $this->shipperFactory                     = $shipperFactory;
+        $this->receiverFactory                    = $receiverFactory;
+        $this->returnReceiverFactory              = $returnReceiverFactory;
+        $this->customsDetailsFactory              = $customsDetailsFactory;
+        $this->packageWeightFactory               = $packageWeightFactory;
+        $this->packageDimensionsFactory           = $packageDimensionsFactory;
+        $this->packageValueFactory                = $packageValueFactory;
+        $this->packageFactory                     = $packageFactory;
         $this->bcsProductProviderInterfaceFactory = $bcsProductProviderInterfaceFactory;
+        $this->exportTypeInterfaceFactory         = $exportTypeInterfaceFactory;
     }
 
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
+     *
      * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipmentDetailsInterface
      */
     private function getShipmentDetails(\Magento\Shipping\Model\Shipment\Request $request)
@@ -200,92 +231,114 @@ class AppDataMapper implements AppDataMapperInterface
         $storeId = $request->getOrderShipment()->getStoreId();
 
         $bankData = $this->bankDataFactory->create([
-            'accountOwner' => $this->bcsConfig->getBankDataAccountOwner($storeId),
-            'bankName' => $this->bcsConfig->getBankDataBankName($storeId),
-            'iban' => $this->bcsConfig->getBankDataIban($storeId),
-            'bic' => $this->bcsConfig->getBankDataBic($storeId),
-            'notes' => $this->bcsConfig->getBankDataNote($storeId),
-            'accountReference' => $this->bcsConfig->getBankDataAccountReference($storeId),
-        ]);
+                'accountOwner'     => $this->bcsConfig->getBankDataAccountOwner($storeId),
+                'bankName'         => $this->bcsConfig->getBankDataBankName($storeId),
+                'iban'             => $this->bcsConfig->getBankDataIban($storeId),
+                'bic'              => $this->bcsConfig->getBankDataBic($storeId),
+                'notes'            => $this->bcsConfig->getBankDataNote($storeId),
+                'accountReference' => $this->bcsConfig->getBankDataAccountReference($storeId),
+            ]
+        );
+
+        $bcsProductProvider = $this->bcsProductProviderInterfaceFactory->create();
+        $product            = $bcsProductProvider->getProductName(
+            $request->getShipperAddressCountryCode(),
+            $request->getRecipientAddressCountryCode(),
+            $this->moduleConfig->getEuCountryList()
+        );
 
         $shipmentDetails = $this->shipmentDetailsFactory->create([
-            //TODO(nr): read from shipment request or config
-            'isPrintOnlyIfCodeable' => $this->bcsConfig->isPrintOnlyIfCodeable($storeId), //TODO(nr): override with packaging settings
-            'product' => 'V01PAK',
-            'accountNumber' => '22222222220101',
-            'returnShipmentAccountNumber' => '22222222220701',
-            'pickupAccountNumber' => $this->glConfig->getPickupAccountNumber($storeId),
-            'reference' => $request->getOrderShipment()->getIncrementId(),
-            'returnShipmentReference' => $request->getOrderShipment()->getIncrementId(),
-            'shipmentDate' => date("Y-m-d"),
-            'bankData' => $bankData,
-        ]);
+                'isPrintOnlyIfCodeable'       => $this->bcsConfig->isPrintOnlyIfCodeable($storeId),
+                //TODO(nr): override with packaging settings
+                'product'                     => $product,
+                'accountNumber'               => $bcsProductProvider->getAccountNumber($product),
+                'returnShipmentAccountNumber' => $bcsProductProvider->getReturnShipmentAccountNumber($product),
+                'pickupAccountNumber'         => $this->glConfig->getPickupAccountNumber($storeId),
+                'reference'                   => $request->getOrderShipment()->getOrder()->getIncrementId(),
+                'returnShipmentReference'     => $request->getOrderShipment()->getOrder()->getIncrementId(),
+                'shipmentDate'                => date("Y-m-d"),
+                'bankData'                    => $bankData,
+            ]
+        );
 
         return $shipmentDetails;
     }
 
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
+     *
      * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipperInterface
      */
     private function getShipper(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $storeId = $request->getOrderShipment()->getStoreId();
+        $storeId      = $request->getOrderShipment()->getStoreId();
+        $addressParts = $this->addressHelper->splitStreet($request->getShipperAddressStreet());
 
-        //TODO(nr): split street
         $address = $this->addressFactory->create([
-            'streetName' => $request->getShipperAddressStreet(),
-            'postalCode' => $request->getShipperAddressPostalCode(),
-            'city' => $request->getShipperAddressCity(),
-            'state' => $request->getShipperAddressStateOrProvinceCode(),
-            'countryCode' => $request->getShipperAddressCountryCode(),
-            'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
-        ]);
+                'street'                 => $request->getShipperAddressStreet(),
+                'streetName'             => $addressParts['street_name'],
+                'streetNumber'           => $addressParts['street_number'],
+                'addressAddition'        => $addressParts['supplement'],
+                'postalCode'             => $request->getShipperAddressPostalCode(),
+                'city'                   => $request->getShipperAddressCity(),
+                'state'                  => $request->getShipperAddressStateOrProvinceCode(),
+                'countryCode'            => $request->getShipperAddressCountryCode(),
+                'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
+            ]
+        );
 
         $shipper = $this->shipperFactory->create([
-            'contactPerson' => $this->bcsConfig->getContactPerson($storeId),
-            'name' => [
-                $request->getShipperContactPersonName(),
-                $request->getShipperContactCompanyName(),
-                $this->bcsConfig->getShipperCompanyAddition($storeId),
-            ],
-            'companyName' => $request->getShipperContactCompanyName(),
-            'phone' => $request->getShipperContactPhoneNumber(),
-            'email' => $request->getData('shipper_email'),
-            'address' => $address,
-        ]);
+                'contactPerson' => $this->bcsConfig->getContactPerson($storeId),
+                'name'          => [
+                    $request->getShipperContactPersonName(),
+                    $request->getShipperContactCompanyName(),
+                    $this->bcsConfig->getShipperCompanyAddition($storeId),
+                ],
+                'companyName'   => $request->getShipperContactCompanyName(),
+                'phone'         => $request->getShipperContactPhoneNumber(),
+                'email'         => $request->getData('shipper_email'),
+                'address'       => $address,
+            ]
+        );
 
         return $shipper;
     }
 
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
+     *
      * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ReceiverInterface
      */
     private function getReceiver(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $storeId = $request->getOrderShipment()->getStoreId();
+        $storeId      = $request->getOrderShipment()->getStoreId();
+        $addressParts = $this->addressHelper->splitStreet($request->getRecipientAddressStreet());
 
         $address = $this->addressFactory->create([
-            'streetName' => $request->getRecipientAddressStreet(),
-            'postalCode' => $request->getRecipientAddressPostalCode(),
-            'city' => $request->getRecipientAddressCity(),
-            'state' => $request->getRecipientAddressStateOrProvinceCode(),
-            'countryCode' => $request->getRecipientAddressCountryCode(),
-            'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
-        ]);
+                'street'                 => $request->getRecipientAddressStreet(),
+                'streetName'             => $addressParts['street_name'],
+                'streetNumber'           => $addressParts['street_number'],
+                'addressAddition'        => $addressParts['supplement'],
+                'postalCode'             => $request->getRecipientAddressPostalCode(),
+                'city'                   => $request->getRecipientAddressCity(),
+                'state'                  => $request->getRecipientAddressStateOrProvinceCode(),
+                'countryCode'            => $request->getRecipientAddressCountryCode(),
+                'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
+            ]
+        );
 
         $receiver = $this->receiverFactory->create([
-            'contactPerson' => $request->getRecipientContactPersonName(),
-            'name' => [
-                $request->getRecipientContactPersonName(),
-                $request->getRecipientContactCompanyName(),
-            ],
-            'companyName' => $request->getRecipientContactCompanyName(),
-            'phone' => $request->getRecipientContactPhoneNumber(),
-            'email' => $request->getData('recipient_email'),
-            'address' => $address,
-        ]);
+                'contactPerson' => $request->getRecipientContactPersonName(),
+                'name'          => [
+                    $request->getRecipientContactPersonName(),
+                    $request->getRecipientContactCompanyName(),
+                ],
+                'companyName'   => $request->getRecipientContactCompanyName(),
+                'phone'         => $request->getRecipientContactPhoneNumber(),
+                'email'         => $request->getData('recipient_email'),
+                'address'       => $address,
+            ]
+        );
 
         return $receiver;
     }
@@ -294,33 +347,40 @@ class AppDataMapper implements AppDataMapperInterface
      * TODO(nr): allow other return receiver than shipping origin.
      *
      * @param \Magento\Shipping\Model\Shipment\Request $request
+     *
      * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ReturnReceiverInterface
      */
     private function getReturnReceiver(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $storeId = $request->getOrderShipment()->getStoreId();
+        $storeId      = $request->getOrderShipment()->getStoreId();
+        $addressParts = $this->addressHelper->splitStreet($request->getShipperAddressStreet());
 
         $address = $this->addressFactory->create([
-            'streetName' => $request->getShipperAddressStreet(),
-            'postalCode' => $request->getShipperAddressPostalCode(),
-            'city' => $request->getShipperAddressCity(),
-            'state' => $request->getShipperAddressStateOrProvinceCode(),
-            'countryCode' => $request->getShipperAddressCountryCode(),
-            'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
-        ]);
+                'street'                 => $request->getRecipientAddressStreet(),
+                'streetName'             => $addressParts['street_name'],
+                'streetNumber'           => $addressParts['street_number'],
+                'addressAddition'        => $addressParts['supplement'],
+                'postalCode'             => $request->getShipperAddressPostalCode(),
+                'city'                   => $request->getShipperAddressCity(),
+                'state'                  => $request->getShipperAddressStateOrProvinceCode(),
+                'countryCode'            => $request->getShipperAddressCountryCode(),
+                'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
+            ]
+        );
 
         $returnReceiver = $this->returnReceiverFactory->create([
-            'contactPerson' => $this->bcsConfig->getContactPerson($storeId),
-            'name' => [
-                $request->getShipperContactPersonName(),
-                $request->getShipperContactCompanyName(),
-                $this->bcsConfig->getShipperCompanyAddition($storeId),
-            ],
-            'companyName' => $request->getShipperContactCompanyName(),
-            'phone' => $request->getShipperContactPhoneNumber(),
-            'email' => $request->getData('shipper_email'),
-            'address' => $address,
-        ]);
+                'contactPerson' => $this->bcsConfig->getContactPerson($storeId),
+                'name'          => [
+                    $request->getShipperContactPersonName(),
+                    $request->getShipperContactCompanyName(),
+                    $this->bcsConfig->getShipperCompanyAddition($storeId),
+                ],
+                'companyName'   => $request->getShipperContactCompanyName(),
+                'phone'         => $request->getShipperContactPhoneNumber(),
+                'email'         => $request->getData('shipper_email'),
+                'address'       => $address,
+            ]
+        );
 
         return $returnReceiver;
     }
@@ -329,57 +389,75 @@ class AppDataMapper implements AppDataMapperInterface
      * TODO(nr): allow international shipping
      *
      * @param \Magento\Shipping\Model\Shipment\Request $request
+     *
      * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetailsInterface
      */
     private function getCustomsDetails(\Magento\Shipping\Model\Shipment\Request $request)
     {
+        $exportType = $this->exportTypeInterfaceFactory->create();
+
         $customsDetails = $this->customsDetailsFactory->create([
-            'invoiceNumber' => '???',
-            'exportType' => '',
-            'termsOfTrade' => '',
-            'placeOfCommital' => '',
-            'additionalFee' => '',
-            'permitNumber' => '',
-            'attestationNumber' => '',
-            'isWithElectronicExportNtfctn' => false,
-            'positions' => [],
-        ]);
+                'invoiceNumber'                => '???',
+                'exportType'                   => $exportType,
+                'termsOfTrade'                 => '',
+                'placeOfCommital'              => '',
+                'additionalFee'                => '',
+                'permitNumber'                 => '',
+                'attestationNumber'            => '',
+                'isWithElectronicExportNtfctn' => false,
+                'positions'                    => [],
+            ]
+        );
 
         return $customsDetails;
     }
 
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
+     *
      * @return PackageInterface[]
      */
     private function getPackages(\Magento\Shipping\Model\Shipment\Request $request)
     {
         $packages = [];
         foreach ($request->getData('packages') as $packageId => $package) {
-            $weight = $this->packageWeightFactory->create([
-                //TODO(nr): fix keys
-                'value' => $package['weight'],
-                'unitOfMeasurement' => $package['weight_unit'],
-            ]);
+            $weight     = $this->packageWeightFactory->create([
+                    'value'             => $package['params']['weight'],
+                    'unitOfMeasurement' => $package['params']['weight_units'],
+                ]
+            );
             $dimensions = $this->packageDimensionsFactory->create([
-                //TODO(nr): fix keys
-                'length' => $package['length'],
-                'width' => $package['width'],
-                'height' => $package['height'],
-                'unitOfMeasurement' => $package['dimensions_unit'],
-            ]);
-            $declaredValue = $this->packageValueFactory->create([
-                //TODO(nr): fix keys
-                'value' => $package['value'],
-                'currencyCode' => $package['currency_code']
-            ]);
+                    'length'            => $package['params']['length'],
+                    'width'             => $package['params']['width'],
+                    'height'            => $package['params']['height'],
+                    'unitOfMeasurement' => $package['params']['dimension_units'],
+                ]
+            );
 
-            $packages[]= $this->packageFactory->create([
-                'packageId' => $packageId,
-                'weight' => $weight,
-                'dimensions' => $dimensions,
-                'declaredValue' => $declaredValue,
-            ]);
+            $packageValue = array_reduce(
+                $package['items'],
+                function($carry, $item) {
+                    $price = $item['price'] * 1000;
+                    $carry += ($price * $item['qty']);
+
+                    return $carry;
+                }
+            );
+            $packageValue = number_format($packageValue / 1000, 2, '.', '');
+
+            $declaredValue = $this->packageValueFactory->create([
+                    'value'        => $packageValue,
+                    'currencyCode' => $request->getData('base_currency_code'),
+                ]
+            );
+
+            $packages[] = $this->packageFactory->create([
+                    'packageId'     => $packageId,
+                    'weight'        => $weight,
+                    'dimensions'    => $dimensions,
+                    'declaredValue' => $declaredValue,
+                ]
+            );
         }
 
         return $packages;
@@ -397,29 +475,31 @@ class AppDataMapper implements AppDataMapperInterface
      * Convert M2 shipment request to platform independent request object.
      *
      * @param \Magento\Shipping\Model\Shipment\Request $request
-     * @param string $sequenceNumber
+     * @param string                                   $sequenceNumber
+     *
      * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterface
      */
     public function mapShipmentRequest($request, $sequenceNumber)
     {
         $shipmentDetails = $this->getShipmentDetails($request);
-        $shipper = $this->getShipper($request);
-        $receiver = $this->getReceiver($request);
-        $returnReceiver = $this->getReturnReceiver($request);
-        $customsDetails = $this->getCustomsDetails($request);
-        $packages = $this->getPackages($request);
-        $services = $this->getServices($request);
+        $shipper         = $this->getShipper($request);
+        $receiver        = $this->getReceiver($request);
+        $returnReceiver  = $this->getReturnReceiver($request);
+        $customsDetails  = $this->getCustomsDetails($request);
+        $packages        = $this->getPackages($request);
+        $services        = $this->getServices($request);
 
         $shipmentOrder = $this->shipmentOrderFactory->create([
-            'sequenceNumber' => $sequenceNumber,
-            'shipmentDetails' => $shipmentDetails,
-            'shipper' => $shipper,
-            'receiver' => $receiver,
-            'returnReceiver' => $returnReceiver,
-            'customsDetails' => $customsDetails,
-            'packages' => $packages,
-            'services' => $services,
-        ]);
+                'sequenceNumber'  => $sequenceNumber,
+                'shipmentDetails' => $shipmentDetails,
+                'shipper'         => $shipper,
+                'receiver'        => $receiver,
+                'returnReceiver'  => $returnReceiver,
+                'customsDetails'  => $customsDetails,
+                'packages'        => $packages,
+                'services'        => $services,
+            ]
+        );
 
         return $shipmentOrder;
     }
