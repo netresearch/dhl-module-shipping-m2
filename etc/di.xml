@@ -39,6 +39,7 @@
     <preference for="Dhl\Versenden\Api\Data\Webservice\Response\Type\Generic\ItemStatusInterface" type="Dhl\Versenden\Webservice\Response\Type\Generic\ItemStatus" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Response\Type\CreateShipment\LabelInterface" type="Dhl\Versenden\Webservice\Response\Type\CreateShipment\Label" />
 
+    <preference for="Dhl\Versenden\Api\Webservice\UnitConverterInterface" type="Dhl\Versenden\Webservice\UnitConverter" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\AdapterChainInterface" type="Dhl\Versenden\Webservice\Adapter\AdapterChain" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Versenden\Webservice\Adapter\BcsAdapter" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\GlAdapterInterface" type="Dhl\Versenden\Webservice\Adapter\GlAdapter" />

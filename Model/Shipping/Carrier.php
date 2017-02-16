@@ -138,13 +138,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         $response = $this->webserviceGateway->createLabels([$sequenceNumber => $request]);
         if ($response->getStatus()->isError()) {
             // plain string seems to be expected for errors
-            $errors = sprintf(
-                '%s: %s | %s',
-                $response->getStatus()->getCode(),
-                $response->getStatus()->getText(),
-                $response->getStatus()->getMessage()
-            );
-            $result->setData('errors', $errors);
+            $result->setData('errors', $response->getStatus()->getMessage());
         } else {
             $result->setData(
                 [
@@ -155,5 +149,28 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Get tracking information. Original return value annotation is misleading.
+     *
+     * @see \Magento\Shipping\Model\Carrier\AbstractCarrier::isTrackingAvailable()
+     * @see \Magento\Shipping\Model\Carrier\AbstractCarrierOnline::getTrackingInfo()
+     * @see \Magento\Dhl\Model\Carrier::getTracking()
+     * @param string $trackingNumber
+     * @return \Magento\Shipping\Model\Tracking\Result\AbstractResult
+     */
+    public function getTrackingInfo($trackingNumber)
+    {
+        /** @var \Magento\Shipping\Model\Tracking\Result\Status $tracking */
+        $tracking = $this->_trackStatusFactory->create();
+        $tracking->setData([
+            'carrier' => $this->_code,
+            'carrier_title' => $this->getConfigData('title'),
+            'tracking' => $trackingNumber,
+            'url' => 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=' . $trackingNumber
+        ]);
+
+        return $tracking;
     }
 }
