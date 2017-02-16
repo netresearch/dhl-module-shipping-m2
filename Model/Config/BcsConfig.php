@@ -24,6 +24,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Versenden\Model\Config;
 
 use \Dhl\Versenden\Api\Config\BcsConfigInterface;
@@ -53,21 +54,24 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * BcsApiConfig constructor.
+     *
      * @param ConfigAccessorInterface $configAccessor
-     * @param ModuleConfigInterface $moduleConfig
+     * @param ModuleConfigInterface   $moduleConfig
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         ModuleConfigInterface $moduleConfig
-    ) {
+    )
+    {
         $this->configAccessor = $configAccessor;
-        $this->moduleConfig = $moduleConfig;
+        $this->moduleConfig   = $moduleConfig;
     }
 
     /**
      * Obtain API endpoint.
      *
      * @param mixed $store
+     *
      * @return string | null
      */
     public function getApiEndpoint($store = null)
@@ -83,6 +87,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain auth credentials: username.
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getAuthUsername($store = null)
@@ -98,6 +103,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain auth credentials: password.
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getAuthPassword($store = null)
@@ -113,6 +119,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain DHL Business Customer Shipping contract data: username.
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getAccountUser($store = null)
@@ -128,6 +135,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain DHL Business Customer Shipping contract data: signature.
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getAccountSignature($store = null)
@@ -143,6 +151,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain DHL Business Customer Shipping contract data: ekp.
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getAccountEkp($store = null)
@@ -157,20 +166,34 @@ class BcsConfig implements BcsConfigInterface
     /**
      * Obtain DHL Business Customer Shipping contract data: participation numbers.
      *
-     * @param mixed $store
-     * @return string[]
+     * @param string $procedure
+     * @param mixed  $store
+     *
+     * @return string
      */
-    public function getAccountParticipation($store = null)
+    public function getAccountParticipation($procedure, $store = null)
     {
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION, $store);
+            $participations =
+                $this->configAccessor->getConfigValue(
+                    self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION,
+                    $store
+                );
+        } else {
+            $participations =
+                $this->configAccessor->getConfigValue(
+                    self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION,
+                    $store
+                );
         }
+        $participations = array_column($participations, 'participation', 'procedure');
 
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION, $store);
+        return isset($participations[$procedure]) ? $participations[$procedure] : '';
     }
 
     /**
      * @param mixed $store
+     *
      * @return bool
      */
     public function isPrintOnlyIfCodeable($store = null)
@@ -180,6 +203,7 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @param mixed $store
+     *
      * @return string
      */
     public function getBankDataAccountOwner($store = null)
@@ -189,6 +213,7 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @param mixed $store
+     *
      * @return string
      */
     public function getBankDataBankName($store = null)
@@ -198,6 +223,7 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @param mixed $store
+     *
      * @return string
      */
     public function getBankDataIban($store = null)
@@ -207,6 +233,7 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @param mixed $store
+     *
      * @return string
      */
     public function getBankDataBic($store = null)
@@ -216,6 +243,7 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @param mixed $store
+     *
      * @return string[]
      */
     public function getBankDataNote($store = null)
@@ -228,17 +256,19 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @param mixed $store
+     *
      * @return string
      */
     public function getBankDataAccountReference($store = null)
     {
-        $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_ACCOUNT_REFERENCE, $store);
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_BANKDATA_ACCOUNT_REFERENCE, $store);
     }
 
     /**
      * Obtain communication contact person.
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getContactPerson($store = null)
@@ -250,10 +280,11 @@ class BcsConfig implements BcsConfigInterface
      * Obtain name of shipper (first name part)
      *
      * @deprecated Shipment request uses name of currently logged in admin
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\User\Model\User::getName()
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\User\Model\User::getName()
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperName($store = null)
@@ -265,10 +296,11 @@ class BcsConfig implements BcsConfigInterface
      * Obtain shipper company name (second name part)
      *
      * @deprecated Shipment request uses config general/store_information/name
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Store\Model\Information::XML_PATH_STORE_INFO_NAME
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Store\Model\Information::XML_PATH_STORE_INFO_NAME
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperCompany($store = null)
@@ -280,6 +312,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain shipper company name (third name part)
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperCompanyAddition($store = null)
@@ -289,10 +322,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses config general/store_information/name
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Store\Model\Information::XML_PATH_STORE_INFO_PHONE
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Store\Model\Information::XML_PATH_STORE_INFO_PHONE
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperPhone($store = null)
@@ -302,10 +336,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses email of currently logged in admin
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\User\Model\User::getEmail()
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\User\Model\User::getEmail()
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperEmail($store = null)
@@ -315,10 +350,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses config shipping/origin/street_line1
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_ADDRESS1
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_ADDRESS1
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperStreet($store = null)
@@ -328,10 +364,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses config shipping/origin/street_line1
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_ADDRESS1
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_ADDRESS1
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperStreetNumber($store = null)
@@ -341,10 +378,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses config shipping/origin/postcode
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_ZIP
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_ZIP
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperPostalCode($store = null)
@@ -354,10 +392,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses config shipping/origin/city
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_CITY
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_CITY
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperCity($store = null)
@@ -367,10 +406,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses config shipping/origin/region_id
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_REGION_ID
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_REGION_ID
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperRegion($store = null)
@@ -380,10 +420,11 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @deprecated Shipment request uses config shipping/origin/country_id
-     * @see \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
-     * @see \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_COUNTRY_ID
+     * @see        \Magento\Shipping\Model\Shipping\Labels::requestToShipment()
+     * @see        \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_COUNTRY_ID
      *
      * @param mixed $store
+     *
      * @return string
      */
     public function getShipperCountryISOCode($store = null)
@@ -393,6 +434,7 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * @param mixed $store
+     *
      * @return string
      */
     public function getDispatchingInformation($store = null)
