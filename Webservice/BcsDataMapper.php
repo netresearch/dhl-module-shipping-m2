@@ -53,15 +53,11 @@ class BcsDataMapper implements BcsDataMapperInterface
         // bcs cannot handle multiple packages
         $package = current($packages);
 
-        //TODO(nr): convert to KG
-        $shipmentItemType = new BcsApi\ShipmentItemType(
-            $package->getWeight()->getValue('KILOGRAM')
-        );
-
-        //TODO(nr): convert to CM
-        $shipmentItemType->setWidthInCM($package->getDimensions()->getWidth('KILOGRAM'));
-        $shipmentItemType->setHeightInCM($package->getDimensions()->getHeight('KILOGRAM'));
-        $shipmentItemType->setLengthInCM($package->getDimensions()->getLength('KILOGRAM'));
+        $packageWeight = $package->getWeight()->getValue(\Zend_Measure_Weight::KILOGRAM);
+        $shipmentItemType = new BcsApi\ShipmentItemType($packageWeight);
+        $shipmentItemType->setWidthInCM($package->getDimensions()->getWidth(\Zend_Measure_Length::CENTIMETER));
+        $shipmentItemType->setHeightInCM($package->getDimensions()->getHeight(\Zend_Measure_Length::CENTIMETER));
+        $shipmentItemType->setLengthInCM($package->getDimensions()->getLength(\Zend_Measure_Length::CENTIMETER));
 
         $shipmentDetailsType = new BcsApi\ShipmentDetailsTypeType(
             $shipmentDetails->getProduct(),
@@ -210,10 +206,8 @@ class BcsDataMapper implements BcsDataMapperInterface
                 $position->getCountryOfOrigin(),
                 $position->getHsCode(),
                 $position->getQty(),
-                //TODO(nr): convert to KG
-                $position->getWeight()->getValue(),
-                //TODO(nr): convert to EUR
-                $position->getDeclaredValue()->getValue()
+                $position->getWeight()->getValue(\Zend_Measure_Weight::KILOGRAM),
+                $position->getDeclaredValue()->getValue('EUR')
             );
             $exportDocPositions[]= $exportDocPosition;
         }
