@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Versenden\Webservice\Client;
 
 use Dhl\Versenden\Api\Config\BcsConfigInterface;
@@ -46,6 +47,7 @@ class BcsSoapClient implements BcsSoapClientInterface
 
     /**
      * BcsSoapClient constructor.
+     *
      * @param BcsConfigInterface $bcsConfig
      */
     public function __construct(BcsConfigInterface $bcsConfig)
@@ -53,17 +55,17 @@ class BcsSoapClient implements BcsSoapClientInterface
         //TODO(nr): maybe or maybe not use m2 factory
         $options = [
             'location' => $bcsConfig->getApiEndpoint(),
-            'login' => $bcsConfig->getAuthUsername(),
+            'login'    => $bcsConfig->getAuthUsername(),
             'password' => $bcsConfig->getAuthPassword(),
-            'trace' => 1
+            'trace'    => 1
         ];
-        $client = new \Dhl\Versenden\Bcs\GVAPI_2_0_de($options);
+        $client  = new \Dhl\Versenden\Bcs\GVAPI_2_0_de($options);
 
         $authHeader = new \SoapHeader(
             'http://dhl.de/webservice/cisbase',
             'Authentification',
             [
-                'user' => $bcsConfig->getAccountUser(),
+                'user'      => $bcsConfig->getAccountUser(),
                 'signature' => $bcsConfig->getAccountSignature(),
             ]
         );
@@ -77,6 +79,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      *         webservice.
      *
      * @param \Dhl\Versenden\Bcs\Version $request
+     *
      * @return \Dhl\Versenden\Bcs\GetVersionResponse
      */
     public function getVersion(\Dhl\Versenden\Bcs\Version $request)
@@ -88,6 +91,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      * Creates shipments.
      *
      * @param \Dhl\Versenden\Bcs\CreateShipmentOrderRequest $request
+     *
      * @return \Dhl\Versenden\Bcs\CreateShipmentOrderResponse
      */
     public function createShipmentOrder(\Dhl\Versenden\Bcs\CreateShipmentOrderRequest $request)
@@ -99,10 +103,43 @@ class BcsSoapClient implements BcsSoapClientInterface
      * Deletes the requested shipments.
      *
      * @param \Dhl\Versenden\Bcs\DeleteShipmentOrderRequest $request
+     *
      * @return \Dhl\Versenden\Bcs\DeleteShipmentOrderResponse
      */
     public function deleteShipmentOrder(\Dhl\Versenden\Bcs\DeleteShipmentOrderRequest $request)
     {
         return $this->soapClient->deleteShipmentOrder($request);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastRequest()
+    {
+        return $this->soapClient->__getLastRequest();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastRequestHeaders()
+    {
+        return $this->soapClient->__getLastRequestHeaders();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastResponse()
+    {
+        return $this->soapClient->__getLastResponse();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastResponseHeaders()
+    {
+        return $this->soapClient->__getLastResponseHeaders();
     }
 }
