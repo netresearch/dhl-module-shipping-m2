@@ -23,15 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\ResourceModel\VersendenInfoOrder;
+namespace Dhl\Versenden\Model\ShippingInfo;
 
-use \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use \Dhl\Versenden\Model;
-use \Dhl\Versenden\Setup\InstallSchema;
+use Dhl\Versenden\Api\Data\QuoteShippingInfoInterface;
+use \Dhl\Versenden\Model\ResourceModel\ShippingInfo\QuoteShippingInfo as ShippingInfoResource;
 
 /**
- * Dhl Versenden Info Resource Model
- * @deprecated No use?
+ * Dhl Versenden Info Model
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -39,17 +37,17 @@ use \Dhl\Versenden\Setup\InstallSchema;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Collection extends AbstractCollection
+class QuoteShippingInfo extends AbstractShippingInfo implements QuoteShippingInfoInterface
 {
-    protected $_idFieldName = InstallSchema::TABLE_VERSENDEN_INFO_SALES_ORDER_PK;
+    protected $_cacheTag = 'dhlshipping_quote_info';
+    protected $_eventPrefix = 'dhlshipping_quote_info';
 
     /**
-     * Resource collection initialization
+     * Init resource model.
      */
     protected function _construct()
     {
-        $this->_init(Model\OrderShippingInfo::class, Model\ResourceModel\OrderShippingInfo::class);
-
         parent::_construct();
+        $this->_init(ShippingInfoResource::class);
     }
 }

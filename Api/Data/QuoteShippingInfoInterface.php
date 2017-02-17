@@ -26,7 +26,7 @@
 namespace Dhl\Versenden\Api\Data;
 
 /**
- * Versenden Info Entity Interface
+ * DHL Shipping Info, solely for metadata pool…
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -34,32 +34,6 @@ namespace Dhl\Versenden\Api\Data;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface VersendenInfoOrderInterface
+interface QuoteShippingInfoInterface extends ShippingInfoInterface
 {
-    const VERSENDEN_INFO_ID    = 'sales_order_address_id';
-    const VERSENDEN_INFO_FIELD = 'dhl_versenden_info';
-
-    /**
-     * @return int
-     */
-    public function getSalesOrderAddressId();
-
-    /**
-     * @param int $salesOrderAddressId
-     *
-     * @return self
-     */
-    public function setSalesOrderAddressId($salesOrderAddressId);
-
-    /**
-     * @return string
-     */
-    public function getDhlVersendenInfo();
-
-    /**
-     * @param string $dhlVersendenInfo
-     *
-     * @return self
-     */
-    public function setDhlVersendenInfo($dhlVersendenInfo);
 }

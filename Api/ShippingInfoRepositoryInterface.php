@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api\Data;
+namespace Dhl\Versenden\Api;
 
 /**
- * Versenden Info Entity Interface
+ * ShippingInfoRepositoryInterface
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -34,32 +34,29 @@ namespace Dhl\Versenden\Api\Data;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface VersendenInfoQuoteInterface
+interface ShippingInfoRepositoryInterface
 {
-    const VERSENDEN_INFO_ID    = 'quote_address_id';
-    const VERSENDEN_INFO_FIELD = 'dhl_versenden_info';
-
     /**
-     * @return int
-     */
-    public function getQuoteAddressId();
-
-    /**
-     * @param int $quoteAddressId
+     * Save DHL Shipping Info. PK equals Address ID.
      *
-     * @return self
+     * @param Data\ShippingInfoInterface $entity
+     * @return Data\ShippingInfoInterface
      */
-    public function setQuoteAddressId($quoteAddressId);
+    public function save(Data\ShippingInfoInterface $entity);
 
     /**
-     * @return string
-     */
-    public function getDhlVersendenInfo();
-
-    /**
-     * @param string $dhlVersendenInfo
+     * Retrieve DHL Shipping Info by Address id.
      *
-     * @return self
+     * @param int $addressId Order Address ID or Quote Address ID
+     * @return Data\ShippingInfoInterface
      */
-    public function setDhlVersendenInfo($dhlVersendenInfo);
+    public function getById($addressId);
+
+    /**
+     * Delete DHL Shipping Info
+     *
+     * @param Data\ShippingInfoInterface $entity
+     * @return bool
+     */
+    public function delete(Data\ShippingInfoInterface $entity);
 }

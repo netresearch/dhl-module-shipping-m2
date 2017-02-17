@@ -23,15 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\ResourceModel;
-
-use Dhl\Versenden\Api\Data\VersendenInfoQuoteInterface;
-use Dhl\Versenden\Setup\InstallSchema;
-use \Magento\Framework\Model\AbstractModel;
-use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+namespace Dhl\Versenden\Api\Data;
 
 /**
- * Dhl Versenden Info Resource Model
+ * Entity for address extension attribute
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -39,29 +34,32 @@ use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VersendenInfoQuote extends AbstractDb
+interface ShippingInfoInterface
 {
-    /**
-     * Resource initialization.
-     */
-    protected function _construct()
-    {
-        $this->_init(InstallSchema::TABLE_VERSENDEN_INFO_QUOTE, VersendenInfoQuoteInterface::VERSENDEN_INFO_ID);
-    }
+    const ADDRESS_ID = 'address_id';
+    const INFO = 'info';
 
     /**
-     * @param AbstractModel $object
+     * @return int
+     */
+    public function getAddressId();
+
+    /**
+     * @param int $addressId
      *
-     * @return $this
-     * @throws \Exception
+     * @return self
      */
-    public function save(AbstractModel $object)
-    {
-        $this->_isPkAutoIncrement = false;
+    public function setAddressId($addressId);
 
-        parent::save($object);
+    /**
+     * @return string
+     */
+    public function getInfo();
 
-        return $this;
-    }
-
+    /**
+     * @param string $info
+     *
+     * @return self
+     */
+    public function setInfo($info);
 }

@@ -23,12 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api;
+namespace Dhl\Versenden\Model\ShippingInfo;
 
-use Dhl\Versenden\Api\Data\VersendenInfoOrderInterface;
+use Dhl\Versenden\Api\Data\OrderShippingInfoInterface;
+use \Dhl\Versenden\Model\ResourceModel\ShippingInfo\OrderShippingInfo as ShippingInfoResource;
 
 /**
- * Versenden Info Repository Interface
+ * DHL Shipping Info for Order Address
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -36,33 +37,17 @@ use Dhl\Versenden\Api\Data\VersendenInfoOrderInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface VersendenInfoOrderRepositoryInterface
+class OrderShippingInfo extends AbstractShippingInfo implements OrderShippingInfoInterface
 {
+    protected $_cacheTag = 'dhlshipping_order_info';
+    protected $_eventPrefix = 'dhlshipping_order_info';
 
     /**
-     * Loads a specified versenden info order extension attribute.
-     *
-     * @param int $id
-     *
-     * @return VersendenInfoOrderInterface
+     * Init resource model.
      */
-    public function get($id);
-
-    /**
-     * Deletes a specified versenden info order extension attribute.
-     *
-     * @param VersendenInfoOrderInterface $entity
-     *
-     * @return bool
-     */
-    public function delete(VersendenInfoOrderInterface $entity);
-
-    /**
-     * Performs persist operations for a specified versenden info order extension attribute.
-     *
-     * @param VersendenInfoOrderInterface $entity
-     *
-     * @return VersendenInfoOrderInterface
-     */
-    public function save(VersendenInfoOrderInterface $entity);
+    protected function _construct()
+    {
+        parent::_construct();
+        $this->_init(ShippingInfoResource::class);
+    }
 }

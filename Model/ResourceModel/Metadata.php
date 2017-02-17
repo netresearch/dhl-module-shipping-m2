@@ -11,6 +11,7 @@ use \Magento\Framework\ObjectManagerInterface;
 
 /**
  * Class Metadata
+ * @deprecated Use proper way of doing things
  */
 class Metadata
 {

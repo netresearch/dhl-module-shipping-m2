@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Dhl Versenden
  *
@@ -15,6 +14,8 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
+ * PHP version 7
+ *
  * @category  Dhl
  * @package   Dhl\Versenden
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
@@ -22,14 +23,27 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
--->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Dhl_Versenden" setup_version="0.1.0">
-        <sequence>
-            <module name="Magento_Shipping"/>
-            <module name="Magento_Checkout"/>
-            <module name="Magento_Quote"/>
-            <module name="Magento_Sales"/>
-        </sequence>
-    </module>
-</config>
+namespace Dhl\Versenden\Model\ResourceModel\ShippingInfo;
+
+use \Dhl\Versenden\Api\Data\ShippingInfoInterface;
+use \Dhl\Versenden\Setup\InstallSchema;
+
+/**
+ * DHL Shipping Quote Info Resource Model
+ *
+ * @category Dhl
+ * @package  Dhl\Versenden
+ * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
+class QuoteShippingInfo extends AbstractShippingInfo
+{
+    /**
+     * Resource initialization.
+     */
+    protected function _construct()
+    {
+        $this->_init(InstallSchema::TABLE_QUOTE_ADDRESS, ShippingInfoInterface::ADDRESS_ID);
+    }
+}

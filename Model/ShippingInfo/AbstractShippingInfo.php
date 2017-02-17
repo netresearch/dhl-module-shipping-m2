@@ -23,9 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model;
+namespace Dhl\Versenden\Model\ShippingInfo;
 
-use \Dhl\Versenden\Api\Data\VersendenInfoQuoteInterface;
+use \Dhl\Versenden\Api\Data\ShippingInfoInterface;
 use \Magento\Framework\Model\AbstractModel;
 
 /**
@@ -37,54 +37,43 @@ use \Magento\Framework\Model\AbstractModel;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VersendenInfoQuote extends AbstractModel implements VersendenInfoQuoteInterface
+abstract class AbstractShippingInfo extends AbstractModel implements ShippingInfoInterface
 {
-    protected $_cacheTag = 'dhl_versenden_info_quote';
-    protected $_eventPrefix = 'dhl_versenden_info_quote';
-
-    /**
-     * Init resource model.
-     */
-    protected function _construct()
-    {
-        parent::_construct();
-
-        $this->_init(\Dhl\Versenden\Model\ResourceModel\VersendenInfoQuote::class);
-    }
-
     /**
      * @return int
      */
-    public function getQuoteAddressId()
+    public function getAddressId()
     {
-        return (int)$this->getData(self::VERSENDEN_INFO_ID);
+        return (int)$this->getData(self::ADDRESS_ID);
     }
 
     /**
-     * @param int $quoteAddressId
+     * @param int $addressId
      *
-     * @return self
+     * @return $this
      */
-    public function setQuoteAddressId($quoteAddressId)
+    public function setAddressId($addressId)
     {
-        return $this->setData(self::VERSENDEN_INFO_ID, $quoteAddressId);
+        $this->setData(self::ADDRESS_ID, $addressId);
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getDhlVersendenInfo()
+    public function getInfo()
     {
-        return $this->getData(self::VERSENDEN_INFO_FIELD);
+        return $this->getData(self::INFO);
     }
 
     /**
-     * @param string $dhlVersendenInfo
+     * @param string $info
      *
-     * @return self
+     * @return $this
      */
-    public function setDhlVersendenInfo($dhlVersendenInfo)
+    public function setInfo($info)
     {
-        return $this->setData(self::VERSENDEN_INFO_FIELD, $dhlVersendenInfo);
+        $this->setData(self::INFO, $info);
+        return $this;
     }
 }
