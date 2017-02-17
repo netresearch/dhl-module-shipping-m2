@@ -43,7 +43,7 @@
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\AdapterChainInterface" type="Dhl\Versenden\Webservice\Adapter\AdapterChain" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Versenden\Webservice\Adapter\BcsAdapter" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\GlAdapterInterface" type="Dhl\Versenden\Webservice\Adapter\GlAdapter" />
-    <preference for="Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface" type="Dhl\Versenden\Webservice\Client\BcsSoapClient" />
+    <preference for="Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface" type="Dhl\Versenden\Webservice\Client\BcsSoapClient" shared="true" />
     <preference for="Dhl\Versenden\Api\Webservice\Request\Mapper\AppDataMapperInterface" type="Dhl\Versenden\Webservice\AppDataMapper" />
     <preference for="Dhl\Versenden\Api\Webservice\Request\Mapper\BcsDataMapperInterface" type="Dhl\Versenden\Webservice\BcsDataMapper" />
     <preference for="Dhl\Versenden\Api\Webservice\Request\Mapper\GlDataMapperInterface" type="Dhl\Versenden\Webservice\GlDataMapper" />
@@ -63,6 +63,9 @@
     </type>
     <type name="Magento\Sales\Controller\Adminhtml\Order\AddressSave">
         <plugin name="updateVersendenInfo" type="Dhl\Versenden\Model\Plugin\UpdateVersendenInfoOnAddressSave" />
+    </type>
+    <type name="Dhl\Versenden\Webservice\Adapter\BcsAdapter">
+        <plugin name="logBcsApiCalls" type="Dhl\Versenden\Model\Plugin\BcsAdapterPlugin" />
     </type>
 
     <!-- passing arguments -->
