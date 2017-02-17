@@ -27,12 +27,12 @@
 namespace Dhl\Versenden\Observer;
 
 use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Api\Data\BcsProductProviderInterfaceFactory;
 use \Dhl\Versenden\Api\Service\Cod;
 use \Dhl\Versenden\Api\Service\Filter\ProductFilter;
 use \Dhl\Versenden\Api\Service\ServiceCollection;
 use \Dhl\Versenden\Api\Service\ServiceCollectionFactory;
 use \Dhl\Versenden\Api\Service\ServiceFactory;
+use \Dhl\Versenden\Api\Webservice\BcsAccessDataInterface;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
@@ -55,6 +55,11 @@ class DisableCodPaymentObserver implements ObserverInterface
     private $config;
 
     /**
+     * @var BcsAccessDataInterface
+     */
+    private $bcsAccessData;
+
+    /**
      * @var CheckoutSession
      */
     private $checkoutSession;
@@ -63,28 +68,25 @@ class DisableCodPaymentObserver implements ObserverInterface
      * @var ServiceCollectionFactory
      */
     private $serviceCollectionFactory;
-    /**
-     * @var ServiceCollectionFactory
-     */
-    private $bcsProductProviderInterfaceFactory;
 
     /**
      * DisableCodPaymentObserver constructor.
      *
      * @param ModuleConfigInterface    $config
+     * @param BcsAccessDataInterface   $bcsAccessData
      * @param SessionManagerInterface  $checkoutSession
      * @param ServiceCollectionFactory $serviceCollectionFactory
      */
     public function __construct(
         ModuleConfigInterface $config,
+        BcsAccessDataInterface $bcsAccessData,
         SessionManagerInterface $checkoutSession,
-        ServiceCollectionFactory $serviceCollectionFactory,
-        BcsProductProviderInterfaceFactory $bcsProductProviderInterfaceFactory
+        ServiceCollectionFactory $serviceCollectionFactory
     ) {
-        $this->config                             = $config;
-        $this->checkoutSession                    = $checkoutSession;
-        $this->serviceCollectionFactory           = $serviceCollectionFactory;
-        $this->bcsProductProviderInterfaceFactory = $bcsProductProviderInterfaceFactory;
+        $this->config = $config;
+        $this->checkoutSession = $checkoutSession;
+        $this->serviceCollectionFactory = $serviceCollectionFactory;
+        $this->bcsAccessData = $bcsAccessData;
     }
 
     /**
@@ -131,11 +133,7 @@ class DisableCodPaymentObserver implements ObserverInterface
         $recipientCountry = $quote->getShippingAddress()->getCountryId();
         $euCountries      = $this->config->getEuCountryList();
 
-        $usedProduct = $this->bcsProductProviderInterfaceFactory->create()->getProductName(
-            $shipperCountry,
-            $recipientCountry,
-            $euCountries
-        );
+        $usedProduct = $this->bcsAccessData->getProductCode($shipperCountry, $recipientCountry, $euCountries);
 
         $codService = ServiceFactory::get(Cod::CODE);
         $productFilter = ProductFilter::create(['code' => $usedProduct]);

@@ -27,7 +27,7 @@ namespace Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address;
 
 use \Dhl\Versenden\Api\Info;
 use \Dhl\Versenden\Api\InfoFactory;
-use \Dhl\Versenden\Model\VersendenInfoOrderRepository;
+use \Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Backend\Model\Session\Quote;
 use \Magento\Framework\Data\Form\Element\Fieldset;
@@ -48,7 +48,7 @@ use \Magento\Customer\Model\Address\Mapper;
 use \Magento\Framework\Registry;
 
 /**
- * Dhl Versenden Info Model
+ * Extended Shipping Address Form
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -66,18 +66,9 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
     protected $_template = 'Magento_Sales::order/address/form.phtml';
 
     /**
-     * Address form template
-     *
-     * @var VersendenInfoOrderRepository
+     * @var OrderShippingInfoRepository
      */
-    protected $versendenInfoOrderRepository;
-
-    /**
-     * Address form template
-     *
-     * @var InfoFactory
-     */
-    protected $versendenInfoFactory;
+    private $orderInfoRepository;
 
     /**
      * @param Context                      $context
@@ -96,8 +87,7 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
      * @param FilterBuilder                $filterBuilder
      * @param Mapper                       $addressMapper
      * @param Registry                     $registry
-     * @param VersendenInfoOrderRepository $versendenInfoOrderRepository
-     * @param InfoFactory                  $versendenInfoFactory
+     * @param OrderShippingInfoRepository  $orderInfoRepository
      * @param array                        $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
@@ -118,12 +108,10 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         FilterBuilder $filterBuilder,
         Mapper $addressMapper,
         Registry $registry,
-        VersendenInfoOrderRepository $versendenInfoOrderRepository,
-        InfoFactory $versendenInfoFactory,
+        OrderShippingInfoRepository $orderInfoRepository,
         array $data = []
     ) {
-        $this->versendenInfoOrderRepository = $versendenInfoOrderRepository;
-        $this->versendenInfoFactory         = $versendenInfoFactory;
+        $this->orderInfoRepository = $orderInfoRepository;
 
         parent::__construct(
             $context,
@@ -157,19 +145,18 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         parent::_prepareForm();
 
         $fieldset = $this->_form->getElement('main');
-        $fieldset->addType('separator', '\Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Element\Separator');
+        $fieldset->addType('separator', \Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Element\Separator::class);
 
         $address = $this->_getAddress();
-        try {
-            $versendenInfoEntity = $this->versendenInfoOrderRepository->get($address->getEntityId());
-            $infoEntity          = $this->versendenInfoFactory->create();
-            /** @var Info $info */
-            $info         = $infoEntity::fromJson($versendenInfoEntity->getDhlVersendenInfo());
-            $receiverData = $info->getReceiver()->toArray();
-        } catch (NoSuchEntityException $e) {
-            throw new NoSuchEntityException(__('Info entity for sales order shipping address doesn\'t exist'));
-        }
 
+        // load previous info data
+        $dhlOrderInfo = $this->orderInfoRepository->getById($address->getEntityId());
+        $serializedInfo = $dhlOrderInfo->getInfo();
+        /** @var \Dhl\Versenden\Api\Info $shippingInfo */
+        $shippingInfo = \Dhl\Versenden\Api\Info::fromJson($serializedInfo);
+
+        // add info deserialized data to fieldset
+        $receiverData = $shippingInfo->getReceiver()->toArray();
         $this->_prepareAddressFields($fieldset, $receiverData);
 
         return $this;
@@ -189,22 +176,21 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         );
 
         $fieldset->addField('versenden_info_street_name', 'text', [
-                'name'  => "versenden_info[street_name]",
-                'label' => __('Street Name'),
-                'value' => isset($receiverData['street_name']) ? $receiverData['street_name'] : '',
-            ]
-        );
+            'name'  => "versenden_info[street_name]",
+            'label' => __('Street Name'),
+            'value' => isset($receiverData['street_name']) ? $receiverData['street_name'] : '',
+        ]);
+
         $fieldset->addField('versenden_info_street_number', 'text', [
-                'name'  => "versenden_info[street_number]",
-                'label' => __('House number'),
-                'value' => isset($receiverData['street_number']) ? $receiverData['street_number'] : '',
-            ]
-        );
+            'name'  => "versenden_info[street_number]",
+            'label' => __('House number'),
+            'value' => isset($receiverData['street_number']) ? $receiverData['street_number'] : '',
+        ]);
+
         $fieldset->addField('versenden_info_address_addition', 'text', [
-                'name'  => "versenden_info[address_addition]",
-                'label' => __('Address Addition'),
-                'value' => isset($receiverData['address_addition']) ? $receiverData['address_addition'] : '',
-            ]
-        );
+            'name'  => "versenden_info[address_addition]",
+            'label' => __('Address Addition'),
+            'value' => isset($receiverData['address_addition']) ? $receiverData['address_addition'] : '',
+        ]);
     }
 }

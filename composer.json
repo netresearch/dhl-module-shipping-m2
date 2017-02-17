@@ -4,6 +4,7 @@
     "type": "magento2-module",
     "description": "DHL business customer shipping extension for Magento",
     "require": {
+        "php": "^5.6.0|^7.0.0",
         "magento/framework": "^100.1.0",
         "magento/module-shipping": "^100.1.0",
         "netresearch/dhl-bcs-api-soap": "dev-master"

@@ -25,12 +25,13 @@
  */
 namespace Dhl\Versenden\Model\ResourceModel\VersendenInfoQuote;
 
+use \Dhl\Versenden\Api\Data\ShippingInfoInterface;
 use \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use \Dhl\Versenden\Model;
-use \Dhl\Versenden\Setup\InstallSchema;
 
 /**
  * Dhl Versenden Info Resource Model
+ * @deprecated No use?
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -40,14 +41,14 @@ use \Dhl\Versenden\Setup\InstallSchema;
  */
 class Collection extends AbstractCollection
 {
-    protected $_idFieldName = InstallSchema::TABLE_VERSENDEN_INFO_QUOTE_PK;
+    protected $_idFieldName = ShippingInfoInterface::ADDRESS_ID;
 
     /**
      * Resource collection initialization
      */
     protected function _construct()
     {
-        $this->_init(Model\VersendenInfoQuote::class, Model\ResourceModel\VersendenInfoQuote::class);
+        $this->_init(Model\QuoteShippingInfo::class, Model\ResourceModel\QuoteShippingInfo::class);
 
         parent::_construct();
     }

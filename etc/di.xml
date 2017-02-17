@@ -1,11 +1,31 @@
 <?xml version="1.0"?>
-
+<!--
+/**
+ * Dhl Versenden
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * @category  Dhl
+ * @package   Dhl\Versenden
+ * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @copyright 2017 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+-->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- module preferences -->
-    <preference for="Dhl\Versenden\Api\VersendenInfoOrderRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoOrderRepository"/>
-    <preference for="Dhl\Versenden\Api\VersendenInfoQuoteRepositoryInterface" type="Dhl\Versenden\Model\VersendenInfoQuoteRepository"/>
-
     <preference for="Dhl\Versenden\Api\Webservice\GatewayInterface" type="Dhl\Versenden\Webservice\Gateway" />
     <preference for="Dhl\Versenden\Api\Config\ModuleConfigInterface" type="Dhl\Versenden\Model\Config\ModuleConfig" />
     <preference for="Dhl\Versenden\Api\Config\BcsConfigInterface" type="Dhl\Versenden\Model\Config\BcsConfig" />
@@ -13,7 +33,8 @@
     <preference for="Dhl\Versenden\Api\Config\ConfigAccessorInterface" type="Dhl\Versenden\Model\Config\ConfigAccessor" />
 
     <!-- library preferences -->
-    <preference for="Dhl\Versenden\Api\Data\BcsProductProviderInterface" type="Dhl\Versenden\Api\BcsProductProvider" />
+    <preference for="Dhl\Versenden\Api\Data\QuoteShippingInfoInterface" type="Dhl\Versenden\Model\ShippingInfo\QuoteShippingInfo" />
+    <preference for="Dhl\Versenden\Api\Data\OrderShippingInfoInterface" type="Dhl\Versenden\Model\ShippingInfo\OrderShippingInfo" />
     <preference for="Dhl\Versenden\Api\Data\InfoInterface" type="Dhl\Versenden\Api\Info"/>
 
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\DimensionsInterface" type="Dhl\Versenden\Webservice\Request\Type\Generic\Package\Dimensions" />
@@ -39,6 +60,9 @@
     <preference for="Dhl\Versenden\Api\Data\Webservice\Response\Type\Generic\ItemStatusInterface" type="Dhl\Versenden\Webservice\Response\Type\Generic\ItemStatus" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Response\Type\CreateShipment\LabelInterface" type="Dhl\Versenden\Webservice\Response\Type\CreateShipment\Label" />
 
+    <preference for="Dhl\Versenden\Api\StreetSplitterInterface" type="Dhl\Versenden\Util\StreetSplitter" />
+
+    <preference for="Dhl\Versenden\Api\Webservice\BcsAccessDataInterface" type="Dhl\Versenden\Webservice\BcsAccessData" />
     <preference for="Dhl\Versenden\Api\Webservice\UnitConverterInterface" type="Dhl\Versenden\Webservice\UnitConverter" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\AdapterChainInterface" type="Dhl\Versenden\Webservice\Adapter\AdapterChain" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Versenden\Webservice\Adapter\BcsAdapter" />
@@ -59,36 +83,53 @@
 
     <!-- plugins -->
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="addVersendenInfoToAddress" type="Dhl\Versenden\Model\Plugin\AddVersendenInfoToQuoteAddress" />
-    </type>
-    <type name="Magento\Sales\Controller\Adminhtml\Order\AddressSave">
-        <plugin name="updateVersendenInfo" type="Dhl\Versenden\Model\Plugin\UpdateVersendenInfoOnAddressSave" />
+        <plugin name="initShippingInfo" type="Dhl\Versenden\Model\Plugin\Checkout\ShippingInformationManagementPlugin" />
     </type>
     <type name="Dhl\Versenden\Webservice\Adapter\BcsAdapter">
         <plugin name="logBcsApiCalls" type="Dhl\Versenden\Model\Plugin\BcsAdapterPlugin" />
     </type>
 
     <!-- passing arguments -->
-    <virtualType name="versendenInfoOrderMetadata" type="Dhl\Versenden\Model\ResourceModel\Metadata">
+    <type name="Dhl\Versenden\Model\Plugin\Checkout\ShippingInformationManagementPlugin">
         <arguments>
-            <argument name="resourceClassName" xsi:type="string">Dhl\Versenden\Model\ResourceModel\VersendenInfoOrder</argument>
-            <argument name="modelClassName" xsi:type="string">Dhl\Versenden\Model\VersendenInfoOrder</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="versendenInfoQuoteMetadata" type="Dhl\Versenden\Model\ResourceModel\Metadata">
-        <arguments>
-            <argument name="resourceClassName" xsi:type="string">Dhl\Versenden\Model\ResourceModel\VersendenInfoQuote</argument>
-            <argument name="modelClassName" xsi:type="string">Dhl\Versenden\Model\VersendenInfoQuote</argument>
-        </arguments>
-    </virtualType>
-    <type name="Dhl\Versenden\Model\VersendenInfoOrderRepository">
-        <arguments>
-            <argument name="metadata" xsi:type="object">versendenInfoOrderMetadata</argument>
+            <argument name="quoteInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\QuoteShippingInfoRepository</argument>
         </arguments>
     </type>
-    <type name="Dhl\Versenden\Model\VersendenInfoQuoteRepository">
+    <type name="Dhl\Versenden\Observer\ShiftShippingInfoObserver">
         <arguments>
-            <argument name="metadata" xsi:type="object">versendenInfoQuoteMetadata</argument>
+            <argument name="quoteInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\QuoteShippingInfoRepository</argument>
+            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Versenden\Observer\ExtendAddressFormObserver">
+        <arguments>
+            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Versenden\Observer\UpdateShippingInfoObserver">
+        <arguments>
+            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Dhl\Versenden\Api\Data\QuoteShippingInfoInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">dhlshipping_quote_address</item>
+                    <item name="identifierField" xsi:type="string">address_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Dhl\Versenden\Api\Data\OrderShippingInfoInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">dhlshipping_order_address</item>
+                    <item name="identifierField" xsi:type="string">address_id</item>
+                </item>
+            </argument>
         </arguments>
     </type>
 </config>

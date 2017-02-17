@@ -25,8 +25,7 @@
  */
 namespace Dhl\Versenden\Observer;
 
-use \Dhl\Versenden\Api\VersendenInfoOrderRepositoryInterface;
-use \Dhl\Versenden\Api\InfoFactory;
+use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
 use \Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Form;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
@@ -46,40 +45,25 @@ use \Magento\Sales\Block\Adminhtml\Order\Address;
 class ExtendAddressFormObserver implements ObserverInterface
 {
     /**
-     * @var VersendenInfoOrderRepositoryInterface
-     */
-    private $versendenInfoOrderRepository;
-
-    /**
-     * Versenden Info Order Entity
-     *
-     * @var InfoFactory
-     */
-    private $versendenInfoFactory;
-
-    /**
-     * Core registry
-     *
      * @var Registry
      */
     private $coreRegistry;
 
     /**
+     * @var ShippingInfoRepositoryInterface
+     */
+    private $orderInfoRepository;
+
+    /**
      * ExtendAddressFormObserver constructor.
      *
-     * @param VersendenInfoOrderRepositoryInterface $versendenInfoOrderRepository
-     * @param InfoFactory                           $versendenInfoFactory
-     * @param Registry                              $coreRegistry
+     * @param Registry $coreRegistry
+     * @param ShippingInfoRepositoryInterface $orderInfoRepository
      */
-    public function __construct(
-        VersendenInfoOrderRepositoryInterface $versendenInfoOrderRepository,
-        InfoFactory $versendenInfoFactory,
-        Registry $coreRegistry
-    )
+    public function __construct(Registry $coreRegistry, ShippingInfoRepositoryInterface $orderInfoRepository)
     {
-        $this->versendenInfoOrderRepository = $versendenInfoOrderRepository;
-        $this->versendenInfoFactory         = $versendenInfoFactory;
-        $this->coreRegistry                 = $coreRegistry;
+        $this->coreRegistry = $coreRegistry;
+        $this->orderInfoRepository = $orderInfoRepository;
     }
 
     /**
@@ -112,14 +96,16 @@ class ExtendAddressFormObserver implements ObserverInterface
         }
 
         try {
-            $info       = $this->versendenInfoOrderRepository->get($address->getEntityId());
-            $infoEntity = $this->versendenInfoFactory->create();
-            $info       = $infoEntity::fromJson($info->getDhlVersendenInfo());
+            // load previous info data
+            $dhlOrderInfo = $this->orderInfoRepository->getById($address->getEntityId());
         } catch (NoSuchEntityException $e) {
             return;
         }
 
-        if (!$info instanceof \Dhl\Versenden\Api\Info) {
+        $serializedInfo = $dhlOrderInfo->getInfo();
+        /** @var \Dhl\Versenden\Api\Info $shippingInfo */
+        $shippingInfo = \Dhl\Versenden\Api\Info::fromJson($serializedInfo);
+        if (!$shippingInfo instanceof \Dhl\Versenden\Api\Info) {
             return;
         }
 

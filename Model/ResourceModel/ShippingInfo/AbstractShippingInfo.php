@@ -23,12 +23,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\ResourceModel;
+namespace Dhl\Versenden\Model\ResourceModel\ShippingInfo;
 
-use Dhl\Versenden\Api\Data\VersendenInfoOrderInterface;
-use Dhl\Versenden\Setup\InstallSchema;
+use \Magento\Framework\EntityManager\EntityManager;
 use \Magento\Framework\Model\AbstractModel;
 use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use \Magento\Framework\Model\ResourceModel\Db\Context;
 
 /**
  * Dhl Versenden Info Resource Model
@@ -39,19 +39,42 @@ use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VersendenInfoOrder extends AbstractDb
+abstract class AbstractShippingInfo extends AbstractDb
 {
     /**
-     * Resource initialization.
+     * @var EntityManager
      */
-    protected function _construct()
-    {
-        $this->_init(InstallSchema::TABLE_VERSENDEN_INFO_SALES_ORDER, VersendenInfoOrderInterface::VERSENDEN_INFO_ID);
+    private $entityManager;
+
+    /**
+     * Class constructor
+     *
+     * @param EntityManager $entityManager
+     * @param Context $context
+     * @param string $connectionName
+     */
+    public function __construct(
+        EntityManager $entityManager,
+        Context $context,
+        $connectionName = null
+    ) {
+        $this->entityManager = $entityManager;
+        parent::__construct($context, $connectionName);
     }
 
     /**
      * @param AbstractModel $object
-     *
+     * @param int $value
+     * @param null $field
+     * @return $this
+     */
+    public function load(AbstractModel $object, $value, $field = null)
+    {
+        $this->entityManager->load($object, $value);
+        return $this;
+    }
+    /**
+     * @param AbstractModel $object
      * @return $this
      * @throws \Exception
      */
@@ -59,9 +82,20 @@ class VersendenInfoOrder extends AbstractDb
     {
         $this->_isPkAutoIncrement = false;
 
-        parent::save($object);
-
+        $this->entityManager->save($object);
         return $this;
     }
 
+    /**
+     * Delete the object
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this
+     * @throws \Exception
+     */
+    public function delete(\Magento\Framework\Model\AbstractModel $object)
+    {
+        $this->entityManager->delete($object);
+        return $this;
+    }
 }

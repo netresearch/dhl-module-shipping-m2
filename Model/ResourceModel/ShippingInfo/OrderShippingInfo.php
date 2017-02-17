@@ -23,12 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api;
+namespace Dhl\Versenden\Model\ResourceModel\ShippingInfo;
 
-use Dhl\Versenden\Api\Data\VersendenInfoQuoteInterface;
+use \Dhl\Versenden\Api\Data\ShippingInfoInterface;
+use \Dhl\Versenden\Setup\InstallSchema;
 
 /**
- * Versenden Info Repository Interface
+ * DHL Shipping Order Info Resource Model
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -36,33 +37,13 @@ use Dhl\Versenden\Api\Data\VersendenInfoQuoteInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface VersendenInfoQuoteRepositoryInterface
+class OrderShippingInfo extends AbstractShippingInfo
 {
-
     /**
-     * Loads a specified versenden info quote extension attribute.
-     *
-     * @param int $id
-     *
-     * @return VersendenInfoQuoteInterface
+     * Resource initialization.
      */
-    public function get($id);
-
-    /**
-     * Deletes a specified versenden info quote extension attribute.
-     *
-     * @param VersendenInfoQuoteInterface $entity
-     *
-     * @return bool
-     */
-    public function delete(VersendenInfoQuoteInterface $entity);
-
-    /**
-     * Performs persist operations for a specified versenden info quote extension attribute.
-     *
-     * @param VersendenInfoQuoteInterface $entity
-     *
-     * @return VersendenInfoQuoteInterface
-     */
-    public function save(VersendenInfoQuoteInterface $entity);
+    protected function _construct()
+    {
+        $this->_init(InstallSchema::TABLE_ORDER_ADDRESS, ShippingInfoInterface::ADDRESS_ID);
+    }
 }

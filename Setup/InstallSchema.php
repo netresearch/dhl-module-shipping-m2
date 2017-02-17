@@ -25,13 +25,14 @@
  */
 namespace Dhl\Versenden\Setup;
 
+use Dhl\Versenden\Api\Data\ShippingInfoInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 
 /**
- * UpdateCarrierObserver
+ * InstallSchema
  *
  * @category Dhl
  * @package  Dhl\Versenden
@@ -41,11 +42,8 @@ use Magento\Framework\Setup\SchemaSetupInterface;
  */
 class InstallSchema implements InstallSchemaInterface
 {
-    const TABLE_VERSENDEN_INFO_QUOTE    = 'versenden_quote_address';
-    const TABLE_VERSENDEN_INFO_QUOTE_PK = 'quote_address_id';
-
-    const TABLE_VERSENDEN_INFO_SALES_ORDER    = 'versenden_sales_order_address';
-    const TABLE_VERSENDEN_INFO_SALES_ORDER_PK = 'sales_order_address_id';
+    const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
+    const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
 
     /**
      * {@inheritdoc}
@@ -54,68 +52,62 @@ class InstallSchema implements InstallSchemaInterface
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $installer = $setup;
+
         /**
-         * Create table 'versenden_quote_address'
+         * Create table 'dhlshipping_quote_address'
          */
         $table = $installer->getConnection()->newTable(
-            $installer->getTable(self::TABLE_VERSENDEN_INFO_QUOTE)
-        )->addColumn(
-            self::TABLE_VERSENDEN_INFO_QUOTE_PK,
+            $installer->getTable(self::TABLE_QUOTE_ADDRESS)
+        );
+
+        $table->addColumn(
+            ShippingInfoInterface::ADDRESS_ID,
             Table::TYPE_INTEGER,
             null,
             ['identity' => false, 'unsigned' => true, 'nullable' => false, 'primary' => true],
             'Quote Address Id'
-        )->addColumn(
-            'dhl_versenden_info',
-            Table::TYPE_TEXT,
-            null,
-            [],
-            'DHL Versenden Info'
-        )->addForeignKey(
+        );
+        $table->addColumn(ShippingInfoInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
+        $table->addForeignKey(
             $installer->getFkName(
-                self::TABLE_VERSENDEN_INFO_QUOTE,
-                self::TABLE_VERSENDEN_INFO_QUOTE_PK,
+                self::TABLE_QUOTE_ADDRESS,
+                ShippingInfoInterface::ADDRESS_ID,
                 'quote_address',
                 'address_id'
             ),
-            self::TABLE_VERSENDEN_INFO_QUOTE_PK,
+            ShippingInfoInterface::ADDRESS_ID,
             $installer->getTable('quote_address'),
             'address_id',
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
-        );;
+        );
         $installer->getConnection()->createTable($table);
 
         /**
-         * Create table 'versenden_sales_order_address'
+         * Create table 'dhlshipping_order_address'
          */
         $table = $installer->getConnection()->newTable(
-            $installer->getTable(self::TABLE_VERSENDEN_INFO_SALES_ORDER)
-        )->addColumn(
-            self::TABLE_VERSENDEN_INFO_SALES_ORDER_PK,
+            $installer->getTable(self::TABLE_ORDER_ADDRESS)
+        );
+        $table->addColumn(
+            ShippingInfoInterface::ADDRESS_ID,
             Table::TYPE_INTEGER,
             null,
             ['identity' => false, 'unsigned' => true, 'nullable' => false, 'primary' => true],
-            'Sales Order Address Id'
-        )->addColumn(
-            'dhl_versenden_info',
-            Table::TYPE_TEXT,
-            null,
-            [],
-            'DHL Versenden Info'
-        )->addForeignKey(
+            'Order Address Id'
+        );
+        $table->addColumn(ShippingInfoInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shippin Info');
+        $table->addForeignKey(
             $installer->getFkName(
-                self::TABLE_VERSENDEN_INFO_SALES_ORDER,
-                self::TABLE_VERSENDEN_INFO_SALES_ORDER_PK,
+                self::TABLE_ORDER_ADDRESS,
+                ShippingInfoInterface::ADDRESS_ID,
                 'sales_order_address',
                 'entity_id'
             ),
-            self::TABLE_VERSENDEN_INFO_SALES_ORDER_PK,
+            ShippingInfoInterface::ADDRESS_ID,
             $installer->getTable('sales_order_address'),
             'entity_id',
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
-        );;
+        );
         $installer->getConnection()->createTable($table);
-
-        $setup->endSetup();
     }
 }
