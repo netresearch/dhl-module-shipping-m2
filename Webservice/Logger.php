@@ -26,8 +26,10 @@
 
 namespace Dhl\Versenden\Webservice;
 
-use \Magento\Framework\Logger\Monolog;
 use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Dhl\Versenden\Api\Webservice\Client\HttpClientInterface;
+use \Dhl\Versenden\Api\Webservice\WebserviceLoggerInterface;
+use \Magento\Framework\Logger\Monolog;
 
 /**
  * Gateway
@@ -38,7 +40,7 @@ use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Logger extends Monolog
+class Logger extends Monolog implements WebserviceLoggerInterface
 {
     /**
      * @var ModuleConfigInterface
@@ -80,5 +82,44 @@ class Logger extends Monolog
         }
 
         return false;
+    }
+
+    /**
+     * @param HttpClientInterface $httpClient
+     * @param array               $context
+     */
+    public function logWebserviceDebug(HttpClientInterface $httpClient, array $context = [])
+    {
+        $this->logWebservice(self::DEBUG, $httpClient, $context);
+    }
+
+    /**
+     * @param HttpClientInterface $httpClient
+     * @param array               $context
+     */
+    public function logWebserviceWarning(HttpClientInterface $httpClient, array $context = [])
+    {
+        $this->logWebservice(self::WARNING, $httpClient, $context);
+    }
+
+    /**
+     * @param HttpClientInterface $httpClient
+     * @param array               $context
+     */
+    public function logWebserviceError(HttpClientInterface $httpClient, array $context = [])
+    {
+        $this->logWebservice(self::ERROR, $httpClient, $context);
+    }
+
+    /**
+     * @param                     $level
+     * @param HttpClientInterface $httpClient
+     * @param array               $context
+     */
+    private function logWebservice($level, HttpClientInterface $httpClient, array $context = [])
+    {
+        $this->log($level, $httpClient->getLastRequest(), $context);
+        $this->log($level, $httpClient->getLastResponseHeaders(), $context);
+        $this->log($level, $httpClient->getLastResponse(), $context);
     }
 }
