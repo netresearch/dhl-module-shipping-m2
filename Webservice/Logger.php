@@ -88,27 +88,27 @@ class Logger extends Monolog implements WebserviceLoggerInterface
      * @param HttpClientInterface $httpClient
      * @param array               $context
      */
-    public function logWebserviceDebug(HttpClientInterface $httpClient, array $context = [])
+    public function wsDebug(HttpClientInterface $httpClient, array $context = [])
     {
-        $this->logWebservice(self::DEBUG, $httpClient, $context);
+        $this->wsLog(self::DEBUG, $httpClient, $context);
     }
 
     /**
      * @param HttpClientInterface $httpClient
      * @param array               $context
      */
-    public function logWebserviceWarning(HttpClientInterface $httpClient, array $context = [])
+    public function wsWarning(HttpClientInterface $httpClient, array $context = [])
     {
-        $this->logWebservice(self::WARNING, $httpClient, $context);
+        $this->wsLog(self::WARNING, $httpClient, $context);
     }
 
     /**
      * @param HttpClientInterface $httpClient
      * @param array               $context
      */
-    public function logWebserviceError(HttpClientInterface $httpClient, array $context = [])
+    public function wsError(HttpClientInterface $httpClient, array $context = [])
     {
-        $this->logWebservice(self::ERROR, $httpClient, $context);
+        $this->wsLog(self::ERROR, $httpClient, $context);
     }
 
     /**
@@ -116,7 +116,7 @@ class Logger extends Monolog implements WebserviceLoggerInterface
      * @param HttpClientInterface $httpClient
      * @param array               $context
      */
-    private function logWebservice($level, HttpClientInterface $httpClient, array $context = [])
+    private function wsLog($level, HttpClientInterface $httpClient, array $context = [])
     {
         $this->log($level, $httpClient->getLastRequest(), $context);
         $this->log($level, $httpClient->getLastResponseHeaders(), $context);
