@@ -228,7 +228,10 @@ class BcsDataMapper implements BcsDataMapperInterface
      */
     public function mapShipmentOrder(Request\Type\CreateShipment\ShipmentOrderInterface $shipmentOrder)
     {
-        $shipmentDetailsType = $this->getShipmentDetails($shipmentOrder->getShipmentDetails(), $shipmentOrder->getPackages());
+        $shipmentDetailsType = $this->getShipmentDetails(
+            $shipmentOrder->getShipmentDetails(),
+            $shipmentOrder->getPackages()
+        );
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
         $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
         $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
@@ -247,7 +250,9 @@ class BcsDataMapper implements BcsDataMapperInterface
             $shipmentType
         );
 
-        $printOnlyIfCodeable = new BcsApi\Serviceconfiguration(true);
+        $printOnlyIfCodeable = new BcsApi\Serviceconfiguration(
+            $shipmentOrder->getShipmentDetails()->isPrintOnlyIfCodeable()
+        );
         $shipmentOrderType->setLabelResponseType('B64');
         $shipmentOrderType->setPrintOnlyIfCodeable($printOnlyIfCodeable);
 
