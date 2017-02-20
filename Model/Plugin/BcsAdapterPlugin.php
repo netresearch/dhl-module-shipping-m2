@@ -31,6 +31,7 @@ use \Dhl\Versenden\Api\Data\Webservice\Response\Type\CreateShipment\LabelInterfa
 use \Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface;
 use \Dhl\Versenden\Webservice\Adapter\BcsAdapter;
 use \Dhl\Versenden\Webservice\Logger;
+use Dhl\Versenden\Webservice\Response\CreateShipmentStatusException;
 
 /**
  *
@@ -72,31 +73,21 @@ class BcsAdapterPlugin
      * @param ShipmentOrderInterface[] $shipmentOrders
      *
      * @return LabelInterface[]
-     * @throws \SoapFault
+     * @throws \SoapFault | CreateShipmentStatusException
      */
     public function aroundCreateLabels(BcsAdapter $subject, callable $proceed, array $shipmentOrders)
     {
         try {
             $labels = $proceed($shipmentOrders);
-            /** @var LabelInterface $label */
-            foreach ($labels as $label) {
-                $labelStatus = $label->getStatus();
-                if ($labelStatus->getCode() == '0') {
-                    $this->logger->log(\Monolog\Logger::DEBUG, $this->soapClient->getLastRequest());
-                    $this->logger->log(\Monolog\Logger::DEBUG, $this->soapClient->getLastResponseHeaders());
-                    $this->logger->log(\Monolog\Logger::DEBUG, $this->soapClient->getLastResponse());
-                } else {
-                    $this->logger->log(\Monolog\Logger::WARNING, $this->soapClient->getLastRequest());
-                    $this->logger->log(\Monolog\Logger::WARNING, $this->soapClient->getLastResponseHeaders());
-                    $this->logger->log(\Monolog\Logger::WARNING, $this->soapClient->getLastResponse());
-                }
-            }
+
+            $this->logger->logWebserviceDebug($this->soapClient);
 
             return $labels;
+        } catch (CreateShipmentStatusException $e) {
+            $this->logger->logWebserviceWarning($this->soapClient);
+            throw $e;
         } catch (\SoapFault $e) {
-            $this->logger->log(\Monolog\Logger::ERROR, $this->soapClient->getLastRequest());
-            $this->logger->log(\Monolog\Logger::ERROR, $this->soapClient->getLastResponseHeaders());
-            $this->logger->log(\Monolog\Logger::ERROR, $this->soapClient->getLastResponse());
+            $this->logger->logWebserviceError($this->soapClient);
             throw $e;
         }
     }
