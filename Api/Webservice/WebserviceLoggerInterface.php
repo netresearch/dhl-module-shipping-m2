@@ -42,17 +42,17 @@ interface WebserviceLoggerInterface
      * @param HttpClientInterface $httpClient
      * @param array               $context
      */
-    public function logWebserviceDebug(HttpClientInterface $httpClient, array $context = []);
+    public function wsDebug(HttpClientInterface $httpClient, array $context = []);
 
     /**
      * @param HttpClientInterface $httpClient
      * @param array               $context
      */
-    public function logWebserviceWarning(HttpClientInterface $httpClient, array $context = []);
+    public function wsWarning(HttpClientInterface $httpClient, array $context = []);
 
     /**
      * @param HttpClientInterface $httpClient
      * @param array               $context
      */
-    public function logWebserviceError(HttpClientInterface $httpClient, array $context = []);
+    public function wsError(HttpClientInterface $httpClient, array $context = []);
 }

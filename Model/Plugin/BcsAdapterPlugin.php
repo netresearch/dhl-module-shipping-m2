@@ -80,14 +80,14 @@ class BcsAdapterPlugin
         try {
             $labels = $proceed($shipmentOrders);
 
-            $this->logger->logWebserviceDebug($this->soapClient);
+            $this->logger->wsDebug($this->soapClient);
 
             return $labels;
         } catch (CreateShipmentStatusException $e) {
-            $this->logger->logWebserviceWarning($this->soapClient);
+            $this->logger->wsWarning($this->soapClient);
             throw $e;
         } catch (\SoapFault $e) {
-            $this->logger->logWebserviceError($this->soapClient);
+            $this->logger->wsError($this->soapClient);
             throw $e;
         }
     }
