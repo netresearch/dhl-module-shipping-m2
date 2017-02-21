@@ -32,6 +32,7 @@ use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ServiceInterface;
 use \Dhl\Versenden\Api\Config\GlConfigInterface;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\DimensionsInterfaceFactory;
+use Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\MonetaryValueInterface;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\MonetaryValueInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\WeightInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
@@ -45,6 +46,7 @@ use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipmentDetailsInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipperInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterfaceFactory;
+use \Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\Service\ServiceFactory;
 use \Dhl\Versenden\Api\StreetSplitterInterface;
 use \Dhl\Versenden\Api\Webservice\BcsAccessDataInterface;
 use \Dhl\Versenden\Api\Webservice\Request\Mapper\AppDataMapperInterface;
@@ -156,6 +158,11 @@ class AppDataMapper implements AppDataMapperInterface
     private $exportTypeInterfaceFactory;
 
     /**
+     * @var ServiceFactory
+     */
+    private $serviceFactory;
+
+    /**
      * AppDataMapper constructor.
      *
      * @param BcsConfigInterface                $bcsConfig
@@ -177,6 +184,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param MonetaryValueInterfaceFactory     $packageValueFactory
      * @param PackageInterfaceFactory           $packageFactory
      * @param ExportTypeInterfaceFactory        $exportTypeInterfaceFactory
+     * @param ServiceFactory                    $serviceFactory
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
@@ -197,7 +205,8 @@ class AppDataMapper implements AppDataMapperInterface
         DimensionsInterfaceFactory $packageDimensionsFactory,
         MonetaryValueInterfaceFactory $packageValueFactory,
         PackageInterfaceFactory $packageFactory,
-        ExportTypeInterfaceFactory $exportTypeInterfaceFactory
+        ExportTypeInterfaceFactory $exportTypeInterfaceFactory,
+        ServiceFactory $serviceFactory
     ) {
         $this->bcsConfig                    = $bcsConfig;
         $this->glConfig                     = $glConfig;
@@ -218,6 +227,32 @@ class AppDataMapper implements AppDataMapperInterface
         $this->packageValueFactory          = $packageValueFactory;
         $this->packageFactory               = $packageFactory;
         $this->exportTypeInterfaceFactory   = $exportTypeInterfaceFactory;
+        $this->serviceFactory               = $serviceFactory;
+    }
+
+    /**
+     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @return MonetaryValueInterface
+     */
+    private function getShipmentValue(\Magento\Shipping\Model\Shipment\Request $request)
+    {
+        $shipmentValue = 0;
+        foreach ($request->getData('packages') as $packageId => $package) {
+            $shipmentValue += array_reduce($package['items'], function ($carry, $item) {
+                // precision: 3
+                $price = $item['price'] * 1000;
+                $carry += ($price * $item['qty']);
+
+                return $carry;
+            }, $shipmentValue);
+        }
+
+        $declaredValue = $this->packageValueFactory->create([
+            'value' => 0.001 * $shipmentValue,
+            'currencyCode' => $request->getData('base_currency_code'),
+        ]);
+
+        return $declaredValue;
     }
 
     /**
@@ -451,7 +486,17 @@ class AppDataMapper implements AppDataMapperInterface
      */
     private function getServices(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        return [];
+        $services = [];
+
+        $paymentMethod = $request->getOrderShipment()->getOrder()->getPayment()->getMethod();
+        if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
+            $services['cod'] = $this->serviceFactory->create('cod', [
+                'codAmount' => $this->getShipmentValue($request),
+                'addFee' => true,
+            ]);
+        }
+
+        return $services;
     }
 
     /**
