@@ -31,7 +31,7 @@ use \Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use \Magento\Framework\Model\ResourceModel\Db\Context;
 
 /**
- * Dhl Versenden Info Resource Model
+ * Dhl Shipping Info Resource Model
  *
  * @category Dhl
  * @package  Dhl\Versenden

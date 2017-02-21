@@ -56,10 +56,14 @@ class UnitConverter implements UnitConverterInterface
      * @param float $value
      * @param string $unitIn
      * @param string $unitOut
-     * @return float
+     * @return float|null
      */
     public function convertDimension($value, $unitIn, $unitOut)
     {
+        if (!is_numeric($value)) {
+            return null;
+        }
+
         $dimensionConverter = new \Zend_Measure_Length($value, $unitIn);
         $dimensionConverter->setType($unitOut);
 
@@ -70,10 +74,14 @@ class UnitConverter implements UnitConverterInterface
      * @param float $value
      * @param string $unitIn
      * @param string $unitOut
-     * @return float
+     * @return float|null
      */
     public function convertMonetaryValue($value, $unitIn, $unitOut)
     {
+        if (!is_numeric($value)) {
+            return null;
+        }
+
         $amount = $this->currencyConverter->currencyConvert($value, $unitIn, $unitOut);
         return round($amount, self::CONVERSION_PRECISION);
     }
@@ -82,10 +90,14 @@ class UnitConverter implements UnitConverterInterface
      * @param float $value
      * @param string $unitIn
      * @param string $unitOut
-     * @return float
+     * @return float|null
      */
     public function convertWeight($value, $unitIn, $unitOut)
     {
+        if (!is_numeric($value)) {
+            return null;
+        }
+
         $weightConverter = new \Zend_Measure_Weight($value, $unitIn);
         $weightConverter->setType($unitOut);
 

@@ -25,9 +25,8 @@
  */
 namespace Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address;
 
-use \Dhl\Versenden\Api\Info;
-use \Dhl\Versenden\Api\InfoFactory;
 use \Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository;
+use \Dhl\Versenden\Webservice\ShippingInfo\Info;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Backend\Model\Session\Quote;
 use \Magento\Framework\Data\Form\Element\Fieldset;
@@ -152,8 +151,8 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         // load previous info data
         $dhlOrderInfo = $this->orderInfoRepository->getById($address->getEntityId());
         $serializedInfo = $dhlOrderInfo->getInfo();
-        /** @var \Dhl\Versenden\Api\Info $shippingInfo */
-        $shippingInfo = \Dhl\Versenden\Api\Info::fromJson($serializedInfo);
+        /** @var Info $shippingInfo */
+        $shippingInfo = Info::fromJson($serializedInfo);
 
         // add info deserialized data to fieldset
         $receiverData = $shippingInfo->getReceiver()->toArray();

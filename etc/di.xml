@@ -35,7 +35,7 @@
     <!-- library preferences -->
     <preference for="Dhl\Versenden\Api\Data\QuoteShippingInfoInterface" type="Dhl\Versenden\Model\ShippingInfo\QuoteShippingInfo" />
     <preference for="Dhl\Versenden\Api\Data\OrderShippingInfoInterface" type="Dhl\Versenden\Model\ShippingInfo\OrderShippingInfo" />
-    <preference for="Dhl\Versenden\Api\Data\InfoInterface" type="Dhl\Versenden\Api\Info"/>
+    <preference for="Dhl\Versenden\Api\Data\ShippingInfo\InfoInterface" type="Dhl\Versenden\Webservice\ShippingInfo\Info"/>
 
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\DimensionsInterface" type="Dhl\Versenden\Webservice\Request\Type\Generic\Package\Dimensions" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\Generic\Package\MonetaryValueInterface" type="Dhl\Versenden\Webservice\Request\Type\Generic\Package\MonetaryValue" />
@@ -67,7 +67,7 @@
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\AdapterChainInterface" type="Dhl\Versenden\Webservice\Adapter\AdapterChain" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Versenden\Webservice\Adapter\BcsAdapter" />
     <preference for="Dhl\Versenden\Api\Webservice\Adapter\GlAdapterInterface" type="Dhl\Versenden\Webservice\Adapter\GlAdapter" />
-    <preference for="Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface" type="Dhl\Versenden\Webservice\Client\BcsSoapClient" shared="true" />
+    <preference for="Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface" type="Dhl\Versenden\Webservice\Client\BcsSoapClient" />
     <preference for="Dhl\Versenden\Api\Webservice\Request\Mapper\AppDataMapperInterface" type="Dhl\Versenden\Webservice\AppDataMapper" />
     <preference for="Dhl\Versenden\Api\Webservice\Request\Mapper\BcsDataMapperInterface" type="Dhl\Versenden\Webservice\BcsDataMapper" />
     <preference for="Dhl\Versenden\Api\Webservice\Request\Mapper\GlDataMapperInterface" type="Dhl\Versenden\Webservice\GlDataMapper" />

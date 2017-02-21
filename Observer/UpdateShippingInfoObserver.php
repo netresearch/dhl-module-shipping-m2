@@ -25,7 +25,8 @@
  */
 namespace Dhl\Versenden\Observer;
 
-use \Dhl\Versenden\Api\Info\Serializer;
+use \Dhl\Versenden\Webservice\ShippingInfo\Info;
+use \Dhl\Versenden\Webservice\ShippingInfo\Serializer;
 use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
 use \Magento\Directory\Model\CountryFactory;
 use \Magento\Framework\App\RequestInterface;
@@ -109,8 +110,8 @@ class UpdateShippingInfoObserver implements ObserverInterface
         // load previous info data
         $dhlOrderInfo = $this->orderInfoRepository->getById($addressId);
         $serializedInfo = $dhlOrderInfo->getInfo();
-        /** @var \Dhl\Versenden\Api\Info $shippingInfo */
-        $shippingInfo = \Dhl\Versenden\Api\Info::fromJson($serializedInfo);
+        /** @var Info $shippingInfo */
+        $shippingInfo = Info::fromJson($serializedInfo);
 
         // update with current address data
         $streetParts = [

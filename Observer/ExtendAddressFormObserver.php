@@ -27,6 +27,7 @@ namespace Dhl\Versenden\Observer;
 
 use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
 use \Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Form;
+use \Dhl\Versenden\Webservice\ShippingInfo\Info;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
 use \Magento\Framework\Exception\NoSuchEntityException;
@@ -103,9 +104,9 @@ class ExtendAddressFormObserver implements ObserverInterface
         }
 
         $serializedInfo = $dhlOrderInfo->getInfo();
-        /** @var \Dhl\Versenden\Api\Info $shippingInfo */
-        $shippingInfo = \Dhl\Versenden\Api\Info::fromJson($serializedInfo);
-        if (!$shippingInfo instanceof \Dhl\Versenden\Api\Info) {
+        /** @var Info $shippingInfo */
+        $shippingInfo = Info::fromJson($serializedInfo);
+        if (!$shippingInfo instanceof Info) {
             return;
         }
 

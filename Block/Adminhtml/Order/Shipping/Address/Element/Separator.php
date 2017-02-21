@@ -26,7 +26,7 @@
 namespace Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Element;
 
 /**
- * Dhl Versenden Info Model
+ * Config values separator
  *
  * @category Dhl
  * @package  Dhl\Versenden
