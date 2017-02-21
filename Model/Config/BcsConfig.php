@@ -61,8 +61,7 @@ class BcsConfig implements BcsConfigInterface
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         ModuleConfigInterface $moduleConfig
-    )
-    {
+    ) {
         $this->configAccessor = $configAccessor;
         $this->moduleConfig   = $moduleConfig;
     }

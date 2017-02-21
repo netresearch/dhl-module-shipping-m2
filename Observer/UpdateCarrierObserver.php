@@ -68,12 +68,6 @@ class UpdateCarrierObserver implements ObserverInterface
         /** @var \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order $order */
         $order          = $observer->getEvent()->getData('order');
         $shippingMethod = $order->getShippingMethod();
-        $paymentMethod  = $order->getPayment()->getMethod();
-
-        if ($this->config->isCodPaymentMethod($paymentMethod)) {
-            //FIXME(nr): COD is not yet supported.
-            return;
-        }
 
         if ($this->config->canProcessMethod($shippingMethod, $order->getStoreId())) {
             $parts          = explode('_', $shippingMethod);

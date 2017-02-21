@@ -29,6 +29,7 @@ use \Dhl\Versenden\Api\Data\Webservice\Request;
 use \Dhl\Versenden\Api\Webservice\Request\Mapper\BcsDataMapperInterface;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder;
 use \Dhl\Versenden\Bcs as BcsApi;
+use Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\Service as Services;
 
 /**
  * BcsDataMapper
@@ -65,7 +66,25 @@ class BcsDataMapper implements BcsDataMapperInterface
             $shipmentDetails->getShipmentDate(), // TODO(nr): convert to CET
             $shipmentItemType
         );
+
         return $shipmentDetailsType;
+    }
+
+    /**
+     * @param BcsApi\ShipmentDetailsTypeType $shipmentDetailsType
+     * @param ShipmentOrder\ServiceInterface[] $services
+     */
+    private function addServices(BcsApi\ShipmentDetailsTypeType $shipmentDetailsType, array $services)
+    {
+        $serviceType = new BcsApi\ShipmentService();
+        if (isset($services['cod'])) {
+            /** @var Services\Cod $service */
+            $service = $services['cod'];
+            $codConfig = new BcsApi\ServiceconfigurationCashOnDelivery(true, $service->addFee(), $service->getCodAmount()->getValue('EUR'));
+            $serviceType->setCashOnDelivery($codConfig);
+        };
+
+        $shipmentDetailsType->setService($serviceType);
     }
 
     /**
@@ -232,6 +251,8 @@ class BcsDataMapper implements BcsDataMapperInterface
             $shipmentOrder->getShipmentDetails(),
             $shipmentOrder->getPackages()
         );
+        $this->addServices($shipmentDetailsType, $shipmentOrder->getServices());
+
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
         $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
         $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
