@@ -25,8 +25,8 @@
  */
 namespace Dhl\Versenden\Model\Plugin\Checkout;
 
-use \Dhl\Versenden\Api\Data\InfoInterface;
-use \Dhl\Versenden\Api\Info\Serializer;
+use Dhl\Versenden\Api\Data\ShippingInfo\InfoInterface;
+use \Dhl\Versenden\Webservice\ShippingInfo\Serializer;
 use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
 use \Dhl\Versenden\Api\StreetSplitterInterface;
 use \Dhl\Versenden\Model\ShippingInfo\QuoteShippingInfoFactory;
