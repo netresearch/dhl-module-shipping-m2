@@ -28,8 +28,10 @@ namespace Dhl\Versenden\Model\ShippingInfo;
 use \Dhl\Versenden\Api\Data;
 use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
 use \Dhl\Versenden\Model\ResourceModel\ShippingInfo\AbstractShippingInfo as ShippingInfoResource;
+use \Dhl\Versenden\Webservice\ShippingInfo\Info;
 use \Magento\Framework\Exception\CouldNotDeleteException;
 use \Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryInterface
 {
@@ -69,6 +71,7 @@ abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryI
      *
      * @param int $addressId Order Address ID or Quote Address ID
      * @return Data\ShippingInfoInterface
+     * @throws NoSuchEntityException
      */
     abstract public function getById($addressId);
 
@@ -100,5 +103,21 @@ abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryI
     {
         $entity = $this->getById($addressId);
         return $this->delete($entity);
+    }
+
+    /**
+     * @param $addressId
+     * @return \Dhl\Versenden\Webservice\ShippingInfo\AbstractInfo|null
+     */
+    public function getInfoData($addressId)
+    {
+        try {
+            $shippingInfo = $this->getById($addressId);
+            $infoData = Info::fromJson($shippingInfo->getInfo());
+        } catch (NoSuchEntityException $e) {
+            $infoData = null;
+        }
+
+        return $infoData;
     }
 }

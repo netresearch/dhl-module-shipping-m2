@@ -52,6 +52,27 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      */
     private $webserviceGateway;
 
+    /**
+     * Carrier constructor.
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Xml\Security $xmlSecurity
+     * @param \Magento\Shipping\Model\Simplexml\ElementFactory $xmlElFactory
+     * @param \Magento\Shipping\Model\Rate\ResultFactory $rateFactory
+     * @param \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory
+     * @param \Magento\Shipping\Model\Tracking\ResultFactory $trackFactory
+     * @param \Magento\Shipping\Model\Tracking\Result\ErrorFactory $trackErrorFactory
+     * @param \Magento\Shipping\Model\Tracking\Result\StatusFactory $trackStatusFactory
+     * @param \Magento\Directory\Model\RegionFactory $regionFactory
+     * @param \Magento\Directory\Model\CountryFactory $countryFactory
+     * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
+     * @param \Magento\Directory\Helper\Data $directoryData
+     * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+     * @param \Magento\Framework\DataObjectFactory $dataObjectFactory
+     * @param \Dhl\Versenden\Api\Webservice\GatewayInterface $webserviceGateway
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory,

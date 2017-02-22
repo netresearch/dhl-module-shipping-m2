@@ -26,12 +26,12 @@
 
 namespace Dhl\Versenden\Model\Plugin;
 
-use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Versenden\Api\Data\Webservice\Response\Type\CreateShipment\LabelInterface;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Versenden\Api\Data\Webservice\ResponseType\CreateShipment\LabelInterface;
 use \Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface;
 use \Dhl\Versenden\Webservice\Adapter\BcsAdapter;
 use \Dhl\Versenden\Webservice\Logger;
-use Dhl\Versenden\Webservice\Response\CreateShipmentStatusException;
+use Dhl\Versenden\Webservice\CreateShipmentStatusException;
 
 /**
  *
@@ -56,8 +56,6 @@ class BcsAdapterPlugin
     /**
      * @param BcsSoapClientInterface $soapClient
      * @param Logger                 $logger
-     *
-     * @codeCoverageIgnore
      */
     public function __construct(BcsSoapClientInterface $soapClient, Logger $logger)
     {
@@ -79,16 +77,15 @@ class BcsAdapterPlugin
     {
         try {
             $labels = $proceed($shipmentOrders);
-
             $this->logger->wsDebug($this->soapClient);
-
-            return $labels;
         } catch (CreateShipmentStatusException $e) {
-            $this->logger->wsWarning($this->soapClient);
+            $this->logger->wsWarning($this->soapClient, ['exception' => $e]);
             throw $e;
         } catch (\SoapFault $e) {
-            $this->logger->wsError($this->soapClient);
+            $this->logger->wsError($this->soapClient, ['exception' => $e]);
             throw $e;
         }
+
+        return $labels;
     }
 }

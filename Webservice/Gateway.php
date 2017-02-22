@@ -27,11 +27,10 @@ namespace Dhl\Versenden\Webservice;
 
 use \Dhl\Versenden\Api\Webservice\Adapter\AdapterChainInterface;
 use \Dhl\Versenden\Api\Webservice\GatewayInterface;
-use \Dhl\Versenden\Api\Webservice\Request;
-use \Dhl\Versenden\Api\Webservice\Response;
-use \Dhl\Versenden\Api\Data\Webservice\Request as RequestData;
-use \Dhl\Versenden\Api\Data\Webservice\Response as ResponseData;
-use \Dhl\Versenden\Webservice\Response\Type\CreateShipmentResponseCollection;
+use \Dhl\Versenden\Api\Webservice\RequestMapper;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType;
+use \Dhl\Versenden\Api\Data\Webservice\ResponseType;
+use \Dhl\Versenden\Webservice\ResponseType\CreateShipmentResponseCollection;
 
 /**
  * Gateway
@@ -50,18 +49,18 @@ class Gateway implements GatewayInterface
     private $apiAdapters;
 
     /**
-     * @var Request\Mapper\AppDataMapperInterface
+     * @var RequestMapper\AppDataMapperInterface
      */
     private $appDataMapper;
 
     /**
      * Gateway constructor.
      * @param AdapterChainInterface $apiAdapters
-     * @param Request\Mapper\AppDataMapperInterface $dataMapper
+     * @param RequestMapper\AppDataMapperInterface $dataMapper
      */
     public function __construct(
         AdapterChainInterface $apiAdapters,
-        Request\Mapper\AppDataMapperInterface $dataMapper
+        RequestMapper\AppDataMapperInterface $dataMapper
     ) {
         $this->apiAdapters = $apiAdapters;
         $this->appDataMapper = $dataMapper;
@@ -70,11 +69,11 @@ class Gateway implements GatewayInterface
     /**
      * @api
      * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
-     * @return CreateShipmentResponseCollection|ResponseData\Type\CreateShipmentResponseInterface[]
+     * @return CreateShipmentResponseCollection|ResponseType\CreateShipmentResponseInterface[]
      */
     public function createLabels(array $shipmentRequests)
     {
-        /** @var RequestData\Type\CreateShipment\ShipmentOrderInterface[] $shipmentOrders */
+        /** @var RequestType\CreateShipment\ShipmentOrderInterface[] $shipmentOrders */
         $shipmentOrders = [];
 
         // convert M2 shipment request to api request, add sequence number
@@ -90,7 +89,7 @@ class Gateway implements GatewayInterface
     /**
      * @api
      * @param string[] $shipmentNumbers
-     * @return ResponseData\Type\DeleteShipmentResponseInterface
+     * @return ResponseType\DeleteShipmentResponseInterface
      */
     public function cancelLabels(array $shipmentNumbers)
     {

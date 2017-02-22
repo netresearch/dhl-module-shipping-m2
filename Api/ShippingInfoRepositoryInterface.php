@@ -59,4 +59,10 @@ interface ShippingInfoRepositoryInterface
      * @return bool
      */
     public function delete(Data\ShippingInfoInterface $entity);
+
+    /**
+     * @param $addressId
+     * @return \Dhl\Versenden\Webservice\ShippingInfo\AbstractInfo|null
+     */
+    public function getInfoData($addressId);
 }

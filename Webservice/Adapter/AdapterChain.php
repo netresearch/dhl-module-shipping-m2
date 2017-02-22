@@ -25,15 +25,15 @@
  */
 namespace Dhl\Versenden\Webservice\Adapter;
 
-use \Dhl\Versenden\Api\Data\Webservice\Request;
-use \Dhl\Versenden\Api\Data\Webservice\Response;
-use \Dhl\Versenden\Api\Data\Webservice\Response\Type\Generic\ResponseStatusInterface;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType;
+use \Dhl\Versenden\Api\Data\Webservice\ResponseType;
+use \Dhl\Versenden\Api\Data\Webservice\ResponseType\Generic\ResponseStatusInterface;
 use \Dhl\Versenden\Api\Webservice\Adapter\AdapterChainInterface;
 use \Dhl\Versenden\Api\Webservice\Adapter\BcsAdapterInterfaceFactory;
 use \Dhl\Versenden\Api\Webservice\Adapter\GlAdapterInterfaceFactory;
-use \Dhl\Versenden\Webservice\Response\Type\CreateShipmentResponseCollection;
-use \Dhl\Versenden\Webservice\Response\Type\DeleteShipmentResponseCollection;
-use \Dhl\Versenden\Webservice\Response\Type\Generic\ResponseStatus;
+use \Dhl\Versenden\Webservice\ResponseType\CreateShipmentResponseCollection;
+use \Dhl\Versenden\Webservice\ResponseType\DeleteShipmentResponseCollection;
+use \Dhl\Versenden\Webservice\ResponseType\Generic\ResponseStatus;
 
 /**
  * AdapterChain
@@ -70,7 +70,7 @@ class AdapterChain implements AdapterChainInterface
     }
 
     /**
-     * @param Response\Type\CreateShipment\LabelInterface[] $labels
+     * @param ResponseType\CreateShipment\LabelInterface[] $labels
      * @return string[]
      */
     private function getResponseMessages(array $labels)
@@ -90,15 +90,15 @@ class AdapterChain implements AdapterChainInterface
     }
 
     /**
-     * @param Response\Type\CreateShipment\LabelInterface[] $labels
+     * @param ResponseType\CreateShipment\LabelInterface[] $labels
      * @return ResponseStatus
      */
     private function getResponseStatus(array $labels)
     {
-        $createdLabels = array_filter($labels, function (Response\Type\CreateShipment\LabelInterface $label) {
+        $createdLabels = array_filter($labels, function (ResponseType\CreateShipment\LabelInterface $label) {
             return ($label->getStatus()->getCode() === ResponseStatusInterface::STATUS_SUCCESS);
         });
-        $rejectedLabels = array_filter($labels, function (Response\Type\CreateShipment\LabelInterface $label) {
+        $rejectedLabels = array_filter($labels, function (ResponseType\CreateShipment\LabelInterface $label) {
             return ($label->getStatus()->getCode() === ResponseStatusInterface::STATUS_FAILURE);
         });
 
@@ -128,8 +128,8 @@ class AdapterChain implements AdapterChainInterface
     }
 
     /**
-     * @param Request\Type\CreateShipment\ShipmentOrderInterface[] $shipmentOrders
-     * @return Response\Type\CreateShipmentResponseInterface|CreateShipmentResponseCollection
+     * @param RequestType\CreateShipment\ShipmentOrderInterface[] $shipmentOrders
+     * @return ResponseType\CreateShipmentResponseInterface|CreateShipmentResponseCollection
      */
     public function createLabels(array $shipmentOrders)
     {
@@ -157,7 +157,7 @@ class AdapterChain implements AdapterChainInterface
 
     /**
      * @param string[] $shipmentNumbers
-     * @return Response\Type\DeleteShipmentResponseInterface|DeleteShipmentResponseCollection
+     * @return ResponseType\DeleteShipmentResponseInterface|DeleteShipmentResponseCollection
      */
     public function cancelLabels(array $shipmentNumbers)
     {

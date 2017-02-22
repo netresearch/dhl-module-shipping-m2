@@ -25,11 +25,16 @@
  */
 namespace Dhl\Versenden\Webservice;
 
-use \Dhl\Versenden\Api\Data\Webservice\Request;
-use \Dhl\Versenden\Api\Webservice\Request\Mapper\BcsDataMapperInterface;
-use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\GetVersionRequestInterface;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
+use \Dhl\Versenden\Api\Webservice\RequestMapper\BcsDataMapperInterface;
 use \Dhl\Versenden\Bcs as BcsApi;
-use Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\Service as Services;
+use \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 
 /**
  * BcsDataMapper
@@ -45,11 +50,11 @@ use Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\Service a
 class BcsDataMapper implements BcsDataMapperInterface
 {
     /**
-     * @param ShipmentOrder\ShipmentDetailsInterface $shipmentDetails
-     * @param ShipmentOrder\PackageInterface[] $packages
+     * @param ShipmentDetails\ShipmentDetailsInterface $shipmentDetails
+     * @param PackageInterface[] $packages
      * @return BcsApi\ShipmentDetailsTypeType
      */
-    private function getShipmentDetails(ShipmentOrder\ShipmentDetailsInterface $shipmentDetails, array $packages)
+    private function getShipmentDetails(ShipmentDetails\ShipmentDetailsInterface $shipmentDetails, array $packages)
     {
         // bcs cannot handle multiple packages
         $package = current($packages);
@@ -71,27 +76,32 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param BcsApi\ShipmentDetailsTypeType $shipmentDetailsType
-     * @param ShipmentOrder\ServiceInterface[] $services
+     * @param Service\ServiceCollectionInterface $services
+     * @return BcsApi\ShipmentService
      */
-    private function addServices(BcsApi\ShipmentDetailsTypeType $shipmentDetailsType, array $services)
+    private function getServices(Service\ServiceCollectionInterface $services)
     {
         $serviceType = new BcsApi\ShipmentService();
-        if (isset($services['cod'])) {
-            /** @var Services\Cod $service */
-            $service = $services['cod'];
-            $codConfig = new BcsApi\ServiceconfigurationCashOnDelivery(true, $service->addFee(), $service->getCodAmount()->getValue('EUR'));
+
+        /** @var \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Cod $codService */
+        $codService = $services->getService(AbstractServiceFactory::SERVICE_CODE_COD);
+        if ($codService) {
+            $codConfig = new BcsApi\ServiceconfigurationCashOnDelivery(
+                true,
+                $codService->addFee(),
+                $codService->getCodAmount()->getValue('EUR')
+            );
             $serviceType->setCashOnDelivery($codConfig);
         };
 
-        $shipmentDetailsType->setService($serviceType);
+        return $serviceType;
     }
 
     /**
-     * @param ShipmentOrder\ShipperInterface $shipper
+     * @param Contact\ShipperInterface $shipper
      * @return BcsApi\ShipperType
      */
-    private function getShipper(ShipmentOrder\ShipperInterface $shipper)
+    private function getShipper(Contact\ShipperInterface $shipper)
     {
         // shipper name
         $shipperName = $shipper->getName();
@@ -122,10 +132,10 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param ShipmentOrder\ReceiverInterface $receiver
+     * @param Contact\ReceiverInterface $receiver
      * @return BcsApi\ReceiverType
      */
-    private function getReceiver(ShipmentOrder\ReceiverInterface $receiver)
+    private function getReceiver(Contact\ReceiverInterface $receiver)
     {
         $receiverName = $receiver->getName();
 
@@ -164,10 +174,10 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param ShipmentOrder\ReturnReceiverInterface $returnReceiver
+     * @param Contact\ReturnReceiverInterface $returnReceiver
      * @return BcsApi\ShipperType
      */
-    private function getReturnReceiver(ShipmentOrder\ReturnReceiverInterface $returnReceiver)
+    private function getReturnReceiver(Contact\ReturnReceiverInterface $returnReceiver)
     {
         // return receiver name
         $shipperName = $returnReceiver->getName();
@@ -198,10 +208,10 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param ShipmentOrder\CustomsDetailsInterface $customsDetails
+     * @param CustomsDetails\CustomsDetailsInterface $customsDetails
      * @return BcsApi\ExportDocumentType
      */
-    private function getExportDocument(ShipmentOrder\CustomsDetailsInterface $customsDetails)
+    private function getExportDocument(CustomsDetails\CustomsDetailsInterface $customsDetails)
     {
         $exportDocumentType = new BcsApi\ExportDocumentType(
             $customsDetails->getExportType()->getType(),
@@ -242,22 +252,29 @@ class BcsDataMapper implements BcsDataMapperInterface
     /**
      * Create api specific request object from framework standardized object.
      *
-     * @param \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterface $shipmentOrder
+     * @param ShipmentOrderInterface $shipmentOrder
      * @return BcsApi\ShipmentOrderType
      */
-    public function mapShipmentOrder(Request\Type\CreateShipment\ShipmentOrderInterface $shipmentOrder)
+    public function mapShipmentOrder(ShipmentOrderInterface $shipmentOrder)
     {
+        // account data, package definition, carrier product, additional services
         $shipmentDetailsType = $this->getShipmentDetails(
             $shipmentOrder->getShipmentDetails(),
             $shipmentOrder->getPackages()
         );
-        $this->addServices($shipmentDetailsType, $shipmentOrder->getServices());
+        $serviceType = $this->getServices($shipmentOrder->getServices());
+        $shipmentDetailsType->setService($serviceType);
 
+        // shipper, receiver, return receiver
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
         $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
         $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
+
+        // customs declaration
         $exportDocumentType = $this->getExportDocument($shipmentOrder->getCustomsDetails());
 
+
+        // shipment definition, label format, print only if codeable
         $shipmentType = new BcsApi\Shipment(
             $shipmentDetailsType,
             $shipperType,
@@ -283,10 +300,10 @@ class BcsDataMapper implements BcsDataMapperInterface
     /**
      * Create api specific request object from framework standardized object.
      *
-     * @param \Dhl\Versenden\Api\Data\Webservice\Request\Type\GetVersionRequestInterface $request
+     * @param GetVersionRequestInterface $request
      * @return \Dhl\Versenden\Bcs\Version
      */
-    public function mapVersion(Request\Type\GetVersionRequestInterface $request)
+    public function mapVersion(GetVersionRequestInterface $request)
     {
         // TODO: Implement mapVersion() method.
     }
@@ -295,7 +312,7 @@ class BcsDataMapper implements BcsDataMapperInterface
      * Create api specific request object from framework standardized object.
      * TODO(nr): shipment numbers are a simple type, no need to convert something?
      *
-     * @param \Dhl\Versenden\Api\Data\Webservice\Request\Type\DeleteShipmentRequestInterface[] $numbers
+     * @param \Dhl\Versenden\Api\Data\Webservice\RequestType\DeleteShipmentRequestInterface[] $numbers
      * @return string[]
      */
     public function mapShipmentNumbers(array $numbers)

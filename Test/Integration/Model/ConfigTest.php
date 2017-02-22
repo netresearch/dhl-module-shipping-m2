@@ -25,6 +25,7 @@
  */
 namespace Dhl\Versenden\Model;
 
+use Dhl\Versenden\Model\Config\ModuleConfig;
 use \Magento\TestFramework\ObjectManager;
 
 /**
@@ -82,7 +83,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function sandboxModeDisabled()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->isSandboxModeEnabled());
     }
@@ -93,7 +94,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function sandboxModeEnabled()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertTrue($config->isSandboxModeEnabled());
     }
@@ -104,19 +105,19 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function logIsDisabled()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->isLoggingEnabled());
 
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::DEBUG));
 
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::ERROR));
 
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::WARNING));
     }
@@ -128,7 +129,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function logLevelCritical()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::WARNING));
@@ -142,7 +143,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function logLevelError()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::WARNING));
@@ -156,7 +157,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function logLevelWarning()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::WARNING));
@@ -170,7 +171,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function logLevelDebug()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::WARNING));
@@ -186,7 +187,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getShipperCountry()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertEquals('DE', $config->getShipperCountry());
         $this->assertEquals('DE', $config->getShipperCountry('fixturestore'));
@@ -200,7 +201,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getEuCountryList()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
 
         $euCountries = $config->getEuCountryList();
@@ -223,7 +224,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getShippingMethods()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
 
         $methods = $config->getShippingMethods();
@@ -245,7 +246,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getCodPaymentMethods()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
 
         $methods = $config->getCodPaymentMethods();
@@ -267,7 +268,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function canProcessMethodWithValidConditions()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertTrue($config->canProcessMethod('tablerate_bestway'));
     }
@@ -279,7 +280,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function canProcessMethodWithInvalidShipperCountry()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->canProcessMethod('flatrate_flatrate'));
     }
@@ -291,7 +292,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function canProcessMethodWithInvalidShippingMethod()
     {
-        /** @var Config $config */
+        /** @var ModuleConfig $config */
         $config = $this->objectManager->create(Config::class);
         $this->assertFalse($config->canProcessMethod('pickup_pickup'));
     }
