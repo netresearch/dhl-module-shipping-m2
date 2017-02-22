@@ -49,7 +49,6 @@
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipmentDetailsInterface" type="Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipmentDetails" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterface" type="Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipmentDetails\BankData" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\PackageInterface" type="Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\Package" />
-    <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ServiceInterface" type="Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\Service" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetailsInterface" type="Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetails" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetails\ExportTypeInterface" type="Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetails\ExportType" />
     <preference for="Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionInterface" type="Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\CustomsDetails\ExportPosition" />
@@ -107,6 +106,11 @@
         </arguments>
     </type>
     <type name="Dhl\Versenden\Observer\UpdateShippingInfoObserver">
+        <arguments>
+            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Versenden\Webservice\AppDataMapper">
         <arguments>
             <argument name="orderInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository</argument>
         </arguments>

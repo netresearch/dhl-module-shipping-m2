@@ -46,10 +46,13 @@ use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipmentDetailsInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ShipperInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrderInterfaceFactory;
+use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
 use \Dhl\Versenden\Webservice\Request\Type\CreateShipment\ShipmentOrder\Service\ServiceFactory;
 use \Dhl\Versenden\Api\StreetSplitterInterface;
 use \Dhl\Versenden\Api\Webservice\BcsAccessDataInterface;
 use \Dhl\Versenden\Api\Webservice\Request\Mapper\AppDataMapperInterface;
+use \Dhl\Versenden\Webservice\ShippingInfo\Info;
+use \Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * AppDataMapper
@@ -86,6 +89,11 @@ class AppDataMapper implements AppDataMapperInterface
      * @var StreetSplitterInterface
      */
     private $streetSplitter;
+
+    /**
+     * @var ShippingInfoRepositoryInterface
+     */
+    private $orderInfoRepository;
 
     /**
      * @var BankDataInterfaceFactory
@@ -170,6 +178,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ModuleConfigInterface             $moduleConfig
      * @param BcsAccessDataInterface            $bcsAccessData
      * @param StreetSplitterInterface           $streetSplitter
+     * @param ShippingInfoRepositoryInterface   $orderInfoRepository
      * @param BankDataInterfaceFactory          $bankDataFactory
      * @param ShipmentDetailsInterfaceFactory   $shipmentDetailsFactory
      * @param ShipmentOrderInterfaceFactory     $shipmentOrderFactory
@@ -180,7 +189,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ReturnReceiverInterfaceFactory    $returnReceiverFactory
      * @param CustomsDetailsInterfaceFactory    $customsDetailsFactory
      * @param WeightInterfaceFactory            $packageWeightFactory
-     * @param DimensionsInterfaceFactory        $packageDimensionsFactory ,
+     * @param DimensionsInterfaceFactory        $packageDimensionsFactory
      * @param MonetaryValueInterfaceFactory     $packageValueFactory
      * @param PackageInterfaceFactory           $packageFactory
      * @param ExportTypeInterfaceFactory        $exportTypeInterfaceFactory
@@ -192,6 +201,7 @@ class AppDataMapper implements AppDataMapperInterface
         ModuleConfigInterface $moduleConfig,
         BcsAccessDataInterface $bcsAccessData,
         StreetSplitterInterface $streetSplitter,
+        ShippingInfoRepositoryInterface $orderInfoRepository,
         BankDataInterfaceFactory $bankDataFactory,
         ShipmentDetailsInterfaceFactory $shipmentDetailsFactory,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
@@ -212,7 +222,8 @@ class AppDataMapper implements AppDataMapperInterface
         $this->glConfig                     = $glConfig;
         $this->moduleConfig                 = $moduleConfig;
         $this->bcsAccessData                = $bcsAccessData;
-        $this->streetSplitter                = $streetSplitter;
+        $this->streetSplitter               = $streetSplitter;
+        $this->orderInfoRepository          = $orderInfoRepository;
         $this->bankDataFactory              = $bankDataFactory;
         $this->shipmentDetailsFactory       = $shipmentDetailsFactory;
         $this->shipmentOrderFactory         = $shipmentOrderFactory;
@@ -337,35 +348,59 @@ class AppDataMapper implements AppDataMapperInterface
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
      * @return \Dhl\Versenden\Api\Data\Webservice\Request\Type\CreateShipment\ShipmentOrder\ReceiverInterface
+     * @throws NoSuchEntityException
      */
     private function getReceiver(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $storeId      = $request->getOrderShipment()->getStoreId();
-        $addressParts = $this->streetSplitter->splitStreet($request->getRecipientAddressStreet());
+        $storeId = $request->getOrderShipment()->getStoreId();
 
-        $address = $this->addressFactory->create([
-            'street'                 => $request->getRecipientAddressStreet(),
-            'streetName'             => $addressParts['street_name'],
-            'streetNumber'           => $addressParts['street_number'],
-            'addressAddition'        => $addressParts['supplement'],
-            'postalCode'             => $request->getRecipientAddressPostalCode(),
-            'city'                   => $request->getRecipientAddressCity(),
-            'state'                  => $request->getRecipientAddressStateOrProvinceCode(),
-            'countryCode'            => $request->getRecipientAddressCountryCode(),
-            'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
-        ]);
+        try {
+            $shippingInfoEntry = $this->orderInfoRepository->getById(
+                $request->getOrderShipment()->getOrder()->getShippingAddress()->getEntityId()
+            );
+            /** @var Info $shippingInfo */
+            $shippingInfo = Info::fromJson($shippingInfoEntry->getInfo());
+        } catch (NoSuchEntityException $e) {
+            $shippingInfo = '';
+        }
 
-        $receiver = $this->receiverFactory->create([
-            'contactPerson' => $request->getRecipientContactPersonName(),
-            'name'          => [
-                $request->getRecipientContactPersonName(),
-                $request->getRecipientContactCompanyName(),
-            ],
-            'companyName'   => $request->getRecipientContactCompanyName(),
-            'phone'         => $request->getRecipientContactPhoneNumber(),
-            'email'         => $request->getData('recipient_email'),
-            'address'       => $address,
-        ]);
+        if (!empty($shippingInfo)) {
+            $addressParts = [
+                'street_name'   => $shippingInfo->getReceiver()->streetName,
+                'street_number' => $shippingInfo->getReceiver()->streetNumber,
+                'supplement'    => $shippingInfo->getReceiver()->addressAddition,
+            ];
+        } else {
+            $addressParts = $this->streetSplitter->splitStreet($request->getRecipientAddressStreet());
+        }
+
+        $address = $this->addressFactory->create(
+            [
+                'street'                 => $request->getRecipientAddressStreet(),
+                'streetName'             => $addressParts['street_name'],
+                'streetNumber'           => $addressParts['street_number'],
+                'addressAddition'        => $addressParts['supplement'],
+                'postalCode'             => $request->getRecipientAddressPostalCode(),
+                'city'                   => $request->getRecipientAddressCity(),
+                'state'                  => $request->getRecipientAddressStateOrProvinceCode(),
+                'countryCode'            => $request->getRecipientAddressCountryCode(),
+                'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
+            ]
+        );
+
+        $receiver = $this->receiverFactory->create(
+            [
+                'contactPerson' => $request->getRecipientContactPersonName(),
+                'name'          => [
+                    $request->getRecipientContactPersonName(),
+                    $request->getRecipientContactCompanyName(),
+                ],
+                'companyName'   => $request->getRecipientContactCompanyName(),
+                'phone'         => $request->getRecipientContactPhoneNumber(),
+                'email'         => $request->getData('recipient_email'),
+                'address'       => $address,
+            ]
+        );
 
         return $receiver;
     }
