@@ -32,7 +32,7 @@ use \Dhl\Versenden\Api\Webservice\WebserviceLoggerInterface;
 use \Magento\Framework\Logger\Monolog;
 
 /**
- * Gateway
+ * Logger
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice

@@ -25,9 +25,8 @@
  */
 namespace Dhl\Versenden\Api\Webservice;
 
-use \Dhl\Versenden\Api\Data\Webservice\Request;
-use \Dhl\Versenden\Api\Data\Webservice\Response;
-use \Dhl\Versenden\Webservice\Response\Type\CreateShipmentResponseCollection;
+use \Dhl\Versenden\Api\Data\Webservice\ResponseType;
+use \Dhl\Versenden\Webservice\ResponseType\CreateShipmentResponseCollection;
 
 /**
  * GatewayInterface
@@ -42,13 +41,13 @@ interface GatewayInterface
 {
     /**
      * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
-     * @return CreateShipmentResponseCollection|Response\Type\CreateShipmentResponseInterface[]
+     * @return CreateShipmentResponseCollection|ResponseType\CreateShipmentResponseInterface[]
      */
     public function createLabels(array $shipmentRequests);
 
     /**
      * @param string[] $shipmentNumbers
-     * @return Response\Type\DeleteShipmentResponseInterface
+     * @return ResponseType\DeleteShipmentResponseInterface
      */
     public function cancelLabels(array $shipmentNumbers);
 }

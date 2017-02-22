@@ -23,43 +23,51 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Versenden\Webservice;
 
-use \Dhl\Versenden\Api\Data\Webservice\RequestType;
-use \Dhl\Versenden\Api\Webservice\RequestMapper\GlDataMapperInterface;
+use \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
+use \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\CodFactory;
 
 /**
- * GlDataMapper
+ * Generic service factory
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
- *
- * @SuppressWarnings(MEQP2.Classes.ObjectInstantiation)
  */
-class GlDataMapper implements GlDataMapperInterface
+class RequestServiceFactory extends AbstractServiceFactory
 {
     /**
-     * Create api specific request object from framework standardized object.
-     *
-     * @param \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder
-     * @return object The "BCS shipment order" or "GL API shipment" entity
+     * @var CodFactory
      */
-    public function mapShipmentOrder(RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder)
+    private $codFactory;
+
+    /**
+     * RequestServiceFactory constructor.
+     * @param CodFactory $codFactory
+     */
+    public function __construct(CodFactory $codFactory)
     {
-        // TODO: Implement mapShipmentOrder() method.
+        $this->codFactory = $codFactory;
     }
 
     /**
-     * Create api specific request object from framework standardized object.
+     * Create class instance with specified parameters
      *
-     * @param \Dhl\Versenden\Api\Data\Webservice\RequestType\GetTokenRequestInterface $request
-     * @return object
+     * @param string $instanceCode
+     * @param mixed[] $data
+     * @return \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceInterface
      */
-    public function mapGetTokenRequest(RequestType\GetTokenRequestInterface $request)
+    public function create($instanceCode, array $data = array())
     {
-        // TODO: Implement mapGetTokenRequest() method.
+        switch ($instanceCode) {
+            case AbstractServiceFactory::SERVICE_CODE_COD:
+                return $this->codFactory->create($data);
+            default:
+                return null;
+        }
     }
 }

@@ -31,7 +31,7 @@
                 </field>
                 <field id="logging_enabled" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enable Logging</label>
-                    <comment><![CDATA[Please ensure that the Magento-Log is also activated. Data will be written to <em>dhl_versenden.log</em>.]]></comment>
+                    <comment/>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="log_level" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
