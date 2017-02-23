@@ -25,6 +25,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- module preferences -->
+    <preference for="Dhl\Versenden\Api\Data\CheckoutInfoInterface" type="Dhl\Versenden\Model\Checkout\CheckoutInfo" />
     <preference for="Dhl\Versenden\Api\Webservice\GatewayInterface" type="Dhl\Versenden\Webservice\Gateway" />
     <preference for="Dhl\Versenden\Api\Config\ModuleConfigInterface" type="Dhl\Versenden\Model\Config\ModuleConfig" />
     <preference for="Dhl\Versenden\Api\Config\BcsConfigInterface" type="Dhl\Versenden\Model\Config\BcsConfig" />

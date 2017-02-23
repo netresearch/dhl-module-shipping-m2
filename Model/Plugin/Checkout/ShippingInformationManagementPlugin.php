@@ -120,9 +120,12 @@ class ShippingInformationManagementPlugin
     ) {
         /** @var \Magento\Quote\Model\Quote\Address $shippingAddress */
         $shippingAddress = $addressInformation->getShippingAddress();
-
         $street = $shippingAddress->getStreetFull();
         $streetParts = $this->streetSplitter->splitStreet($street);
+
+        //TODO(nr): persist additional data from checkout in shipping info json, @see modify-shipping-information.js
+//        $postalFacility = $shippingAddress->getExtensionAttributes()->getDhlshipping()->getPostalFacility();
+//        $services = $shippingAddress->getExtensionAttributes()->getDhlshipping()->getServices();
 
         $countryDirectory = $this->countryFactory->create();
         $countryDirectory->loadByCode($shippingAddress->getCountryId());
