@@ -113,7 +113,8 @@ abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryI
     {
         try {
             $shippingInfo = $this->getById($addressId);
-            $infoData = Info::fromJson($shippingInfo->getInfo());
+            $jsonInfo = $shippingInfo->getInfo();
+            $infoData = $jsonInfo ? Info::fromJson($shippingInfo->getInfo()) : null;
         } catch (NoSuchEntityException $e) {
             $infoData = null;
         }

@@ -48,6 +48,7 @@ use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\
 use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
 use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
 use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
+use Dhl\Versenden\Api\Webservice\RequestValidatorInterface;
 use \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Versenden\Api\StreetSplitterInterface;
 use \Dhl\Versenden\Api\Webservice\BcsAccessDataInterface;
@@ -170,6 +171,11 @@ class AppDataMapper implements AppDataMapperInterface
     private $shipmentOrderFactory;
 
     /**
+     * @var RequestValidatorInterface
+     */
+    private $requestValidator;
+
+    /**
      * AppDataMapper constructor.
      *
      * @param BcsConfigInterface $bcsConfig
@@ -193,6 +199,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param PackageInterfaceFactory $packageFactory
      * @param Service\ServiceCollectionInterface $serviceCollection
      * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
+     * @param RequestValidatorInterface $requestValidator
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
@@ -215,7 +222,8 @@ class AppDataMapper implements AppDataMapperInterface
         MonetaryValueInterfaceFactory $packageValueFactory,
         PackageInterfaceFactory $packageFactory,
         Service\ServiceCollectionInterface $serviceCollection,
-        ShipmentOrderInterfaceFactory $shipmentOrderFactory
+        ShipmentOrderInterfaceFactory $shipmentOrderFactory,
+        RequestValidatorInterface $requestValidator
     ) {
         $this->bcsConfig                    = $bcsConfig;
         $this->glConfig                     = $glConfig;
@@ -238,6 +246,7 @@ class AppDataMapper implements AppDataMapperInterface
         $this->packageFactory               = $packageFactory;
         $this->serviceCollection            = $serviceCollection;
         $this->shipmentOrderFactory         = $shipmentOrderFactory;
+        $this->requestValidator             = $requestValidator;
     }
 
     /**
@@ -304,6 +313,8 @@ class AppDataMapper implements AppDataMapperInterface
             'accountReference' => $this->bcsConfig->getBankDataAccountReference($storeId),
         ]);
 
+        $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
+        $qtyShipped = $request->getOrderShipment()->getTotalQty();
         $product = $this->bcsAccessData->getProductCode(
             $request->getShipperAddressCountryCode(),
             $request->getRecipientAddressCountryCode(),
@@ -312,7 +323,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $shipmentDetails = $this->shipmentDetailsFactory->create([
             'isPrintOnlyIfCodeable'       => $this->bcsConfig->isPrintOnlyIfCodeable($storeId),
-            //TODO(nr): override with packaging settings
+            'isPartialShipment'           => ($qtyOrdered != $qtyShipped),
             'product'                     => $product,
             'accountNumber'               => $this->bcsAccessData->getBillingNumber($product),
             'returnShipmentAccountNumber' => $this->bcsAccessData->getReturnShipmentBillingNumber($product),
@@ -547,6 +558,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param string                                   $sequenceNumber
      *
      * @return ShipmentOrderInterface
+     * @throws CreateShipmentValidationException
      */
     public function mapShipmentRequest($request, $sequenceNumber)
     {
@@ -569,6 +581,7 @@ class AppDataMapper implements AppDataMapperInterface
             'packages'        => $packages,
         ]);
 
+        $shipmentOrder = $this->requestValidator->validateShipmentOrder($shipmentOrder);
         return $shipmentOrder;
     }
 }

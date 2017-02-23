@@ -75,14 +75,19 @@ class Gateway implements GatewayInterface
     {
         /** @var RequestType\CreateShipment\ShipmentOrderInterface[] $shipmentOrders */
         $shipmentOrders = [];
+        $invalidRequests = [];
 
         // convert M2 shipment request to api request, add sequence number
         foreach ($shipmentRequests as $sequenceNumber => $request) {
-            $shipmentOrders[] = $this->appDataMapper->mapShipmentRequest($request, $sequenceNumber);
+            try {
+                $shipmentOrders[] = $this->appDataMapper->mapShipmentRequest($request, $sequenceNumber);
+            } catch (CreateShipmentValidationException $e) {
+                $invalidRequests[$sequenceNumber] = $e->getMessage();
+            }
         }
 
         // send shipment orders to APIs
-        $response = $this->apiAdapters->createLabels($shipmentOrders);
+        $response = $this->apiAdapters->createLabels($shipmentOrders, $invalidRequests);
         return $response;
     }
 
