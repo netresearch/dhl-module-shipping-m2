@@ -24,19 +24,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
-    <!-- FIXME(nr): in 2.1.3 the addresses do not support extension attributes. rework when they do. -->
     <extension_attributes for="Magento\Quote\Api\Data\AddressInterface">
-        <attribute code="dhl_versenden_info" type="string">
-            <join reference_table="versenden_quote_address" reference_field="address_id" join_on_field="address_id">
-                <field>info</field>
-            </join>
-        </attribute>
+        <attribute code="dhlshipping" type="\Dhl\Versenden\Api\Data\CheckoutInfoInterface"/>
     </extension_attributes>
     <extension_attributes for="Magento\Sales\Api\Data\OrderAddressInterface">
-        <attribute code="dhl_versenden_info" type="string">
-            <join reference_table="versenden_sales_order_address" reference_field="address_id" join_on_field="address_id">
-                <field>info</field>
-            </join>
-        </attribute>
+        <attribute code="dhlshipping" type="\Dhl\Versenden\Api\Data\CheckoutInfoInterface"/>
     </extension_attributes>
 </config>

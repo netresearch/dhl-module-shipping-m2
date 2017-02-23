@@ -16,7 +16,13 @@ define([
                 shippingAddress['extension_attributes'] = {};
             }
 
-            shippingAddress['extension_attributes']['dhl_versenden_info'] = 'foobar';
+            // append extra data collected during checkout for server side processing
+            // @see \Dhl\Versenden\Model\Plugin\Checkout\ShippingInformationManagementPlugin
+            shippingAddress['extension_attributes']['dhlshipping'] = {
+                services: ['wunschtermin'],
+                postalFacility: 'type, station id, postnumber'
+            };
+
             // pass execution to original action ('Magento_Checkout/js/action/set-shipping-information')
             return originalAction();
         });
