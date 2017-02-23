@@ -133,6 +133,11 @@ class DisableCodPaymentObserver implements ObserverInterface
         $recipientCountry = $quote->getShippingAddress()->getCountryId();
         $euCountries      = $this->config->getEuCountryList();
 
+        //FIXME(nr): allow cross-border shipping
+        if (!in_array($recipientCountry, $this->config->getEuCountryList())) {
+            return;
+        }
+
         $usedProduct = $this->bcsAccessData->getProductCode($shipperCountry, $recipientCountry, $euCountries);
 
         $codService = ServiceFactory::get(Cod::CODE);

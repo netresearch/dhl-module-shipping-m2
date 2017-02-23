@@ -69,6 +69,12 @@ class UpdateCarrierObserver implements ObserverInterface
         $order          = $observer->getEvent()->getData('order');
         $shippingMethod = $order->getShippingMethod();
 
+        //FIXME(nr): allow cross-border shipping
+        $recipientCountry = $order->getShippingAddress()->getCountryId();
+        if (!in_array($recipientCountry, $this->config->getEuCountryList())) {
+            return;
+        }
+
         if ($this->config->canProcessMethod($shippingMethod, $order->getStoreId())) {
             $parts          = explode('_', $shippingMethod);
             $parts[0]       = Carrier::CODE;

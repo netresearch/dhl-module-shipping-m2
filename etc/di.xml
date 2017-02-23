@@ -70,6 +70,7 @@
     <preference for="Dhl\Versenden\Api\Webservice\RequestMapper\AppDataMapperInterface" type="Dhl\Versenden\Webservice\AppDataMapper" />
     <preference for="Dhl\Versenden\Api\Webservice\RequestMapper\BcsDataMapperInterface" type="Dhl\Versenden\Webservice\BcsDataMapper" />
     <preference for="Dhl\Versenden\Api\Webservice\RequestMapper\GlDataMapperInterface" type="Dhl\Versenden\Webservice\GlDataMapper" />
+    <preference for="Dhl\Versenden\Api\Webservice\RequestValidatorInterface" type="Dhl\Versenden\Webservice\RequestValidator" />
     <preference for="Dhl\Versenden\Api\Webservice\ResponseParser\BcsResponseParserInterface" type="Dhl\Versenden\Webservice\ResponseParser\BcsResponseParser" />
     <preference for="Dhl\Versenden\Api\Webservice\ResponseParser\GlResponseParserInterface" type="Dhl\Versenden\Webservice\ResponseParser\GlResponseParser" />
 
@@ -116,7 +117,6 @@
         <arguments>
             <argument name="orderInfoRepository" xsi:type="object">\Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository</argument>
         </arguments>
-
     </type>
 
     <type name="Magento\Framework\EntityManager\MetadataPool">

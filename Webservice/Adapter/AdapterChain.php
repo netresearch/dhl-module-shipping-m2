@@ -71,9 +71,10 @@ class AdapterChain implements AdapterChainInterface
 
     /**
      * @param ResponseType\CreateShipment\LabelInterface[] $labels
+     * @param string[] $invalidOrders
      * @return string[]
      */
-    private function getResponseMessages(array $labels)
+    private function getStatusMessages(array $labels, array $invalidOrders = [])
     {
         $messages = [];
 
@@ -86,14 +87,23 @@ class AdapterChain implements AdapterChainInterface
             );
         }
 
+        foreach ($invalidOrders as $sequenceNumber => $errorMessage) {
+            $messages[] = sprintf(
+                '%s: %s',
+                $sequenceNumber,
+                $errorMessage
+            );
+        }
+
         return $messages;
     }
 
     /**
      * @param ResponseType\CreateShipment\LabelInterface[] $labels
+     * @param string[] $invalidOrders
      * @return ResponseStatus
      */
-    private function getResponseStatus(array $labels)
+    private function getResponseStatus(array $labels, array $invalidOrders = [])
     {
         $createdLabels = array_filter($labels, function (ResponseType\CreateShipment\LabelInterface $label) {
             return ($label->getStatus()->getCode() === ResponseStatusInterface::STATUS_SUCCESS);
@@ -102,21 +112,21 @@ class AdapterChain implements AdapterChainInterface
             return ($label->getStatus()->getCode() === ResponseStatusInterface::STATUS_FAILURE);
         });
 
-        if (empty($rejectedLabels)) {
+        if (empty($rejectedLabels) && empty($invalidOrders)) {
             $responseStatus = new ResponseStatus(
                 ResponseStatusInterface::STATUS_SUCCESS,
                 'Info',
                 self::MSG_STATUS_CREATED
             );
         } elseif (empty($createdLabels)) {
-            $messages = $this->getResponseMessages($rejectedLabels);
+            $messages = $this->getStatusMessages($rejectedLabels, $invalidOrders);
             $responseStatus = new ResponseStatus(
                 ResponseStatusInterface::STATUS_FAILURE,
                 'Error',
                 sprintf(self::MSG_STATUS_NOT_CREATED, implode("\n", $messages))
             );
         } else {
-            $messages = $this->getResponseMessages($rejectedLabels);
+            $messages = $this->getStatusMessages($rejectedLabels, $invalidOrders);
             $responseStatus = new ResponseStatus(
                 ResponseStatusInterface::STATUS_PARTIAL_SUCCESS,
                 'Warning',
@@ -129,9 +139,10 @@ class AdapterChain implements AdapterChainInterface
 
     /**
      * @param RequestType\CreateShipment\ShipmentOrderInterface[] $shipmentOrders
+     * @param string[] $invalidOrders
      * @return ResponseType\CreateShipmentResponseInterface|CreateShipmentResponseCollection
      */
-    public function createLabels(array $shipmentOrders)
+    public function createLabels(array $shipmentOrders, array $invalidOrders = [])
     {
         /** @var GlAdapter $glAdapter */
         $glAdapter = $this->glAdapterFactory->create();
@@ -141,7 +152,7 @@ class AdapterChain implements AdapterChainInterface
 
         try {
             $labels = $bcsAdapter->createLabels($shipmentOrders);
-            $responseStatus = $this->getResponseStatus($labels);
+            $responseStatus = $this->getResponseStatus($labels, $invalidOrders);
         } catch (\Exception $e) {
             $labels = [];
             $responseStatus = new ResponseStatus(
