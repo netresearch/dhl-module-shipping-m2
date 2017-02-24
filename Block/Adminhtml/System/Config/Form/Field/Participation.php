@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,22 +17,22 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field;
+namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
 use \Magento\Framework\View\Element\Html\Select;
 
 /**
- * Dhl Versenden Form Field Block
+ * Dhl Shipping Form Field Block
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -53,7 +53,7 @@ class Participation extends AbstractFieldArray
     {
         if (!$this->templateRenderer) {
             $this->templateRenderer = $this->getLayout()->createBlock(
-                'Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Procedure\Select',
+                'Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Procedure\Select',
                 '',
                 ['data' => ['is_render_to_js_template' => true]]
             );
@@ -73,7 +73,7 @@ class Participation extends AbstractFieldArray
      */
     protected function _prepareArrayRow(\Magento\Framework\DataObject $row)
     {
-        $optionExtraAttr                                                                                        = [];
+        $optionExtraAttr = [];
         $optionExtraAttr['option_' . $this->_getTemplateRenderer()->calcOptionHash($row->getData('procedure'))] =
             'selected="selected"';
         $row->setData(

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="DHL Versenden for Magento 2" default="dist">
+<project name="DHL Shipping for Magento 2" default="dist">
 
     <target name="define" description="defines properties needed for build">
         <taskdef name="extprops" classname="tasks.ExtensionProperties" />

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -16,7 +16,7 @@
  * newer versions in the future.
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -24,7 +24,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Dhl_Versenden" setup_version="0.1.0">
+    <module name="Dhl_Shipping" setup_version="0.1.0">
         <sequence>
             <module name="Magento_Shipping"/>
             <module name="Magento_Checkout"/>

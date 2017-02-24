@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,17 +17,17 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Observer;
+namespace Dhl\Shipping\Observer;
 
-use Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use Dhl\Versenden\Model\Shipping\Carrier;
+use Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Shipping\Carrier;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
@@ -35,7 +35,7 @@ use Magento\Framework\Event\ObserverInterface;
  * UpdateCarrierObserver
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -57,7 +57,7 @@ class UpdateCarrierObserver implements ObserverInterface
     }
 
     /**
-     * When a new order is placed, set the DHL Versenden carrier if applicable.
+     * When a new order is placed, set the DHL Shipping carrier if applicable.
      * Event:
      * - sales_order_place_after
      *

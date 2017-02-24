@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,21 +17,21 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Test\Unit
+ * @package   Dhl\Shipping\Test\Unit
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\Adminhtml\System\Config\Source;
+namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-use \Dhl\Versenden\Model\Adminhtml\System\Config\Source\Loglevel;
+use \Dhl\Shipping\Model\Adminhtml\System\Config\Source\Loglevel;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 /**
  * LoglevelTest
  *
  * @category Dhl
- * @package  Dhl\Versenden\Test\Unit
+ * @package  Dhl\Shipping\Test\Unit
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

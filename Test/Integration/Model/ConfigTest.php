@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,22 +17,22 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Test\Integration
+ * @package   Dhl\Shipping\Test\Integration
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model;
+namespace Dhl\Shipping\Model;
 
-use Dhl\Versenden\Model\Config\ModuleConfig;
+use Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\TestFramework\ObjectManager;
 
 /**
  * ConfigTest
  *
  * @category Dhl
- * @package  Dhl\Versenden\Test\Integration
+ * @package  Dhl\Shipping\Test\Integration
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -79,7 +79,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/sandbox_mode 0
+     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
      */
     public function sandboxModeDisabled()
     {
@@ -90,7 +90,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/sandbox_mode 1
+     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
      */
     public function sandboxModeEnabled()
     {
@@ -101,7 +101,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/logging_enabled 0
+     * @magentoConfigFixture default/carriers/dhlshipping/logging_enabled 0
      */
     public function logIsDisabled()
     {
@@ -124,8 +124,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/logging_enabled 1
-     * @magentoConfigFixture default/carriers/dhlversenden/log_level 500
+     * @magentoConfigFixture default/carriers/dhlshipping/logging_enabled 1
+     * @magentoConfigFixture default/carriers/dhlshipping/log_level 500
      */
     public function logLevelCritical()
     {
@@ -138,8 +138,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/logging_enabled 1
-     * @magentoConfigFixture default/carriers/dhlversenden/log_level 400
+     * @magentoConfigFixture default/carriers/dhlshipping/logging_enabled 1
+     * @magentoConfigFixture default/carriers/dhlshipping/log_level 400
      */
     public function logLevelError()
     {
@@ -152,8 +152,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/logging_enabled 1
-     * @magentoConfigFixture default/carriers/dhlversenden/log_level 300
+     * @magentoConfigFixture default/carriers/dhlshipping/logging_enabled 1
+     * @magentoConfigFixture default/carriers/dhlshipping/log_level 300
      */
     public function logLevelWarning()
     {
@@ -166,8 +166,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/logging_enabled 1
-     * @magentoConfigFixture default/carriers/dhlversenden/log_level 100
+     * @magentoConfigFixture default/carriers/dhlshipping/logging_enabled 1
+     * @magentoConfigFixture default/carriers/dhlshipping/log_level 100
      */
     public function logLevelDebug()
     {
@@ -219,8 +219,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
-     * @magentoConfigFixture fixturestore_store carriers/dhlversenden/shipment_dhlmethods
+     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
+     * @magentoConfigFixture fixturestore_store carriers/dhlshipping/shipment_dhlmethods
      */
     public function getShippingMethods()
     {
@@ -241,8 +241,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlversenden/shipment_dhlcodmethods cashondelivery,nachnahme
-     * @magentoConfigFixture fixturestore_store carriers/dhlversenden/shipment_dhlcodmethods
+     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlcodmethods cashondelivery,nachnahme
+     * @magentoConfigFixture fixturestore_store carriers/dhlshipping/shipment_dhlcodmethods
      */
     public function getCodPaymentMethods()
     {
@@ -264,7 +264,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/shipping/origin/country_id AT
-     * @magentoConfigFixture default/carriers/dhlversenden/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
+     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      */
     public function canProcessMethodWithValidConditions()
     {
@@ -276,7 +276,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/shipping/origin/country_id PL
-     * @magentoConfigFixture default/carriers/dhlversenden/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
+     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      */
     public function canProcessMethodWithInvalidShipperCountry()
     {
@@ -288,7 +288,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/shipping/origin/country_id AT
-     * @magentoConfigFixture default/carriers/dhlversenden/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
+     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      */
     public function canProcessMethodWithInvalidShippingMethod()
     {

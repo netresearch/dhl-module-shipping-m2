@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,20 +17,20 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Test\Unit
+ * @package   Dhl\Shipping\Test\Unit
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Observer;
+namespace Dhl\Shipping\Observer;
 
-use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Api\Service\Cod;
-use \Dhl\Versenden\Api\Service\ServiceCollection;
-use \Dhl\Versenden\Api\Service\ServiceCollectionFactory;
-use \Dhl\Versenden\Api\Service\ServiceFactory;
-use \Dhl\Versenden\Model\Config\ModuleConfig;
+use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Api\Service\Cod;
+use \Dhl\Shipping\Api\Service\ServiceCollection;
+use \Dhl\Shipping\Api\Service\ServiceCollectionFactory;
+use \Dhl\Shipping\Api\Service\ServiceFactory;
+use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\DataObject;
 use \Magento\Framework\Event;
@@ -44,7 +44,7 @@ use \PHPUnit_Framework_MockObject_MockObject as MockObject;
  * DisableCodPaymentObserverTest
  *
  * @category Dhl
- * @package  Dhl\Versenden\Test\Unit
+ * @package  Dhl\Shipping\Test\Unit
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -86,7 +86,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
             '',
             false
         );
-        $this->serviceCollectionFactory = $this->getMockBuilder('\Dhl\Versenden\Api\Service\ServiceCollectionFactory')
+        $this->serviceCollectionFactory = $this->getMockBuilder('\Dhl\Shipping\Api\Service\ServiceCollectionFactory')
             ->setMethods(['create'])
             ->disableOriginalConstructor()
             ->getMock();

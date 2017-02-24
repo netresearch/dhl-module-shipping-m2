@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,17 +17,17 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Observer;
+namespace Dhl\Shipping\Observer;
 
-use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
-use \Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Form;
-use \Dhl\Versenden\Webservice\ShippingInfo\Info;
+use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address\Form;
+use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
 use \Magento\Framework\Exception\NoSuchEntityException;
@@ -38,7 +38,7 @@ use \Magento\Sales\Block\Adminhtml\Order\Address;
  * ExtendAddressFormObserver
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -68,7 +68,7 @@ class ExtendAddressFormObserver implements ObserverInterface
     }
 
     /**
-     * When the shipping address edit page in the backend is loaded, add the versenden address data into the form
+     * When the shipping address edit page in the backend is loaded, add the shipping address data into the form
      *
      * Event:
      * - adminhtml_block_html_before
@@ -92,7 +92,7 @@ class ExtendAddressFormObserver implements ObserverInterface
         }
 
         $shippingMethod = $address->getOrder()->getShippingMethod(true);
-        if ($shippingMethod->getData('carrier_code') !== \Dhl\Versenden\Model\Shipping\Carrier::CODE) {
+        if ($shippingMethod->getData('carrier_code') !== \Dhl\Shipping\Model\Shipping\Carrier::CODE) {
             return;
         }
 
@@ -116,7 +116,7 @@ class ExtendAddressFormObserver implements ObserverInterface
         }
 
         /** @var Form $dhlAddressForm */
-        $dhlAddressForm = $container->getLayout()->getBlock('versenden_sales_order_address_form');
+        $dhlAddressForm = $container->getLayout()->getBlock('shipping_sales_order_address_form');
         $dhlAddressForm->setDisplayVatValidationButton($origAddressForm->getDisplayVatValidationButton());
         $container->setChild('form', $dhlAddressForm);
     }

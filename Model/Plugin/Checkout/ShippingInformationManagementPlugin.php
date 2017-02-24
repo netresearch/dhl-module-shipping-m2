@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,19 +17,19 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\Plugin\Checkout;
+namespace Dhl\Shipping\Model\Plugin\Checkout;
 
-use Dhl\Versenden\Api\Data\ShippingInfo\InfoInterface;
-use \Dhl\Versenden\Webservice\ShippingInfo\Serializer;
-use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
-use \Dhl\Versenden\Api\StreetSplitterInterface;
-use \Dhl\Versenden\Model\ShippingInfo\QuoteShippingInfoFactory;
+use Dhl\Shipping\Api\Data\ShippingInfo\InfoInterface;
+use \Dhl\Shipping\Webservice\ShippingInfo\Serializer;
+use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Api\StreetSplitterInterface;
+use \Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory;
 use \Magento\Checkout\Api\Data\ShippingInformationInterface;
 use \Magento\Checkout\Model\ShippingInformationManagement;
 use \Magento\Directory\Model\CountryFactory;
@@ -39,7 +39,7 @@ use \Magento\Quote\Api\CartRepositoryInterface;
  * ShippingInformationManagementPlugin
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -157,7 +157,7 @@ class ShippingInformationManagementPlugin
             /** @var \Magento\Quote\Model\Quote $quote */
             $quote = $this->cartRepository->getActive($cartId);
 
-            // save/override versenden info into extension table
+            // save/override shipping info into extension table
             $quoteInfo = $this->quoteInfoFactory->create(['data' => [
                 'address_id' => $quote->getShippingAddress()->getId(),
                 'info' => $serializedInfo,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,30 +17,30 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice
+ * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice;
+namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\GetVersionRequestInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
-use \Dhl\Versenden\Api\Webservice\RequestMapper\BcsDataMapperInterface;
-use \Dhl\Versenden\Bcs as BcsApi;
-use \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\GetVersionRequestInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
+use \Dhl\Shipping\Api\Webservice\RequestMapper\BcsDataMapperInterface;
+use \Dhl\Shipping\Bcs as BcsApi;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 
 /**
  * BcsDataMapper
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice
+ * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -83,7 +83,7 @@ class BcsDataMapper implements BcsDataMapperInterface
     {
         $serviceType = new BcsApi\ShipmentService();
 
-        /** @var \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Cod $codService */
+        /** @var \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Cod $codService */
         $codService = $services->getService(AbstractServiceFactory::SERVICE_CODE_COD);
         if ($codService) {
             $codConfig = new BcsApi\ServiceconfigurationCashOnDelivery(
@@ -301,7 +301,7 @@ class BcsDataMapper implements BcsDataMapperInterface
      * Create api specific request object from framework standardized object.
      *
      * @param GetVersionRequestInterface $request
-     * @return \Dhl\Versenden\Bcs\Version
+     * @return \Dhl\Shipping\Bcs\Version
      */
     public function mapVersion(GetVersionRequestInterface $request)
     {
@@ -312,7 +312,7 @@ class BcsDataMapper implements BcsDataMapperInterface
      * Create api specific request object from framework standardized object.
      * TODO(nr): shipment numbers are a simple type, no need to convert something?
      *
-     * @param \Dhl\Versenden\Api\Data\Webservice\RequestType\DeleteShipmentRequestInterface[] $numbers
+     * @param \Dhl\Shipping\Api\Data\Webservice\RequestType\DeleteShipmentRequestInterface[] $numbers
      * @return string[]
      */
     public function mapShipmentNumbers(array $numbers)

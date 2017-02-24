@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,16 +17,16 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address;
+namespace Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address;
 
-use \Dhl\Versenden\Model\ShippingInfo\OrderShippingInfoRepository;
-use \Dhl\Versenden\Webservice\ShippingInfo\Info;
+use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository;
+use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Backend\Model\Session\Quote;
 use \Magento\Framework\Data\Form\Element\Fieldset;
@@ -50,7 +50,7 @@ use \Magento\Framework\Registry;
  * Extended Shipping Address Form
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -144,7 +144,7 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         parent::_prepareForm();
 
         $fieldset = $this->_form->getElement('main');
-        $fieldset->addType('separator', \Dhl\Versenden\Block\Adminhtml\Order\Shipping\Address\Element\Separator::class);
+        $fieldset->addType('separator', \Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address\Element\Separator::class);
 
         $address = $this->_getAddress();
 
@@ -167,27 +167,27 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
      */
     protected function _prepareAddressFields(Fieldset $fieldset, array $receiverData = null)
     {
-        $src = $this->getViewFileUrl('Dhl_Versenden::images/dhl_versenden/dhl_logo.png');
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png');
         $fieldset->addField(
-            'versenden_info_street',
+            'shipping_info_street',
             'separator',
-            ['value' => '<img src="' . $src . '" alt="DHL Versenden"/>']
+            ['value' => '<img src="' . $src . '" alt="DHL Shipping"/>']
         );
 
-        $fieldset->addField('versenden_info_street_name', 'text', [
-            'name'  => "versenden_info[street_name]",
+        $fieldset->addField('shipping_info_street_name', 'text', [
+            'name'  => "shipping_info[street_name]",
             'label' => __('Street Name'),
             'value' => isset($receiverData['street_name']) ? $receiverData['street_name'] : '',
         ]);
 
-        $fieldset->addField('versenden_info_street_number', 'text', [
-            'name'  => "versenden_info[street_number]",
+        $fieldset->addField('shipping_info_street_number', 'text', [
+            'name'  => "shipping_info[street_number]",
             'label' => __('House number'),
             'value' => isset($receiverData['street_number']) ? $receiverData['street_number'] : '',
         ]);
 
-        $fieldset->addField('versenden_info_address_addition', 'text', [
-            'name'  => "versenden_info[address_addition]",
+        $fieldset->addField('shipping_info_address_addition', 'text', [
+            'name'  => "shipping_info[address_addition]",
             'label' => __('Address Addition'),
             'value' => isset($receiverData['address_addition']) ? $receiverData['address_addition'] : '',
         ]);

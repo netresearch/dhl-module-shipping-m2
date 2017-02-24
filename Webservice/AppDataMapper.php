@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,48 +17,48 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice
+ * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Versenden\Webservice;
+namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Versenden\Api\Config\BcsConfigInterface;
-use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Api\Config\GlConfigInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
-use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
-use Dhl\Versenden\Api\Webservice\RequestValidatorInterface;
-use \Dhl\Versenden\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
-use \Dhl\Versenden\Api\StreetSplitterInterface;
-use \Dhl\Versenden\Api\Webservice\BcsAccessDataInterface;
-use \Dhl\Versenden\Api\Webservice\RequestMapper\AppDataMapperInterface;
+use \Dhl\Shipping\Api\Config\BcsConfigInterface;
+use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Api\Config\GlConfigInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
+use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
+use Dhl\Shipping\Api\Webservice\RequestValidatorInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
+use \Dhl\Shipping\Api\StreetSplitterInterface;
+use \Dhl\Shipping\Api\Webservice\BcsAccessDataInterface;
+use \Dhl\Shipping\Api\Webservice\RequestMapper\AppDataMapperInterface;
 
 /**
  * AppDataMapper
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice
+ * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -340,7 +340,7 @@ class AppDataMapper implements AppDataMapperInterface
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
-     * @return \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface
+     * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface
      */
     private function getShipper(\Magento\Shipping\Model\Shipment\Request $request)
     {
@@ -378,7 +378,7 @@ class AppDataMapper implements AppDataMapperInterface
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
-     * @return \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface
+     * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface
      */
     private function getReceiver(\Magento\Shipping\Model\Shipment\Request $request)
     {
@@ -428,7 +428,7 @@ class AppDataMapper implements AppDataMapperInterface
      *
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
-     * @return \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface
+     * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface
      */
     private function getReturnReceiver(\Magento\Shipping\Model\Shipment\Request $request)
     {
