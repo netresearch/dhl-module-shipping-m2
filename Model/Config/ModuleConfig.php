@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,39 +17,39 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\Config;
+namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Versenden\Api\Config\ConfigAccessorInterface;
-use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
+use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 
 /**
  * ModuleConfig
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class ModuleConfig implements ModuleConfigInterface
 {
-    const CONFIG_XML_PATH_TITLE = 'carriers/dhlversenden/title';
+    const CONFIG_XML_PATH_TITLE = 'carriers/dhlshipping/title';
 
-    const CONFIG_XML_PATH_LOGGING_ENABLED  = 'carriers/dhlversenden/logging_enabled';
-    const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlversenden/log_level';
+    const CONFIG_XML_PATH_LOGGING_ENABLED  = 'carriers/dhlshipping/logging_enabled';
+    const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlshipping/log_level';
 
-    const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlversenden/sandbox_mode';
+    const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
 
-    const CONFIG_XML_PATH_DHLMETHODS = 'carriers/dhlversenden/shipment_dhlmethods';
-    const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlversenden/shipment_dhlcodmethods';
+    const CONFIG_XML_PATH_DHLMETHODS = 'carriers/dhlshipping/shipment_dhlmethods';
+    const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
 
     /**
      * @var ConfigAccessorInterface
@@ -118,7 +118,7 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
-     * Obtain the shipping method that should be processed with DHL Versenden.
+     * Obtain the shipping method that should be processed with DHL Shipping.
      *
      * @param mixed $store
      * @return string[]
@@ -154,7 +154,7 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
-     * Check if the given shipping method should be processed with DHL Versenden.
+     * Check if the given shipping method should be processed with DHL Shipping.
      *
      * @param string $shippingMethod
      * @param mixed $store

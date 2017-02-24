@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,13 +17,13 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\Shipping;
+namespace Dhl\Shipping\Model\Shipping;
 
 use \Magento\Quote\Model\Quote\Address\RateRequest;
 use \Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
@@ -33,14 +33,14 @@ use \Magento\Shipping\Model\Carrier\CarrierInterface;
  * Carrier
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class Carrier extends AbstractCarrierOnline implements CarrierInterface
 {
-    const CODE = 'dhlversenden';
+    const CODE = 'dhlshipping';
 
     /**
      * @var \Magento\Framework\DataObjectFactory
@@ -48,7 +48,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     private $dataObjectFactory;
 
     /**
-     * @var \Dhl\Versenden\Api\Webservice\GatewayInterface
+     * @var \Dhl\Shipping\Api\Webservice\GatewayInterface
      */
     private $webserviceGateway;
 
@@ -70,7 +70,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param \Magento\Directory\Helper\Data $directoryData
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
      * @param \Magento\Framework\DataObjectFactory $dataObjectFactory
-     * @param \Dhl\Versenden\Api\Webservice\GatewayInterface $webserviceGateway
+     * @param \Dhl\Shipping\Api\Webservice\GatewayInterface $webserviceGateway
      * @param array $data
      */
     public function __construct(
@@ -90,7 +90,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         \Magento\Directory\Helper\Data $directoryData,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
-        \Dhl\Versenden\Api\Webservice\GatewayInterface $webserviceGateway,
+        \Dhl\Shipping\Api\Webservice\GatewayInterface $webserviceGateway,
         array $data = []
     ) {
         $this->_code = self::CODE;
@@ -119,7 +119,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     }
 
     /**
-     * The DHL Versenden shipping carrier does not calculate rates.
+     * The DHL Shipping shipping carrier does not calculate rates.
      *
      * @param RateRequest $request
      * @return null
@@ -130,7 +130,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     }
 
     /**
-     * The DHL Versenden shipping carrier does not introduce own methods.
+     * The DHL Shipping shipping carrier does not introduce own methods.
      *
      * @return mixed[]
      */

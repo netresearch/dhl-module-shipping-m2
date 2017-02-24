@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,23 +17,23 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Api
+ * @package   Dhl\Shipping\Api
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Versenden\Webservice\Client;
+namespace Dhl\Shipping\Webservice\Client;
 
-use Dhl\Versenden\Api\Config\BcsConfigInterface;
-use \Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface;
+use Dhl\Shipping\Api\Config\BcsConfigInterface;
+use \Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface;
 
 /**
  * Business Customer Shipping API SOAP client adapter
  *
  * @category Dhl
- * @package  Dhl\Versenden\Api
+ * @package  Dhl\Shipping\Api
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -41,7 +41,7 @@ use \Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface;
 class BcsSoapClient implements BcsSoapClientInterface
 {
     /**
-     * @var \Dhl\Versenden\Bcs\GVAPI_2_0_de
+     * @var \Dhl\Shipping\Bcs\GVAPI_2_0_de
      */
     private $soapClient;
 
@@ -59,7 +59,7 @@ class BcsSoapClient implements BcsSoapClientInterface
             'password' => $bcsConfig->getAuthPassword(),
             'trace'    => 1
         ];
-        $client  = new \Dhl\Versenden\Bcs\GVAPI_2_0_de($options);
+        $client  = new \Dhl\Shipping\Bcs\GVAPI_2_0_de($options);
 
         $authHeader = new \SoapHeader(
             'http://dhl.de/webservice/cisbase',
@@ -78,11 +78,11 @@ class BcsSoapClient implements BcsSoapClientInterface
      * Returns the actual version of the implementation of the whole ISService
      *         webservice.
      *
-     * @param \Dhl\Versenden\Bcs\Version $request
+     * @param \Dhl\Shipping\Bcs\Version $request
      *
-     * @return \Dhl\Versenden\Bcs\GetVersionResponse
+     * @return \Dhl\Shipping\Bcs\GetVersionResponse
      */
-    public function getVersion(\Dhl\Versenden\Bcs\Version $request)
+    public function getVersion(\Dhl\Shipping\Bcs\Version $request)
     {
         return $this->soapClient->getVersion($request);
     }
@@ -90,11 +90,11 @@ class BcsSoapClient implements BcsSoapClientInterface
     /**
      * Creates shipments.
      *
-     * @param \Dhl\Versenden\Bcs\CreateShipmentOrderRequest $request
+     * @param \Dhl\Shipping\Bcs\CreateShipmentOrderRequest $request
      *
-     * @return \Dhl\Versenden\Bcs\CreateShipmentOrderResponse
+     * @return \Dhl\Shipping\Bcs\CreateShipmentOrderResponse
      */
-    public function createShipmentOrder(\Dhl\Versenden\Bcs\CreateShipmentOrderRequest $request)
+    public function createShipmentOrder(\Dhl\Shipping\Bcs\CreateShipmentOrderRequest $request)
     {
         return $this->soapClient->createShipmentOrder($request);
     }
@@ -102,11 +102,11 @@ class BcsSoapClient implements BcsSoapClientInterface
     /**
      * Deletes the requested shipments.
      *
-     * @param \Dhl\Versenden\Bcs\DeleteShipmentOrderRequest $request
+     * @param \Dhl\Shipping\Bcs\DeleteShipmentOrderRequest $request
      *
-     * @return \Dhl\Versenden\Bcs\DeleteShipmentOrderResponse
+     * @return \Dhl\Shipping\Bcs\DeleteShipmentOrderResponse
      */
-    public function deleteShipmentOrder(\Dhl\Versenden\Bcs\DeleteShipmentOrderRequest $request)
+    public function deleteShipmentOrder(\Dhl\Shipping\Bcs\DeleteShipmentOrderRequest $request)
     {
         return $this->soapClient->deleteShipmentOrder($request);
     }

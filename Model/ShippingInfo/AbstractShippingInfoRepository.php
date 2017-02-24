@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,18 +17,18 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\ShippingInfo;
+namespace Dhl\Shipping\Model\ShippingInfo;
 
-use \Dhl\Versenden\Api\Data;
-use \Dhl\Versenden\Api\ShippingInfoRepositoryInterface;
-use \Dhl\Versenden\Model\ResourceModel\ShippingInfo\AbstractShippingInfo as ShippingInfoResource;
-use \Dhl\Versenden\Webservice\ShippingInfo\Info;
+use \Dhl\Shipping\Api\Data;
+use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\AbstractShippingInfo as ShippingInfoResource;
+use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Magento\Framework\Exception\CouldNotDeleteException;
 use \Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -107,7 +107,7 @@ abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryI
 
     /**
      * @param $addressId
-     * @return \Dhl\Versenden\Webservice\ShippingInfo\AbstractInfo|null
+     * @return \Dhl\Shipping\Webservice\ShippingInfo\AbstractInfo|null
      */
     public function getInfoData($addressId)
     {

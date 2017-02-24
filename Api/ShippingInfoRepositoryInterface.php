@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,19 +17,19 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Api;
+namespace Dhl\Shipping\Api;
 
 /**
  * ShippingInfoRepositoryInterface
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -62,7 +62,7 @@ interface ShippingInfoRepositoryInterface
 
     /**
      * @param $addressId
-     * @return \Dhl\Versenden\Webservice\ShippingInfo\AbstractInfo|null
+     * @return \Dhl\Shipping\Webservice\ShippingInfo\AbstractInfo|null
      */
     public function getInfoData($addressId);
 }

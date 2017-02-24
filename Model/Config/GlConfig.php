@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,39 +17,39 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model\Config;
+namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Versenden\Api\Config\ConfigAccessorInterface;
-use \Dhl\Versenden\Api\Config\GlConfigInterface;
-use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
+use \Dhl\Shipping\Api\Config\GlConfigInterface;
+use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
 
 /**
  * GlApiConfig
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class GlConfig implements GlConfigInterface
 {
-    const CONFIG_XML_PATH_PICKUP_NUMBER = 'carriers/dhlversenden/gl_pickup_number';
+    const CONFIG_XML_PATH_PICKUP_NUMBER = 'carriers/dhlshipping/gl_pickup_number';
 
-    const CONFIG_XML_PATH_ENDPOINT      = 'carriers/dhlversenden/api_gl_endpoint';
-    const CONFIG_XML_PATH_AUTH_USERNAME = 'carriers/dhlversenden/api_gl_auth_username';
-    const CONFIG_XML_PATH_AUTH_PASSWORD = 'carriers/dhlversenden/api_gl_auth_password';
+    const CONFIG_XML_PATH_ENDPOINT      = 'carriers/dhlshipping/api_gl_endpoint';
+    const CONFIG_XML_PATH_AUTH_USERNAME = 'carriers/dhlshipping/api_gl_auth_username';
+    const CONFIG_XML_PATH_AUTH_PASSWORD = 'carriers/dhlshipping/api_gl_auth_password';
 
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT      = 'carriers/dhlversenden/api_gl_sandbox_endpoint';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'carriers/dhlversenden/api_gl_sandbox_auth_username';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'carriers/dhlversenden/api_gl_sandbox_auth_password';
+    const CONFIG_XML_PATH_SANDBOX_ENDPOINT      = 'carriers/dhlshipping/api_gl_sandbox_endpoint';
+    const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'carriers/dhlshipping/api_gl_sandbox_auth_username';
+    const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'carriers/dhlshipping/api_gl_sandbox_auth_password';
 
     /**
      * @var ConfigAccessorInterface

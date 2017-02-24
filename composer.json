@@ -1,5 +1,5 @@
 {
-    "name": "dhl/module-versenden-m2",
+    "name": "dhl/module-shipping-m2",
     "license": "OSL-3.0",
     "type": "magento2-module",
     "description": "DHL business customer shipping extension for Magento",
@@ -20,7 +20,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Dhl\\Versenden\\": ""
+            "Dhl\\Shipping\\": ""
         }
     }
 }

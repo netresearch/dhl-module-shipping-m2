@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,16 +17,16 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Test\Unit
+ * @package   Dhl\Shipping\Test\Unit
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Model;
+namespace Dhl\Shipping\Model;
 
-use \Dhl\Versenden\Api\Config\ModuleConfigInterface;
-use \Dhl\Versenden\Model\Config\ModuleConfig;
+use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\Framework\App\Config\ScopeConfigInterface;
 use \Magento\Framework\App\Config\Storage\WriterInterface;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
@@ -39,7 +39,7 @@ use \Magento\Store\Model\StoreManagerInterface;
  * ConfigTest
  *
  * @category Dhl
- * @package  Dhl\Versenden\Test\Unit
+ * @package  Dhl\Shipping\Test\Unit
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

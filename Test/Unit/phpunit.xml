@@ -4,7 +4,7 @@
          colors="true"
          bootstrap="../../../../../dev/tests/unit/framework/bootstrap.php">
     <testsuites>
-        <testsuite name="DHL Versenden Unit Tests">
+        <testsuite name="DHL Shipping Unit Tests">
             <directory>.</directory>
         </testsuite>
     </testsuites>

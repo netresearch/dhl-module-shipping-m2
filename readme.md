@@ -1,7 +1,7 @@
-DHL Versenden Extension
+DHL Shipping Extension
 =======================
 
-The DHL Versenden extension for Magento 2 integrates the DHL business customer
+The DHL Shipping extension for Magento 2 integrates the DHL business customer
 shipping API into the order processing workflow.
 
 Facts

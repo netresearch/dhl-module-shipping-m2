@@ -1,5 +1,5 @@
 <?php
-namespace Dhl\Versenden;
+namespace Dhl\Shipping;
 
 use \Magento\Framework\Component\ComponentRegistrar;
 use \Magento\TestFramework\ObjectManager;
@@ -24,7 +24,7 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
     public function moduleIsRegistered()
     {
         $registrar = new ComponentRegistrar();
-        $this->assertArrayHasKey('Dhl_Versenden', $registrar->getPaths(ComponentRegistrar::MODULE));
+        $this->assertArrayHasKey('Dhl_Shipping', $registrar->getPaths(ComponentRegistrar::MODULE));
     }
 
     /**
@@ -32,7 +32,7 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function bcsLibLoaded()
     {
-        $className = \Dhl\Versenden\Bcs\Soap\GVAPI_2_0_de::class;
+        $className = \Dhl\Shipping\Bcs\Soap\GVAPI_2_0_de::class;
 
         try {
             $libObject = $this->objectManager->create($className);
@@ -42,7 +42,7 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf($className, $libObject);
 
-        $className = \Dhl\Versenden\Api\Webservice\Adapter\GkAdapter::class;
+        $className = \Dhl\Shipping\Api\Webservice\Adapter\GkAdapter::class;
 
         try {
             $libObject = $this->objectManager->create($className);

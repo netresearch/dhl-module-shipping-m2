@@ -3,13 +3,13 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="carriers">
-            <group id="dhlversenden" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="dhlshipping" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
 
-                <!-- dhl versenden fields - general -->
-                <label>DHL Versenden</label>
+                <!-- dhl shipping fields - general -->
+                <label>DHL Shipping</label>
                 <field id="fields_general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>General Settings</label>
-                    <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
 
                 <!-- default fields - general -->
@@ -24,7 +24,7 @@
                     <label>Method Name</label>
                 </field>
 
-                <!-- dhl versenden fields - general -->
+                <!-- dhl shipping fields - general -->
                 <field id="sandbox_mode" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Sandbox Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -37,17 +37,17 @@
                 <field id="log_level" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Log Level</label>
                     <comment><![CDATA[Beware: Log level <em>Debug</em> will result in large log files.]]></comment>
-                    <source_model>Dhl\Versenden\Model\Adminhtml\System\Config\Source\Loglevel</source_model>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Loglevel</source_model>
                     <depends>
                         <field id="logging_enabled">1</field>
                     </depends>
                 </field>
 
-                <!-- dhl versenden fields - account -->
+                <!-- dhl shipping fields - account -->
                 <field id="fields_account" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Account Data</label>
                     <comment>Basic account data as required in production mode</comment>
-                    <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="sandbox_mode">0</field>
                     </depends>
@@ -76,17 +76,17 @@
                 </field>
                 <field id="bcs_account_participation" type="select" translate="label" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Participation Numbers</label>
-                    <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Participation</frontend_model>
-                    <backend_model>Dhl\Versenden\Model\Adminhtml\System\Config\Serialized\ArraySerialized</backend_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Participation</frontend_model>
+                    <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\ArraySerialized</backend_model>
                     <depends>
                         <field id="sandbox_mode">0</field>
                     </depends>
                 </field>
 
-                <!-- dhl versenden fields - shipment -->
+                <!-- dhl shipping fields - shipment -->
                 <field id="fields_shipment_orders" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Shipment Orders</label>
-                    <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
                 <field id="bcs_shipment_printonlyifcodeable" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Print Only If Codeable</label>
@@ -113,23 +113,23 @@
                     <label>Displayed Error Message</label>
                 </field>
 
-                <!-- dhl versenden fields - shipment -->
+                <!-- dhl shipping fields - shipment -->
                 <field id="shipment_dhlmethods" translate="label tooltip comment" type="multiselect" sortOrder="150" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Shipping Methods for DHL Versenden</label>
+                    <label>Shipping Methods for DHL Shipping</label>
                     <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
-                    <comment>These shipping methods will be processed with DHL Versenden.</comment>
+                    <comment>These shipping methods will be processed with DHL Shipping.</comment>
                     <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
                 </field>
                 <field id="shipment_dhlcodmethods" translate="label tooltip" type="multiselect" sortOrder="160" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Cash On Delivery Payment Methods for DHL Versenden</label>
+                    <label>Cash On Delivery Payment Methods for DHL Shipping</label>
                     <tooltip>These payment methods will be treated as COD methods during shipping order requests.</tooltip>
                     <source_model>Magento\Payment\Model\Config\Source\Allmethods</source_model>
                 </field>
 
-                <!-- dhl versenden fields - contact -->
+                <!-- dhl shipping fields - contact -->
                 <field id="fields_contact" translate="label" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Contact Information</label>
-                    <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
                 <field id="bcs_shipper_contact_company_addition" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Name of Company (2)</label>
@@ -142,10 +142,10 @@
                 </field>
 
 
-                <!-- dhl versenden fields - bank data -->
+                <!-- dhl shipping fields - bank data -->
                 <field id="fields_bank_data" translate="label" sortOrder="280" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Bank Data</label>
-                    <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
 
                 <field id="bcs_bankdata_account_owner" translate="label" type="text" sortOrder="290" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -176,10 +176,10 @@
                     <label>Account Reference to Customer Profile</label>
                 </field>
 
-                <!-- dhl versenden fields - other -->
+                <!-- dhl shipping fields - other -->
                 <field id="fields_others" translate="label" sortOrder="360" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Others</label>
-                    <frontend_model>Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
 
                 <!-- default fields -->

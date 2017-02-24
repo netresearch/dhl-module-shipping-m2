@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,23 +17,23 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Block\Adminhtml\System\Config\Form\Field\Procedure;
+namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Procedure;
 
-use \Dhl\Versenden\Model\Adminhtml\System\Config\Source\Procedure;
+use \Dhl\Shipping\Model\Adminhtml\System\Config\Source\Procedure;
 use \Magento\Framework\View\Element\Context;
 use \Magento\Framework\View\Element\Html\Select as BaseSelect;
 
 /**
- * Dhl Versenden Form Field Html Select Block
+ * Dhl Shipping Form Field Html Select Block
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

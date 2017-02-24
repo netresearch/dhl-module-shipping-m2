@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -17,26 +17,26 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Versenden\Model\Plugin;
+namespace Dhl\Shipping\Model\Plugin;
 
-use \Dhl\Versenden\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Versenden\Api\Data\Webservice\ResponseType\CreateShipment\LabelInterface;
-use \Dhl\Versenden\Api\Webservice\Client\BcsSoapClientInterface;
-use \Dhl\Versenden\Webservice\Adapter\BcsAdapter;
-use \Dhl\Versenden\Webservice\Logger;
-use Dhl\Versenden\Webservice\CreateShipmentStatusException;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Shipping\Api\Data\Webservice\ResponseType\CreateShipment\LabelInterface;
+use \Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface;
+use \Dhl\Shipping\Webservice\Adapter\BcsAdapter;
+use \Dhl\Shipping\Webservice\Logger;
+use Dhl\Shipping\Webservice\CreateShipmentStatusException;
 
 /**
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
