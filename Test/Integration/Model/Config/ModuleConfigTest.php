@@ -23,9 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model;
+namespace Dhl\Shipping\Model\Config;
 
-use Dhl\Shipping\Model\Config\ModuleConfig;
+use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\TestFramework\ObjectManager;
 
 /**
@@ -37,7 +37,7 @@ use \Magento\TestFramework\ObjectManager;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ModuleConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var $objectManager ObjectManager
@@ -51,6 +51,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public static function setUpBeforeClass()
     {
+        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore_rollback.php');
+        require realpath(__DIR__ . '/../../_files/core_second_third_fixturestore_rollback.php');
+
         require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore.php');
         require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_second_third_fixturestore.php');
         parent::setUpBeforeClass();
@@ -66,7 +69,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore_rollback.php');
-        require realpath(__DIR__ . '/../_files/core_second_third_fixturestore_rollback.php');
+        require realpath(__DIR__ . '/../../_files/core_second_third_fixturestore_rollback.php');
         parent::tearDownAfterClass();
     }
 
@@ -84,7 +87,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function sandboxModeDisabled()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isSandboxModeEnabled());
     }
 
@@ -95,7 +98,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function sandboxModeEnabled()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertTrue($config->isSandboxModeEnabled());
     }
 
@@ -106,19 +109,19 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function logIsDisabled()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isLoggingEnabled());
 
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::DEBUG));
 
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::ERROR));
 
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::WARNING));
     }
 
@@ -130,7 +133,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function logLevelCritical()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::WARNING));
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::DEBUG));
@@ -144,7 +147,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function logLevelError()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::WARNING));
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::DEBUG));
@@ -158,7 +161,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function logLevelWarning()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::WARNING));
         $this->assertFalse($config->isLoggingEnabled(\Monolog\Logger::DEBUG));
@@ -172,7 +175,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function logLevelDebug()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::ERROR));
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::WARNING));
         $this->assertTrue($config->isLoggingEnabled(\Monolog\Logger::DEBUG));
@@ -188,7 +191,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function getShipperCountry()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertEquals('DE', $config->getShipperCountry());
         $this->assertEquals('DE', $config->getShipperCountry('fixturestore'));
         $this->assertEquals('AT', $config->getShipperCountry('secondstore'));
@@ -202,7 +205,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function getEuCountryList()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
 
         $euCountries = $config->getEuCountryList();
         $this->assertInternalType('array', $euCountries);
@@ -225,7 +228,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function getShippingMethods()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
 
         $methods = $config->getShippingMethods();
         $this->assertInternalType('array', $methods);
@@ -247,7 +250,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function getCodPaymentMethods()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
 
         $methods = $config->getCodPaymentMethods();
         $this->assertInternalType('array', $methods);
@@ -269,7 +272,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function canProcessMethodWithValidConditions()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertTrue($config->canProcessMethod('tablerate_bestway'));
     }
 
@@ -281,7 +284,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function canProcessMethodWithInvalidShipperCountry()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->canProcessMethod('flatrate_flatrate'));
     }
 
@@ -293,7 +296,31 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function canProcessMethodWithInvalidShippingMethod()
     {
         /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(Config::class);
+        $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->canProcessMethod('pickup_pickup'));
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlcodmethods cashondelivery,nachnahme
+     * @magentoConfigFixture fixturestore_store carriers/dhlshipping/shipment_dhlcodmethods
+     */
+    public function isCodPaymentMethodTrue()
+    {
+        /** @var ModuleConfig $config */
+        $config = $this->objectManager->create(ModuleConfig::class);
+        $this->assertTrue($config->isCodPaymentMethod('nachnahme'));
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlcodmethods cashondelivery,nachnahme
+     * @magentoConfigFixture fixturestore_store carriers/dhlshipping/shipment_dhlcodmethods
+     */
+    public function isCodPaymentMethodFalse()
+    {
+        /** @var ModuleConfig $config */
+        $config = $this->objectManager->create(ModuleConfig::class);
+        $this->assertFalse($config->isCodPaymentMethod('cc'));
     }
 }
