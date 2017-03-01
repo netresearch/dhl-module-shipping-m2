@@ -32,7 +32,7 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function bcsLibLoaded()
     {
-        $className = \Dhl\Shipping\Bcs\Soap\GVAPI_2_0_de::class;
+        $className = \Dhl\Shipping\Bcs\GVAPI_2_0_de::class;
 
         try {
             $libObject = $this->objectManager->create($className);
@@ -42,7 +42,7 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf($className, $libObject);
 
-        $className = \Dhl\Shipping\Api\Webservice\Adapter\GkAdapter::class;
+        $className = \Dhl\Shipping\Webservice\Adapter\GlAdapter::class;
 
         try {
             $libObject = $this->objectManager->create($className);
