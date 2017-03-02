@@ -17,64 +17,62 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Test\Integration
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
 namespace Dhl\Shipping\Model\Checkout;
 
-use \Dhl\Shipping\Api\Data\CheckoutInfoInterface;
-use \Magento\Framework\Model\AbstractModel;
+use \Magento\TestFramework\ObjectManager;
 
 /**
- * CheckoutInfo
+ * ConfigTest
  *
  * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Test\Integration
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class CheckoutInfo extends AbstractModel implements CheckoutInfoInterface
+class CheckoutInfoTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     *
-     * @return string[]
+     * @var $objectManager ObjectManager
+     */
+    private $objectManager;
+
+    /** @var  CheckoutInfo */
+    private $model;
+
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->objectManager = ObjectManager::getInstance();
+        $this->model   = $this->objectManager->create(CheckoutInfo::class);
+    }
+
+    /**
+     * @test
      */
     public function getServices()
     {
-        return $this->getDataByKey(self::SERVICES);
+        $this->model->setServices(['service1']);
+        $result = $this->model->getServices();
+        $this->assertTrue(is_array($result));
+        $this->assertEquals('service1', $result[0]);
     }
 
     /**
-     * @param string[] $services
-     * @return self
-     */
-    public function setServices(array $services)
-    {
-        $this->setData(self::SERVICES, $services);
-        return $this;
-    }
-
-    /**
-     * @return string
+     * @test
      */
     public function getPostalFacility()
     {
-        return $this->getDataByKey(self::POSTAL_FACILITY);
+        $this->model->setPostalFacility('facility');
+        $this->assertEquals('facility', $this->model->getPostalFacility());
     }
 
-    /**
-     * @param string $postalFacility
-     * @return self
-     */
-    public function setPostalFacility($postalFacility)
-    {
-        $this->setData(self::POSTAL_FACILITY, $postalFacility);
-        return $this;
-    }
 }
