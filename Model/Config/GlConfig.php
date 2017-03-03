@@ -127,4 +127,7 @@ class GlConfig implements GlConfigInterface
     {
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER, $store);
     }
+
+
 }
+
