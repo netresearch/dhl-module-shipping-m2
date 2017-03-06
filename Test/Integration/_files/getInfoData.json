@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0",
+  "receiver": {
+    "packstation": null,
+    "postfiliale": null,
+    "parcelShop": null,
+    "name1": "Sebastian Ertner",
+    "name2": "Netresearch",
+    "name3": null,
+    "streetName": "Nonnenstra\u00dfe",
+    "streetNumber": "11d",
+    "addressAddition": "",
+    "dispatchingInformation": null,
+    "zip": "04229",
+    "city": "Leipzig",
+    "country": "Deutschland",
+    "countryISOCode": "DE",
+    "state": "Sachsen",
+    "phone": "23213",
+    "email": null,
+    "contactPerson": null
+  },
+  "services": {
+    "preferredDay": null,
+    "preferredTime": null,
+    "preferredLocation": null,
+    "preferredNeighbour": null,
+    "parcelAnnouncement": null,
+    "visualCheckOfAge": null,
+    "returnShipment": null,
+    "insurance": null,
+    "bulkyGoods": null,
+    "cod": null,
+    "printOnlyIfCodeable": null
+  }
+}
+
