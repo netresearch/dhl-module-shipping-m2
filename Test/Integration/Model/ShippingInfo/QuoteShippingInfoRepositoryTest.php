@@ -30,6 +30,7 @@ use Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoRepository;
 use Magento\Framework\Exception\CouldNotSaveException;
 use \Magento\TestFramework\ObjectManager;
 use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteShippingInfo as ShippingInfoResource;
+use \Magento\Framework\Filesystem\Driver\File as Filesystem;
 
 /**
  * ConfigTest
@@ -237,15 +238,30 @@ class QuoteShippingInfoRepositoryTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @test
+     * @return string[]
      */
-    public function getInfoData()
+    public function getInfoDataProvider()
+    {
+        $driver = new Filesystem();
+        return [
+            'response_1' => [
+                $driver->fileGetContents(__DIR__ . '/../../_files/getInfoData.json')
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getInfoDataProvider
+     * @param string $json
+     */
+    public function getInfoData($json)
     {
 
         /** @var  QuoteShippingInfo $quoteShippingInfo */
         $quoteShippingInfo = $this->objectManager->create(QuoteShippingInfo::class);
         $quoteShippingInfo->setAddressId(23);
-        $quoteShippingInfo->setInfo('info');
+        $quoteShippingInfo->setInfo($json);
         $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
         $factoryMock  = $this->getMock(\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory::class, ['create'], [], '', false);
 
@@ -264,9 +280,52 @@ class QuoteShippingInfoRepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->model  = $this->objectManager->create(QuoteShippingInfoRepository::class);
 
-        $result = $this->model->getInfoData(23);
-        $this->assertEquals('info', $result);
         $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory::class);
         $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteShippingInfo::class);
+
+        $result = $this->model->getInfoData(23);
+        $receiver = $result->getReceiver();
+        $services = $result->getServices();
+        $this->assertTrue($receiver instanceof \Dhl\Shipping\Webservice\ShippingInfo\Receiver);
+        $this->assertTrue($services instanceof \Dhl\Shipping\Webservice\ShippingInfo\Services);
+
+    }
+
+    /**
+     * @test
+     * @dataProvider getInfoDataProvider
+     * @param string $json
+     */
+    public function getInfoDataExceptionCase($json)
+    {
+
+        /** @var  QuoteShippingInfo $quoteShippingInfo */
+        $quoteShippingInfo = $this->objectManager->create(QuoteShippingInfo::class);
+//        $quoteShippingInfo->setInfo($json);
+        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
+        $factoryMock  = $this->getMock(\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory::class, ['create'], [], '', false);
+
+        $factoryMock
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($quoteShippingInfo);
+
+        $resourceMock
+            ->expects($this->once())
+            ->method('load')
+            ->willReturn($quoteShippingInfo);
+
+        $this->objectManager->addSharedInstance($factoryMock, \Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory::class);
+        $this->objectManager->addSharedInstance($resourceMock, \Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteShippingInfo::class);
+
+        $this->model  = $this->objectManager->create(QuoteShippingInfoRepository::class);
+
+        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory::class);
+        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteShippingInfo::class);
+
+        $result = $this->model->getInfoData(23);
+
+        $this->assertNull($result);
+
     }
 }
