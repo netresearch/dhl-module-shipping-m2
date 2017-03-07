@@ -84,9 +84,9 @@ class DisableCodPaymentObserver implements ObserverInterface
         ServiceCollectionFactory $serviceCollectionFactory
     ) {
         $this->config = $config;
+        $this->bcsAccessData = $bcsAccessData;
         $this->checkoutSession = $checkoutSession;
         $this->serviceCollectionFactory = $serviceCollectionFactory;
-        $this->bcsAccessData = $bcsAccessData;
     }
 
     /**
