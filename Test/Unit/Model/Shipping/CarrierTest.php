@@ -25,6 +25,8 @@
  */
 namespace Dhl\Shipping\Model\Shipping;
 
+use Dhl\Shipping\Test\Provider\ShipmentResponseProvider;
+use Dhl\Shipping\Webservice\Gateway;
 use \Magento\Framework\DataObject;
 use \Magento\Framework\DataObjectFactory;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
@@ -53,19 +55,27 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
      */
     private $dataObjectFactory;
 
+    /**
+     * @var Gateway|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $webserviceGateway;
+
     protected function setUp()
     {
         parent::setUp();
 
         $this->objectManager = new ObjectManager($this);
 
-        $this->dataObjectFactory = $this->getMock(
-            'Magento\Framework\DataObjectFactory',
-            ['create'],
-            [],
-            '',
-            false
-        );
+        $testName = $this->getName(false);
+        $factoryIsInvoked = in_array($testName, ['shipmentRequestSuccess', 'shipmentRequestError']);
+        $dataObject = $this->objectManager->getObject(DataObject::class);
+        $this->dataObjectFactory = $this->getMock(DataObjectFactory::class, ['create'], [], '', false);
+        $this->dataObjectFactory
+            ->expects($this->exactly((int)$factoryIsInvoked))
+            ->method('create')
+            ->willReturn($dataObject);
+
+        $this->webserviceGateway = $this->getMock(Gateway::class, ['createLabels'], [], '', false);
     }
 
     /**
@@ -125,23 +135,25 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function requestToShipment()
+    public function shipmentRequestSuccess()
     {
-        $dataObject = $this->getMock(DataObject::class, ['setData']);
-        $dataObject->expects($this->once())
-            ->method('setData')
-            ->with('info', $this->isType('array'));
+        $incrementId = '1001';
+        $packageId = '7';
 
-        $this->dataObjectFactory
+        $sequenceNumber = "$incrementId-$packageId";
+        $mockResponse = ShipmentResponseProvider::provideSingleSuccessResponse($sequenceNumber);
+
+        $this->webserviceGateway
             ->expects($this->once())
-            ->method('create')
-            ->willReturn($dataObject);
+            ->method('createLabels')
+            ->willReturn($mockResponse);
 
-        /** @var Carrier $carrier */
-        $carrier = $this->objectManager->getObject(Carrier::class, [
-            'dataObjectFactory' => $this->dataObjectFactory,
-        ]);
-
+        $order = $this->objectManager->getObject(DataObject::class, ['data' => [
+            'increment_id' => $incrementId,
+        ]]);
+        $shipment = $this->objectManager->getObject(DataObject::class, ['data' => [
+            'order' => $order,
+        ]]);
         $package = [
             'params' => [
                 'container' => 'foo',
@@ -149,10 +161,18 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             ],
             'items' => [],
         ];
-        /** @var ShipmentRequest $request */
-        $request = $this->objectManager->getObject(ShipmentRequest::class);
-        $request->setData('packages', [$package]);
 
+        /** @var ShipmentRequest $request */
+        $request = $this->objectManager->getObject(ShipmentRequest::class, ['data' => [
+            'packages' => [$packageId => $package],
+            'order_shipment' => $shipment,
+        ]]);
+
+        /** @var Carrier $carrier */
+        $carrier = $this->objectManager->getObject(Carrier::class, [
+            'dataObjectFactory' => $this->dataObjectFactory,
+            'webserviceGateway' => $this->webserviceGateway,
+        ]);
         $response = $carrier->requestToShipment($request);
         $this->assertInstanceOf(DataObject::class, $response);
 
@@ -162,9 +182,63 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey(0, $response->getData('info'));
 
         $this->assertArrayHasKey('tracking_number', $response->getData('info/0'));
-        $this->assertEquals('', $response->getData('info/0/tracking_number'));
+        $this->assertEquals(
+            $mockResponse->getCreatedItem($sequenceNumber)->getTrackingNumber(),
+            $response->getData('info/0/tracking_number')
+        );
 
         $this->assertArrayHasKey('label_content', $response->getData('info/0'));
-        $this->assertEquals('', $response->getData('info/0/label_content'));
+        $this->assertEquals(
+            $mockResponse->getCreatedItem($sequenceNumber)->getLabel(),
+            $response->getData('info/0/label_content')
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function shipmentRequestError()
+    {
+        $incrementId = '1001';
+        $packageId = '7';
+
+        $mockResponse = ShipmentResponseProvider::provideSingleErrorResponse();
+
+        $this->webserviceGateway
+            ->expects($this->once())
+            ->method('createLabels')
+            ->willReturn($mockResponse);
+
+        $order = $this->objectManager->getObject(DataObject::class, ['data' => [
+            'increment_id' => $incrementId,
+        ]]);
+        $shipment = $this->objectManager->getObject(DataObject::class, ['data' => [
+            'order' => $order,
+        ]]);
+        $package = [
+            'params' => [
+                'container' => 'foo',
+                'weight' => 42
+            ],
+            'items' => [],
+        ];
+
+        /** @var ShipmentRequest $request */
+        $request = $this->objectManager->getObject(ShipmentRequest::class, ['data' => [
+            'packages' => [$packageId => $package],
+            'order_shipment' => $shipment,
+        ]]);
+
+        /** @var Carrier $carrier */
+        $carrier = $this->objectManager->getObject(Carrier::class, [
+            'dataObjectFactory' => $this->dataObjectFactory,
+            'webserviceGateway' => $this->webserviceGateway,
+        ]);
+        $response = $carrier->requestToShipment($request);
+        $this->assertInstanceOf(DataObject::class, $response);
+
+        $this->assertArrayHasKey('errors', $response->getData());
+        $this->assertInternalType('string', $response->getData('errors'));
+        $this->assertEquals($mockResponse->getStatus()->getMessage(), $response->getData('errors'));
     }
 }

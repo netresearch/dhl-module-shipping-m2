@@ -30,7 +30,9 @@ use \Dhl\Shipping\Api\Service\Cod;
 use \Dhl\Shipping\Api\Service\ServiceCollection;
 use \Dhl\Shipping\Api\Service\ServiceCollectionFactory;
 use \Dhl\Shipping\Api\Service\ServiceFactory;
+use Dhl\Shipping\Api\Webservice\BcsAccessDataInterface;
 use \Dhl\Shipping\Model\Config\ModuleConfig;
+use Dhl\Shipping\Webservice\BcsAccessData;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\DataObject;
 use \Magento\Framework\Event;
@@ -58,14 +60,19 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
     private $objectManager;
 
     /**
-     * @var CheckoutSession|MockObject
-     */
-    private $checkoutSession;
-
-    /**
      * @var ModuleConfigInterface|MockObject
      */
     private $config;
+
+    /**
+     * @var BcsAccessDataInterface|MockObject
+     */
+    private $bcsAccessData;
+
+    /**
+     * @var CheckoutSession|MockObject
+     */
+    private $checkoutSession;
 
     /**
      * @var ServiceCollectionFactory|MockObject
@@ -76,9 +83,10 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
+        $testName = $this->getName(false);
+
         $this->objectManager = new ObjectManager($this);
 
-        $this->checkoutSession = $this->getMock(CheckoutSession::class, ['start', 'getQuote', 'destroy'], [], '', false);
         $this->config = $this->getMock(
             ModuleConfig::class,
             ['getShipperCountry', 'canProcessMethod', 'isCodPaymentMethod', 'getEuCountryList'],
@@ -86,7 +94,17 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
             '',
             false
         );
-        $this->serviceCollectionFactory = $this->getMockBuilder('\Dhl\Shipping\Api\Service\ServiceCollectionFactory')
+        $this->bcsAccessData = $this->getMock(BcsAccessData::class, ['getProductCode'], [], '', false);
+        $invokedCount = in_array($testName, ['codIsNotAvailable', 'codIsAvailable']);
+        $returnValue = $testName === 'codIsNotAvailable'
+            ? BcsAccessDataInterface::CODE_WELTPAKET
+            : BcsAccessDataInterface::CODE_PAKET_NATIONAL;
+        $this->bcsAccessData
+            ->expects($this->exactly((int)$invokedCount))
+            ->method('getProductCode')
+            ->willReturn($returnValue);
+        $this->checkoutSession = $this->getMock(CheckoutSession::class, ['start', 'getQuote', 'destroy'], [], '', false);
+        $this->serviceCollectionFactory = $this->getMockBuilder(ServiceCollectionFactory::class)
             ->setMethods(['create'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -123,7 +141,10 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
     {
         /** @var DisableCodPaymentObserver $codObserver */
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
+            'config' => $this->config,
+            'bcsAccessData' => $this->bcsAccessData,
             'checkoutSession' => $this->checkoutSession,
+            'serviceCollectionFactory' => $this->serviceCollectionFactory,
         ]);
 
         /** @var Observer|MockObject $observerMock */
@@ -154,8 +175,10 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
     {
         /** @var DisableCodPaymentObserver $codObserver */
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
-            'checkoutSession' => $this->checkoutSession,
             'config' => $this->config,
+            'bcsAccessData' => $this->bcsAccessData,
+            'checkoutSession' => $this->checkoutSession,
+            'serviceCollectionFactory' => $this->serviceCollectionFactory,
         ]);
 
         /** @var Observer|MockObject $observerMock */
@@ -202,8 +225,10 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
     {
         /** @var DisableCodPaymentObserver $codObserver */
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
-            'checkoutSession' => $this->checkoutSession,
             'config' => $this->config,
+            'bcsAccessData' => $this->bcsAccessData,
+            'checkoutSession' => $this->checkoutSession,
+            'serviceCollectionFactory' => $this->serviceCollectionFactory,
         ]);
 
         /** @var Observer|MockObject $observerMock */
@@ -254,13 +279,14 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
     public function codIsNotAvailable()
     {
         $shipperCountry = 'DE';
-        $recipientCountry = 'NZ';
+        $recipientCountry = 'PL';
         $euCountryList = ['DE', 'AT', 'PL'];
 
         /** @var DisableCodPaymentObserver $codObserver */
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
-            'checkoutSession' => $this->checkoutSession,
             'config' => $this->config,
+            'bcsAccessData' => $this->bcsAccessData,
+            'checkoutSession' => $this->checkoutSession,
             'serviceCollectionFactory' => $this->serviceCollectionFactory,
         ]);
 
@@ -309,7 +335,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
             ->willReturn($shipperCountry);
 
         $this->config
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getEuCountryList')
             ->willReturn($euCountryList);
 
@@ -337,8 +363,9 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
 
         /** @var DisableCodPaymentObserver $codObserver */
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
-            'checkoutSession' => $this->checkoutSession,
             'config' => $this->config,
+            'bcsAccessData' => $this->bcsAccessData,
+            'checkoutSession' => $this->checkoutSession,
             'serviceCollectionFactory' => $this->serviceCollectionFactory,
         ]);
 
@@ -387,7 +414,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
             ->willReturn($shipperCountry);
 
         $this->config
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getEuCountryList')
             ->willReturn($euCountryList);
 

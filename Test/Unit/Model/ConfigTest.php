@@ -25,7 +25,9 @@
  */
 namespace Dhl\Shipping\Model;
 
+use Dhl\Shipping\Api\Config\ConfigAccessorInterface;
 use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ConfigAccessor;
 use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\Framework\App\Config\ScopeConfigInterface;
 use \Magento\Framework\App\Config\Storage\WriterInterface;
@@ -53,36 +55,22 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     private $objectManager;
 
     /**
-     * @var \Magento\Store\Api\Data\StoreInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ConfigAccessorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $store;
-
-    /**
-     * @var StoreManagerInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $storeManager;
-
-    /**
-     * @var ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $scopeConfig;
-
-    /**
-     * @var WriterInterface|\PHPUnit_Framework_MockObject_MockObject
-     */
-    private $configWriter;
+    private $configAccessor;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->objectManager = new ObjectManager($this);
-
-        $this->store = $this->getMock('Magento\Store\Model\Store', ['getId'], [], '', false);
-        $this->storeManager = $this->getMock('Magento\Store\Model\StoreManager', ['getStore'], [], '', false);
-
-        $this->scopeConfig = $this->getMock('Magento\Framework\App\Config', ['getValue'], [], '', false);
-        $this->configWriter = $this->getMock('Magento\Framework\App\Config\Storage\Writer', ['save'], [], '', false);
+        $this->configAccessor = $this->getMock(
+            ConfigAccessor::class,
+            ['saveConfigValue', 'getConfigValue'],
+            [],
+            '',
+            false
+        );
     }
 
     /**
@@ -112,9 +100,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $errorLogLevel    = \Monolog\Logger::ERROR;
         $warningLogLevel  = \Monolog\Logger::WARNING;
 
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->any())
-            ->method('getValue')
+            ->method('getConfigValue')
             ->willReturnOnConsecutiveCalls(
                 // (1) check if debug log is enabled with config DEBUG
                 $isLoggingEnabled,
@@ -129,7 +117,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'scopeConfig' => $this->scopeConfig
+            'configAccessor' => $this->configAccessor
         ]);
 
         $this->assertTrue($config->isLoggingEnabled());
@@ -142,14 +130,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function isSandboxModeEnabled()
     {
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->exactly(2))
-            ->method('getValue')
+            ->method('getConfigValue')
             ->willReturnOnConsecutiveCalls([true, false]);
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'scopeConfig'  => $this->scopeConfig
+            'configAccessor'  => $this->configAccessor
         ]);
 
         $this->assertTrue($config->isSandboxModeEnabled());
@@ -165,19 +153,18 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $storeOneCountry = 'AT';
 
         $returnValueMap = [
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultCountry],
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneCountry],
+            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, null, $defaultCountry],
+            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, 'store_one', $storeOneCountry],
         ];
 
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->exactly(2))
-            ->method('getValue')
+            ->method('getConfigValue')
             ->will($this->returnValueMap($returnValueMap));
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'configWriter' => $this->configWriter,
-            'scopeConfig' => $this->scopeConfig
+            'configAccessor' => $this->configAccessor,
         ]);
 
         $this->assertSame($defaultCountry, $config->getShipperCountry());
@@ -197,19 +184,18 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $storeOneList = $pl;
 
         $returnValueMap = [
-            [CarrierHelper::XML_PATH_EU_COUNTRIES_LIST, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultList],
-            [CarrierHelper::XML_PATH_EU_COUNTRIES_LIST, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneList],
+            [CarrierHelper::XML_PATH_EU_COUNTRIES_LIST, null, $defaultList],
+            [CarrierHelper::XML_PATH_EU_COUNTRIES_LIST, 'store_one', $storeOneList],
         ];
 
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->exactly(2))
-            ->method('getValue')
+            ->method('getConfigValue')
             ->will($this->returnValueMap($returnValueMap));
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'configWriter' => $this->configWriter,
-            'scopeConfig' => $this->scopeConfig
+            'configAccessor' => $this->configAccessor,
         ]);
 
         $list = $config->getEuCountryList();
@@ -234,20 +220,19 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $storeTwoMethods = null;
 
         $returnValueMap = [
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_two', $storeTwoMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, null, $defaultMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, 'store_one', $storeOneMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, 'store_two', $storeTwoMethods],
         ];
 
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->exactly(3))
-            ->method('getValue')
+            ->method('getConfigValue')
             ->will($this->returnValueMap($returnValueMap));
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'configWriter' => $this->configWriter,
-            'scopeConfig' => $this->scopeConfig
+            'configAccessor' => $this->configAccessor,
         ]);
 
         $shippingMethods = $config->getShippingMethods();
@@ -275,21 +260,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $storeTwoMethods = null;
 
         $returnValueMap = [
-            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
-            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
-            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, ScopeInterface::SCOPE_STORE, 'store_two', $storeTwoMethods],
+            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, null, $defaultMethods],
+            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, 'store_one', $storeOneMethods],
+            [ModuleConfig::CONFIG_XML_PATH_CODMETHODS, 'store_two', $storeTwoMethods],
 
         ];
 
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->exactly(3))
-            ->method('getValue')
+            ->method('getConfigValue')
             ->will($this->returnValueMap($returnValueMap));
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'configWriter' => $this->configWriter,
-            'scopeConfig' => $this->scopeConfig
+            'configAccessor' => $this->configAccessor,
         ]);
 
         $codMethods = $config->getCodPaymentMethods();
@@ -319,21 +303,20 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $storeOneMethods = 'tablerate_bestway';
 
         $returnValueMap = [
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultShipperCountry],
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneShipperCountry],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $defaultMethods],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeInterface::SCOPE_STORE, 'store_one', $storeOneMethods],
+            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, null, $defaultShipperCountry],
+            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, 'store_one', $storeOneShipperCountry],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, null, $defaultMethods],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, 'store_one', $storeOneMethods],
         ];
 
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->exactly(4))
-            ->method('getValue')
+            ->method('getConfigValue')
             ->will($this->returnValueMap($returnValueMap));
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'configWriter' => $this->configWriter,
-            'scopeConfig' => $this->scopeConfig
+            'configAccessor' => $this->configAccessor,
         ]);
 
         $this->assertTrue($config->canProcessMethod('flatrate_flatrate'));
@@ -352,20 +335,19 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $invalidMethod = 'tablerate_bestway';
 
         $returnValueMap = [
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $validShipperCountry],
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, ScopeInterface::SCOPE_STORE, 'store_one', $invalidShipperCountry],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, $validMethod],
+            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, null, $validShipperCountry],
+            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, 'store_one', $invalidShipperCountry],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, null, $validMethod],
         ];
 
-        $this->scopeConfig
+        $this->configAccessor
             ->expects($this->exactly(3))
-            ->method('getValue')
+            ->method('getConfigValue')
             ->will($this->returnValueMap($returnValueMap));
 
         /** @var ModuleConfigInterface $config */
         $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'configWriter' => $this->configWriter,
-            'scopeConfig' => $this->scopeConfig
+            'configAccessor' => $this->configAccessor,
         ]);
 
         $this->assertFalse($config->canProcessMethod($invalidMethod));
