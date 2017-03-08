@@ -5,7 +5,7 @@ DATABASE_HOST="$1"
 DATABASE_PORT="$2"
 
 composer config -g repositories.pkgundertest path ${PACKAGE_PATH}
-composer config -g repositories.libundertest path ${PACKAGE_PATH}/vendor/dhl/lib-shipping-mx
+composer config -g repositories.libundertest path ${LIB_PATH}
 composer require --ignore-platform-reqs --dev --no-suggest phing/phing:2.*
 composer require --ignore-platform-reqs --prefer-source ${PACKAGE_NAME} @dev
 
