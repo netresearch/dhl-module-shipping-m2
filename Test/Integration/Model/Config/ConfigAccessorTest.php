@@ -25,7 +25,6 @@
  */
 namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\TestFramework\ObjectManager;
 
 /**
@@ -47,50 +46,64 @@ class ConfigAccessorTest extends \PHPUnit_Framework_TestCase
     /** @var  ConfigAccessor */
     private $configModel;
 
-    /**
-     * Config fixtures are loaded before data fixtures. Config fixtures for
-     * non-existent stores will fail. We need to set the stores up first manually.
-     * @link http://magento.stackexchange.com/a/93961
-     */
-    public static function setUpBeforeClass()
-    {
-        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore_rollback.php');
-        require realpath(__DIR__ . '/../../_files/core_second_third_fixturestore_rollback.php');
-
-        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore.php');
-        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_second_third_fixturestore.php');
-        parent::setUpBeforeClass();
-    }
-
-    /**
-     * Delete manually added stores. There is no rollback script for the
-     * second and third store (with websites). As long as this does not lead to
-     * errors, leave it as is.
-     *
-     * @see setUpBeforeClass()
-     */
-    public static function tearDownAfterClass()
-    {
-        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore_rollback.php');
-        require realpath(__DIR__ . '/../../_files/core_second_third_fixturestore_rollback.php');
-        parent::tearDownAfterClass();
-    }
-
     protected function setUp()
     {
         parent::setUp();
         $this->objectManager = ObjectManager::getInstance();
-        $this->configModel   = $this->objectManager->create(ConfigAccessor::class);
     }
 
     /**
      * @test
      */
-    public function testSaveAndGet()
+    public function saveConfig()
     {
         $path  = GlConfig::CONFIG_XML_PATH_AUTH_USERNAME;
         $value = 'myTestValue';
+
+        $writerMock = $this->getMock(
+            \Magento\Framework\App\Config\Storage\Writer::class,
+            ['save'],
+            [],
+            '',
+            false
+        );
+
+        $writerMock
+            ->expects($this->once())
+            ->method('save')
+            ->with($path, $value);
+
+        $this->configModel = $this->objectManager->create(
+            \Dhl\Shipping\Model\Config\ConfigAccessor::class,
+            ['configWriter' => $writerMock]
+        );
         $this->configModel->saveConfigValue($path, $value, 1);
-        $this->assertEquals($value, $this->configModel->getConfigValue($path));
+    }
+
+    /**
+     * @test
+     */
+    public function getConfig()
+    {
+        $path  = GlConfig::CONFIG_XML_PATH_AUTH_USERNAME;
+
+        $scopeConfigMock = $this->getMock(
+            \Magento\Framework\App\Config::class,
+            ['getValue'],
+            [],
+            '',
+            false
+        );
+
+        $scopeConfigMock
+            ->expects($this->once())
+            ->method('getValue')
+            ->with($path, 'store', 'store');
+
+        $this->configModel = $this->objectManager->create(
+            \Dhl\Shipping\Model\Config\ConfigAccessor::class,
+            ['scopeConfig' => $scopeConfigMock]
+        );
+        $this->configModel->getConfigValue($path, 'store');
     }
 }

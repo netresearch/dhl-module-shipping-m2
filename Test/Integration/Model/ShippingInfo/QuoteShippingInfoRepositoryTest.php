@@ -253,6 +253,8 @@ class QuoteShippingInfoRepositoryTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @dataProvider getInfoDataProvider
+     * @dataProvider ShipmentOrderProvider::getValidOrder
+     * @dataProvider ShipmentOrderProvider::getInvalidOrder
      * @param string $json
      */
     public function getInfoData($json)
