@@ -25,7 +25,6 @@
  */
 namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\TestFramework\ObjectManager;
 
 /**

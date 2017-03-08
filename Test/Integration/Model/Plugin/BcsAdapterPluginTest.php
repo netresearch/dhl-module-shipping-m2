@@ -18,15 +18,14 @@
  *
  * @category  Dhl
  * @package   Dhl\Shipping\Test\Integration
- * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Config;
+namespace Dhl\Shipping\Model\Plugin;
 
-use Dhl\Shipping\Bcs\CreateShipmentOrderResponse;
-use Dhl\Shipping\Webservice\CreateShipmentStatusException;
+use Magento\TestFramework\Interception\PluginList;
 use \Magento\TestFramework\ObjectManager;
 
 /**
@@ -34,7 +33,7 @@ use \Magento\TestFramework\ObjectManager;
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
- * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -45,32 +44,163 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
      */
     private $objectManager;
 
-    /** @var   \Dhl\Shipping\Webservice\Adapter\BcsAdapter */
-    private $bcsAdapterMock;
+    /**
+     * @var \Dhl\Shipping\Webservice\Adapter\BcsAdapter|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $bcsAdapter;
 
     public function setUp()
     {
         parent::setUp();
         $this->objectManager = ObjectManager::getInstance();
+        $this->objectManager->removeSharedInstance(PluginList::class);
+        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\Plugin\BcsAdapterPlugin::class);
     }
 
+    public function getValidOrder()
+    {
+        $order = \Dhl\Shipping\Test\Integration\Provider\ShipmentOrderProvider::getValidOrder();
+        return $order;
+    }
 
     /**
      * @test
+     * @dataProvider getValidOrder
      */
-    public function createLabels()
+    public function logDebug($shipmentOrder)
     {
-//        $this->markTestIncomplete('not finished yet');
-
-        $soapClientMock = $this->getMock(
+        $bcsSoapClient = $this->getMock(
             \Dhl\Shipping\Webservice\Client\BcsSoapClient::class,
-            ['createShipmentOrders'],
+            ['createShipmentOrder'],
             [],
             '',
             false
         );
 
-        $CreateShipmentStatusExceptionMock = $this->getMock(
+        $bcsSoapClient
+            ->expects($this->once())
+            ->method('createShipmentOrder');
+
+        $loggerMock = $this->getMock(
+            \Dhl\Shipping\Webservice\Logger::class,
+            ['wsDebug', 'log', 'wsWarning', 'wsError'],
+            [],
+            '',
+            false
+        );
+
+        $loggerMock
+            ->expects($this->once())
+            ->method('wsDebug');
+
+        $loggerMock
+            ->expects($this->never())
+            ->method('wsWarning');
+
+        $loggerMock
+            ->expects($this->never())
+            ->method('wsError');
+
+        $this->objectManager->addSharedInstance($loggerMock, \Dhl\Shipping\Webservice\Logger::class);
+
+        $mapperMock =  $this->getMock(\Dhl\Shipping\Webservice\BcsDataMapper::class,[],[],'',false);
+        $parserMock = $this->getMock(
+            \Dhl\Shipping\Webservice\ResponseParser\BcsResponseParser::class,
+            ['parseCreateShipmentResponse'],
+            [],
+            '',
+            false
+        );
+
+        $parserMock
+            ->expects($this->once())
+            ->method('parseCreateShipmentResponse')
+            ->will($this->returnValue('foo'));
+
+
+        $bcsAdapter = $this->objectManager->create(
+            \Dhl\Shipping\Webservice\Adapter\BcsAdapter::class,
+            [
+                'soapClient' => $bcsSoapClient,
+                'dataMapper' => $mapperMock,
+                'responseParser' => $parserMock
+            ]
+        );
+
+        $bcsAdapter->createLabels([$shipmentOrder]);
+    }
+
+    /**
+     * @test
+     * @dataProvider getValidOrder
+     */
+    public function logError($shipmentOrder)
+    {
+        $bcsSoapClient = $this->getMock(
+            \Dhl\Shipping\Webservice\Client\BcsSoapClient::class,
+            ['createShipmentOrder'],
+            [],
+            '',
+            false
+        );
+
+        $bcsSoapClient
+            ->expects($this->once())
+            ->method('createShipmentOrder')
+            ->willThrowException(new \SoapFault('1', 'error'));
+
+        $loggerMock = $this->getMock(
+            \Dhl\Shipping\Webservice\Logger::class,
+            ['wsDebug', 'log', 'wsWarning', 'wsError'],
+            [],
+            '',
+            false
+        );
+
+        $loggerMock
+            ->expects($this->never())
+            ->method('wsDebug');
+
+        $loggerMock
+            ->expects($this->never())
+            ->method('wsWarning');
+
+        $loggerMock
+            ->expects($this->once())
+            ->method('wsError');
+
+        $this->objectManager->addSharedInstance($loggerMock, \Dhl\Shipping\Webservice\Logger::class);
+
+        $mapperMock =  $this->getMock(\Dhl\Shipping\Webservice\BcsDataMapper::class,[],[],'',false);
+
+        $bcsAdapter = $this->objectManager->create(
+            \Dhl\Shipping\Webservice\Adapter\BcsAdapter::class,
+            [
+                'soapClient' => $bcsSoapClient,
+                'dataMapper' => $mapperMock
+            ]
+        );
+
+        $this->setExpectedException(\SoapFault::class);
+        $bcsAdapter->createLabels([$shipmentOrder]);
+
+    }
+
+    /**
+     * @test
+     * @dataProvider getValidOrder
+     */
+    public function logWarning($shipmentOrder)
+    {
+        $bcsSoapClient = $this->getMock(
+            \Dhl\Shipping\Webservice\Client\BcsSoapClient::class,
+            ['createShipmentOrder'],
+            [],
+            '',
+            false
+        );
+
+        $createShipmentStatusExceptionMock = $this->getMock(
             \Dhl\Shipping\Webservice\CreateShipmentStatusException::class,
             [],
             [],
@@ -78,28 +208,42 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
             false
         );
 
-        $soapClientMock
+        $bcsSoapClient
             ->expects($this->once())
-            ->method('createShipmentOrders')
-            ->willThrowException($CreateShipmentStatusExceptionMock);
+            ->method('createShipmentOrder')
+            ->willThrowException($createShipmentStatusExceptionMock);
 
-        $this->bcsAdapter = $this->objectManager->create(
-            \Dhl\Shipping\Webservice\Adapter\BcsAdapter::class,
-            [
-                'soapClient' => $soapClientMock
-            ]
-        );
-
-        $test = $this->getMock(
-            \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder::class,
-            [],
+        $loggerMock = $this->getMock(
+            \Dhl\Shipping\Webservice\Logger::class,
+            ['wsDebug', 'log', 'wsWarning'],
             [],
             '',
             false
         );
 
-        $result = $this->bcsAdapter->createLabels([$test]);
-        $this->assertTrue($result);
+        $loggerMock
+            ->expects($this->never())
+            ->method('wsDebug');
+
+        $loggerMock
+            ->expects($this->once())
+            ->method('wsWarning');
+
+        $this->objectManager->addSharedInstance($loggerMock, \Dhl\Shipping\Webservice\Logger::class);
+
+        $mapperMock =  $this->getMock(\Dhl\Shipping\Webservice\BcsDataMapper::class,[],[],'',false);
+
+        $this->bcsAdapter = $this->objectManager->create(
+            \Dhl\Shipping\Webservice\Adapter\BcsAdapter::class,
+            [
+                'soapClient' => $bcsSoapClient,
+                'dataMapper' => $mapperMock
+            ]
+        );
+
+
+        $this->setExpectedException(\Dhl\Shipping\Webservice\CreateShipmentStatusException::class);
+        $this->bcsAdapter->createLabels([$shipmentOrder]);
     }
 
 }
