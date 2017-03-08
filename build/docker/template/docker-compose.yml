@@ -1,8 +1,8 @@
-version: '2'
+version: '2.1'
 services:
   db:
     image: "registry.netresearch.de/magento-ci/db:${MAGENTO_VERSION}"
-    container_name: magento_dbms
+    container_name: ${JOB_BASE_NAME:-default}_dbms_${MAGENTO_VERSION}_${PHP_VERSION}
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "magento"
@@ -11,7 +11,7 @@ services:
 
   testdb:
     image: mysql:5.7
-    container_name: magento_dbms_test
+    container_name: ${JOB_BASE_NAME:-default}_dbms_test-${MAGENTO_VERSION}_${PHP_VERSION}
     environment:
       MYSQL_ROOT_PASSWORD: "MagEC1"
       MYSQL_DATABASE: "magento_integration_tests"
@@ -20,7 +20,7 @@ services:
 
   app:
     build: ./app
-    container_name: magento_app
+    container_name: ${JOB_BASE_NAME:-default}_app_${MAGENTO_VERSION}_${PHP_VERSION}
     links:
       - db:mysql
     environment:
@@ -31,14 +31,14 @@ services:
 
   env:
     image: "registry.netresearch.de/magento-ci/php-apache:${PHP_VERSION}"
-    container_name: magento_env
+    container_name: ${JOB_BASE_NAME:-default}_env_${MAGENTO_VERSION}_${PHP_VERSION}
     ports:
       - 80
     links:
       - db:mysql
       - testdb:mysql_test
     volumes:
-      - ../../reports:/opt/reports
+      - ../../../reports:${REPORT_PATH}
     volumes_from:
       - app
 

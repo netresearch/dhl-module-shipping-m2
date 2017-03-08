@@ -1,4 +1,4 @@
-FROM registry.netresearch.de/magento-ci/base:2.1.2
+FROM registry.netresearch.de/magento-ci/base:%app-version%
 MAINTAINER Christoph Aßmann <christoph.assmann@netresearch.de>
 
 RUN wget https://raw.githubusercontent.com/netresearch/retry/master/retry -O /usr/local/bin/retry && \

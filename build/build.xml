@@ -1,32 +1,218 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="DHL Shipping for Magento 2" default="dist">
+<project name="DHL-Shipping for Magento2" default="dist">
+    <property name="composer-name" value="dhl/module-shipping-m2"/>
+    <property name="app-versions" value="2.0,2.1"
+              description="Different versions of host applications, determines the versions installed in docker containers"/>
+    <property name="php-versions" value="5.6,7.0"
+              description="Different versions of PHP to setup docker containers"/>
+
+    <property name="buildzip" value="false"/>
+    <property environment="env"/>
+    <propertyregex property="last-app" subject="${app-versions}" pattern=",(.*)$" match="$1"/>
+    <propertyregex property="last-php" subject="${php-versions}" pattern=",(.*)$" match="$1"/>
+
+    <taskdef name="docker-properties" classname="tasks.DockerProperties"/>
+    <taskdef name="dockerGenEnv" classname="tasks.DockerGenerateEnviroments"/>
+
+    <!-- ============================================  -->
+    <!-- Target: startup                               -->
+    <!-- ============================================  -->
+    <target name="prepare-environment"
+            description="Generates specific docker container configurations from templates, using defined parameters">
+        <foreach list="${app-versions}" param="app-version" target="foreach-php-copy"/>
+    </target>
+    <target name="foreach-php-copy">
+        <foreach list="${php-versions}" param="php-version" target="render-env"/>
+    </target>
+    <target name="render-env">
+        <copy todir="docker/${app-version}/${php-version}" overwrite="true">
+            <fileset dir="docker/template">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+        <dockerGenEnv appVersion="${app-version}" phpVersion="${php-version}" projectName="${composer-name}"/>
+    </target>
+    <target name="startup"
+            description="Starts up docker containers for configured versions"
+            depends="prepare-environment">
+        <foreach list="${app-versions}" param="app-version" target="foreach-php-docker-up" delimiter=","/>
+    </target>
+    <target name="foreach-php-docker-up">
+        <foreach list="${php-versions}" param="php-version" target="docker-up" delimiter=","/>
+    </target>
+    <target name="docker-up" description="Starts docker container configured in specified directory">
+        <echo message="Start up docker Container for app version ${app-version} and PHP${php-version}"/>
+        <exec dir="docker/${app-version}/${php-version}"
+              command="docker-compose up -d"
+              passthru="true"/>
+        <exec dir="docker/${app-version}/${php-version}"
+              command="docker-compose logs -f app"
+              passthru="true"/>
+        <exec dir="docker/${app-version}/${php-version}"
+              command="docker-compose exec -T env /var/www/magetwo.nrdev.de/bin/magento setup:upgrade"
+              passthru="true"/>
+        <exec dir="docker/${app-version}/${php-version}"
+              command="docker-compose exec -T env /var/www/magetwo.nrdev.de/bin/magento setup:di:compile"
+              passthru="true"/>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: tear-down                             -->
+    <!-- ============================================  -->
+    <target name="tear-down"
+            depends="prepare-environment"
+            description="Run path replace command in container and shut down docker containers">
+        <exec dir="docker/${last-app}/${last-php}"
+              command="docker-compose exec -T env
+                /var/www/magetwo.nrdev.de/vendor/bin/phing
+                -f ${docker.PACKAGE_PATH}build/build.xml
+                -Dtargetpath=${application.startdir}/
+                path-replace"
+              passthru="true"/>
+        <foreach list="${app-versions}" param="app-version" target="foreach-php-docker-down" delimiter=","/>
+        <foreach list="${app-versions}" param="dir" target="delete-generated" delimiter=","/>
+    </target>
+    <target name="delete-generated">
+        <delete dir="docker/${dir}"/>
+    </target>
+    <target name="foreach-php-docker-down">
+        <foreach list="${php-versions}" param="php-version" target="docker-down" delimiter=","/>
+    </target>
+    <target name="docker-down" description="Shut down docker container for specified version">
+        <exec dir="docker/${app-version}/${php-version}"
+              command="docker-compose down --rmi local -v"/>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: path-replace                          -->
+    <!-- ============================================  -->
+    <target name="path-replace"
+            description="replaces paths in report files, should be called from within docker container">
+        <docker-properties dir="docker/${last-app}/${last-php}"/>
+        <replaceregexp
+                match="${docker.PACKAGE_PATH}"
+                replace="${targetpath}">
+            <fileset dir="reports">
+                <include name="*.xml"/>
+                <include name="**/*.html"/>
+            </fileset>
+        </replaceregexp>
+    </target>
 
     <target name="define" description="defines properties needed for build">
-        <taskdef name="extprops" classname="tasks.ExtensionProperties" />
+        <if>
+            <contains string="${env.GIT_BRANCH}" substring="master"/>
+            <then>
+                <property name="buildzip" value="true"/>
+            </then>
+        </if>
+        <taskdef name="extprops" classname="tasks.ExtensionProperties"/>
     </target>
 
     <!-- ============================================  -->
     <!-- Target: prepare                               -->
     <!-- ============================================  -->
     <target name="prepare" depends="define">
-        <extprops />
-        <echo msg="Module Name: ${extension.name}" />
-        <echo msg="Module Version: ${extension.version}" />
-        <echo msg="create directory ./package" />
-        <mkdir dir="./package" />
+        <extprops/>
+        <echo msg="Module Name: ${extension.name}"/>
+        <echo msg="Module Version: ${extension.version}"/>
+        <echo msg="create directory ./package"/>
+        <mkdir dir="./package"/>
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: static analysis                       -->
+    <!-- ============================================  -->
+    <target name="static-analysis" description="Runs static code analysis on codebase">
+        <docker-properties dir="docker/${last-app}/${last-php}"/>
+        <property name="docker.extensionPath" value="${docker.MAGENTO_ROOT_PATH}vendor/${composer-name}/"/>
+
+        <exec dir="docker/${last-app}/${last-php}"
+              command="docker-compose exec -T env
+              /var/www/magetwo.nrdev.de/vendor/bin/phpmd
+              ${docker.extensionPath}
+              xml
+              codesize,design,naming,unusedcode
+              --reportfile ${docker.REPORT_PATH}phpmd.xml
+              --exclude Test"
+              passthru="true"
+        />
+
+        <exec dir="docker/${last-app}/${last-php}"
+              command="docker-compose exec -T env
+              /var/www/magetwo.nrdev.de/vendor/bin/phpcpd
+              ${docker.extensionPath}
+              --log-pmd=${docker.REPORT_PATH}phpcpd.xml"
+              passthru="true"
+        />
+
+        <exec dir="docker/${last-app}/${last-php}"
+              command="docker-compose exec -T env
+              /var/www/magetwo.nrdev.de/vendor/bin/pdepend
+              --summary-xml=${docker.REPORT_PATH}pdepend.xml
+              --jdepend-chart=${docker.REPORT_PATH}jdepend.svg
+              --overview-pyramid=${docker.REPORT_PATH}pyramid.svg
+              ${docker.extensionPath}"
+              passthru="true"
+        />
+        <exec dir="docker/${last-app}/${last-php}"
+              command="docker-compose exec -T env
+              /var/www/magetwo.nrdev.de/vendor/bin/phpcs -p
+              --report-checkstyle=${docker.REPORT_PATH}checkstyle.xml
+              --standard=MEQP2 -v
+              --runtime-set ignore_warnings_on_exit true
+              --ignore=*/build/*
+              ${docker.extensionPath}"
+              checkreturn="true"
+              passthru="true"
+        />
+        <exec dir="docker/${last-app}/${last-php}"
+              command="docker-compose exec -T env
+              /var/www/magetwo.nrdev.de/vendor/bin/phpunit
+              -c ${docker.extensionPath}/Test/phpunit.xml
+              --filter /^Netresearch/
+              --bootstrap /var/www/magetwo.nrdev.de/dev/tests/unit/framework/bootstrap.php
+              --coverage-html ${docker.REPORT_PATH}coverage-report/
+              --coverage-clover ${docker.REPORT_PATH}coverage.xml"
+              checkreturn="true"
+              passthru="true"
+        />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: unittests                             -->
+    <!-- ============================================  -->
+    <target name="phpunit-all" description="run unit tests against each minor version">
+        <foreach list="${app-versions}" param="app-dir" target="foreach-php-phpunit" delimiter=","/>
+    </target>
+    <target name="foreach-php-phpunit">
+        <foreach list="${php-versions}" param="php-dir" target="phpunit" delimiter=","/>
+    </target>
+
+    <target name="phpunit">
+        <exec dir="docker/${app-dir}/${php-dir}"
+              command="docker-compose exec -T env
+              /var/www/magetwo.nrdev.de/vendor/bin/phpunit
+              -c ${docker.extensionPath}/Test/phpunit.xml
+              --filter /^Dhl/
+              --bootstrap /var/www/magetwo.nrdev.de/dev/tests/unit/framework/bootstrap.php"
+              passthru="true"
+        />
     </target>
 
     <!-- ============================================  -->
     <!-- (DEFAULT)  Target: dist                       -->
     <!-- ============================================  -->
-    <target name="dist" depends="prepare">
-        <echo msg="Creating archive..." />
+    <target name="dist" depends="startup,static-analysis,phpunit-all,prepare">
+        <echo msg="Creating archive..."/>
         <zip destfile="./package/${extension.name}-${extension.version}.zip">
             <fileset dir="../">
                 <exclude name="build/**"/>
             </fileset>
         </zip>
-        <echo msg="Files compressed in package directory OK!" />
+        <echo msg="Files compressed in package directory OK!"/>
+        <!--<gittag name="${extension.version}" repository="${project.basedir}"/>-->
+        <!--<gitpush repository="${project.basedir}" tags="true"/>-->
     </target>
 </project>
