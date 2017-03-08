@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="DHL-Shipping for Magento2" default="dist">
+<project name="DHL Shipping for Magento2" default="dist">
     <property name="composer-name" value="dhl/module-shipping-m2"/>
     <property name="app-versions" value="2.0,2.1"
               description="Different versions of host applications, determines the versions installed in docker containers"/>
