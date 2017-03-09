@@ -9,8 +9,8 @@
 
     <property name="buildzip" value="false"/>
     <property environment="env"/>
-    <propertyregex property="last-app" subject="${app-versions}" pattern=",(.*)$" match="$1"/>
-    <propertyregex property="last-php" subject="${php-versions}" pattern=",(.*)$" match="$1"/>
+    <propertyregex property="last-app" subject="${app-versions}" pattern=" ,?(.*)$" match="$1"/>
+    <propertyregex property="last-php" subject="${php-versions}" pattern=" ,?(.*)$" match="$1"/>
 
     <taskdef name="docker-properties" classname="tasks.DockerProperties"/>
     <taskdef name="dockerGenEnv" classname="tasks.DockerGenerateEnviroments"/>
