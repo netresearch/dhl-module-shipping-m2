@@ -29,7 +29,7 @@ use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\TestFramework\ObjectManager;
 
 /**
- * ConfigTest
+ * ModuleConfigTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration

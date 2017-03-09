@@ -28,7 +28,7 @@ namespace Dhl\Shipping\Model\Checkout;
 use \Magento\TestFramework\ObjectManager;
 
 /**
- * ConfigTest
+ * CheckoutInfoTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -39,40 +39,52 @@ use \Magento\TestFramework\ObjectManager;
 class CheckoutInfoTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
 
-    /** @var  CheckoutInfo */
-    private $model;
-
+    /**
+     * @var CheckoutInfo
+     */
+    private $checkoutInfo;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-        $this->model   = $this->objectManager->create(CheckoutInfo::class);
+        $this->checkoutInfo = $this->objectManager->create(CheckoutInfo::class);
     }
 
     /**
+     * Simple in / out test
+     *
      * @test
      */
     public function getServices()
     {
-        $this->model->setServices(['service1']);
-        $result = $this->model->getServices();
-        $this->assertTrue(is_array($result));
-        $this->assertEquals('service1', $result[0]);
+        $services = ['foo domestic', 'foo express'];
+
+        $this->checkoutInfo->setServices($services);
+        $result = $this->checkoutInfo->getServices();
+
+        $this->assertInternalType('array', $result);
+        foreach ($services as $service) {
+            $this->assertContains($service, $result);
+        }
     }
 
     /**
+     * Simple in / out test
+     *
      * @test
      */
     public function getPostalFacility()
     {
-        $this->model->setPostalFacility('facility');
-        $this->assertEquals('facility', $this->model->getPostalFacility());
-    }
+        $postalFacility = 'packstation';
 
+        $this->checkoutInfo->setPostalFacility($postalFacility);
+
+        $this->assertEquals($postalFacility, $this->checkoutInfo->getPostalFacility());
+    }
 }

@@ -28,7 +28,7 @@ namespace Dhl\Shipping\Model\Config;
 use \Magento\TestFramework\ObjectManager;
 
 /**
- * ConfigTest
+ * BcsConfigTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -39,12 +39,14 @@ use \Magento\TestFramework\ObjectManager;
 class BcsConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
 
-    /** @var  BcsConfig */
-    private $configModel;
+    /**
+     * @var BcsConfig
+     */
+    private $config;
 
     /**
      * Config fixtures are loaded before data fixtures. Config fixtures for
@@ -80,7 +82,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-        $this->configModel   = $this->objectManager->create(BcsConfig::class);
+        $this->config = $this->objectManager->create(BcsConfig::class);
     }
 
     /**
@@ -90,7 +92,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getSandboxApiEndpoint()
     {
-        $this->assertEquals('Sandbox', $this->configModel->getApiEndpoint());
+        $this->assertEquals('Sandbox', $this->config->getApiEndpoint());
     }
 
     /**
@@ -100,7 +102,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getApiEndpoint()
     {
-        $this->assertNull($this->configModel->getApiEndpoint());
+        $this->assertNull($this->config->getApiEndpoint());
     }
 
     /**
@@ -110,7 +112,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthPassword()
     {
-        $this->assertEquals('password', $this->configModel->getAuthPassword());
+        $this->assertEquals('password', $this->config->getAuthPassword());
     }
 
     /**
@@ -120,7 +122,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthPasswordSandboxMode()
     {
-        $this->assertEquals('sandbox', $this->configModel->getAuthPassword());
+        $this->assertEquals('sandbox', $this->config->getAuthPassword());
     }
 
     /**
@@ -130,7 +132,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthUsernameSandboxMode()
     {
-        $this->assertEquals('sandbox', $this->configModel->getAuthUsername());
+        $this->assertEquals('sandbox', $this->config->getAuthUsername());
     }
 
     /**
@@ -140,7 +142,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthUsername()
     {
-        $this->assertEquals('username', $this->configModel->getAuthUsername());
+        $this->assertEquals('username', $this->config->getAuthUsername());
     }
 
     /**
@@ -150,7 +152,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountUserSandBoxMode()
     {
-        $this->assertEquals('username', $this->configModel->getAccountUser());
+        $this->assertEquals('username', $this->config->getAccountUser());
     }
 
     /**
@@ -160,7 +162,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountUser()
     {
-        $this->assertEquals('username', $this->configModel->getAccountUser());
+        $this->assertEquals('username', $this->config->getAccountUser());
     }
 
     /**
@@ -170,7 +172,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountSignatureSandBoxMode()
     {
-        $this->assertEquals('signature', $this->configModel->getAccountSignature());
+        $this->assertEquals('signature', $this->config->getAccountSignature());
     }
 
     /**
@@ -180,7 +182,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountSignature()
     {
-        $this->assertEquals('signature', $this->configModel->getAccountSignature());
+        $this->assertEquals('signature', $this->config->getAccountSignature());
     }
 
     /**
@@ -190,7 +192,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountEkpSandBoxMode()
     {
-        $this->assertEquals('account_ekp', $this->configModel->getAccountEkp());
+        $this->assertEquals('account_ekp', $this->config->getAccountEkp());
     }
 
     /**
@@ -200,7 +202,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountEkp()
     {
-        $this->assertEquals('account_ekp', $this->configModel->getAccountEkp());
+        $this->assertEquals('account_ekp', $this->config->getAccountEkp());
     }
 
     /**
@@ -209,7 +211,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountParticipationSandBoxMode()
     {
-        $this->assertEquals('02', $this->configModel->getAccountParticipation('83'));
+        $this->assertEquals('02', $this->config->getAccountParticipation('83'));
     }
 
     /**
@@ -218,7 +220,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAccountParticipation()
     {
-        $this->assertEquals('02', $this->configModel->getAccountParticipation('83'));
+        $this->assertEquals('02', $this->config->getAccountParticipation('83'));
     }
 
     /**
@@ -227,7 +229,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function isPrintOnlyIfCodeableFalse()
     {
-        $this->assertFalse((bool)$this->configModel->isPrintOnlyIfCodeable());
+        $this->assertFalse((bool)$this->config->isPrintOnlyIfCodeable());
     }
 
     /**
@@ -236,7 +238,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function isPrintOnlyIfCodeableTrue()
     {
-        $this->assertTrue((bool)$this->configModel->isPrintOnlyIfCodeable());
+        $this->assertTrue((bool)$this->config->isPrintOnlyIfCodeable());
     }
 
     /**
@@ -245,7 +247,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getBankDataAccountOwner()
     {
-        $this->assertEquals('owner', $this->configModel->getBankDataAccountOwner());
+        $this->assertEquals('owner', $this->config->getBankDataAccountOwner());
     }
 
     /**
@@ -254,7 +256,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getBankDataBankName()
     {
-        $this->assertEquals('bank', $this->configModel->getBankDataBankName());
+        $this->assertEquals('bank', $this->config->getBankDataBankName());
     }
 
     /**
@@ -263,7 +265,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getBankDataIban()
     {
-        $this->assertEquals('iban', $this->configModel->getBankDataIban());
+        $this->assertEquals('iban', $this->config->getBankDataIban());
     }
 
     /**
@@ -272,7 +274,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getBankDataBic()
     {
-        $this->assertEquals('bic', $this->configModel->getBankDataBic());
+        $this->assertEquals('bic', $this->config->getBankDataBic());
     }
 
     /**
@@ -282,7 +284,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getBankDataNote()
     {
-        $result = $this->configModel->getBankDataNote();
+        $result = $this->config->getBankDataNote();
         $this->assertTrue(is_array($result));
         $this->assertEquals(2, count($result));
         $this->assertEquals('note1', $result[0]);
@@ -295,9 +297,8 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getBankDataAccountReference()
     {
-        $this->assertEquals('reference', $this->configModel->getBankDataAccountReference());
+        $this->assertEquals('reference', $this->config->getBankDataAccountReference());
     }
-
 
     /**
      * @test
@@ -305,7 +306,7 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getContactPerson()
     {
-        $this->assertEquals('person', $this->configModel->getContactPerson());
+        $this->assertEquals('person', $this->config->getContactPerson());
     }
 
     /**
@@ -314,23 +315,23 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getShipperCompanyAddition()
     {
-        $this->assertEquals('company', $this->configModel->getShipperCompanyAddition());
+        $this->assertEquals('company', $this->config->getShipperCompanyAddition());
     }
 
     /**
      * @test
      */
-    public function getDeprecatedShipperContactGetters()
+    public function deprecatedGettersReturnNull()
     {
-        $this->assertNull($this->configModel->getShipperCompany());
-        $this->assertNull($this->configModel->getShipperCity());
-        $this->assertNull($this->configModel->getShipperCountryISOCode());
-        $this->assertNull($this->configModel->getShipperEmail());
-        $this->assertNull($this->configModel->getShipperName());
-        $this->assertNull($this->configModel->getShipperPostalCode());
-        $this->assertNull($this->configModel->getShipperRegion());
-        $this->assertNull($this->configModel->getShipperStreet());
-        $this->assertNull($this->configModel->getShipperStreetNumber());
+        $this->assertNull($this->config->getShipperCompany());
+        $this->assertNull($this->config->getShipperCity());
+        $this->assertNull($this->config->getShipperCountryISOCode());
+        $this->assertNull($this->config->getShipperEmail());
+        $this->assertNull($this->config->getShipperName());
+        $this->assertNull($this->config->getShipperPostalCode());
+        $this->assertNull($this->config->getShipperRegion());
+        $this->assertNull($this->config->getShipperStreet());
+        $this->assertNull($this->config->getShipperStreetNumber());
     }
 
     /**
@@ -339,6 +340,6 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getDispatchingInformation()
     {
-        $this->assertEquals('info', $this->configModel->getDispatchingInformation());
+        $this->assertEquals('info', $this->config->getDispatchingInformation());
     }
 }

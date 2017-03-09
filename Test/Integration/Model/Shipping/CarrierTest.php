@@ -25,12 +25,14 @@
  */
 namespace Dhl\Shipping\Model\Shipping;
 
+use Dhl\Shipping\Test\Provider\ShipmentResponseProvider;
+use Dhl\Shipping\Webservice\Gateway;
 use Magento\Framework\DataObject;
 use \Magento\TestFramework\ObjectManager;
 use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 
 /**
- * ConfigTest
+ * CarrierTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -41,71 +43,96 @@ use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 class CarrierTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
 
-    /** @var  Carrier */
-    private $model;
+    /**
+     * @var Carrier
+     */
+    private $carrier;
 
     /**
-     * @var \Dhl\Shipping\Api\Webservice\GatewayInterface
+     * @var Gateway|\PHPUnit_Framework_MockObject_MockObject
      */
     private $webserviceGateway;
-
-    /**
-     * @var \Magento\Framework\DataObjectFactory
-     */
-    private $dataObjectFactory;
-
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-        $this->model = $this->objectManager->create(Carrier::class);
+        $this->carrier = $this->objectManager->create(Carrier::class);
+
+        $this->webserviceGateway = $this->getMock(Gateway::class, ['createLabels'], [], '', false);
     }
 
     /**
+     * Assert that carrier does not provide any rates
+     *
      * @test
      */
     public function collectRates()
     {
         $request = $this->objectManager->create(\Magento\Quote\Model\Quote\Address\RateRequest::class);
-        $this->assertNull($this->model->collectRates($request));
+        $this->assertNull($this->carrier->collectRates($request));
     }
 
     /**
+     * Assert that carrier does not provide shipping methods
+     *
      * @test
      */
     public function getAllowedMethods()
     {
-        $result = $this->model->getAllowedMethods();
-        $this->assertTrue(is_array($result));
-        $this->assertCount(0, $result);
+        $result = $this->carrier->getAllowedMethods();
+        $this->assertInternalType('array', $result);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default_store carriers/dhlshipping/title CarrierFoo
+     */
+    public function getTrackingInfo()
+    {
+        $trackingNumber = '1234';
+        $trackingUrl = sprintf(
+            '%s%s',
+            'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=',
+            $trackingNumber
+        );
+
+        /** @var \Magento\Shipping\Model\Tracking\Result\Status $result */
+        $result = $this->carrier->getTrackingInfo($trackingNumber);
+        $this->assertInstanceOf(\Magento\Shipping\Model\Tracking\Result\Status::class , $result);
+        $this->assertEquals(Carrier::CODE, $result->getData('carrier'));
+        $this->assertEquals('CarrierFoo', $result->getData('carrier_title'));
+        $this->assertEquals($trackingNumber, $result->getData('tracking'));
+        $this->assertEquals($trackingUrl, $result->getData('url'));
     }
 
     /**
      * @test
      */
-    public function getTrackingInfo()
-    {
-        /** @var \Magento\Shipping\Model\Tracking\Result\Status $result */
-        $result = $this->model->getTrackingInfo('1234');
-        $this->assertInstanceOf(\Magento\Shipping\Model\Tracking\Result\Status::class , $result);
-        $this->assertEquals('dhlshipping', $result->getData('carrier'));
-        $this->assertEquals('DHL', $result->getData('carrier_title'));
-        $this->assertEquals('1234', $result->getData('tracking'));
-        $this->assertEquals('http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=1234', $result->getData('url'));
-    }
-
-    /**
- * @test
- */
     public function requestToShipmentError()
     {
+        $incrementId = '1001';
+        $packageId = '7';
 
+        $response = ShipmentResponseProvider::provideSingleErrorResponse();
+        $this->webserviceGateway
+            ->expects($this->once())
+            ->method('createLabels')
+            ->willReturn($response);
+
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $this->objectManager->create(DataObject::class, ['data' => [
+            'increment_id' => $incrementId
+        ]]);
+        $shipment = $this->objectManager->create(DataObject::class, ['data' => [
+            'order' => $order,
+        ]]);
         $package = [
             'params' => [
                 'container' => 'foo',
@@ -114,48 +141,43 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             'items' => [],
         ];
 
-        $order = $this->objectManager->create(\Magento\Sales\Model\Order::class);
-        $order->setIncrementId(12);
-        $orderShipment = $this->objectManager->create(Carrier::class);
-        $orderShipment->setOrder($order);
         /** @var ShipmentRequest $request */
-        $request = $this->objectManager->get(ShipmentRequest::class);
-        $request->setOrderShipment($orderShipment);
-        $request->setData('packages', [$package]);
+        $request = $this->objectManager->create(ShipmentRequest::class, ['data' => [
+            'packages' => [$packageId => $package],
+            'order_shipment' => $shipment,
+        ]]);
 
-        $responseStatus = $this->objectManager->create(
-            \Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatus::class,
-            [
-                'code' => 2,
-                'text' => 'foo',
-                'message' => 'bar'
-            ]);
-        $webserviceResponse = $this->objectManager->create(
-            \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection::class,
-            ['status' => $responseStatus]
-        );
-
-        $webServiceMock = $this->getMock(\Dhl\Shipping\Webservice\Gateway::class, ['createLabels'], [], '', false);
-        $webServiceMock
-            ->expects($this->any())
-            ->method('createLabels')
-            ->will($this->returnValue($webserviceResponse));
-
-        $this->model = $this->objectManager->create(Carrier::class, [
-            'webserviceGateway' => $webServiceMock
+        $this->carrier = $this->objectManager->create(Carrier::class, [
+            'webserviceGateway' => $this->webserviceGateway
         ]);
 
-        $response = $this->model->requestToShipment($request);
-        $this->assertEquals('bar', $response->getErrors());
+        $response = $this->carrier->requestToShipment($request);
+        $this->assertEquals('Hard validation error occured.', $response->getData('errors'));
     }
 
     /**
      * @test
      */
-    public function requestToShipment()
+    public function requestToShipmentSuccess()
     {
+        $incrementId = '1001';
+        $packageId = '7';
+        $sequenceNumber = "$incrementId-$packageId";
 
-        $package= [
+        $response = ShipmentResponseProvider::provideSingleSuccessResponse($sequenceNumber);
+        $this->webserviceGateway
+            ->expects($this->once())
+            ->method('createLabels')
+            ->willReturn($response);
+
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $this->objectManager->create(DataObject::class, ['data' => [
+            'increment_id' => $incrementId
+        ]]);
+        $shipment = $this->objectManager->create(DataObject::class, ['data' => [
+            'order' => $order,
+        ]]);
+        $package = [
             'params' => [
                 'container' => 'foo',
                 'weight' => 42
@@ -163,60 +185,23 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             'items' => [],
         ];
 
-        $order = $this->objectManager->create(\Magento\Sales\Model\Order::class);
-        $order->setIncrementId(12);
-        $orderShipment = $this->objectManager->create(Carrier::class);
-        $orderShipment->setOrder($order);
         /** @var ShipmentRequest $request */
-        $request = $this->objectManager->get(ShipmentRequest::class);
-        $request->setOrderShipment($orderShipment);
-        $request->setData('packages', [$package]);
+        $request = $this->objectManager->create(ShipmentRequest::class, ['data' => [
+            'packages' => [$packageId => $package],
+            'order_shipment' => $shipment,
+        ]]);
 
-        $itemStatus = $this->objectManager->create(
-            \Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatus::class,
-            [
-                'identifier' => 'foo',
-                'code'=> 0,
-                'text' => 'foo',
-                'message' => 'bar'
-            ]);
-        $label = $this->objectManager->create(
-            \Dhl\Shipping\Webservice\ResponseType\CreateShipment\Label::class,
-            [
-                'status' => $itemStatus,
-                'sequenceNumber' => '12',
-                'trackingNumber' => 'tr12qa',
-                'label' => 'label',
-                'returnLabel' => 'returnLabel',
-                'exportLabel' => 'exportLabel',
-                'codLabel' => 'codLabel'
-            ]);
-
-        $webserviceResponse = $this->objectManager->create(
-            \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection::class,
-            ['status' => $itemStatus]
-        );
-        $sequenceNumber = '12-0';
-        $webserviceResponse[$sequenceNumber] = $label;
-
-        $webServiceMock = $this->getMock(\Dhl\Shipping\Webservice\Gateway::class, ['createLabels'], [], '', false);
-        $webServiceMock
-            ->expects($this->any())
-            ->method('createLabels')
-            ->will($this->returnValue($webserviceResponse));
-
-        $this->model = $this->objectManager->create(Carrier::class, [
-            'webserviceGateway' => $webServiceMock
+        $this->carrier = $this->objectManager->create(Carrier::class, [
+            'webserviceGateway' => $this->webserviceGateway
         ]);
 
-        $response = $this->model->requestToShipment($request);
-        $info = $response->getInfo();
-        $this->assertTrue(is_array($info));
-        $this->assertArrayHasKey('tracking_number',$info[0]);
-        $this->assertArrayHasKey('label_content',$info[0]);
-        $this->assertEquals('tr12qa',$info[0]['tracking_number']);
-        $this->assertEquals('label',$info[0]['label_content']);
+        $response = $this->carrier->requestToShipment($request);
+        $info = $response->getData('info');
+        $this->assertInternalType('array', $info);
+        $this->assertCount(1, $info);
+        $this->assertArrayHasKey('tracking_number', $info[0]);
+        $this->assertArrayHasKey('label_content', $info[0]);
+        $this->assertEquals('22222221337', $info[0]['tracking_number']);
+        $this->assertEquals('%PDF-1.4', $info[0]['label_content']);
     }
-
-
 }
