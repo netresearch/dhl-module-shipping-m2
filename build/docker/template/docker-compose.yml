@@ -24,10 +24,12 @@ services:
     links:
       - db:mysql
     environment:
+      LIB_PATH:     "${LIB_PATH}"
       PACKAGE_PATH: "${PACKAGE_PATH}"
       PACKAGE_NAME: "${PACKAGE_NAME}"
     volumes:
       - ${PACKAGE_HOST_PATH}:${PACKAGE_PATH}
+      - ${LIB_HOST_PATH}:${LIB_PATH}
 
   env:
     image: "registry.netresearch.de/magento-ci/php-apache:${PHP_VERSION}"
