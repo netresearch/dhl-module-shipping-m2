@@ -105,7 +105,7 @@ class ExtendAddressFormObserver implements ObserverInterface
 
         $serializedInfo = $dhlOrderInfo->getInfo();
         /** @var Info $shippingInfo */
-        $shippingInfo = Info::fromJson($serializedInfo);
+        $shippingInfo = $serializedInfo ? Info::fromJson($serializedInfo) : null;
         if (!$shippingInfo instanceof Info) {
             return;
         }
