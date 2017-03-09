@@ -89,7 +89,7 @@ class BcsDataMapper implements BcsDataMapperInterface
             $codConfig = new BcsApi\ServiceconfigurationCashOnDelivery(
                 true,
                 $codService->addFee(),
-                $codService->getCodAmount()->getValue('EUR')
+                round ($codService->getCodAmount()->getValue('EUR'), 2)
             );
             $serviceType->setCashOnDelivery($codConfig);
         };
