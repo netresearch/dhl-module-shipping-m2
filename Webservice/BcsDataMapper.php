@@ -72,6 +72,19 @@ class BcsDataMapper implements BcsDataMapperInterface
             $shipmentItemType
         );
 
+        $bankData = new BcsApi\BankType(
+            $shipmentDetails->getBankData()->getAccountOwner(),
+            $shipmentDetails->getBankData()->getBankName(),
+            $shipmentDetails->getBankData()->getIban()
+        );
+        // note1, note2, bic, accountreference
+        $notes = $shipmentDetails->getBankData()->getNotes();
+        $bankData->setNote1(isset($notes[0]) ? $notes[0] : null);
+        $bankData->setNote2(isset($notes[1]) ? $notes[1] : null);
+        $bankData->setBic($shipmentDetails->getBankData()->getBic());
+        $bankData->setAccountreference($shipmentDetails->getBankData()->getAccountReference());
+        $shipmentDetailsType->setBankData($bankData);
+
         return $shipmentDetailsType;
     }
 
@@ -146,8 +159,8 @@ class BcsDataMapper implements BcsDataMapperInterface
         $countryType->setState($receiver->getAddress()->getState());
 
         $addressType = new BcsApi\ReceiverNativeAddressType(
-            $receiverName[0],
-            $receiverName[1],
+            isset($receiverName[1]) ? $receiverName[1] : null,
+            isset($receiverName[2]) ? $receiverName[2] : null,
             $receiver->getAddress()->getStreetName(),
             $receiver->getAddress()->getStreetNumber(),
             $receiver->getAddress()->getPostalCode(),
