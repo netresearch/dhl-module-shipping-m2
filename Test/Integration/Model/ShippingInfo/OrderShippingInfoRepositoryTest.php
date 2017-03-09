@@ -25,13 +25,14 @@
  */
 namespace Dhl\Shipping\Model\Shipping;
 
-use Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo;
-use Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository;
-use \Magento\TestFramework\ObjectManager;
 use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo as ShippingInfoResource;
+use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo;
+use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory;
+use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository;
+use \Magento\TestFramework\ObjectManager;
 
 /**
- * ConfigTest
+ * OrderShippingInfoRepositoryTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -42,88 +43,79 @@ use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo as Shipping
 class OrderShippingInfoRepositoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
-
-    /** @var  OrderShippingInfoRepository */
-    private $model;
-
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-
-
     }
 
     /**
+     * TODO(nr): create/rollback shipping info fixture
+     *
      * @test
      */
     public function getById()
     {
-        /** @var  OrderShippingInfo $orderShippingInfo */
-        $orderShippingInfo = $this->objectManager->create(OrderShippingInfo::class);
-        $orderShippingInfo->setAddressId(23);
-        $orderShippingInfo->setInfo('info');
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
-        $factoryMock  = $this->getMock(\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory::class, ['create'], [], '', false);
+        $addressId = 23;
+        $info = 'info foo';
 
+        /** @var  OrderShippingInfo $orderShippingInfo */
+        $orderShippingInfo = $this->objectManager->create(OrderShippingInfo::class, ['data' => [
+            'address_id' => $addressId,
+            'info' => $info
+        ]]);
+
+        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
+        $factoryMock = $this->getMock(OrderShippingInfoFactory::class, ['create'], [], '', false);
         $factoryMock
             ->expects($this->once())
             ->method('create')
             ->willReturn($orderShippingInfo);
 
-        $resourceMock
-            ->expects($this->once())
-            ->method('load')
-            ->willReturn($orderShippingInfo);
+        /** @var OrderShippingInfoRepository $repository */
+        $repository = $this->objectManager->create(OrderShippingInfoRepository::class, [
+            'shippingInfoFactory' => $factoryMock,
+            'shippingInfoResource' => $resourceMock
+        ]);
 
-        $this->objectManager->addSharedInstance($factoryMock, \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory::class);
-        $this->objectManager->addSharedInstance($resourceMock, \Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo::class);
-
-        $this->model  = $this->objectManager->create(OrderShippingInfoRepository::class);
-
-        $result = $this->model->getById(23);
-        $this->assertEquals('info', $result->getInfo());
-        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory::class);
-        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo::class);
+        $result = $repository->getById($addressId);
+        $this->assertEquals($info, $result->getInfo());
     }
 
     /**
+     * TODO(nr): create/rollback shipping info fixture
+     *
      * @test
      * @expectedException \Magento\Framework\Exception\NoSuchEntityException
      * @expectedExceptionMessage Shipment with id "23" does not exist.
      */
     public function getByIdExceptionCase()
     {
-        /** @var  OrderShippingInfo $orderShippingInfo */
-        $orderShippingInfo = $this->objectManager->create(OrderShippingInfo::class);
-        $orderShippingInfo->setAddressId(null);
-        $orderShippingInfo->setInfo('info');
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
-        $factoryMock  = $this->getMock(\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory::class, ['create'], [], '', false);
+        $info = 'info foo';
 
+        /** @var  OrderShippingInfo $orderShippingInfo */
+        $orderShippingInfo = $this->objectManager->create(OrderShippingInfo::class, ['data' => [
+            'info' => $info,
+        ]]);
+
+        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
+        $factoryMock  = $this->getMock(OrderShippingInfoFactory::class, ['create'], [], '', false);
         $factoryMock
             ->expects($this->once())
             ->method('create')
             ->willReturn($orderShippingInfo);
 
-        $resourceMock
-            ->expects($this->once())
-            ->method('load')
-            ->willReturn($orderShippingInfo);
+        /** @var OrderShippingInfoRepository $repository */
+        $repository = $this->objectManager->create(OrderShippingInfoRepository::class, [
+            'shippingInfoFactory' => $factoryMock,
+            'shippingInfoResource' => $resourceMock
+        ]);
 
-        $this->objectManager->addSharedInstance($factoryMock, \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory::class);
-        $this->objectManager->addSharedInstance($resourceMock, \Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo::class);
-        $this->model  = $this->objectManager->create(OrderShippingInfoRepository::class);
-
-        $result = $this->model->getById(23);
-
-        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory::class);
-        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo::class);
+        $repository->getById(23);
     }
-
 }

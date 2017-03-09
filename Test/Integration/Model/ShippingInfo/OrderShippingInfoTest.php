@@ -25,11 +25,11 @@
  */
 namespace Dhl\Shipping\Model\Shipping;
 
-use Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo;
+use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo;
 use \Magento\TestFramework\ObjectManager;
 
 /**
- * ConfigTest
+ * OrderShippingInfoTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -40,39 +40,45 @@ use \Magento\TestFramework\ObjectManager;
 class OrderShippingInfoTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
 
-    /** @var  OrderShippingInfo */
-    private $model;
-
-
+    /**
+     * @var OrderShippingInfo
+     */
+    private $shippingInfo;
 
     protected function setUp()
     {
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-        $this->model = $this->objectManager->create(OrderShippingInfo::class);
+        $this->shippingInfo = $this->objectManager->create(OrderShippingInfo::class);
     }
 
     /**
+     * Assert value is passed through getter/setter
+     *
      * @test
      */
-    public function getAddressById()
+    public function getAddressId()
     {
-        $this->model->setAddressId(12);
-        $this->assertEquals(12, $this->model->getAddressId(12));
+        $addressId = 12;
+
+        $this->shippingInfo->setAddressId($addressId);
+        $this->assertEquals($addressId, $this->shippingInfo->getAddressId());
     }
 
     /**
+     * Assert value is passed through getter/setter
+     *
      * @test
      */
     public function getInfo()
     {
-        $this->model->setInfo('fooInfo');
-        $this->assertEquals('fooInfo', $this->model->getInfo());
+        $info = 'info foo';
+        $this->shippingInfo->setInfo($info);
+        $this->assertEquals($info, $this->shippingInfo->getInfo());
     }
-
 }

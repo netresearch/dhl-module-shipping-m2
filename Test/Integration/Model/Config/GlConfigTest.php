@@ -25,11 +25,10 @@
  */
 namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\TestFramework\ObjectManager;
 
 /**
- * ConfigTest
+ * GlConfigTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -40,12 +39,14 @@ use \Magento\TestFramework\ObjectManager;
 class GlConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
 
-    /** @var  GlConfig */
-    private $configModel;
+    /**
+     * @var GlConfig
+     */
+    private $config;
 
     /**
      * Config fixtures are loaded before data fixtures. Config fixtures for
@@ -81,8 +82,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-
-        $this->configModel   = $this->objectManager->create(GlConfig::class);
+        $this->config = $this->objectManager->create(GlConfig::class);
     }
 
     /**
@@ -92,7 +92,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getSandboxApiEndpoint()
     {
-        $this->assertEquals('Sandbox', $this->configModel->getApiEndpoint());
+        $this->assertEquals('Sandbox', $this->config->getApiEndpoint());
     }
 
     /**
@@ -102,7 +102,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getApiEndpoint()
     {
-        $this->assertEquals('Api', $this->configModel->getApiEndpoint());
+        $this->assertEquals('Api', $this->config->getApiEndpoint());
     }
 
     /**
@@ -112,7 +112,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthPassword()
     {
-        $this->assertEquals('password', $this->configModel->getAuthPassword());
+        $this->assertEquals('password', $this->config->getAuthPassword());
     }
 
     /**
@@ -122,7 +122,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthPasswordSandboxMode()
     {
-        $this->assertEquals('sandbox', $this->configModel->getAuthPassword());
+        $this->assertEquals('sandbox', $this->config->getAuthPassword());
     }
 
     /**
@@ -132,7 +132,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthUsernameSandboxMode()
     {
-        $this->assertEquals('sandbox', $this->configModel->getAuthUsername());
+        $this->assertEquals('sandbox', $this->config->getAuthUsername());
     }
 
     /**
@@ -142,7 +142,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthUsername()
     {
-        $this->assertEquals('username', $this->configModel->getAuthUsername());
+        $this->assertEquals('username', $this->config->getAuthUsername());
     }
 
     /**
@@ -151,6 +151,6 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function getPickupAccountNumber()
     {
-        $this->assertEquals('1234', $this->configModel->getPickupAccountNumber());
+        $this->assertEquals('1234', $this->config->getPickupAccountNumber());
     }
 }
