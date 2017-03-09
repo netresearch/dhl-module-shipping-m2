@@ -25,8 +25,9 @@
  */
 namespace Dhl\Shipping\Webservice;
 
-use Dhl\Shipping\Api\Webservice\UnitConverterInterface;
+use \Dhl\Shipping\Api\Webservice\UnitConverterInterface;
 use \Magento\TestFramework\ObjectManager;
+use \Magento\Directory\Model\CurrencyFactory;
 
 /**
  * UnitConverterTest
@@ -44,6 +45,14 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
      */
     private $objectManager;
 
+    /**
+     * @var \Magento\Directory\Helper\Data
+     */
+    private $dataHelper;
+
+    /**
+     * prepare object manager, add mocks
+     */
     protected function setUp()
     {
         parent::setUp();
@@ -83,13 +92,13 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function convertMoney()
     {
-        $rateUsdToEur = 0.9377;
-        $rateGbpToEur = 1.1723;
-        $rateGbpToUsd = 1.2494;
-
         $valueInEur = 1;
         $valueInUsd = 1.066;
         $valueInGbp = 0.853;
+
+        $rateUsdToEur = 0.9377;
+        $rateGbpToEur = 1.1723;
+        $rateGbpToUsd = 1.2494;
 
         $currencyMock = $this->getMock(\Magento\Directory\Model\Currency::class, ['getRate'], [], '', false);
         $currencyMock
@@ -97,14 +106,19 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
             ->method('getRate')
             ->willReturnOnConsecutiveCalls($rateUsdToEur, $rateGbpToEur, $rateGbpToUsd);
 
-        $currencyFactoryMock = $this->getMock(\Magento\Directory\Model\CurrencyFactory::class, ['create'], [], '', false);
+        $currencyFactoryMock = $this->getMock(CurrencyFactory::class, ['create'], [], '', false);
         $currencyFactoryMock->expects($this->any())
             ->method('create')
             ->willReturn($currencyMock);
-        $this->objectManager->addSharedInstance($currencyFactoryMock, \Magento\Directory\Model\CurrencyFactory::class);
+
+        $dataHelper = $this->objectManager->create(\Magento\Directory\Helper\Data::class, [
+            'currencyFactory' => $currencyFactoryMock,
+        ]);
 
         /** @var UnitConverterInterface $unitConverter */
-        $unitConverter = $this->objectManager->create(UnitConverter::class);
+        $unitConverter = $this->objectManager->create(UnitConverter::class, [
+            'currencyConverter' => $dataHelper,
+        ]);
 
         $conversionResult = $unitConverter->convertMonetaryValue($valueInUsd, 'USD', 'EUR');
         $this->assertEquals($valueInEur, $conversionResult);
@@ -114,8 +128,6 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
 
         $conversionResult = $unitConverter->convertMonetaryValue($valueInGbp, 'GBP', 'USD');
         $this->assertEquals($valueInUsd, $conversionResult);
-
-        $this->objectManager->removeSharedInstance(\Magento\Directory\Model\CurrencyFactory::class);
     }
 
     /**

@@ -26,9 +26,10 @@
 namespace Dhl\Shipping\Model\Config;
 
 use \Magento\TestFramework\ObjectManager;
+use \Magento\Framework\App\Config\Storage\Writer as ConfigWriter;
 
 /**
- * ConfigTest
+ * ConfigAccessorTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -39,20 +40,45 @@ use \Magento\TestFramework\ObjectManager;
 class ConfigAccessorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
-
-    /** @var  ConfigAccessor */
-    private $configModel;
 
     protected function setUp()
     {
         parent::setUp();
+
         $this->objectManager = ObjectManager::getInstance();
     }
 
     /**
+     * Config fixtures are loaded before data fixtures. Config fixtures for
+     * non-existent stores will fail. We need to set the stores up first manually.
+     * @link http://magento.stackexchange.com/a/93961
+     */
+    public static function setUpBeforeClass()
+    {
+        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore_rollback.php');
+        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore.php');
+        parent::setUpBeforeClass();
+    }
+
+    /**
+     * Delete manually added stores. There is no rollback script for the
+     * second and third store (with websites). As long as this does not lead to
+     * errors, leave it as is.
+     *
+     * @see setUpBeforeClass()
+     */
+    public static function tearDownAfterClass()
+    {
+        require realpath(TESTS_TEMP_DIR . '/../testsuite/Magento/Store/_files/core_fixturestore_rollback.php');
+        parent::tearDownAfterClass();
+    }
+
+    /**
+     * Assert config value is passed through from accessor to writer
+     *
      * @test
      */
     public function saveConfig()
@@ -60,50 +86,36 @@ class ConfigAccessorTest extends \PHPUnit_Framework_TestCase
         $path  = GlConfig::CONFIG_XML_PATH_AUTH_USERNAME;
         $value = 'myTestValue';
 
-        $writerMock = $this->getMock(
-            \Magento\Framework\App\Config\Storage\Writer::class,
-            ['save'],
-            [],
-            '',
-            false
-        );
-
+        $writerMock = $this->getMock(ConfigWriter::class, ['save'], [], '', false);
         $writerMock
             ->expects($this->once())
             ->method('save')
             ->with($path, $value);
 
-        $this->configModel = $this->objectManager->create(
-            \Dhl\Shipping\Model\Config\ConfigAccessor::class,
-            ['configWriter' => $writerMock]
-        );
-        $this->configModel->saveConfigValue($path, $value, 1);
+        /** @var ConfigAccessor $configAccessor */
+        $configAccessor = $this->objectManager->create(ConfigAccessor::class, ['configWriter' => $writerMock]);
+        $configAccessor->saveConfigValue($path, $value, 1);
     }
 
     /**
+     * Assert config value is read from correct scope
+     *
      * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/title CarrierFoo
+     * @magentoConfigFixture fixturestore_store carriers/dhlshipping/title CarrierBar
      */
     public function getConfig()
     {
-        $path  = GlConfig::CONFIG_XML_PATH_AUTH_USERNAME;
+        $storeCode = 'fixturestore';
+        $store = $this->objectManager->create(\Magento\Store\Model\Store::class)->load($storeCode);
 
-        $scopeConfigMock = $this->getMock(
-            \Magento\Framework\App\Config::class,
-            ['getValue'],
-            [],
-            '',
-            false
-        );
+        /** @var ConfigAccessor $configAccessor */
+        $configAccessor = $this->objectManager->create(ConfigAccessor::class);
 
-        $scopeConfigMock
-            ->expects($this->once())
-            ->method('getValue')
-            ->with($path, 'store', 'store');
+        $defaultValue = $configAccessor->getConfigValue(ModuleConfig::CONFIG_XML_PATH_TITLE);
+        $storeValue = $configAccessor->getConfigValue(ModuleConfig::CONFIG_XML_PATH_TITLE, $store->getId());
 
-        $this->configModel = $this->objectManager->create(
-            \Dhl\Shipping\Model\Config\ConfigAccessor::class,
-            ['scopeConfig' => $scopeConfigMock]
-        );
-        $this->configModel->getConfigValue($path, 'store');
+        $this->assertEquals('CarrierFoo', $defaultValue);
+        $this->assertEquals('CarrierBar', $storeValue);
     }
 }
