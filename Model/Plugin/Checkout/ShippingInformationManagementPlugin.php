@@ -49,7 +49,7 @@ class ShippingInformationManagementPlugin
     /**
      * @var CartRepositoryInterface
      */
-    private $cartRepository;
+    private $quoteRepository;
 
     /**
      * @var QuoteShippingInfoFactory
@@ -81,7 +81,7 @@ class ShippingInformationManagementPlugin
     private $countryFactory;
 
     /**
-     * @param CartRepositoryInterface $cartRepository
+     * @param CartRepositoryInterface $quoteRepository
      * @param QuoteShippingInfoFactory $quoteInfoFactory
      * @param ShippingInfoRepositoryInterface $quoteInfoRepository
      * @param InfoInterface $shippingInfo
@@ -89,14 +89,14 @@ class ShippingInformationManagementPlugin
      * @param StreetSplitterInterface $streetSplitter
      */
     public function __construct(
-        CartRepositoryInterface $cartRepository,
+        CartRepositoryInterface $quoteRepository,
         QuoteShippingInfoFactory $quoteInfoFactory,
         ShippingInfoRepositoryInterface $quoteInfoRepository,
         InfoInterface $shippingInfo,
         CountryFactory $countryFactory,
         StreetSplitterInterface $streetSplitter
     ) {
-        $this->cartRepository = $cartRepository;
+        $this->quoteRepository = $quoteRepository;
         $this->quoteInfoFactory = $quoteInfoFactory;
         $this->quoteInfoRepository = $quoteInfoRepository;
         $this->shippingInfo = $shippingInfo;
@@ -155,7 +155,7 @@ class ShippingInformationManagementPlugin
 
         if ($serializedInfo) {
             /** @var \Magento\Quote\Model\Quote $quote */
-            $quote = $this->cartRepository->getActive($cartId);
+            $quote = $this->quoteRepository->getActive($cartId);
 
             // save/override shipping info into extension table
             $quoteInfo = $this->quoteInfoFactory->create(['data' => [
