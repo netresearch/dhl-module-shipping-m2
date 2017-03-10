@@ -5,10 +5,10 @@
     "description": "DHL business customer shipping extension for Magento",
     "require": {
         "php": "^5.6.0|^7.0.0",
-        "dhl/lib-shipping-mx": "@dev"
+        "dhl/lib-shipping-mx": "@dev",
         "magento/module-store": "^100.1.4",
         "magento/module-shipping": "^100.1.2",
-        "magento/zendframework1": "~1.12.16",
+        "magento/zendframework1": "~1.12.16"
     },
     "authors":[
         {
