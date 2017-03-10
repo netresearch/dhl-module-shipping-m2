@@ -31,7 +31,7 @@ use \Dhl\Shipping\Api\Data\Webservice\ResponseType\CreateShipment\LabelInterface
 use \Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface;
 use \Dhl\Shipping\Webservice\Adapter\BcsAdapter;
 use \Dhl\Shipping\Webservice\Logger;
-use Dhl\Shipping\Webservice\CreateShipmentStatusException;
+use \Dhl\Shipping\Webservice\Exception\CreateShipmentStatusException;
 
 /**
  *

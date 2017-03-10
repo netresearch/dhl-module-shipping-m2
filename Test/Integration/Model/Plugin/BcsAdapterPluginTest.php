@@ -26,7 +26,7 @@
 namespace Dhl\Shipping\Model\Plugin;
 
 use \Dhl\Shipping\Webservice\Client\BcsSoapClient;
-use \Dhl\Shipping\Webservice\CreateShipmentStatusException;
+use \Dhl\Shipping\Webservice\Exception\CreateShipmentStatusException;
 use \Magento\TestFramework\Interception\PluginList;
 use \Magento\TestFramework\ObjectManager;
 use \Dhl\Shipping\Webservice\Adapter\BcsAdapter as ApiAdapter;
@@ -168,6 +168,7 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
      */
     public function logWarning($shipmentOrder)
     {
+        /** @var CreateShipmentStatusException|\PHPUnit_Framework_MockObject_MockObject $wsException */
         $wsException = $this->getMock(CreateShipmentStatusException::class, [], [], '', false);
 
         $soapClientMock = $this->getMock(BcsSoapClient::class, ['createShipmentOrder'], [], '', false);
@@ -185,7 +186,7 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
             'dataMapper' => $this->requestMapper,
         ]);
 
-        $this->setExpectedException(\Dhl\Shipping\Webservice\CreateShipmentStatusException::class);
+        $this->setExpectedException(CreateShipmentStatusException::class);
         $this->bcsAdapter->createLabels([$shipmentOrder]);
     }
 }
