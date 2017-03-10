@@ -48,7 +48,8 @@ use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\S
 use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
 use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
 use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
-use Dhl\Shipping\Api\Webservice\RequestValidatorInterface;
+use \Dhl\Shipping\Api\Webservice\RequestValidatorInterface;
+use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Shipping\Api\StreetSplitterInterface;
 use \Dhl\Shipping\Api\Webservice\BcsAccessDataInterface;

@@ -316,7 +316,7 @@ class BcsConfig implements BcsConfigInterface
      */
     public function getShipperCompanyAddition($store = null)
     {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPPER_CONTACT_COMPANY_ADDITION, $store);
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPPER_CONTACT_COMPANYADDITION, $store);
     }
 
     /**

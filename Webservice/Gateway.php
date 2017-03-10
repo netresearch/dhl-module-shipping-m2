@@ -30,6 +30,7 @@ use \Dhl\Shipping\Api\Webservice\GatewayInterface;
 use \Dhl\Shipping\Api\Webservice\RequestMapper;
 use \Dhl\Shipping\Api\Data\Webservice\RequestType;
 use \Dhl\Shipping\Api\Data\Webservice\ResponseType;
+use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
 
 /**

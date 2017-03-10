@@ -95,7 +95,7 @@ class InstallSchema implements InstallSchemaInterface
             ['identity' => false, 'unsigned' => true, 'nullable' => false, 'primary' => true],
             'Order Address Id'
         );
-        $table->addColumn(ShippingInfoInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shippin Info');
+        $table->addColumn(ShippingInfoInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
         $table->addForeignKey(
             $installer->getFkName(
                 self::TABLE_ORDER_ADDRESS,

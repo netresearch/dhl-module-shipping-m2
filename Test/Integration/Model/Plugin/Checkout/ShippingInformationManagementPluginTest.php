@@ -25,7 +25,14 @@
  */
 namespace Dhl\Shipping\Model\Plugin;
 
-use Magento\TestFramework\Interception\PluginList;
+use \Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoRepository;
+use \Magento\Checkout\Model\ShippingInformation;
+use \Magento\Checkout\Model\ShippingInformationManagement;
+use \Magento\Framework\DataObject;
+use \Magento\Quote\Model\Quote;
+use \Magento\Quote\Model\QuoteRepository;
+use \Magento\Quote\Model\Quote\Address as ShippingAddress;
+use \Magento\TestFramework\Interception\PluginList;
 use \Magento\TestFramework\ObjectManager;
 
 /**
@@ -40,42 +47,101 @@ use \Magento\TestFramework\ObjectManager;
 class ShippingInformationManagementPluginTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var $objectManager ObjectManager
+     * @var ObjectManager
      */
     private $objectManager;
+
+    /**
+     * @var ShippingAddress|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $shippingAddress;
+
+    /**
+     * @var QuoteShippingInfoRepository|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $infoRepository;
+
+    /**
+     * @var ShippingInformationManagement
+     */
+    private $shippingInfoManagement;
 
     public function setUp()
     {
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
+
+        $this->shippingAddress = $this->getMock(
+            ShippingAddress::class,
+            ['getShippingRateByCode', 'getName'],
+            [],
+            '',
+            false
+        );
+        $this->shippingAddress
+            ->expects($this->once())
+            ->method('getShippingRateByCode')
+            ->willReturn('foo_bar');
+        $this->shippingAddress->setData([
+            'id' => 808,
+            'country_id' => 'XX',
+        ]);
+
+        /** @var Quote|\PHPUnit_Framework_MockObject_MockObject $quote */
+        $quote = $this->getMock(Quote::class, ['getShippingAddress'], [], '', false);
+        $quote->setItemsCount(1);
+        $quote->setStoreId(1);
+        $quote->expects($this->any())->method('getShippingAddress')->willReturn($this->shippingAddress);
+
+        $quoteRepository = $this->getMock(QuoteRepository::class, ['getActive', 'save'], [], '', false);
+        $quoteRepository
+            ->expects($this->any())
+            ->method('getActive')
+            ->willReturn($quote);
+        $this->objectManager->addSharedInstance($quoteRepository, QuoteRepository::class);
+
+        $this->infoRepository = $this->getMock(QuoteShippingInfoRepository::class, ['save'], [], '', false);
+        $this->objectManager->addSharedInstance($this->infoRepository, QuoteShippingInfoRepository::class);
+
+        $paymentManagement = $this->getMock(\Magento\Quote\Model\PaymentMethodManagement::class, ['getList'], [], '', false);
+        $cartTotalsRepository = $this->getMock(\Magento\Quote\Model\Cart\CartTotalRepository::class, ['get'], [], '', false);
+        /** @var ShippingInformationManagement $subject */
+        $this->shippingInfoManagement = $this->objectManager->create(ShippingInformationManagement::class, [
+            'paymentMethodManagement' => $paymentManagement,
+            'cartTotalsRepository' => $cartTotalsRepository,
+        ]);
+    }
+
+    protected function tearDown()
+    {
+        $this->objectManager->removeSharedInstance(QuoteRepository::class);
+        $this->objectManager->removeSharedInstance(QuoteShippingInfoRepository::class);
         $this->objectManager->removeSharedInstance(PluginList::class);
+
+        parent::tearDown();
     }
 
     /**
      * @test
      */
-    public function saveAddressInformation()
+    public function quoteInformationIsSaved()
     {
-        $this->markTestIncomplete('Test fails, what is the assertion at all?');
+        $cartId = 303;
+        $carrierCode = 'foo';
+        $methodCode = 'bar';
 
-        $shippingInformationMock = $this->getMock(
-            \Magento\Checkout\Model\ShippingInformation::class,
-            ['getShippingAddress'],
-            [],
-            '',
-            false
-        );
+        $shippingInformation = $this->objectManager->create(ShippingInformation::class, ['data' => [
+            'shipping_address' => $this->shippingAddress,
+            'carrier_code' => $carrierCode,
+            'method_code' => $methodCode,
+        ]]);
 
-        $address = $this->objectManager->create(\Magento\Quote\Model\Quote\Address::class);
-        $shippingInformationMock
+        $this->infoRepository
             ->expects($this->once())
-            ->method('getShippingAddress')
-            ->will($this->returnValue($address));
+            ->method('save')
+            ->with($this->isInstanceOf(\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo::class));
 
-        /** @var \Magento\Checkout\Model\ShippingInformationManagement $model */
-        $model = $this->objectManager->create(\Magento\Checkout\Model\ShippingInformationManagement::class);
-
-        $model->saveAddressInformation(12, $shippingInformationMock);
+        $this->shippingInfoManagement->saveAddressInformation($cartId, $shippingInformation);
     }
 }
