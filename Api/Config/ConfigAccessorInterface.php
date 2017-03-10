@@ -53,5 +53,4 @@ interface ConfigAccessorInterface
      * @return mixed
      */
     public function getConfigValue($path, $scopeId = null);
-
 }
