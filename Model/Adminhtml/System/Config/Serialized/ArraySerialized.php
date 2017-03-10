@@ -69,5 +69,4 @@ class ArraySerialized extends BaseArraySerialized implements ProcessorInterface
 
         return (string)$oldValue;
     }
-
 }

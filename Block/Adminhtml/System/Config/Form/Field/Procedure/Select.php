@@ -56,8 +56,8 @@ class Select extends BaseSelect
         Context $context,
         Procedure $procedureModel,
         array $data = []
-    )
-    {
+    ) {
+    
         parent::__construct($context, $data);
         $this->procedureModel = $procedureModel;
     }

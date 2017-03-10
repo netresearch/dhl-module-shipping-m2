@@ -105,7 +105,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
 
         /** @var \Magento\Shipping\Model\Tracking\Result\Status $result */
         $result = $this->carrier->getTrackingInfo($trackingNumber);
-        $this->assertInstanceOf(\Magento\Shipping\Model\Tracking\Result\Status::class , $result);
+        $this->assertInstanceOf(\Magento\Shipping\Model\Tracking\Result\Status::class, $result);
         $this->assertEquals(Carrier::CODE, $result->getData('carrier'));
         $this->assertEquals('CarrierFoo', $result->getData('carrier_title'));
         $this->assertEquals($trackingNumber, $result->getData('tracking'));

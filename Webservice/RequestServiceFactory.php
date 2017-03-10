@@ -61,7 +61,7 @@ class RequestServiceFactory extends AbstractServiceFactory
      * @param mixed[] $data
      * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceInterface
      */
-    public function create($instanceCode, array $data = array())
+    public function create($instanceCode, array $data = [])
     {
         switch ($instanceCode) {
             case AbstractServiceFactory::SERVICE_CODE_COD:
