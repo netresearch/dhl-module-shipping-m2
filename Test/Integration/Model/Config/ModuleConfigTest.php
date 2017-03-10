@@ -323,6 +323,4 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
         $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isCodPaymentMethod('cc'));
     }
-
-
 }

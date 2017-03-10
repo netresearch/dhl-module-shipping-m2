@@ -92,13 +92,11 @@ class Participation extends AbstractFieldArray
         $this->addColumn('procedure', [
                 'label'    => __('Procedure'),
                 'renderer' => $this->_getTemplateRenderer()
-            ]
-        );
+            ]);
         $this->addColumn('participation', [
                 'label' => __('Participation'),
                 'style' => 'width:80px',
-            ]
-        );
+            ]);
         // hide "Add after" button
         $this->_addAfter = false;
     }
