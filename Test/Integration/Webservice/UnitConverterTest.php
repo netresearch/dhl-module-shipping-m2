@@ -46,9 +46,9 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
     private $objectManager;
 
     /**
-     * @var \Magento\Directory\Helper\Data
+     * @var UnitConverterInterface
      */
-    private $dataHelper;
+    private $unitConverter;
 
     /**
      * prepare object manager, add mocks
@@ -58,43 +58,6 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-    }
-
-    /**
-     * @test
-     */
-    public function convertDimension()
-    {
-        $valueInKm = 1;
-        $valueInM = 1000;
-        $valueInInches = 39370.079;
-
-        /** @var UnitConverterInterface $unitConverter */
-        $unitConverter = $this->objectManager->create(UnitConverter::class);
-
-        $conversionResult = $unitConverter->convertDimension(
-            $valueInKm,
-            \Zend_Measure_Length::KILOMETER,
-            \Zend_Measure_Length::METER
-        );
-        $this->assertEquals($valueInM, $conversionResult);
-
-        $conversionResult = $unitConverter->convertDimension(
-            $valueInKm,
-            \Zend_Measure_Length::KILOMETER,
-            \Zend_Measure_Length::INCH
-        );
-        $this->assertEquals($valueInInches, $conversionResult);
-    }
-
-    /**
-     * @test
-     */
-    public function convertMoney()
-    {
-        $valueInEur = 1;
-        $valueInUsd = 1.066;
-        $valueInGbp = 0.853;
 
         $rateUsdToEur = 0.9377;
         $rateGbpToEur = 1.1723;
@@ -111,49 +74,138 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
             ->method('create')
             ->willReturn($currencyMock);
 
-        $dataHelper = $this->objectManager->create(\Magento\Directory\Helper\Data::class, [
+        $carrierHelper = $this->objectManager->get(\Magento\Shipping\Helper\Carrier::class);
+        $directoryHelper = $this->objectManager->create(\Magento\Directory\Helper\Data::class, [
             'currencyFactory' => $currencyFactoryMock,
         ]);
 
-        /** @var UnitConverterInterface $unitConverter */
-        $unitConverter = $this->objectManager->create(UnitConverter::class, [
-            'currencyConverter' => $dataHelper,
+        $this->unitConverter = $this->objectManager->create(UnitConverter::class, [
+            'currencyConverter' => $directoryHelper,
+            'unitConverter' => $carrierHelper,
         ]);
+    }
 
-        $conversionResult = $unitConverter->convertMonetaryValue($valueInUsd, 'USD', 'EUR');
+    /**
+     * @test
+     * @magentoConfigFixture default_store general/locale/code en_US
+     */
+    public function convertDimension()
+    {
+        $valueInKm = 1;
+        $valueInM = 1000;
+        $valueInInches = 39370.079;
+
+        $conversionResult = $this->unitConverter->convertDimension(
+            $valueInKm,
+            \Zend_Measure_Length::KILOMETER,
+            \Zend_Measure_Length::METER
+        );
+        $this->assertEquals($valueInM, $conversionResult);
+
+        $conversionResult = $this->unitConverter->convertDimension(
+            $valueInKm,
+            \Zend_Measure_Length::KILOMETER,
+            \Zend_Measure_Length::INCH
+        );
+        $this->assertEquals($valueInInches, $conversionResult);
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default_store general/locale/code en_US
+     */
+    public function convertMoney()
+    {
+        $valueInEur = 1;
+        $valueInUsd = 1.066;
+        $valueInGbp = 0.853;
+
+        $conversionResult = $this->unitConverter->convertMonetaryValue($valueInUsd, 'USD', 'EUR');
         $this->assertEquals($valueInEur, $conversionResult);
 
-        $conversionResult = $unitConverter->convertMonetaryValue($valueInGbp, 'GBP', 'EUR');
+        $conversionResult = $this->unitConverter->convertMonetaryValue($valueInGbp, 'GBP', 'EUR');
         $this->assertEquals($valueInEur, $conversionResult);
 
-        $conversionResult = $unitConverter->convertMonetaryValue($valueInGbp, 'GBP', 'USD');
+        $conversionResult = $this->unitConverter->convertMonetaryValue($valueInGbp, 'GBP', 'USD');
         $this->assertEquals($valueInUsd, $conversionResult);
     }
 
     /**
      * @test
+     * @magentoConfigFixture default_store general/locale/code en_US
      */
     public function convertWeight()
     {
-        $valueInKg = 1;
-        $valueInG = 1000;
-        $valueInLbs = 2.205;
+        $valueInKg = "1";
+        $valueInG = "1000";
+        $valueInLbs = "2.205";
 
-        /** @var UnitConverterInterface $unitConverter */
-        $unitConverter = $this->objectManager->create(UnitConverter::class);
-
-        $conversionResult = $unitConverter->convertWeight(
+        $conversionResult = $this->unitConverter->convertWeight(
             $valueInKg,
             \Zend_Measure_Weight::KILOGRAM,
             \Zend_Measure_Weight::GRAM
         );
         $this->assertEquals($valueInG, $conversionResult);
 
-        $conversionResult = $unitConverter->convertWeight(
+        $conversionResult = $this->unitConverter->convertWeight(
             $valueInKg,
             \Zend_Measure_Weight::KILOGRAM,
             \Zend_Measure_Weight::LBS
         );
         $this->assertEquals($valueInLbs, $conversionResult);
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default_store general/locale/code de_DE
+     */
+    public function handleDeLocaleWithPointSeparator()
+    {
+        $lang = getenv('HTTP_ACCEPT_LANGUAGE');
+
+        putenv('HTTP_ACCEPT_LANGUAGE=de-DE');
+
+        $valueInLbs = "3.2";
+        $valueInG = 1451.496;
+
+        $conversionResult = $this->unitConverter->convertWeight(
+            $valueInLbs,
+            \Zend_Measure_Weight::LBS,
+            \Zend_Measure_Weight::GRAM
+        );
+        $this->assertEquals($valueInG, $conversionResult);
+
+        if ($lang) {
+            putenv("HTTP_ACCEPT_LANGUAGE=$lang");
+        } else {
+            putenv('HTTP_ACCEPT_LANGUAGE');
+        }
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default_store general/locale/code de_DE
+     */
+    public function handleDeLocaleWithCommaSeparator()
+    {
+        $lang = getenv('HTTP_ACCEPT_LANGUAGE');
+
+        putenv('HTTP_ACCEPT_LANGUAGE=de-DE');
+
+        $valueInLbs = "3,2";
+        $valueInG = 1451.496;
+
+        $conversionResult = $this->unitConverter->convertWeight(
+            $valueInLbs,
+            \Zend_Measure_Weight::LBS,
+            \Zend_Measure_Weight::GRAM
+        );
+        $this->assertEquals($valueInG, $conversionResult);
+
+        if ($lang) {
+            putenv("HTTP_ACCEPT_LANGUAGE=$lang");
+        } else {
+            putenv('HTTP_ACCEPT_LANGUAGE');
+        }
     }
 }
