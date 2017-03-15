@@ -60,7 +60,7 @@
                         <field id="sandbox_mode">0</field>
                     </depends>
                 </field>
-                <field id="bcs_account_signature" translate="label tooltip" type="text" sortOrder="82" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="bcs_account_signature" translate="label tooltip" type="obscure" sortOrder="82" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Signature</label>
                     <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
                     <depends>
