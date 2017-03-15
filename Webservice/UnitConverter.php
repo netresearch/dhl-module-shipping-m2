@@ -39,17 +39,34 @@ use \Dhl\Shipping\Api\Webservice\UnitConverterInterface;
 class UnitConverter implements UnitConverterInterface
 {
     /**
+     * @var \Magento\Framework\Locale\FormatInterface
+     */
+    private $localeFormat;
+
+    /**
      * @var \Magento\Directory\Helper\Data
      */
     private $currencyConverter;
 
     /**
-     * UnitConverter constructor.
-     * @param \Magento\Directory\Helper\Data $currencyConverter
+     * @var \Magento\Shipping\Helper\Carrier
      */
-    public function __construct(\Magento\Directory\Helper\Data $currencyConverter)
-    {
+    private $unitConverter;
+
+    /**
+     * UnitConverter constructor.
+     * @param \Magento\Framework\Locale\FormatInterface $localeFormat
+     * @param \Magento\Directory\Helper\Data $currencyConverter
+     * @param \Magento\Shipping\Helper\Carrier $unitConverter
+     */
+    public function __construct(
+        \Magento\Framework\Locale\FormatInterface $localeFormat,
+        \Magento\Directory\Helper\Data $currencyConverter,
+        \Magento\Shipping\Helper\Carrier $unitConverter
+    ) {
+        $this->localeFormat = $localeFormat;
         $this->currencyConverter = $currencyConverter;
+        $this->unitConverter = $unitConverter;
     }
 
     /**
@@ -60,14 +77,13 @@ class UnitConverter implements UnitConverterInterface
      */
     public function convertDimension($value, $unitIn, $unitOut)
     {
-        if (!is_numeric($value)) {
+        $value = $this->localeFormat->getNumber($value);
+        $converted = $this->unitConverter->convertMeasureDimension($value, $unitIn, $unitOut);
+        if (!$converted) {
             return null;
         }
 
-        $dimensionConverter = new \Zend_Measure_Length($value, $unitIn);
-        $dimensionConverter->setType($unitOut);
-
-        return $dimensionConverter->getValue(self::CONVERSION_PRECISION);
+        return round($converted, self::CONVERSION_PRECISION);
     }
 
     /**
@@ -94,13 +110,12 @@ class UnitConverter implements UnitConverterInterface
      */
     public function convertWeight($value, $unitIn, $unitOut)
     {
-        if (!is_numeric($value)) {
+        $value = $this->localeFormat->getNumber($value);
+        $converted = $this->unitConverter->convertMeasureWeight($value, $unitIn, $unitOut);
+        if (!$converted) {
             return null;
         }
 
-        $weightConverter = new \Zend_Measure_Weight($value, $unitIn);
-        $weightConverter->setType($unitOut);
-
-        return $weightConverter->getValue(self::CONVERSION_PRECISION);
+        return round($converted, self::CONVERSION_PRECISION);
     }
 }
