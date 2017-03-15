@@ -409,6 +409,11 @@ class AppDataMapper implements AppDataMapperInterface
             'dispatchingInformation' => $this->bcsConfig->getDispatchingInformation($storeId)
         ]);
 
+        $idCard = $this->identityFactory->create([
+            'type' => '',
+            'number' => '',
+        ]);
+
         $receiver = $this->receiverFactory->create([
             'contactPerson' => $request->getRecipientContactPersonName(),
             'name'          => [
@@ -419,6 +424,7 @@ class AppDataMapper implements AppDataMapperInterface
             'phone'         => $request->getRecipientContactPhoneNumber(),
             'email'         => $request->getData('recipient_email'),
             'address'       => $address,
+            'identity'      => $idCard,
         ]);
 
         return $receiver;
@@ -489,7 +495,10 @@ class AppDataMapper implements AppDataMapperInterface
      */
     private function getCustomsDetails(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $exportType = $this->exportTypeInterfaceFactory->create();
+        $exportType = $this->exportTypeInterfaceFactory->create([
+            'type' => '',
+            'description' => '',
+        ]);
 
         $customsDetails = $this->customsDetailsFactory->create([
             'invoiceNumber'                => '???',
