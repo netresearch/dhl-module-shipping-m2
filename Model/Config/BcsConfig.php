@@ -117,6 +117,9 @@ class BcsConfig implements BcsConfigInterface
     /**
      * Obtain DHL Business Customer Shipping contract data: username.
      *
+     * Note: Webservice login fails if merchant registered a username with upper
+     * case characters. The same username converted to lower case is accepted.
+     *
      * @param mixed $store
      *
      * @return string
@@ -124,10 +127,12 @@ class BcsConfig implements BcsConfigInterface
     public function getAccountUser($store = null)
     {
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_USER, $store);
+            $user = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_USER, $store);
+        } else {
+            $user = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_USER, $store);
         }
 
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_USER, $store);
+        return strtolower($user);
     }
 
     /**
