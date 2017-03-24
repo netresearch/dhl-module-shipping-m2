@@ -167,6 +167,16 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
+     * @magentoConfigFixture default/carriers/dhlshipping/bcs_account_user U53Rn4m3
+     */
+    public function getAccountUserWithMixedCase()
+    {
+        $this->assertEquals('u53rn4m3', $this->config->getAccountUser());
+    }
+
+    /**
+     * @test
      * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
      * @magentoConfigFixture default/carriers/dhlshipping/bcs_sandbox_account_signature signature
      */
