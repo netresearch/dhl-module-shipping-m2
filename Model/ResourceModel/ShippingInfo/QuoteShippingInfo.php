@@ -26,7 +26,7 @@
 namespace Dhl\Shipping\Model\ResourceModel\ShippingInfo;
 
 use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
-use \Dhl\Shipping\Setup\InstallSchema;
+use \Dhl\Shipping\Setup\ShippingSetup;
 
 /**
  * DHL Shipping Quote Info Resource Model
@@ -44,6 +44,6 @@ class QuoteShippingInfo extends AbstractShippingInfo
      */
     protected function _construct()
     {
-        $this->_init(InstallSchema::TABLE_QUOTE_ADDRESS, ShippingInfoInterface::ADDRESS_ID);
+        $this->_init(ShippingSetup::TABLE_QUOTE_ADDRESS, ShippingInfoInterface::ADDRESS_ID);
     }
 }

@@ -18,32 +18,39 @@
  *
  * @category  Dhl
  * @package   Dhl\Shipping
- * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\ResourceModel\ShippingInfo;
+namespace Dhl\Shipping\Setup;
 
-use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
-use \Dhl\Shipping\Setup\ShippingSetup;
+use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\UninstallInterface;
 
 /**
- * DHL Shipping Order Info Resource Model
+ * Uninstall
  *
  * @category Dhl
  * @package  Dhl\Shipping
- * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class OrderShippingInfo extends AbstractShippingInfo
+class Uninstall implements UninstallInterface
 {
     /**
-     * Resource initialization.
+     * Remove tables that were created during module installation.
+     *
+     * @param SchemaSetupInterface $setup
+     * @param ModuleContextInterface $context
      */
-    protected function _construct()
+    public function uninstall(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
-        $this->_init(ShippingSetup::TABLE_ORDER_ADDRESS, ShippingInfoInterface::ADDRESS_ID);
+        $uninstaller = $setup;
+
+        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_QUOTE_ADDRESS);
+        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_ORDER_ADDRESS);
     }
 }

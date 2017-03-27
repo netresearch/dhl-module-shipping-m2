@@ -42,12 +42,11 @@ use Magento\Framework\Setup\SchemaSetupInterface;
  */
 class InstallSchema implements InstallSchemaInterface
 {
-    const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
-    const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
-
     /**
-     * {@inheritdoc}
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * Install schema.
+     *
+     * @param SchemaSetupInterface $setup
+     * @param ModuleContextInterface $context
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -57,7 +56,7 @@ class InstallSchema implements InstallSchemaInterface
          * Create table 'dhlshipping_quote_address'
          */
         $table = $installer->getConnection()->newTable(
-            $installer->getTable(self::TABLE_QUOTE_ADDRESS)
+            $installer->getTable(ShippingSetup::TABLE_QUOTE_ADDRESS)
         );
 
         $table->addColumn(
@@ -70,7 +69,7 @@ class InstallSchema implements InstallSchemaInterface
         $table->addColumn(ShippingInfoInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
         $table->addForeignKey(
             $installer->getFkName(
-                self::TABLE_QUOTE_ADDRESS,
+                ShippingSetup::TABLE_QUOTE_ADDRESS,
                 ShippingInfoInterface::ADDRESS_ID,
                 'quote_address',
                 'address_id'
@@ -86,7 +85,7 @@ class InstallSchema implements InstallSchemaInterface
          * Create table 'dhlshipping_order_address'
          */
         $table = $installer->getConnection()->newTable(
-            $installer->getTable(self::TABLE_ORDER_ADDRESS)
+            $installer->getTable(ShippingSetup::TABLE_ORDER_ADDRESS)
         );
         $table->addColumn(
             ShippingInfoInterface::ADDRESS_ID,
@@ -98,7 +97,7 @@ class InstallSchema implements InstallSchemaInterface
         $table->addColumn(ShippingInfoInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
         $table->addForeignKey(
             $installer->getFkName(
-                self::TABLE_ORDER_ADDRESS,
+                ShippingSetup::TABLE_ORDER_ADDRESS,
                 ShippingInfoInterface::ADDRESS_ID,
                 'sales_order_address',
                 'entity_id'

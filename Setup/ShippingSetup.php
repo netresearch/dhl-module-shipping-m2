@@ -18,32 +18,24 @@
  *
  * @category  Dhl
  * @package   Dhl\Shipping
- * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\ResourceModel\ShippingInfo;
-
-use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
-use \Dhl\Shipping\Setup\ShippingSetup;
+namespace Dhl\Shipping\Setup;
 
 /**
- * DHL Shipping Order Info Resource Model
+ * ShippingSetup
  *
  * @category Dhl
  * @package  Dhl\Shipping
- * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class OrderShippingInfo extends AbstractShippingInfo
+class ShippingSetup
 {
-    /**
-     * Resource initialization.
-     */
-    protected function _construct()
-    {
-        $this->_init(ShippingSetup::TABLE_ORDER_ADDRESS, ShippingInfoInterface::ADDRESS_ID);
-    }
+    const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
+    const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
 }
