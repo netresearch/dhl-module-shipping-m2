@@ -27,6 +27,7 @@ namespace Dhl\Shipping\Model\Adminhtml\System\Config\Serialized;
 
 use \Magento\Config\Model\Config\Backend\Serialized\ArraySerialized as BaseArraySerialized;
 use \Magento\Framework\App\Config\Data\ProcessorInterface;
+use \Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * ArraySerialized Class

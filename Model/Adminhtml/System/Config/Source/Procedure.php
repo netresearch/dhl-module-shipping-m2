@@ -68,7 +68,7 @@ class Procedure implements \Magento\Framework\Option\ArrayInterface
             BcsAccessDataInterface::PROCEDURE_PAKET_AUSTRIA           => __('DHL Paket Austria: V86PARCEL'),
             BcsAccessDataInterface::PROCEDURE_PAKET_CONNECT           => __('DHL PAKET Connect: V87PARCEL'),
             BcsAccessDataInterface::PROCEDURE_PAKET_INTERNATIONAL     => __('DHL PAKET International: V82PARCEL'),
-            BcsAccessDataInterface::PROCEDURE_RETURNSHIPMENT_NATIONAL => __('Retoure DHL Paket: V01PAK'),
+            BcsAccessDataInterface::PROCEDURE_RETURNSHIPMENT_NATIONAL => __('Retoure DHL Paket: V07PAK'),
             BcsAccessDataInterface::PROCEDURE_RETURNSHIPMENT_AUSTRIA  => __('Retoure DHL Paket Austria: V86PARCEL'),
             BcsAccessDataInterface::PROCEDURE_RETURNSHIPMENT_CONNECT  => __('Retoure DHL Paket Connect: V87PARCEL'),
         ];
