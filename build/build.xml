@@ -63,6 +63,7 @@
     <target name="tear-down"
             depends="prepare-environment"
             description="Run path replace command in container and shut down docker containers">
+        <docker-properties dir="docker/${last-app}/${last-php}"/>
         <exec dir="docker/${last-app}/${last-php}"
               command="docker-compose exec -T env
                 /var/www/magetwo.nrdev.de/vendor/bin/phing
