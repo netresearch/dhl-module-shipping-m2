@@ -32,24 +32,36 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function bcsLibLoaded()
     {
-        $className = \Dhl\Shipping\Bcs\GVAPI_2_0_de::class;
-
+        // generated classes
+        $className = \Dhl\Shipping\Bcs\Version::class;
         try {
-            $libObject = $this->objectManager->create($className);
+            /** @var \Dhl\Shipping\Bcs\Version $libObject */
+            $libObject = $this->objectManager->create($className, [
+                'majorRelease' => '2',
+                'minorRelease' => '2',
+                'build' => '',
+            ]);
         } catch (\ReflectionException $e) {
             $libObject = null;
         }
-
         $this->assertInstanceOf($className, $libObject);
 
-        $className = \Dhl\Shipping\Webservice\Adapter\GlAdapter::class;
-
+        // business customer shipping api access
+        $className = \Dhl\Shipping\Webservice\Adapter\BcsAdapter::class;
         try {
             $libObject = $this->objectManager->create($className);
         } catch (\ReflectionException $e) {
             $libObject = null;
         }
+        $this->assertInstanceOf($className, $libObject);
 
+        // global label api access
+        $className = \Dhl\Shipping\Webservice\Adapter\GlAdapter::class;
+        try {
+            $libObject = $this->objectManager->create($className);
+        } catch (\ReflectionException $e) {
+            $libObject = null;
+        }
         $this->assertInstanceOf($className, $libObject);
     }
 }
