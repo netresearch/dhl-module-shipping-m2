@@ -27,11 +27,11 @@
     <default>
         <carriers>
             <dhlshipping>
-                <active>1</active>
+                <active>0</active>
                 <title>DHL</title>
                 <name>Shipping</name>
                 <sandbox_mode>1</sandbox_mode>
-                <logging_enabled>1</logging_enabled>
+                <logging_enabled>0</logging_enabled>
                 <log_level>2</log_level>
                 <sallowspecific>0</sallowspecific>
                 <specificerrmsg>This shipping method is not available. To use this shipping method, please contact us.</specificerrmsg>
@@ -52,6 +52,7 @@
                 <bcs_sandbox_account_ekp>2222222222</bcs_sandbox_account_ekp>
                 <bcs_sandbox_account_participation backend_model="Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\ArraySerialized"><![CDATA[a:8:{s:18:"_1485789382230_230";a:2:{s:9:"procedure";s:2:"01";s:13:"participation";s:2:"04";}s:18:"_1485789931170_170";a:2:{s:9:"procedure";s:2:"53";s:13:"participation";s:2:"01";}s:18:"_1485789932261_261";a:2:{s:9:"procedure";s:2:"86";s:13:"participation";s:2:"02";}s:18:"_1485789932731_731";a:2:{s:9:"procedure";s:2:"87";s:13:"participation";s:2:"02";}s:18:"_1485789933215_215";a:2:{s:9:"procedure";s:2:"82";s:13:"participation";s:2:"02";}s:18:"_1485789933729_729";a:2:{s:9:"procedure";s:2:"07";s:13:"participation";s:2:"01";}s:17:"_1485789955040_40";a:2:{s:9:"procedure";s:2:"83";s:13:"participation";s:2:"02";}s:18:"_1485789964896_896";a:2:{s:9:"procedure";s:2:"85";s:13:"participation";s:2:"02";}}]]></bcs_sandbox_account_participation>
 
+                <bcs_shipment_printonlyifcodeable>1</bcs_shipment_printonlyifcodeable>
             </dhlshipping>
         </carriers>
     </default>
