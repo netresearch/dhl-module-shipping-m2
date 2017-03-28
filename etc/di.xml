@@ -119,6 +119,11 @@
             <argument name="orderInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository</argument>
         </arguments>
     </type>
+    <type name="Dhl\Shipping\Webservice\Client\BcsSoapClient">
+        <arguments>
+            <argument name="wsdl" xsi:type="string">https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.2/geschaeftskundenversand-api-2.2.wsdl</argument>
+        </arguments>
+    </type>
 
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>

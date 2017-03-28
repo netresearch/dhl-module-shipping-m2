@@ -26,11 +26,11 @@
 
 namespace Dhl\Shipping\Webservice\Client;
 
-use Dhl\Shipping\Api\Config\BcsConfigInterface;
+use \Dhl\Shipping\Api\Config\BcsConfigInterface;
 use \Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface;
 
 /**
- * Business Customer Shipping API SOAP client adapter
+ * Business Customer Shipping API SOAP client
  *
  * @category Dhl
  * @package  Dhl\Shipping\Api
@@ -38,40 +38,88 @@ use \Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class BcsSoapClient implements BcsSoapClientInterface
+class BcsSoapClient extends \SoapClient implements BcsSoapClientInterface
 {
     /**
-     * @var \Dhl\Shipping\Bcs\GVAPI_2_0_de
+     * @var array $classmap The defined classes
      */
-    private $soapClient;
+    private static $classmap = array (
+        'Version' => 'Dhl\\Shipping\\Bcs\\Version',
+        'GetVersionResponse' => 'Dhl\\Shipping\\Bcs\\GetVersionResponse',
+        'CreateShipmentOrderRequest' => 'Dhl\\Shipping\\Bcs\\CreateShipmentOrderRequest',
+        'CreateShipmentOrderResponse' => 'Dhl\\Shipping\\Bcs\\CreateShipmentOrderResponse',
+        'ShipmentOrderType' => 'Dhl\\Shipping\\Bcs\\ShipmentOrderType',
+        'Shipment' => 'Dhl\\Shipping\\Bcs\\Shipment',
+        'ShipmentDetailsTypeType' => 'Dhl\\Shipping\\Bcs\\ShipmentDetailsTypeType',
+        'ShipmentDetailsType' => 'Dhl\\Shipping\\Bcs\\ShipmentDetailsType',
+        'ShipmentItemType' => 'Dhl\\Shipping\\Bcs\\ShipmentItemType',
+        'ShipmentService' => 'Dhl\\Shipping\\Bcs\\ShipmentService',
+        'ServiceconfigurationDateOfDelivery' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationDateOfDelivery',
+        'ServiceconfigurationDeliveryTimeframe' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationDeliveryTimeframe',
+        'ServiceconfigurationISR' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationISR',
+        'Serviceconfiguration' => 'Dhl\\Shipping\\Bcs\\Serviceconfiguration',
+        'ServiceconfigurationShipmentHandling' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationShipmentHandling',
+        'ServiceconfigurationEndorsement' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationEndorsement',
+        'ServiceconfigurationVisualAgeCheck' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationVisualAgeCheck',
+        'ServiceconfigurationDetails' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationDetails',
+        'ServiceconfigurationCashOnDelivery' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationCashOnDelivery',
+        'ServiceconfigurationAdditionalInsurance' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationAdditionalInsurance',
+        'ServiceconfigurationIC' => 'Dhl\\Shipping\\Bcs\\ServiceconfigurationIC',
+        'Ident' => 'Dhl\\Shipping\\Bcs\\Ident',
+        'ShipmentNotificationType' => 'Dhl\\Shipping\\Bcs\\ShipmentNotificationType',
+        'BankType' => 'Dhl\\Shipping\\Bcs\\BankType',
+        'ShipperType' => 'Dhl\\Shipping\\Bcs\\ShipperType',
+        'ShipperTypeType' => 'Dhl\\Shipping\\Bcs\\ShipperTypeType',
+        'NameType' => 'Dhl\\Shipping\\Bcs\\NameType',
+        'NativeAddressType' => 'Dhl\\Shipping\\Bcs\\NativeAddressType',
+        'CountryType' => 'Dhl\\Shipping\\Bcs\\CountryType',
+        'CommunicationType' => 'Dhl\\Shipping\\Bcs\\CommunicationType',
+        'ReceiverType' => 'Dhl\\Shipping\\Bcs\\ReceiverType',
+        'ReceiverTypeType' => 'Dhl\\Shipping\\Bcs\\ReceiverTypeType',
+        'ReceiverNativeAddressType' => 'Dhl\\Shipping\\Bcs\\ReceiverNativeAddressType',
+        'cis:PackStationType' => 'Dhl\\Shipping\\Bcs\\PackStationType',
+        'cis:PostfilialeType' => 'Dhl\\Shipping\\Bcs\\PostfilialeType',
+        'cis:ParcelShopType' => 'Dhl\\Shipping\\Bcs\\ParcelShopType',
+        'ExportDocumentType' => 'Dhl\\Shipping\\Bcs\\ExportDocumentType',
+        'ExportDocPosition' => 'Dhl\\Shipping\\Bcs\\ExportDocPosition',
+        'Statusinformation' => 'Dhl\\Shipping\\Bcs\\Statusinformation',
+        'CreationState' => 'Dhl\\Shipping\\Bcs\\CreationState',
+        'LabelData' => 'Dhl\\Shipping\\Bcs\\LabelData',
+        'DeleteShipmentOrderRequest' => 'Dhl\\Shipping\\Bcs\\DeleteShipmentOrderRequest',
+        'DeleteShipmentOrderResponse' => 'Dhl\\Shipping\\Bcs\\DeleteShipmentOrderResponse',
+        'DeletionState' => 'Dhl\\Shipping\\Bcs\\DeletionState',
+    );
 
     /**
      * BcsSoapClient constructor.
-     *
-     * @param BcsConfigInterface $bcsConfig
+     * @param BcsConfigInterface $config
+     * @param string|null $wsdl
+     * @param string[]|null $options
      */
-    public function __construct(BcsConfigInterface $bcsConfig)
+    public function __construct(BcsConfigInterface $config, $wsdl, array $options = null)
     {
-        //TODO(nr): maybe or maybe not use m2 factory
-        $options = [
-            'location' => $bcsConfig->getApiEndpoint(),
-            'login'    => $bcsConfig->getAuthUsername(),
-            'password' => $bcsConfig->getAuthPassword(),
-            'trace'    => 1
+        $bcsOptions = [
+            'location' => $config->getApiEndpoint(),
+            'login'    => $config->getAuthUsername(),
+            'password' => $config->getAuthPassword(),
+            'classmap' => self::$classmap,
+            'trace'    => true,
+            'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
         ];
-        $client  = new \Dhl\Shipping\Bcs\GVAPI_2_0_de($options);
+
+        $options = empty($options) ? $bcsOptions : array_merge($options, $bcsOptions);
+
+        parent::__construct($wsdl, $options);
 
         $authHeader = new \SoapHeader(
             'http://dhl.de/webservice/cisbase',
             'Authentification',
             [
-                'user'      => $bcsConfig->getAccountUser(),
-                'signature' => $bcsConfig->getAccountSignature(),
+                'user'      => $config->getAccountUser(),
+                'signature' => $config->getAccountSignature(),
             ]
         );
-        $client->__setSoapHeaders($authHeader);
-
-        $this->soapClient = $client;
+        $this->__setSoapHeaders($authHeader);
     }
 
     /**
@@ -84,7 +132,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      */
     public function getVersion(\Dhl\Shipping\Bcs\Version $request)
     {
-        return $this->soapClient->getVersion($request);
+        return $this->__soapCall('getVersion', [$request]);
     }
 
     /**
@@ -96,7 +144,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      */
     public function createShipmentOrder(\Dhl\Shipping\Bcs\CreateShipmentOrderRequest $request)
     {
-        return $this->soapClient->createShipmentOrder($request);
+        return $this->__soapCall('createShipmentOrder', [$request]);
     }
 
     /**
@@ -108,7 +156,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      */
     public function deleteShipmentOrder(\Dhl\Shipping\Bcs\DeleteShipmentOrderRequest $request)
     {
-        return $this->soapClient->deleteShipmentOrder($request);
+        return $this->__soapCall('deleteShipmentOrder', [$request]);
     }
 
     /**
@@ -116,7 +164,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      */
     public function getLastRequest()
     {
-        return $this->soapClient->__getLastRequest();
+        return $this->__getLastRequest();
     }
 
     /**
@@ -124,7 +172,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      */
     public function getLastRequestHeaders()
     {
-        return $this->soapClient->__getLastRequestHeaders();
+        return $this->__getLastRequestHeaders();
     }
 
     /**
@@ -132,7 +180,7 @@ class BcsSoapClient implements BcsSoapClientInterface
      */
     public function getLastResponse()
     {
-        return $this->soapClient->__getLastResponse();
+        return $this->__getLastResponse();
     }
 
     /**
@@ -140,6 +188,6 @@ class BcsSoapClient implements BcsSoapClientInterface
      */
     public function getLastResponseHeaders()
     {
-        return $this->soapClient->__getLastResponseHeaders();
+        return $this->__getLastResponseHeaders();
     }
 }
