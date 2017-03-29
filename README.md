@@ -1,7 +1,7 @@
 DHL Shipping Extension
 ======================
 
-The DHL Shipping extension for Magento© 2 integrates the DHL business customer
+The DHL Shipping extension for Magento® 2 integrates the DHL business customer
 shipping API into the order processing workflow.
 
 Facts
@@ -24,7 +24,7 @@ Compatibility
 
 Installation Instructions
 -------------------------
-The DHL Shipping module for Magento© 2 is distributed in three formats:
+The DHL Shipping module for Magento® 2 is distributed in three formats:
 * Drop-In
 * [Composer Artifact](https://getcomposer.org/doc/05-repositories.md#artifact)
 * [Composer VCS](https://getcomposer.org/doc/05-repositories.md#using-private-repositories)
@@ -32,7 +32,7 @@ The DHL Shipping module for Magento© 2 is distributed in three formats:
 ### Install Source Files ###
 
 The following sections describe how to install the module source files,
-depending on the distribution format, to your Magento© 2 instance. 
+depending on the distribution format, to your Magento® 2 instance. 
 
 #### Drop-In ####
 If you received a single ZIP file with no `composer.json` file included, extract
@@ -86,7 +86,7 @@ Uninstallation
 --------------
 
 The following sections describe how to uninstall the module, depending on the
-distribution format, from your Magento© 2 instance. 
+distribution format, from your Magento® 2 instance. 
 
 #### Composer VCS and Composer Artifact ####
 
