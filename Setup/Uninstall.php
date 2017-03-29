@@ -41,7 +41,7 @@ use Magento\Framework\Setup\UninstallInterface;
 class Uninstall implements UninstallInterface
 {
     /**
-     * Remove tables that were created during module installation.
+     * Remove data that was created during module installation.
      *
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
@@ -50,7 +50,10 @@ class Uninstall implements UninstallInterface
     {
         $uninstaller = $setup;
 
+        $configTable = $uninstaller->getTable('core_config_data');
+
         $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_QUOTE_ADDRESS);
         $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_ORDER_ADDRESS);
+        $uninstaller->getConnection()->delete($configTable, "`path` LIKE 'carriers/dhlshipping/%'");
     }
 }
