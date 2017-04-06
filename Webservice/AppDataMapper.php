@@ -522,41 +522,42 @@ class AppDataMapper implements AppDataMapperInterface
      */
     private function getPackages(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $packages = [];
+        $packages    = [];
+        $allPackages = $request->getData('packages');
+        $packageId   = $request->getPackageId();
+        $package     = $allPackages[$packageId];
 
-        foreach ($request->getData('packages') as $packageId => $package) {
-            $weight = $this->packageWeightFactory->create([
-                'value' => $package['params']['weight'],
-                'unitOfMeasurement' => $package['params']['weight_units'],
-            ]);
-            $dimensions = $this->packageDimensionsFactory->create([
-                'length' => $package['params']['length'],
-                'width' => $package['params']['width'],
-                'height' => $package['params']['height'],
-                'unitOfMeasurement' => $package['params']['dimension_units'],
-            ]);
+        $weight = $this->packageWeightFactory->create([
+            'value'             => $package['params']['weight'],
+            'unitOfMeasurement' => $package['params']['weight_units'],
+        ]);
+        $dimensions = $this->packageDimensionsFactory->create([
+            'length'            => $package['params']['length'],
+            'width'             => $package['params']['width'],
+            'height'            => $package['params']['height'],
+            'unitOfMeasurement' => $package['params']['dimension_units'],
+        ]);
 
-            $packageValue = array_reduce($package['items'], function ($carry, $item) {
-                $price = $item['price'] * 1000;
-                $carry += ($price * $item['qty']);
+        $packageValue = array_reduce($package['items'], function ($carry, $item) {
+            $price  = $item['price'] * 1000;
+            $carry += ($price * $item['qty']);
 
-                return $carry;
-            });
-            $packageValue = number_format($packageValue / 1000, 2, '.', '');
+            return $carry;
+        });
+        $packageValue = number_format($packageValue / 1000, 2, '.', '');
 
-            $declaredValue = $this->monetaryValueFactory->create([
-                'value' => $packageValue,
-                'currencyCode' => $request->getData('base_currency_code'),
-            ]);
+        $declaredValue = $this->monetaryValueFactory->create([
+            'value'        => $packageValue,
+            'currencyCode' => $request->getData('base_currency_code'),
+        ]);
 
-            //FIXME(nr): should declared value include tax?
-            $packages[] = $this->packageFactory->create([
-                'packageId' => $packageId,
-                'weight' => $weight,
-                'dimensions' => $dimensions,
-                'declaredValue' => $declaredValue,
-            ]);
-        }
+        //FIXME(nr): should declared value include tax?
+        $packages[] = $this->packageFactory->create([
+            'packageId'     => $packageId,
+            'weight'        => $weight,
+            'dimensions'    => $dimensions,
+            'declaredValue' => $declaredValue,
+        ]);
 
         return $packages;
     }
