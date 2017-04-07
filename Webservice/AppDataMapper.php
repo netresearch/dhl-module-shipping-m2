@@ -324,7 +324,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $shipmentDetails = $this->shipmentDetailsFactory->create([
             'isPrintOnlyIfCodeable'       => $this->bcsConfig->isPrintOnlyIfCodeable($storeId),
-            'isPartialShipment'           => ($qtyOrdered != $qtyShipped),
+            'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
             'product'                     => $product,
             'accountNumber'               => $this->bcsAccessData->getBillingNumber($product),
             'returnShipmentAccountNumber' => $this->bcsAccessData->getReturnShipmentBillingNumber($product),
