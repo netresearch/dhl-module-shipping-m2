@@ -172,6 +172,7 @@
               command="docker-compose exec -T env
               /var/www/magetwo.nrdev.de/vendor/bin/phpunit
               -c ${docker.extensionPath}/Test/Integration/phpunit.xml
+              --bootstrap ${docker.MAGENTO_ROOT_PATH}dev/tests/integration/framework/bootstrap.php
               --coverage-html ${docker.REPORT_PATH}coverage-report/
               --coverage-clover ${docker.REPORT_PATH}coverage.xml"
               checkreturn="true"
@@ -194,6 +195,7 @@
               command="docker-compose exec -T env
               /var/www/magetwo.nrdev.de/vendor/bin/phpunit
               -c ${docker.extensionPath}/Test/Integration/phpunit.xml
+              --bootstrap ${docker.MAGENTO_ROOT_PATH}dev/tests/integration/framework/bootstrap.php
               --no-coverage"
               passthru="true"
         />
