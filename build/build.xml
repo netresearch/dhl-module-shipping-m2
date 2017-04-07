@@ -127,7 +127,7 @@
     <!-- ============================================  -->
     <target name="static-analysis" description="Runs static code analysis on codebase">
         <docker-properties dir="docker/${last-app}/${last-php}"/>
-        <property name="docker.extensionPath" value="${docker.MAGENTO_ROOT_PATH}vendor/${composer-name}/"/>
+        <property name="docker.extensionPath" value="${docker.MAGENTO_ROOT_PATH}vendor/${composer-name}"/>
 
         <exec dir="docker/${last-app}/${last-php}"
               command="docker-compose exec -T env
@@ -171,9 +171,7 @@
         <exec dir="docker/${last-app}/${last-php}"
               command="docker-compose exec -T env
               /var/www/magetwo.nrdev.de/vendor/bin/phpunit
-              -c ${docker.extensionPath}/Test/phpunit.xml
-              --filter /^Netresearch/
-              --bootstrap /var/www/magetwo.nrdev.de/dev/tests/unit/framework/bootstrap.php
+              -c ${docker.extensionPath}/Test/Integration/phpunit.xml
               --coverage-html ${docker.REPORT_PATH}coverage-report/
               --coverage-clover ${docker.REPORT_PATH}coverage.xml"
               checkreturn="true"
@@ -195,9 +193,8 @@
         <exec dir="docker/${app-dir}/${php-dir}"
               command="docker-compose exec -T env
               /var/www/magetwo.nrdev.de/vendor/bin/phpunit
-              -c ${docker.extensionPath}/Test/phpunit.xml
-              --filter /^Dhl/
-              --bootstrap /var/www/magetwo.nrdev.de/dev/tests/unit/framework/bootstrap.php"
+              -c ${docker.extensionPath}/Test/Integration/phpunit.xml
+              --no-coverage"
               passthru="true"
         />
     </target>
