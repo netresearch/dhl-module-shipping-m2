@@ -17,6 +17,7 @@ via the [DHL business customer shipping API](https://entwickler.dhl.de/en/)
 Requirements
 ------------
 * PHP >= 5.6.5
+* PHP >= 7.0.6
 
 Compatibility
 -------------

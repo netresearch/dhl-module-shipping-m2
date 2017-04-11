@@ -38,10 +38,10 @@ Voraussetzungen
 
 Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Moduls erfüllt sein:
 
-Magento®
---------
+Magento® 2
+----------
 
-Folgende Magento®-Versionen werden vom Modul unterstützt:
+Folgende Magento® 2-Versionen werden vom Modul unterstützt:
 
 - Community Edition 2.1.4 oder höher
 
@@ -50,8 +50,11 @@ PHP
 
 Folgende PHP-Versionen werden vom Modul unterstützt:
 
-- PHP 5.6.5 oder höher
-- PHP 7.0.6 oder höher
+- PHP 5.6.5+
+- PHP 7.0.6+
+
+Weitere Informationen finden Sie auch in den Dateien *README.md* und *composer.json* im
+Modulpackage. Im Zweifelsfall sind die Versionsangaben in der Datei *composer.json* maßgeblich.
 
 Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
 Webserver installiert und aktiviert sein.
@@ -80,18 +83,12 @@ Konfigurationseinstellungen vorgenommen werden müssen.
 Installation
 ------------
 
-Installieren Sie das Modul gemäß der Anweisung in der Datei README.md, die Sie im
+Installieren Sie das Modul gemäß der Anweisung in der Datei *README.md*, die Sie im
 Modulpackage finden. Achten Sie darauf, alle Anweisungen exakt zu befolgen und keine
 Schritte zu überspringen.
 
-Beim ersten Aufruf des Moduls werden diese neuen Adress-Attribute im System angelegt:
-
-- ``dhl_versenden_info``
-
-Die Attribute werden in folgenden Tabellen hinzugefügt:
-
-- ``sales_flat_quote_address``
-- ``sales_flat_order_address``
+In der Datei *README.md* finden Sie zudem Informationen, welche Änderungen in der
+Datenbank durch die Installation vorgenommen werden.
 
 Modulkonfiguration
 ------------------
@@ -124,7 +121,8 @@ Nachfolgens werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben
 .. admonition:: Hinweis
 
    Der Abschnitt *Versandarten → DHL* ist Kernbestandteil von Magento® 2 und bindet
-   die Schnittstelle von DHL USA an, nicht jedoch den DHL Geschäftskundenversand.
+   die Schnittstelle von DHL USA an, nicht jedoch den DHL Geschäftskundenversand. Diese
+   Einstellungen beziehen sich nicht auf *DHL Versenden*.
 
 .. raw:: pdf
 
@@ -138,28 +136,29 @@ Im Konfigurationsbereich *Allgemeine Einstellungen* wird festgelegt, ob der
 Extension produktiv betrieben werden soll.
 
 Darüber hinaus wird die Protokollierung konfiguriert. Wenn die Protokollierung
-der *DHL Versenden* Extension sowie das allgemeine Logging
-(*Stores → Konfiguration → Erweitert → Entwickleroptionen → Log Einstellungen*)
-aktiviert sind, werden Webservice-Nachrichten in die Magento® Log-Dateien in ``var/log``
-geschrieben. Es wird *keine* gesonderte Log-Datei für das Versenden-Modul erstellt.
+der *DHL Versenden* Extension aktiviert ist, werden Webservice-Nachrichten in
+die Magento® Log-Dateien in ``var/log`` geschrieben. Es wird *keine* gesonderte
+Log-Datei für das Versenden-Modul erstellt.
 
 Sie haben die Auswahl zwischen drei Protokollstufen:
 
-* ``Error`` zeichnet Fehler in der Kommunikation zwischen Shop und DHL Webservice auf,
+* ``Error`` zeichnet Kommunikationsfehler zwischen Shop und DHL Webservice auf,
 * ``Warning`` zeichnet Kommunikationsfehler sowie Fehler, die auf den Inhalt der
-  Nachrichten zurückgehen (bspw. Adressvalidierung, ungültige Service-Auswahl), auf und
-* ``Debug`` zeichnet sämtliche Nachrichten auf.
+  Nachrichten zurückgehen (z.B. Adressvalidierung, ungültige Service-Auswahl), auf und
+* ``Debug`` zeichnet sämtliche Nachrichten auf, einschl. heruntergeladener Paketaufkleber.
 
 .. admonition:: Hinweis
 
-   Stellen Sie sicher, dass die Log-Dateien regelmäßig bereinigt bzw. rotiert werden.
+   Stellen Sie sicher, dass die Log-Dateien regelmäßig bereinigt bzw. rotiert werden. Die
+   Einstellung *Debug* sollte nur zur Problembehebung aktiviert werden, da die Log-Dateien
+   sehr umfangreich werden können.
 
 Stammdaten
 ~~~~~~~~~~
 
 Im Konfigurationsbereich *Stammdaten* werden Ihre Zugangsdaten für den DHL Webservice
 hinterlegt, die für den Produktivmodus erforderlich sind. Die Zugangsdaten erhalten
-DHL Vertragskunden über den Vertrieb DHL Paket.
+DHL Vertragskunden über den Vertrieb *DHL Paket*.
 
 Tragen Sie folgende Daten ein:
 
@@ -168,7 +167,7 @@ Tragen Sie folgende Daten ein:
 * EKP (DHL-Kundennummer, 10-stellig)
 * Teilnahmenummern (Participation, jeweils zweistellig)
 
-Die Eingabefelder erscheinen nur, wenn der Sanbox-Modus abgeschaltet wird.
+Die Eingabefelder erscheinen nur, wenn der Sandbox-Modus abgeschaltet wird.
 
 Versandaufträge
 ~~~~~~~~~~~~~~~
@@ -177,14 +176,9 @@ Im Konfigurationsbereich *Versandaufträge* werden Einstellungen vorgenommen, di
 für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich sind.
 
 * *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
-  so werden nur Labels für seitens DHL erfolgreich validierte Lieferadressen erzeugt.
-  Andernfalls wird DHL im Rahmen der Zustellung versuchen, fehlerhafte Lieferadressen
-  korrekt zuzuordnen, wobei ein Nachkodierungsentgelt erhoben wird.
-* *Versand in bestimmte Länder*: Hier wird festgelegt, ob der Versand in alle Länder
-  möglich ist, die in der generellen Shop-Konfiguration freigeschaltet sind, oder nur
-  in ausgewählte Länder.
-* *Angezeigte Fehlermeldung*: Dieser Meldungstext wird angezeigt, wenn die Versandart
-  nicht zur Verfügung steht.
+  werden nur Labels für Lieferadressen erzeugt, die durch DHL erfolgreich validiert wurden.
+  Ansonsten wird DHL im Rahmen der Zustellung versuchen, fehlerhafte Lieferadressen
+  soweit möglich zu korrigieren, wofür ein Nachkodierungsentgelt erhoben wird.
 * *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten für die
   Versandkostenberechnung im Checkout verwendet werden sollen. Die hier ausgewählten
   Versandarten werden in der nachgelagerten Lieferscheinerstellung über den
@@ -202,9 +196,9 @@ während der Erstellung von Versandaufträgen an DHL übermittelt werden sollen.
 Bankverbindung
 ~~~~~~~~~~~~~~
 
-Im Konfigurationsbereich *Bankverbindung* legen Sie fest, welche Bankdaten im
-Rahmen von Nachnahme-Versandaufträgen an DHL übermittelt werden.
-Der vom Kunden erhobene Nachnahmebetrag wird auf dieses Konto transferiert.
+Im Konfigurationsbereich *Bankverbindung* legen Sie fest, welche Bankdaten für
+Nachnahme-Versandaufträge an DHL übermittelt werden. Der vom Empfänger erhobene
+Nachnahmebetrag wird auf dieses Konto transferiert.
 
 
 Ablaufbeschreibung und Features
@@ -216,23 +210,23 @@ Annahme einer Bestellung
 Im Folgenden wird beschrieben, wie sich die Extension *DHL Versenden* in den
 Bestellprozess integriert.
 
-Checkout
-~~~~~~~~
+Bestellung über Checkout
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 In der Modulkonfiguration_ wurden Versandarten für die Abwicklung der Versandaufträge
 und die Erstellung der Paketaufkleber eingestellt. Wählt der Kunde im Checkout-Schritt
-*Versandart* eine dieser DHL-Versandarten, kann die Bestellung im Nachgang über DHL
+*Versandart* eine dieser DHL-Versandarten, kann die Lieferung im Nachgang über DHL
 abgewickelt werden.
 
-Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlungen deaktiviert,
-falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung
-steht.
+Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlungen automatisch
+deaktiviert, falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur
+Verfügung steht (siehe *Nachnahme-Zahlarten für DHL Versenden*).
 
-Admin Order
-~~~~~~~~~~~
+Bestellung über Admin Panel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls
-der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
+Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls der
+Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
 
 .. raw:: pdf
 
@@ -248,8 +242,8 @@ Nationale Sendungen
 ~~~~~~~~~~~~~~~~~~~
 
 Öffnen Sie im Admin Panel eine Bestellung, deren Versandart mit dem DHL
-Geschäftskundenversand verknüpft ist. Betätigen Sie dann den Button *Versand*
-im oberen Bereich der Seite.
+Geschäftskundenversand verknüpft ist (siehe *Versandarten für DHL Versenden*).
+Betätigen Sie dann den Button *Versand* im oberen Bereich der Seite.
 
 .. image:: images/de/button_ship.png
    :scale: 75 %
@@ -274,8 +268,10 @@ Achten Sie auf das korrekte Paketgewicht.
 
 Der Button *OK* im Popup ist nun aktiviert. Bei Betätigung wird ein Versandauftrag
 an DHL übermittelt und im Erfolgsfall der resultierende Paketaufkleber abgerufen.
-Im Fehlerfall wird die vom Webservice erhaltene Fehlermeldung eingeblendet und
-die Bestellung kann entsprechend korrigiert werden, siehe auch Fehlerbehandlung_.
+
+Im Fehlerfall wird die vom Webservice erhaltene Fehlermeldung am oberen Rand des Popups
+eingeblendet und die Bestellung kann entsprechend korrigiert werden, siehe auch
+Fehlerbehandlung_.
 
 .. raw:: pdf
 
@@ -292,12 +288,19 @@ Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 Drucken eines Paketaufklebers
 -----------------------------
 
-Erfolgreich abgerufene Paketaufkleber können standardmäßig an verschiedenen
-Stellen im Admin Panel eingesehen werden:
+Erfolgreich abgerufene Paketaufkleber können an verschiedenen Stellen im Admin Panel
+eingesehen werden:
 
 * Verkäufe → Bestellungen → Massenaktion *Paketaufkleber drucken*
 * Verkäufe → Lieferscheine → Massenaktion *Paketaufkleber drucken*
 * Detail-Ansicht eines Lieferscheins → Button *Paketaufkleber drucken*
+
+.. admonition:: Hinweis
+
+   Die exakte Bezeichnung der Menüpunkte *Bestellungen* bzw. *Lieferscheine* kann je
+   nach installiertem Language Pack leicht abweichen (z.B. *Aufträge* oder *Lieferungen*).
+   Das ist aber für die weitere Nutzung unerheblich.
+   
 
 Stornieren eines Versandauftrags
 --------------------------------
@@ -363,19 +366,11 @@ derselben Box *Versand- und Trackinginformationen*. Es gilt dasselbe Vorgehen
 wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
 
 
-Modul deinstallieren oder deaktivieren
-======================================
+Modul deinstallieren
+====================
 
-Gehen Sie wie folgt vor, um das Modul zu *deinstallieren*:
-
-1. Löschen Sie alle Moduldateien aus dem Dateisystem.
-2. Entfernen Sie die im Abschnitt `Installation`_ genannten Adressattribute.
-3. Entfernen Sie den zum Modul gehörigen Eintrag ``dhl_versenden_setup`` aus der Tabelle ``core_resource``.
-4. Entfernen Sie die zum Modul gehörigen Einträge ``carriers/dhlversenden/*`` aus der Tabelle ``core_config_data``.
-5. Leeren Sie abschließend den Cache.
-
-Das Modul wird *deaktiviert*, wenn der Knoten ``active`` in der Datei
-``app/etc/modules/Dhl_Versenden.xml`` von **true** auf **false** abgeändert wird.
+Befolgen Sie die Anleitung aus der Datei *README.md* im Modulpackage, um das
+Modul zu deinstallieren.
 
 
 Technischer Support
