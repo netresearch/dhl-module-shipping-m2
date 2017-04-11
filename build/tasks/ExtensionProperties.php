@@ -29,7 +29,14 @@ class ExtensionProperties extends Task
                 break;
             }
         }
-
         $reader->close();
+
+        $content = file_get_contents(__DIR__ . '/../../../lib-shipping-mx/composer.json');
+        $content = json_decode($content, true);
+
+        if (isset($content['version'])) {
+            $this->project->setProperty('library.name', 'Dhl_Shipping_Lib');
+            $this->project->setProperty('library.version', $content['version']);
+        }
     }
 }
