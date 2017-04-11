@@ -204,9 +204,7 @@
     <!-- ============================================  -->
     <!-- (DEFAULT)  Target: dist                       -->
     <!-- ============================================  -->
-    <!--<target name="dist" depends="startup,static-analysis,phpunit-all,prepare">-->
-
-    <target name="dist" depends="prepare">
+    <target name="dist" depends="startup,static-analysis,phpunit-all,prepare">
         <docker-properties dir="docker/template"/>
         <echo msg="Creating module archive..."/>
         <zip destfile="./package/${extension.name}-${extension.version}.zip">
