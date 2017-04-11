@@ -41,7 +41,8 @@ use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
  */
 class GlConfig implements GlConfigInterface
 {
-    const CONFIG_XML_PATH_PICKUP_NUMBER = 'carriers/dhlshipping/gl_pickup_number';
+    const CONFIG_XML_PATH_PICKUP_NUMBER_SANDBOX     = 'carriers/dhlshipping/gl_pickup_number_sandbox';
+    const CONFIG_XML_PATH_PICKUP_NUMBER_PRODUCTION  = 'carriers/dhlshipping/gl_pickup_number_production';
 
     const CONFIG_XML_PATH_ENDPOINT      = 'carriers/dhlshipping/api_gl_endpoint';
     const CONFIG_XML_PATH_AUTH_USERNAME = 'carriers/dhlshipping/api_gl_auth_username';
@@ -123,8 +124,17 @@ class GlConfig implements GlConfigInterface
      * @param mixed $store
      * @return string
      */
-    public function getPickupAccountNumber($store = null)
+    public function getSandboxPickupAccountNumber($store = null)
     {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER, $store);
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER_SANDBOX, $store);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getProductionPickupAccountNumber($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER_PRODUCTION, $store);
     }
 }
