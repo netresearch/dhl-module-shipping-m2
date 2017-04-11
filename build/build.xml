@@ -208,17 +208,38 @@
 
     <target name="dist" depends="prepare">
         <docker-properties dir="docker/template"/>
-        <echo msg="Creating archive..."/>
+        <echo msg="Creating module archive..."/>
         <zip destfile="./package/${extension.name}-${extension.version}.zip">
             <fileset dir="../">
                 <exclude name="build/**"/>
             </fileset>
         </zip>
+        <echo msg="Creating lib archive..."/>
         <zip destfile="./package/${library.name}-${library.version}.zip">
             <fileset dir="${docker.LIB_HOST_PATH}">
                 <exclude name="build/**"/>
             </fileset>
         </zip>
+        <mkdir dir="./tmp/app/code/Dhl/Shipping/"/>
+        <copy todir="./tmp/app/code/Dhl/Shipping/">
+            <fileset dir="../" >
+                <exclude name="build/**"/>
+                <exclude name="**/composer.json" />
+            </fileset>
+        </copy>
+        <copy todir="./tmp/app/code/Dhl/Shipping/">
+            <fileset dir="${docker.LIB_HOST_PATH}">
+                <exclude name="build/**"/>
+                <exclude name="**/registration.php" />
+                <exclude name="**/README.md" />
+                <exclude name="**/composer.json" />
+            </fileset>
+        </copy>
+        <echo msg="Creating combined archive..."/>
+        <zip destfile="./package/Dhl_Shipping_M2-${extension.version}.zip">
+            <fileset dir="./tmp/" />
+        </zip>
+        <delete dir="./tmp/" />
         <echo msg="Files compressed in package directory OK!"/>
         <!--<gittag name="${extension.version}" repository="${project.basedir}"/>-->
         <!--<gitpush repository="${project.basedir}" tags="true"/>-->
