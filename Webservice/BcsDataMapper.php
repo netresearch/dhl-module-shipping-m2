@@ -71,6 +71,8 @@ class BcsDataMapper implements BcsDataMapperInterface
             $shipmentDetails->getShipmentDate(), // TODO(nr): convert to CET
             $shipmentItemType
         );
+        $shipmentDetailsType->setCustomerReference($shipmentDetails->getReference());
+        $shipmentDetailsType->setReturnShipmentReference($shipmentDetails->getReturnShipmentReference());
 
         $bankData = new BcsApi\BankType(
             $shipmentDetails->getBankData()->getAccountOwner(),
