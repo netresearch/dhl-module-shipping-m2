@@ -147,10 +147,19 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/gl_pickup_number 1234
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_pickup_number_production 1234
      */
-    public function getPickupAccountNumber()
+    public function getProductionPickupAccountNumber()
     {
-        $this->assertEquals('1234', $this->config->getPickupAccountNumber());
+        $this->assertEquals('1234', $this->config->getProductionPickupAccountNumber());
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_pickup_number_sandbox 4321
+     */
+    public function getSandboxPickupAccountNumber()
+    {
+        $this->assertEquals('4321', $this->config->getSandboxPickupAccountNumber());
     }
 }
