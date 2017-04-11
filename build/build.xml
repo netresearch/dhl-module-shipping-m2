@@ -207,6 +207,7 @@
     <!--<target name="dist" depends="startup,static-analysis,phpunit-all,prepare">-->
 
     <target name="dist" depends="prepare">
+        <docker-properties dir="docker/template"/>
         <echo msg="Creating archive..."/>
         <zip destfile="./package/${extension.name}-${extension.version}.zip">
             <fileset dir="../">
@@ -214,7 +215,7 @@
             </fileset>
         </zip>
         <zip destfile="./package/${library.name}-${library.version}.zip">
-            <fileset dir="../../lib-shipping-mx">
+            <fileset dir="${docker.LIB_HOST_PATH}">
                 <exclude name="build/**"/>
             </fileset>
         </zip>
