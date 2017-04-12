@@ -31,12 +31,18 @@ class ExtensionProperties extends Task
         }
         $reader->close();
 
-        $content = file_get_contents(__DIR__ . '/../../../lib-shipping-mx/composer.json');
-        $content = json_decode($content, true);
-
-        if (isset($content['version'])) {
-            $this->project->setProperty('library.name', 'Dhl_Shipping_Lib');
-            $this->project->setProperty('library.version', $content['version']);
+        $libDir = $this->project->getProperty('docker.LIB_HOST_PATH');
+        $composerJson = @file_get_contents("$libDir/composer.json");
+        if (!$libDir || !$composerJson) {
+            throw new BuildException("Failed to read '$libDir/composer.json'");
         }
+
+        $content = json_decode($composerJson, true);
+        if ($content === null || !isset($content['version'])) {
+            throw new BuildException("Could not read version from '$libDir/composer.json'");
+        }
+
+        $this->project->setProperty('library.name', 'Dhl_Shipping_Lib');
+        $this->project->setProperty('library.version', $content['version']);
     }
 }
