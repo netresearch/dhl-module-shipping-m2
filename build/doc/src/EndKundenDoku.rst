@@ -116,7 +116,7 @@ Store-Information und Herkunft ausgefüllt sind:
   * Stadt
   * Straße
 
-Nachfolgens werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben.
+Nachfolgend werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben.
 
 .. admonition:: Hinweis
 
