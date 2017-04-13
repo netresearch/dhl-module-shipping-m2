@@ -41,7 +41,7 @@ class Product
     /**
      * Options getter
      *
-     * @return array
+     * @return mixed
      */
     public function toOptionArray()
     {
@@ -58,7 +58,7 @@ class Product
     /**
      * Get options
      *
-     * @return array
+     * @return mixed
      */
     public function toArray()
     {
