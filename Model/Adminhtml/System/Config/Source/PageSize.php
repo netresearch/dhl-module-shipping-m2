@@ -25,6 +25,8 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
+use \Dhl\Shipping\Api\Config\GlConfigInterface;
+
 /**
  * Product
  *
@@ -61,9 +63,9 @@ class PageSize
     public function toArray()
     {
         return [
-            'A4',
-            '400x600',
-            '400x400'
+            0 => GlConfigInterface::PAGE_SIZE_A4,
+            1 => GlConfigInterface::PAGE_SIZE_400X400,
+            2 => GlConfigInterface::PAGE_SIZE_400X600,
          ];
     }
 }
