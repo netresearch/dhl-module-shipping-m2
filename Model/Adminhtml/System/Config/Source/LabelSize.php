@@ -25,6 +25,8 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
+use \Dhl\Shipping\Api\Config\GlConfigInterface;
+
 /**
  * Product
  *
@@ -61,8 +63,8 @@ class LabelSize
     public function toArray()
     {
         return [
-            '4x6',
-            '4x4',
+            0 => GlConfigInterface::LABEL_SIZE_4X4,
+            1 => GlConfigInterface::LABEL_SIZE_4X6,
          ];
     }
 }

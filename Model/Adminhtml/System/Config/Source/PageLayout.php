@@ -25,6 +25,8 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
+use \Dhl\Shipping\Api\Config\GlConfigInterface;
+
 /**
  * Product
  *
@@ -61,8 +63,8 @@ class PageLayout
     public function toArray()
     {
         return [
-            '1x1',
-            '4x1',
+            0 => GlConfigInterface::PAGE_LAYOUT_1X1,
+            1 => GlConfigInterface::PAGE_LAYOUT_4X1
          ];
     }
 }
