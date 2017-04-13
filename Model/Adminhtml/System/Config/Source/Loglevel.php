@@ -41,7 +41,7 @@ class Loglevel
     /**
      * Options getter
      *
-     * @return array
+     * @return mixed
      */
     public function toOptionArray()
     {
@@ -58,7 +58,7 @@ class Loglevel
     /**
      * Get options in "key-value" format
      *
-     * @return array
+     * @return mixed
      */
     public function toArray()
     {
