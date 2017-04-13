@@ -36,22 +36,12 @@ use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
  * @category Dhl
  * @package  Dhl\Shipping
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class GlConfig implements GlConfigInterface
 {
-    const CONFIG_XML_PATH_PICKUP_NUMBER_SANDBOX     = 'carriers/dhlshipping/gl_pickup_number_sandbox';
-    const CONFIG_XML_PATH_PICKUP_NUMBER_PRODUCTION  = 'carriers/dhlshipping/gl_pickup_number_production';
-
-    const CONFIG_XML_PATH_ENDPOINT      = 'carriers/dhlshipping/api_gl_endpoint';
-    const CONFIG_XML_PATH_AUTH_USERNAME = 'carriers/dhlshipping/api_gl_auth_username';
-    const CONFIG_XML_PATH_AUTH_PASSWORD = 'carriers/dhlshipping/api_gl_auth_password';
-
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT      = 'carriers/dhlshipping/api_gl_sandbox_endpoint';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'carriers/dhlshipping/api_gl_sandbox_auth_username';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'carriers/dhlshipping/api_gl_sandbox_auth_password';
-
     /**
      * @var ConfigAccessorInterface
      */
@@ -121,20 +111,18 @@ class GlConfig implements GlConfigInterface
     }
 
     /**
+     * Obtain Pickup number.
+     *
      * @param mixed $store
-     * @return string
+     * @return mixed
      */
-    public function getSandboxPickupAccountNumber($store = null)
+    public function getPickupAccountNumber($store = null)
     {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER_SANDBOX, $store);
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER_SANDBOX, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER, $store);
     }
 
-    /**
-     * @param mixed $store
-     * @return string
-     */
-    public function getProductionPickupAccountNumber($store = null)
-    {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER_PRODUCTION, $store);
-    }
 }

@@ -88,7 +88,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
-     * @magentoConfigFixture default/carriers/dhlshipping/api_gl_sandbox_endpoint Sandbox
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_sandbox_api_endpoint Sandbox
      */
     public function getSandboxApiEndpoint()
     {
@@ -98,7 +98,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
-     * @magentoConfigFixture default/carriers/dhlshipping/api_gl_endpoint Api
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_api_endpoint Api
      */
     public function getApiEndpoint()
     {
@@ -108,7 +108,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
-     * @magentoConfigFixture default/carriers/dhlshipping/api_gl_auth_password password
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_api_auth_password password
      */
     public function getAuthPassword()
     {
@@ -118,7 +118,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
-     * @magentoConfigFixture default/carriers/dhlshipping/api_gl_sandbox_auth_password sandbox
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_sandbox_api_auth_password sandbox
      */
     public function getAuthPasswordSandboxMode()
     {
@@ -128,7 +128,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
-     * @magentoConfigFixture default/carriers/dhlshipping/api_gl_sandbox_auth_username sandbox
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_sandbox_api_auth_username sandbox
      */
     public function getAuthUsernameSandboxMode()
     {
@@ -138,7 +138,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
-     * @magentoConfigFixture default/carriers/dhlshipping/api_gl_auth_username username
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_api_auth_username username
      */
     public function getAuthUsername()
     {
@@ -147,19 +147,21 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/gl_pickup_number_production 1234
+     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_pickup_number 1234
      */
     public function getProductionPickupAccountNumber()
     {
-        $this->assertEquals('1234', $this->config->getProductionPickupAccountNumber());
+        $this->assertEquals('1234', $this->config->getPickupAccountNumber());
     }
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/gl_pickup_number_sandbox 4321
+     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_sandbox_pickup_number 4321
      */
     public function getSandboxPickupAccountNumber()
     {
-        $this->assertEquals('4321', $this->config->getSandboxPickupAccountNumber());
+        $this->assertEquals('4321', $this->config->getPickupAccountNumber());
     }
 }

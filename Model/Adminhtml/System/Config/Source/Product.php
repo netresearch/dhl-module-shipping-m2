@@ -25,6 +25,8 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
+use Dhl\Shipping\Api\Config\GlConfigInterface;
+
 /**
  * Product
  *
@@ -61,14 +63,14 @@ class Product
     public function toArray()
     {
         return [
-            'PKG',
-            'PPS',
-            'PPM',
-            'PLD',
-            'PKD',
-            'PLE',
-            'PLT',
-            'PKM'
+            0 => GlConfigInterface::PRODUCT_PKG,
+            1 => GlConfigInterface::PRODUCT_PPS,
+            2 => GlConfigInterface::PRODUCT_PPM,
+            3 => GlConfigInterface::PRODUCT_PLD,
+            4 => GlConfigInterface::PRODUCT_PKD,
+            5 => GlConfigInterface::PRODUCT_PLE,
+            6 => GlConfigInterface::PRODUCT_PLT,
+            7 => GlConfigInterface::PRODUCT_PKM
          ];
     }
 }
