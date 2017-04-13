@@ -41,7 +41,7 @@ class PageLayout
     /**
      * Options getter
      *
-     * @return array
+     * @return mixed
      */
     public function toOptionArray()
     {
@@ -58,7 +58,7 @@ class PageLayout
     /**
      * Get options
      *
-     * @return array
+     * @return mixed
      */
     public function toArray()
     {
