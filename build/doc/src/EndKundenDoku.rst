@@ -18,11 +18,11 @@
 
 .. sectnum::
 
-======================================================
-DHL Versenden M2: Paketversand für DHL Geschäftskunden
-======================================================
+=================================================================
+DHL Versenden (Shipping) M2: Paketversand für DHL Geschäftskunden
+=================================================================
 
-Das Modul *DHL Versenden* für Magento® 2 ermöglicht es Händlern mit einem
+Das Modul *DHL Versenden (Shipping)* für Magento® 2 ermöglicht es Händlern mit einem
 DHL Geschäftskundenkonto, Sendungen über die DHL Geschäftskundenversand API
 anzulegen und Versandscheine (Paketaufkleber) abzurufen.
 
@@ -56,6 +56,8 @@ Folgende PHP-Versionen werden vom Modul unterstützt:
 Weitere Informationen finden Sie auch in den Dateien *README.md* und *composer.json* im
 Modulpackage. Im Zweifelsfall sind die Versionsangaben in der Datei *composer.json* maßgeblich.
 
+Siehe auch https://github.com/netresearch/dhl-module-shipping-m2/tree/0.1.0
+
 Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
 Webserver installiert und aktiviert sein.
 
@@ -66,7 +68,7 @@ Hinweise zur Verwendung des Moduls
 Versandursprung und Währung
 ---------------------------
 
-Die Extension *DHL Versenden* für Magento® 2 wendet sich an Händler mit Sitz in
+Die Extension *DHL Versenden (Shipping)* für Magento® 2 wendet sich an Händler mit Sitz in
 Deutschland oder Österreich. Stellen Sie sicher, dass die Absenderadressen in den
 drei im Abschnitt Modulkonfiguration_ genannten Bereichen korrekt ist.
 
@@ -89,6 +91,8 @@ Schritte zu überspringen.
 
 In der Datei *README.md* finden Sie zudem Informationen, welche Änderungen in der
 Datenbank durch die Installation vorgenommen werden.
+
+Die Datei *README.md* ist im Abschnitt `Voraussetzungen`_ verlinkt.
 
 Modulkonfiguration
 ------------------
@@ -116,13 +120,13 @@ Store-Information und Herkunft ausgefüllt sind:
   * Stadt
   * Straße
 
-Nachfolgend werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben.
+Nachfolgend werden die Konfigurationsabschnitte für die DHL-Extension beschrieben.
 
 .. admonition:: Hinweis
 
    Der Abschnitt *Versandarten → DHL* ist Kernbestandteil von Magento® 2 und bindet
    die Schnittstelle von DHL USA an, nicht jedoch den DHL Geschäftskundenversand. Diese
-   Einstellungen beziehen sich nicht auf *DHL Versenden*.
+   Einstellungen beziehen sich nicht auf *DHL Versenden (Shipping)*.
 
 .. raw:: pdf
 
@@ -136,9 +140,9 @@ Im Konfigurationsbereich *Allgemeine Einstellungen* wird festgelegt, ob der
 Extension produktiv betrieben werden soll.
 
 Darüber hinaus wird die Protokollierung konfiguriert. Wenn die Protokollierung
-der *DHL Versenden* Extension aktiviert ist, werden Webservice-Nachrichten in
-die Magento® Log-Dateien in ``var/log`` geschrieben. Es wird *keine* gesonderte
-Log-Datei für das Versenden-Modul erstellt.
+der DHL-Extension aktiviert ist, werden Webservice-Nachrichten in die Magento®
+Log-Dateien in ``var/log`` geschrieben. Es wird *keine* gesonderte Log-Datei für
+das Versenden-Modul erstellt.
 
 Sie haben die Auswahl zwischen drei Protokollstufen:
 
@@ -207,8 +211,7 @@ Ablaufbeschreibung und Features
 Annahme einer Bestellung
 ------------------------
 
-Im Folgenden wird beschrieben, wie sich die Extension *DHL Versenden* in den
-Bestellprozess integriert.
+Im Folgenden wird beschrieben, wie sich die DHL-Extension in den Bestellprozess integriert.
 
 Bestellung über Checkout
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -300,21 +303,31 @@ eingesehen werden:
    Die exakte Bezeichnung der Menüpunkte *Bestellungen* bzw. *Lieferscheine* kann je
    nach installiertem Language Pack leicht abweichen (z.B. *Aufträge* oder *Lieferungen*).
    Das ist aber für die weitere Nutzung unerheblich.
-   
+
+.. raw:: pdf
+
+   PageBreak
 
 Stornieren eines Versandauftrags
 --------------------------------
 
-Solange ein Versandauftrag nicht manifestiert ist, kann dieser über den DHL
-Webservice storniert werden. Öffnen Sie dazu im Admin-Panel die Detail-Ansicht
-eines Lieferscheins und betätigen Sie den Link *Löschen* in der Box
-*Versand- und Trackinginformationen* neben der Sendungsnummer.
+Solange ein Versandauftrag nicht manifestiert ist, kann dieser bei DHL storniert werden.
+
+Beachten Sie aber, dass derzeit noch keine Stornierung bei DHL ausgelöst wird, wenn
+Sie den Link *Löschen* in der Box *Versand- und Trackinginformationen* neben der
+Sendungsnummer anklicken. Hierdurch wird lediglich die Trackingnummer aus Magento
+entfernt.
 
 .. image:: images/de/shipping_and_tracking.png
    :scale: 75 %
 
-Wenn der Versandauftrag erfolgreich über den DHL Webservice storniert wurde,
-werden Sendungsnummer und Paketaufkleber aus dem System entfernt.
+Zur Stornierung des Versandauftrags nutzen Sie bitte das DHL Geschäftskundenportal. Das
+entsprechende Feature wird zukünftig im DHL-Modul nachgerüstet.
+
+.. admonition:: Hinweis
+
+   Wenn lediglich die Trackingnummer in Magento entfernt wurde, ohne den Auftrag bei
+   DHL zu stornieren, werden hierfür von DHL Versandkosten in Rechnung gestellt.
 
 .. raw:: pdf
 
@@ -371,6 +384,8 @@ Modul deinstallieren
 
 Befolgen Sie die Anleitung aus der Datei *README.md* im Modulpackage, um das
 Modul zu deinstallieren.
+
+Die Datei *README.md* ist im Abschnitt `Voraussetzungen`_ verlinkt.
 
 
 Technischer Support
