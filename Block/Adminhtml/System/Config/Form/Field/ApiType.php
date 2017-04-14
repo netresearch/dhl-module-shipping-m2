@@ -25,6 +25,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
+use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Config\Block\System\Config\Form\Field;
 use Dhl\Shipping\Model\Config\ModuleConfig;
@@ -38,11 +39,10 @@ use Dhl\Shipping\Model\Config\ModuleConfig;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Disable extends Field
+class ApiType extends Field
 {
-    const GV_API_TEXT = 'Geschäftskunden API';
-
-    const GL_API_TEXT = 'Global Label API';
+    const API_TYPE_GV = 'Geschäftskundenversand API';
+    const API_TYPE_GL = 'Global Label API';
 
     /**
      * @var ModuleConfig
@@ -50,41 +50,35 @@ class Disable extends Field
     private $config;
 
     /**
-     * Disable constructor.
-     * @param \Magento\Backend\Block\Template\Context $context
+     * ApiType constructor.
+     * @param Context $context
      * @param ModuleConfig $config
-     * @param array $data
+     * @param mixed[] $data
      */
-    public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        ModuleConfig $config,
-        array $data = []
-    ) {
+    public function __construct(Context $context, ModuleConfig $config, array $data = [])
+    {
         parent::__construct($context, $data);
         $this->config = $config;
     }
 
-    protected function _getElementHtml(AbstractElement $element)
-    {
-        $element->setDisabled('disabled');
-        $element->setData('value',$this->determineApiBasedOnCountry());
-        return $element->getElementHtml();
-    }
-
     /**
-     * Obtain API designation based on shipping origin country.
-     *
+     * @param AbstractElement $element
      * @return string
      */
-    private function determineApiBasedOnCountry()
+    protected function _getElementHtml(AbstractElement $element)
     {
-        $result          = self::GL_API_TEXT;
-        $originCountryId = $this->config->getShipperCountry();
-        $gvApiCountrys   = ['DE', 'AT'];
-        if (in_array($originCountryId, $gvApiCountrys)) {
-            $result = self::GV_API_TEXT;
+        $element->setDisabled(true);
+
+        $shippingOrigin = $this->config->getShipperCountry();
+        switch ($shippingOrigin) {
+            case 'DE':
+            case 'AT':
+                $element->setData('value', self::API_TYPE_GV);
+                break;
+            default:
+                $element->setData('value', self::API_TYPE_GL);
         }
 
-        return $result;
+        return $element->getElementHtml();
     }
 }
