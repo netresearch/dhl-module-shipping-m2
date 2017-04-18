@@ -68,14 +68,14 @@ class PageSizeTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('value' ,$result[0]);
         $this->assertArrayHasKey('label' ,$result[0]);
         $this->assertEquals(0, $result[0]['value']);
-        $this->assertEquals(GlConfigInterface::PAGE_SIZE_A4, $result[0]['label']);
+        $this->assertEquals('A4', $result[0]['label']);
         $this->assertArrayHasKey('value' ,$result[1]);
         $this->assertArrayHasKey('label' ,$result[1]);
-        $this->assertEquals(GlConfigInterface::PAGE_SIZE_400X400, $result[1]['label']);
+        $this->assertEquals('400x400', $result[1]['label']);
         $this->assertEquals(1, $result[1]['value']);
         $this->assertArrayHasKey('value' ,$result[2]);
         $this->assertArrayHasKey('label' ,$result[2]);
-        $this->assertEquals(GlConfigInterface::PAGE_SIZE_400X600, $result[2]['label']);
+        $this->assertEquals('400x600', $result[2]['label']);
         $this->assertEquals(2, $result[2]['value']);
     }
 }

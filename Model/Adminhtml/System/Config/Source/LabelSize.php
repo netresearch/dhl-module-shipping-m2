@@ -41,7 +41,7 @@ class LabelSize
     /**
      * Options getter
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toOptionArray()
     {
@@ -58,13 +58,13 @@ class LabelSize
     /**
      * Get options
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toArray()
     {
         return [
-            0 => GlConfigInterface::LABEL_SIZE_4X4,
-            1 => GlConfigInterface::LABEL_SIZE_4X6,
+            GlConfigInterface::LABEL_SIZE_4X4 => '4x4',
+            GlConfigInterface::LABEL_SIZE_4X6 => '4x6'
          ];
     }
 }

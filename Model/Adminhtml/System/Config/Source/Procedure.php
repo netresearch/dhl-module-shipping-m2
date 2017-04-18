@@ -41,7 +41,7 @@ class Procedure implements \Magento\Framework\Option\ArrayInterface
     /**
      * Options getter
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toOptionArray()
     {
@@ -58,7 +58,7 @@ class Procedure implements \Magento\Framework\Option\ArrayInterface
     /**
      * Get options in "key-value" format
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toArray()
     {

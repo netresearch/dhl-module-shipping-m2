@@ -68,10 +68,10 @@ class PageLayoutTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('value' ,$result[0]);
         $this->assertArrayHasKey('label' ,$result[0]);
         $this->assertEquals(0, $result[0]['value']);
-        $this->assertEquals(GlConfigInterface::PAGE_LAYOUT_1X1, $result[0]['label']);
+        $this->assertEquals('1x1', $result[0]['label']);
         $this->assertArrayHasKey('value' ,$result[1]);
         $this->assertArrayHasKey('label' ,$result[1]);
-        $this->assertEquals(GlConfigInterface::PAGE_LAYOUT_4X1, $result[1]['label']);
+        $this->assertEquals('4x1', $result[1]['label']);
         $this->assertEquals(1, $result[1]['value']);
     }
 }

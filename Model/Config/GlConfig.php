@@ -125,4 +125,48 @@ class GlConfig implements GlConfigInterface
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER, $store);
     }
 
+    /**
+     * Obtain page size config.
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getPageSize($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PAGE_SIZE, $store);
+    }
+
+    /**
+     * Obtain page size config.
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getPageLayout($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PAGE_LAYOUT, $store);
+    }
+
+    /**
+     * Obtain label size config.
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getLabelSize($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_LABEL_SIZE, $store);
+    }
+
+    /**
+     * Obtain label size config.
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getDefaultProduct($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PRODUCT, $store);
+    }
+
 }
