@@ -67,11 +67,11 @@ class LabelSizeTest extends \PHPUnit_Framework_TestCase
         $result = $this->model->toOptionArray();
         $this->assertArrayHasKey('value' ,$result[0]);
         $this->assertArrayHasKey('label' ,$result[0]);
-        $this->assertEquals(0, $result[0]['value']);
-        $this->assertEquals(GlConfigInterface::LABEL_SIZE_4X4, $result[0]['label']);
+        $this->assertEquals(1, $result[0]['value']);
+        $this->assertEquals('4x4', $result[0]['label']);
         $this->assertArrayHasKey('value' ,$result[1]);
         $this->assertArrayHasKey('label' ,$result[1]);
-        $this->assertEquals(GlConfigInterface::LABEL_SIZE_4X6, $result[1]['label']);
-        $this->assertEquals(1, $result[1]['value']);
+        $this->assertEquals('4x6', $result[1]['label']);
+        $this->assertEquals(0, $result[1]['value']);
     }
 }

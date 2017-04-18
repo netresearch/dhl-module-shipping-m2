@@ -41,7 +41,7 @@ class Product
     /**
      * Options getter
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toOptionArray()
     {
@@ -58,19 +58,19 @@ class Product
     /**
      * Get options
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toArray()
     {
         return [
-            0 => GlConfigInterface::PRODUCT_PKG,
-            1 => GlConfigInterface::PRODUCT_PPS,
-            2 => GlConfigInterface::PRODUCT_PPM,
-            3 => GlConfigInterface::PRODUCT_PLD,
-            4 => GlConfigInterface::PRODUCT_PKD,
-            5 => GlConfigInterface::PRODUCT_PLE,
-            6 => GlConfigInterface::PRODUCT_PLT,
-            7 => GlConfigInterface::PRODUCT_PKM
+            GlConfigInterface::PRODUCT_PKG => 'PKG',
+            GlConfigInterface::PRODUCT_PPS => 'PPS',
+            GlConfigInterface::PRODUCT_PPM => 'PPM',
+            GlConfigInterface::PRODUCT_PLD => 'PLD',
+            GlConfigInterface::PRODUCT_PKD => 'PKD',
+            GlConfigInterface::PRODUCT_PLE => 'PLE',
+            GlConfigInterface::PRODUCT_PLT => 'PLT',
+            GlConfigInterface::PRODUCT_PKM => 'PKM'
          ];
     }
 }

@@ -19,6 +19,7 @@
  * @category  Dhl
  * @package   Dhl\Shipping\Test\Integration
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
@@ -33,6 +34,7 @@ use \Magento\TestFramework\ObjectManager;
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -163,5 +165,41 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
     public function getSandboxPickupAccountNumber()
     {
         $this->assertEquals('4321', $this->config->getPickupAccountNumber());
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/page_size 4321
+     */
+    public function getPageSize()
+    {
+        $this->assertEquals('4321', $this->config->getPageSize());
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/label_size 4321
+     */
+    public function getLabelSize()
+    {
+        $this->assertEquals('4321', $this->config->getLabelSize());
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/page_layout 4321
+     */
+    public function getPageLayout()
+    {
+        $this->assertEquals('4321', $this->config->getPageLayout());
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/default_product 4321
+     */
+    public function getDefaultProduct()
+    {
+        $this->assertEquals('4321', $this->config->getDefaultProduct());
     }
 }
