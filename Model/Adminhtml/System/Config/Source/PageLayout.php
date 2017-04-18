@@ -28,7 +28,7 @@ namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 use \Dhl\Shipping\Api\Config\GlConfigInterface;
 
 /**
- * Product
+ * PageLayout
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -41,7 +41,7 @@ class PageLayout
     /**
      * Options getter
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toOptionArray()
     {
@@ -58,13 +58,13 @@ class PageLayout
     /**
      * Get options
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toArray()
     {
         return [
-            0 => GlConfigInterface::PAGE_LAYOUT_1X1,
-            1 => GlConfigInterface::PAGE_LAYOUT_4X1
+            GlConfigInterface::PAGE_LAYOUT_1X1 => '1x1',
+            GlConfigInterface::PAGE_LAYOUT_4X1 => '4x1'
          ];
     }
 }

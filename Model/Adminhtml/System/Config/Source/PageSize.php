@@ -28,7 +28,7 @@ namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 use \Dhl\Shipping\Api\Config\GlConfigInterface;
 
 /**
- * Product
+ * PageSize
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -41,7 +41,7 @@ class PageSize
     /**
      * Options getter
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toOptionArray()
     {
@@ -58,14 +58,14 @@ class PageSize
     /**
      * Get options
      *
-     * @return mixed
+     * @return mixed[]
      */
     public function toArray()
     {
         return [
-            0 => GlConfigInterface::PAGE_SIZE_A4,
-            1 => GlConfigInterface::PAGE_SIZE_400X400,
-            2 => GlConfigInterface::PAGE_SIZE_400X600,
+            GlConfigInterface::PAGE_SIZE_A4 => 'A4',
+            GlConfigInterface::PAGE_SIZE_400X400 => '400x400',
+            GlConfigInterface::PAGE_SIZE_400X600 => '400x600'
          ];
     }
 }
