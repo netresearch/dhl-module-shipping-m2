@@ -134,7 +134,8 @@ class UpdateShippingInfoObserver implements ObserverInterface
             'city'            => $shippingAddress->getCity(),
             'country'         => $countryDirectory->getName(),
             'countryISOCode'  => $countryDirectory->getData('iso2_code'),
-            'state'           => $regionData[$shippingAddress->getRegionId()],
+            'state'           => isset($regionData[$shippingAddress->getRegionId()])
+                ? $regionData[$shippingAddress->getRegionId()] : '',
             'phone'           => $shippingAddress->getTelephone(),
             'email'           => $shippingAddress->getEmail(),
             'packstation'     => null,
