@@ -70,7 +70,7 @@ class Product
             GlConfigInterface::PRODUCT_PKD => 'PKD',
             GlConfigInterface::PRODUCT_PLE => 'PLE',
             GlConfigInterface::PRODUCT_PLT => 'PLT',
-            GlConfigInterface::PRODUCT_PKM => 'PKM'
+            GlConfigInterface::PRODUCT_PKM => 'PKM',
          ];
     }
 }
