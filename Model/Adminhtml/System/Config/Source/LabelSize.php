@@ -64,7 +64,7 @@ class LabelSize
     {
         return [
             GlConfigInterface::LABEL_SIZE_4X4 => '4x4',
-            GlConfigInterface::LABEL_SIZE_4X6 => '4x6'
+            GlConfigInterface::LABEL_SIZE_4X6 => '4x6',
          ];
     }
 }

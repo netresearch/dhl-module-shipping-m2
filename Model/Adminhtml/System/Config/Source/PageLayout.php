@@ -64,7 +64,7 @@ class PageLayout
     {
         return [
             GlConfigInterface::PAGE_LAYOUT_1X1 => '1x1',
-            GlConfigInterface::PAGE_LAYOUT_4X1 => '4x1'
+            GlConfigInterface::PAGE_LAYOUT_4X1 => '4x1',
          ];
     }
 }
