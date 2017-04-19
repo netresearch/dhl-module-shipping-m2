@@ -65,7 +65,7 @@ class PageSize
         return [
             GlConfigInterface::PAGE_SIZE_A4 => 'A4',
             GlConfigInterface::PAGE_SIZE_400X400 => '400x400',
-            GlConfigInterface::PAGE_SIZE_400X600 => '400x600'
+            GlConfigInterface::PAGE_SIZE_400X600 => '400x600',
          ];
     }
 }
