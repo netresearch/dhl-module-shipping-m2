@@ -106,7 +106,7 @@ Für die Abwicklung von Versandaufträgen sind drei Konfigurationsbereiche relev
     Stores → Konfiguration → Verkäufe → Versandarten → DHL Versenden
 
 Stellen Sie sicher, dass die erforderlichen Felder aus den Bereichen
-Store-Information und Herkunft ausgefüllt sind:
+*Store-Information* und *Herkunft* vollständig ausgefüllt sind:
 
 * Store-Information
 
@@ -141,8 +141,8 @@ Extension produktiv betrieben werden soll.
 
 Darüber hinaus wird die Protokollierung konfiguriert. Wenn die Protokollierung
 der DHL-Extension aktiviert ist, werden Webservice-Nachrichten in die Magento®
-Log-Dateien in ``var/log`` geschrieben. Es wird *keine* gesonderte Log-Datei für
-das Versenden-Modul erstellt.
+Log-Dateien in ``var/log`` geschrieben. Es wird *keine gesonderte* Log-Datei für
+die DHL-Extension erstellt.
 
 Sie haben die Auswahl zwischen drei Protokollstufen:
 
@@ -180,16 +180,19 @@ Im Konfigurationsbereich *Versandaufträge* werden Einstellungen vorgenommen, di
 für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich sind.
 
 * *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
-  werden nur Labels für Lieferadressen erzeugt, die durch DHL erfolgreich validiert wurden.
-  Ansonsten wird DHL im Rahmen der Zustellung versuchen, fehlerhafte Lieferadressen
-  soweit möglich zu korrigieren, wofür ein Nachkodierungsentgelt erhoben wird.
+  wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten 
+  lehnt DHL die Sendung mit einer Fehlermeldung ab. Wenn diese Einstellung abgeschaltet 
+  ist, wird DHL versuchen, fehlerhafte Lieferadressen automatisch korrekt zuzuordnen, 
+  wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht 
+  zugeordnet werden kann, wird die Sendung dennoch abgelehnt.
 * *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten für die
-  Versandkostenberechnung im Checkout verwendet werden sollen. Die hier ausgewählten
-  Versandarten werden in der nachgelagerten Lieferscheinerstellung über den
-  DHL Geschäftskundenversand abgewickelt.
+  Versandkostenberechnung im Checkout verwendet werden sollen. Nur die hier ausgewählten
+  Versandarten werden bei der Lieferscheinerstellung über DHL Versenden 
+  (Geschäftskundenversand) abgewickelt.
 * *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten
   es sich um Nachnahme-Zahlarten handelt. Diese Information wird benötigt, um
-  bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen.
+  bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende 
+  Nachnahme-Label zu erzeugen.
 
 Kontaktinformationen
 ~~~~~~~~~~~~~~~~~~~~
@@ -245,8 +248,9 @@ Nationale Sendungen
 ~~~~~~~~~~~~~~~~~~~
 
 Öffnen Sie im Admin Panel eine Bestellung, deren Versandart mit dem DHL
-Geschäftskundenversand verknüpft ist (siehe *Versandarten für DHL Versenden*).
-Betätigen Sie dann den Button *Versand* im oberen Bereich der Seite.
+Geschäftskundenversand verknüpft ist (siehe `Modulkonfiguration`_, Abschnitt
+*Versandarten für DHL Versenden*). Betätigen Sie dann den Button *Versand* im
+oberen Bereich der Seite.
 
 .. image:: images/de/button_ship.png
    :scale: 75 %
@@ -274,7 +278,7 @@ an DHL übermittelt und im Erfolgsfall der resultierende Paketaufkleber abgerufe
 
 Im Fehlerfall wird die vom Webservice erhaltene Fehlermeldung am oberen Rand des Popups
 eingeblendet und die Bestellung kann entsprechend korrigiert werden, siehe auch
-Fehlerbehandlung_.
+`Fehlerbehandlung`_.
 
 .. raw:: pdf
 
@@ -356,14 +360,13 @@ Fehlerhafte Versandaufträge können wie folgt manuell korrigiert werden:
   .. image:: images/de/edit_address_link.png
      :scale: 75 %
 
-  Im nun angezeigten Formular können Sie im oberen
-  Bereich die Standard-Felder der Lieferadresse bearbeiten und im unteren Bereich
-  die zusätzlichen, für den DHL Geschäftskundenversand spezifischen Felder:
+  Im nun angezeigten Formular können Sie im oberen Bereich die Standard-Felder
+  der Lieferadresse bearbeiten und im unteren Bereich die zusätzlichen
+  DHL-spezifischen Felder:
 
   * Straße (ohne Hausnummer)
-  * Hausnummer
+  * Hausnummer (einzeln)
   * Adresszusatz
-
 
 .. image:: images/de/edit_address_form.png
    :scale: 75 %
