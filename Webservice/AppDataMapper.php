@@ -51,7 +51,7 @@ use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
 use \Dhl\Shipping\Api\Webservice\RequestValidatorInterface;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
-use \Dhl\Shipping\Api\StreetSplitterInterface;
+use \Dhl\Shipping\Api\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Api\Webservice\BcsAccessDataInterface;
 use \Dhl\Shipping\Api\Webservice\RequestMapper\AppDataMapperInterface;
 

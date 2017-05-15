@@ -28,7 +28,7 @@ namespace Dhl\Shipping\Model\Config;
 
 use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
 use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use Dhl\Shipping\Api\Config\RouteConfigInterface;
+use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 
 /**
@@ -58,18 +58,18 @@ class ModuleConfig implements ModuleConfigInterface
     private $configAccessor;
 
     /**
-     * @var RouteConfigInterface
+     * @var ShippingRoutesInterface
      */
     private $routeConfig;
 
     /**
      * ModuleConfig constructor.
      * @param ConfigAccessorInterface $configAccessor
-     * @param RouteConfigInterface $routeConfig
+     * @param ShippingRoutesInterface $routeConfig
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
-        RouteConfigInterface $routeConfig
+        ShippingRoutesInterface $routeConfig
     ) {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
