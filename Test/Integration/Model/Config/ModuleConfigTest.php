@@ -266,42 +266,6 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/shipping/origin/country_id AT
-     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
-     */
-    public function canProcessMethodWithValidConditions()
-    {
-        /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(ModuleConfig::class);
-        $this->assertTrue($config->canProcessMethod('tablerate_bestway'));
-    }
-
-    /**
-     * @test
-     * @magentoConfigFixture default/shipping/origin/country_id PL
-     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
-     */
-    public function canProcessMethodWithInvalidShipperCountry()
-    {
-        /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(ModuleConfig::class);
-        $this->assertFalse($config->canProcessMethod('flatrate_flatrate'));
-    }
-
-    /**
-     * @test
-     * @magentoConfigFixture default/shipping/origin/country_id AT
-     * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
-     */
-    public function canProcessMethodWithInvalidShippingMethod()
-    {
-        /** @var ModuleConfig $config */
-        $config = $this->objectManager->create(ModuleConfig::class);
-        $this->assertFalse($config->canProcessMethod('pickup_pickup'));
-    }
-
-    /**
-     * @test
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlcodmethods cashondelivery,nachnahme
      * @magentoConfigFixture fixturestore_store carriers/dhlshipping/shipment_dhlcodmethods
      */

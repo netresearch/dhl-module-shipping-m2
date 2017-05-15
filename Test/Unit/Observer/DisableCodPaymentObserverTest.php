@@ -89,7 +89,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
 
         $this->config = $this->getMock(
             ModuleConfig::class,
-            ['getShipperCountry', 'canProcessMethod', 'isCodPaymentMethod', 'getEuCountryList'],
+            ['getShipperCountry', 'canProcessShipping', 'isCodPaymentMethod', 'getEuCountryList'],
             [],
             '',
             false
@@ -208,7 +208,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
 
         $this->config
             ->expects($this->once())
-            ->method('canProcessMethod')
+            ->method('canProcessShipping')
             ->willReturn(false);
 
         $this->config
@@ -258,7 +258,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
 
         $this->config
             ->expects($this->once())
-            ->method('canProcessMethod')
+            ->method('canProcessShipping')
             ->willReturn(true);
 
         $this->config
@@ -321,7 +321,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
 
         $this->config
             ->expects($this->once())
-            ->method('canProcessMethod')
+            ->method('canProcessShipping')
             ->willReturn(true);
 
         $this->config
@@ -335,7 +335,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
             ->willReturn($shipperCountry);
 
         $this->config
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('getEuCountryList')
             ->willReturn($euCountryList);
 
@@ -400,7 +400,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
 
         $this->config
             ->expects($this->once())
-            ->method('canProcessMethod')
+            ->method('canProcessShipping')
             ->willReturn(true);
 
         $this->config
@@ -414,7 +414,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
             ->willReturn($shipperCountry);
 
         $this->config
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('getEuCountryList')
             ->willReturn($euCountryList);
 

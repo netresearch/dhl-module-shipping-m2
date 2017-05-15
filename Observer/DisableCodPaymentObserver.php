@@ -116,10 +116,11 @@ class DisableCodPaymentObserver implements ObserverInterface
         $methodInstance = $observer->getEvent()->getData('method_instance');
 
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
+        $recipientCountry = $quote->getShippingAddress()->getCountryId();
         $paymentMethod  = $methodInstance->getCode();
 
-        if (!$this->config->canProcessMethod($shippingMethod, $quote->getStoreId())) {
-            // no dhl shipping method
+        if (!$this->config->canProcessShipping($shippingMethod, $recipientCountry, $quote->getStoreId())) {
+            // shipping with dhl not applicable
             return;
         }
 
@@ -129,15 +130,8 @@ class DisableCodPaymentObserver implements ObserverInterface
         }
 
         // obtain possible dhl products (national, weltpaket, …) and check if COD is allowed
-        $shipperCountry   = $this->config->getShipperCountry($quote->getStoreId());
-        $recipientCountry = $quote->getShippingAddress()->getCountryId();
-        $euCountries      = $this->config->getEuCountryList();
-
-        //FIXME(nr): allow cross-border shipping
-        if (!in_array($recipientCountry, $this->config->getEuCountryList())) {
-            return;
-        }
-
+        $shipperCountry = $this->config->getShipperCountry($quote->getStoreId());
+        $euCountries = $this->config->getEuCountryList();
         $usedProduct = $this->bcsAccessData->getProductCode($shipperCountry, $recipientCountry, $euCountries);
 
         $codService = ServiceFactory::get(Cod::CODE);

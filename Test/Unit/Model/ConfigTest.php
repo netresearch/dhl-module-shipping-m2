@@ -25,17 +25,13 @@
  */
 namespace Dhl\Shipping\Model;
 
-use Dhl\Shipping\Api\Config\ConfigAccessorInterface;
+use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
 use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Config\ConfigAccessor;
+use \Dhl\Shipping\Model\Config\ConfigAccessor;
 use \Dhl\Shipping\Model\Config\ModuleConfig;
-use \Magento\Framework\App\Config\ScopeConfigInterface;
-use \Magento\Framework\App\Config\Storage\WriterInterface;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use \Magento\Shipping\Helper\Carrier as CarrierHelper;
 use \Magento\Shipping\Model\Config as ShippingConfig;
-use \Magento\Store\Model\ScopeInterface;
-use \Magento\Store\Model\StoreManagerInterface;
 
 /**
  * ConfigTest
@@ -294,50 +290,15 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function canProcessMethodWithValidConditions()
+    public function canProcessMethod()
     {
-        $defaultShipperCountry  = 'DE';
-        $storeOneShipperCountry = 'AT';
-
-        $defaultMethods = 'flatrate_flatrate';
-        $storeOneMethods = 'tablerate_bestway';
-
-        $returnValueMap = [
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, null, $defaultShipperCountry],
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, 'store_one', $storeOneShipperCountry],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, null, $defaultMethods],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, 'store_one', $storeOneMethods],
-        ];
-
-        $this->configAccessor
-            ->expects($this->exactly(4))
-            ->method('getConfigValue')
-            ->will($this->returnValueMap($returnValueMap));
-
-        /** @var ModuleConfigInterface $config */
-        $config = $this->objectManager->getObject(ModuleConfig::class, [
-            'configAccessor' => $this->configAccessor,
-        ]);
-
-        $this->assertTrue($config->canProcessMethod('flatrate_flatrate'));
-        $this->assertTrue($config->canProcessMethod('tablerate_bestway', 'store_one'));
-    }
-
-    /**
-     * @test
-     */
-    public function canProcessMethodWithInvalidConditions()
-    {
-        $validShipperCountry  = 'DE';
-        $invalidShipperCountry = 'NZ';
-
         $validMethod = 'flatrate_flatrate';
         $invalidMethod = 'tablerate_bestway';
 
         $returnValueMap = [
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, null, $validShipperCountry],
-            [ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, 'store_one', $invalidShipperCountry],
-            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, null, $validMethod],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, null, ''],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, 'store_one', $validMethod],
+            [ModuleConfig::CONFIG_XML_PATH_DHLMETHODS, 'store_two', $validMethod],
         ];
 
         $this->configAccessor
@@ -350,7 +311,36 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             'configAccessor' => $this->configAccessor,
         ]);
 
-        $this->assertFalse($config->canProcessMethod($invalidMethod));
-        $this->assertFalse($config->canProcessMethod($validMethod, 'store_one'));
+        // no dhl methods set on global level
+        $this->assertFalse($config->canProcessMethod($validMethod));
+        // given method does not match configured method
+        $this->assertFalse($config->canProcessMethod($invalidMethod, 'store_one'));
+        // given method does match configured method
+        $this->assertTrue($config->canProcessMethod($validMethod, 'store_two'));
+    }
+
+    /**
+     * @test
+     */
+    public function canProcessShipping()
+    {
+        /** @var ModuleConfigInterface|\PHPUnit_Framework_MockObject_MockObject $config */
+        $config = $this->getMockBuilder(ModuleConfig::class)
+            ->setMethods(['canProcessMethod', 'canProcessRoute'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $config
+            ->expects($this->any())
+            ->method('canProcessMethod')
+            ->willReturnOnConsecutiveCalls(true, true, false, false);
+        $config
+            ->expects($this->any())
+            ->method('canProcessRoute')
+            ->willReturnOnConsecutiveCalls(true, false, true, false);
+
+        $this->assertTrue($config->canProcessShipping('foo', 'bar'));
+        $this->assertFalse($config->canProcessShipping('foo', 'bar'));
+        $this->assertFalse($config->canProcessShipping('foo', 'bar'));
+        $this->assertFalse($config->canProcessShipping('foo', 'bar'));
     }
 }
