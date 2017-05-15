@@ -83,13 +83,34 @@ interface ModuleConfigInterface
     public function getShipperCountry($store = null);
 
     /**
+     * Check if the given origin/destination combination can be processed with DHL Shipping.
+     *
+     * @see canProcessShipping()
+     * @param string $destinationCountryId
+     * @param mixed $store
+     * @return bool
+     */
+    public function canProcessRoute($destinationCountryId, $store = null);
+
+    /**
      * Check if the given shipping method should be processed with DHL Shipping.
      *
+     * @see canProcessShipping()
      * @param string $shippingMethod
      * @param mixed $store
      * @return bool
      */
     public function canProcessMethod($shippingMethod, $store = null);
+
+    /**
+     * Check if the current order can be shipped with DHL Shipping (incl. shipping method and route).
+     *
+     * @param string $shippingMethod
+     * @param string $destCountryId
+     * @param mixed $store
+     * @return bool
+     */
+    public function canProcessShipping($shippingMethod, $destCountryId, $store = null);
 
     /**
      * Check if the given payment method is cash on delivery.

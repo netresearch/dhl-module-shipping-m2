@@ -61,104 +61,62 @@ class UpdateCarrierObserverTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->objectManager = new ObjectManager($this);
+        $this->config = $this->getMock(ModuleConfig::class, ['canProcessShipping'], [], '', false);
+    }
 
-        $euCountryList = ['DE', 'AT', 'PL'];
-        $this->config = $this->getMock(ModuleConfig::class, ['canProcessMethod', 'getEuCountryList'], [], '', false);
+    /**
+     * @test
+     */
+    public function shippingCannotBeProcessed()
+    {
+        $recipientCountry = 'PL';
+        $fooMethod = 'foo_bar';
+        $dhlMethod = 'dhlshipping_bar';
+
         $this->config
             ->expects($this->once())
-            ->method('getEuCountryList')
-            ->willReturn($euCountryList);
+            ->method('canProcessShipping')
+            ->willReturn(false);
 
-        $testName = $this->getName(false);
-        $invokedCount = (int)($testName !== 'recipientIsNotInEu');
-        $canProcess = ($testName === 'shippingMethodCanBeProcessed');
+        $order = new DataObject([
+            'shipping_address' => new DataObject(['country_id' => $recipientCountry]),
+            'shipping_method' => $fooMethod,
+        ]);
+
+        /** @var Observer|MockObject $observerMock */
+        $observerMock = $this->getMock(Observer::class, [], [], '', false);
+        /** @var Event|MockObject $eventMock */
+        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
+        $eventMock->expects($this->once())
+            ->method('getData')
+            ->with('order', null)
+            ->willReturn($order);
+        $observerMock->expects($this->exactly(1))->method('getEvent')->willReturn($eventMock);
+
+        /** @var UpdateCarrierObserver $carrierObserver */
+        $carrierObserver = $this->objectManager->getObject(UpdateCarrierObserver::class, [
+            'config' => $this->config,
+        ]);
+
+        $carrierObserver->execute($observerMock);
+
+        $this->assertSame($fooMethod, $order->getData('shipping_method'));
+        $this->assertNotSame($dhlMethod, $order->getData('shipping_method'));
+    }
+
+    /**
+     * @test
+     */
+    public function shippingCanBeProcessed()
+    {
+        $recipientCountry = 'PL';
+        $fooMethod = 'foo_bar';
+        $dhlMethod = 'dhlshipping_bar';
+
         $this->config
-            ->expects($this->exactly($invokedCount))
-            ->method('canProcessMethod')
-            ->willReturn($canProcess);
-    }
-
-    /**
-     * Cross border shipping is not supported in the current version. Assert
-     * shipping method remaining unchanged.
-     *
-     * @test
-     */
-    public function recipientIsNotInEu()
-    {
-        $recipientCountry = 'NZ';
-        $fooMethod = 'foo_bar';
-        $dhlMethod = 'dhlshipping_bar';
-
-        $order = new DataObject([
-            'shipping_address' => new DataObject(['country_id' => $recipientCountry]),
-            'shipping_method' => $fooMethod,
-        ]);
-
-        /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        /** @var Event|MockObject $eventMock */
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $eventMock->expects($this->once())
-            ->method('getData')
-            ->with('order', null)
-            ->willReturn($order);
-        $observerMock->expects($this->exactly(1))->method('getEvent')->willReturn($eventMock);
-
-        /** @var UpdateCarrierObserver $carrierObserver */
-        $carrierObserver = $this->objectManager->getObject(UpdateCarrierObserver::class, [
-            'config' => $this->config,
-        ]);
-
-        $carrierObserver->execute($observerMock);
-
-        $this->assertSame($fooMethod, $order->getData('shipping_method'));
-        $this->assertNotSame($dhlMethod, $order->getData('shipping_method'));
-    }
-
-    /**
-     * @test
-     */
-    public function shippingMethodCannotBeProcessed()
-    {
-        $recipientCountry = 'PL';
-        $fooMethod = 'foo_bar';
-        $dhlMethod = 'dhlshipping_bar';
-
-        $order = new DataObject([
-            'shipping_address' => new DataObject(['country_id' => $recipientCountry]),
-            'shipping_method' => $fooMethod,
-        ]);
-
-        /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        /** @var Event|MockObject $eventMock */
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $eventMock->expects($this->once())
-            ->method('getData')
-            ->with('order', null)
-            ->willReturn($order);
-        $observerMock->expects($this->exactly(1))->method('getEvent')->willReturn($eventMock);
-
-        /** @var UpdateCarrierObserver $carrierObserver */
-        $carrierObserver = $this->objectManager->getObject(UpdateCarrierObserver::class, [
-            'config' => $this->config,
-        ]);
-
-        $carrierObserver->execute($observerMock);
-
-        $this->assertSame($fooMethod, $order->getData('shipping_method'));
-        $this->assertNotSame($dhlMethod, $order->getData('shipping_method'));
-    }
-
-    /**
-     * @test
-     */
-    public function shippingMethodCanBeProcessed()
-    {
-        $recipientCountry = 'PL';
-        $fooMethod = 'foo_bar';
-        $dhlMethod = 'dhlshipping_bar';
+            ->expects($this->once())
+            ->method('canProcessShipping')
+            ->willReturn(true);
 
         $order = new DataObject([
             'shipping_address' => new DataObject(['country_id' => $recipientCountry]),
