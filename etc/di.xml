@@ -30,6 +30,7 @@
     <preference for="Dhl\Shipping\Api\Config\ModuleConfigInterface" type="Dhl\Shipping\Model\Config\ModuleConfig" />
     <preference for="Dhl\Shipping\Api\Config\BcsConfigInterface" type="Dhl\Shipping\Model\Config\BcsConfig" />
     <preference for="Dhl\Shipping\Api\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig" />
+    <preference for="Dhl\Shipping\Api\Config\RouteConfigInterface" type="Dhl\Shipping\Util\RouteConfig" />
     <preference for="Dhl\Shipping\Api\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
 
     <!-- library preferences -->

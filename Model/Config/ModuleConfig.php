@@ -28,6 +28,7 @@ namespace Dhl\Shipping\Model\Config;
 
 use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
 use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Api\Config\RouteConfigInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 
 /**
@@ -57,12 +58,21 @@ class ModuleConfig implements ModuleConfigInterface
     private $configAccessor;
 
     /**
+     * @var RouteConfigInterface
+     */
+    private $routeConfig;
+
+    /**
      * ModuleConfig constructor.
      * @param ConfigAccessorInterface $configAccessor
+     * @param RouteConfigInterface $routeConfig
      */
-    public function __construct(ConfigAccessorInterface $configAccessor)
-    {
+    public function __construct(
+        ConfigAccessorInterface $configAccessor,
+        RouteConfigInterface $routeConfig
+    ) {
         $this->configAccessor = $configAccessor;
+        $this->routeConfig = $routeConfig;
     }
 
     /**
@@ -154,6 +164,21 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
+     * Check if the given origin/destination combination can be processed with DHL Shipping.
+     *
+     * @param string $destinationCountryId
+     * @param mixed $store
+     * @return bool
+     */
+    public function canProcessRoute($destinationCountryId, $store = null)
+    {
+        $originCountryId = $this->getShipperCountry($store);
+        $euCountries = $this->getEuCountryList($store);
+
+        return $this->routeConfig->canProcessRoute($originCountryId, $destinationCountryId, $euCountries);
+    }
+
+    /**
      * Check if the given shipping method should be processed with DHL Shipping.
      *
      * @param string $shippingMethod
@@ -162,12 +187,20 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function canProcessMethod($shippingMethod, $store = null)
     {
-        if (!in_array($this->getShipperCountry($store), ['AT', 'DE'])) {
-            // shipper country is not supported, regardless of shipping method.
-            return false;
-        }
-
         return in_array($shippingMethod, $this->getShippingMethods($store));
+    }
+
+    /**
+     * Check if the current order can be shipped with DHL Shipping.
+     *
+     * @param string $shippingMethod
+     * @param string $destCountryId
+     * @param mixed $store
+     * @return bool
+     */
+    public function canProcessShipping($shippingMethod, $destCountryId, $store = null)
+    {
+        return $this->canProcessMethod($shippingMethod, $store) && $this->canProcessRoute($destCountryId, $store);
     }
 
     /**

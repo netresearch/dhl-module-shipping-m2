@@ -66,16 +66,11 @@ class UpdateCarrierObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         /** @var \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order $order */
-        $order          = $observer->getEvent()->getData('order');
+        $order = $observer->getEvent()->getData('order');
         $shippingMethod = $order->getShippingMethod();
-
-        //FIXME(nr): allow cross-border shipping
         $recipientCountry = $order->getShippingAddress()->getCountryId();
-        if (!in_array($recipientCountry, $this->config->getEuCountryList())) {
-            return;
-        }
 
-        if ($this->config->canProcessMethod($shippingMethod, $order->getStoreId())) {
+        if ($this->config->canProcessShipping($shippingMethod, $recipientCountry, $order->getStoreId())) {
             $parts          = explode('_', $shippingMethod);
             $parts[0]       = Carrier::CODE;
             $shippingMethod = implode('_', $parts);
