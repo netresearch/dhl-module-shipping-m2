@@ -27,12 +27,8 @@
 namespace Dhl\Shipping\Observer;
 
 use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use \Dhl\Shipping\Api\Service\Cod;
-use \Dhl\Shipping\Api\Service\Filter\ProductFilter;
-use \Dhl\Shipping\Api\Service\ServiceCollection;
-use \Dhl\Shipping\Api\Service\ServiceCollectionFactory;
-use \Dhl\Shipping\Api\Service\ServiceFactory;
-use \Dhl\Shipping\Api\Webservice\BcsAccessDataInterface;
+use Dhl\Shipping\Api\Util\ShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProducts;
 use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
@@ -55,38 +51,30 @@ class DisableCodPaymentObserver implements ObserverInterface
     private $config;
 
     /**
-     * @var BcsAccessDataInterface
-     */
-    private $bcsAccessData;
-
-    /**
      * @var CheckoutSession
      */
     private $checkoutSession;
 
     /**
-     * @var ServiceCollectionFactory
+     * @var ShippingProductsInterface
      */
-    private $serviceCollectionFactory;
+    private $shippingProducts;
 
     /**
      * DisableCodPaymentObserver constructor.
      *
-     * @param ModuleConfigInterface    $config
-     * @param BcsAccessDataInterface   $bcsAccessData
-     * @param SessionManagerInterface  $checkoutSession
-     * @param ServiceCollectionFactory $serviceCollectionFactory
+     * @param ModuleConfigInterface $config
+     * @param SessionManagerInterface $checkoutSession
+     * @param ShippingProductsInterface $shippingProducts
      */
     public function __construct(
         ModuleConfigInterface $config,
-        BcsAccessDataInterface $bcsAccessData,
         SessionManagerInterface $checkoutSession,
-        ServiceCollectionFactory $serviceCollectionFactory
+        ShippingProductsInterface $shippingProducts
     ) {
         $this->config = $config;
-        $this->bcsAccessData = $bcsAccessData;
         $this->checkoutSession = $checkoutSession;
-        $this->serviceCollectionFactory = $serviceCollectionFactory;
+        $this->shippingProducts = $shippingProducts;
     }
 
     /**
@@ -132,14 +120,21 @@ class DisableCodPaymentObserver implements ObserverInterface
         // obtain possible dhl products (national, weltpaket, …) and check if COD is allowed
         $shipperCountry = $this->config->getShipperCountry($quote->getStoreId());
         $euCountries = $this->config->getEuCountryList();
-        $usedProduct = $this->bcsAccessData->getProductCode($shipperCountry, $recipientCountry, $euCountries);
 
-        $codService = ServiceFactory::get(Cod::CODE);
-        $productFilter = ProductFilter::create(['code' => $usedProduct]);
+        // find all applicable product codes for the current route
+        $routeProductCodes = $this->shippingProducts->getApplicableCodes(
+            $shipperCountry,
+            $recipientCountry,
+            $euCountries
+        );
+        // check if there are product codes that support COD for the current route
+        $codProductCodes = array_intersect($routeProductCodes, [
+            ShippingProducts::CODE_PAKET_NATIONAL,
+            ShippingProducts::CODE_PAKET_AUSTRIA,
+            ShippingProducts::CODE_PAKET_CONNECT,
+        ]);
 
-        /** @var ServiceCollection $collection */
-        $collection = $this->serviceCollectionFactory->create(['services' => [$codService]]);
-        $items = $collection->filter($productFilter);
-        $checkResult->setData('is_available', isset($items[Cod::CODE]));
+        $canShipWithCod = !empty($codProductCodes);
+        $checkResult->setData('is_available', $canShipWithCod);
     }
 }

@@ -30,7 +30,6 @@
     <preference for="Dhl\Shipping\Api\Config\ModuleConfigInterface" type="Dhl\Shipping\Model\Config\ModuleConfig" />
     <preference for="Dhl\Shipping\Api\Config\BcsConfigInterface" type="Dhl\Shipping\Model\Config\BcsConfig" />
     <preference for="Dhl\Shipping\Api\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig" />
-    <preference for="Dhl\Shipping\Api\Config\RouteConfigInterface" type="Dhl\Shipping\Util\RouteConfig" />
     <preference for="Dhl\Shipping\Api\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
 
     <!-- library preferences -->
@@ -61,7 +60,9 @@
     <preference for="Dhl\Shipping\Api\Data\Webservice\ResponseType\Generic\ItemStatusInterface" type="Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatus" />
     <preference for="Dhl\Shipping\Api\Data\Webservice\ResponseType\CreateShipment\LabelInterface" type="Dhl\Shipping\Webservice\ResponseType\CreateShipment\Label" />
 
-    <preference for="Dhl\Shipping\Api\StreetSplitterInterface" type="Dhl\Shipping\Util\StreetSplitter" />
+    <preference for="Dhl\Shipping\Api\Util\ShippingProductsInterface" type="Dhl\Shipping\Util\ShippingProducts" />
+    <preference for="Dhl\Shipping\Api\Util\ShippingRoutesInterface" type="Dhl\Shipping\Util\ShippingRoutes" />
+    <preference for="Dhl\Shipping\Api\Util\StreetSplitterInterface" type="Dhl\Shipping\Util\StreetSplitter" />
 
     <preference for="Dhl\Shipping\Api\Webservice\BcsAccessDataInterface" type="Dhl\Shipping\Webservice\BcsAccessData" />
     <preference for="Dhl\Shipping\Api\Webservice\UnitConverterInterface" type="Dhl\Shipping\Webservice\UnitConverter" />
