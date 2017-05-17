@@ -79,7 +79,7 @@ class DisableCodPaymentObserver implements ObserverInterface
 
     /**
      * Disable COD payment methods if it is not available for the current
-     * GK API product.
+     * shipping product.
      * - event: payment_method_is_active
      *
      * @param Observer $observer
