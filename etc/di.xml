@@ -60,6 +60,11 @@
     <preference for="Dhl\Shipping\Api\Data\Webservice\ResponseType\Generic\ItemStatusInterface" type="Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatus" />
     <preference for="Dhl\Shipping\Api\Data\Webservice\ResponseType\CreateShipment\LabelInterface" type="Dhl\Shipping\Webservice\ResponseType\CreateShipment\Label" />
 
+    <preference for="Dhl\Shipping\Api\Util\Serializer\Reflection\PropertyHandlerInterface" type="Dhl\Shipping\Util\Serializer\Reflection\PropertyHandler"/>
+    <preference for="Dhl\Shipping\Api\Util\Serializer\Reflection\ReflectionInterface" type="Dhl\Shipping\Util\Serializer\Reflection"/>
+    <preference for="Dhl\Shipping\Api\Util\Serializer\Reflection\TypeHandlerInterface" type="Dhl\Shipping\Util\Serializer\TypeHandler"/>
+    <preference for="Dhl\Shipping\Api\Util\Serializer\SerializerInterface" type="Dhl\Shipping\Util\Serializer\Json" />
+
     <preference for="Dhl\Shipping\Api\Util\ShippingProductsInterface" type="Dhl\Shipping\Util\ShippingProducts" />
     <preference for="Dhl\Shipping\Api\Util\ShippingRoutesInterface" type="Dhl\Shipping\Util\ShippingRoutes" />
     <preference for="Dhl\Shipping\Api\Util\StreetSplitterInterface" type="Dhl\Shipping\Util\StreetSplitter" />
