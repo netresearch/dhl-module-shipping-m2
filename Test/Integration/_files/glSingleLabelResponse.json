@@ -1,0 +1,24 @@
+{
+  "shipments": [
+    {
+      "packages": [
+        {
+          "packageDetails": {
+            "packageId": "3000000001-1"
+          },
+          "responseDetails": {
+            "labelDetails": [
+              {
+                "packageId": "3000000001-1",
+                "format": "pdf",
+                "labelData": "%PDF-1.4"
+              }
+            ],
+            "trackingNumber": "1234567890",
+            "trackingNumberStatus": "pending"
+          }
+        }
+      ]
+    }
+  ]
+}
