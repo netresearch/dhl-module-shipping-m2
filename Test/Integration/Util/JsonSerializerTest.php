@@ -26,6 +26,11 @@
 namespace Dhl\Shipping\Util;
 
 use Dhl\Shipping\Api\Util\Serializer\SerializerInterface;
+use Dhl\Shipping\Gla\Request\LabelRequest;
+use Dhl\Shipping\Gla\Request\Type\ConsigneeAddressRequestType;
+use Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
+use Dhl\Shipping\Gla\Request\Type\PackageRequestType;
+use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
 use Dhl\Shipping\Gla\Response\LabelResponse;
 use Dhl\Shipping\Gla\Response\Type\LabelDetailsResponseType;
 use Dhl\Shipping\Gla\Response\Type\PackageResponseType;
@@ -70,6 +75,84 @@ class JsonSerializerTest extends \PHPUnit_Framework_TestCase
                 $driver->fileGetContents(__DIR__ . '/../_files/glSingleLabelResponse.json')
             ]
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function serializeJson()
+    {
+        $pickupAccount = '4cc0un7';
+        $distributionCenter = 'f00123';
+        $consigneeAddress1 = '123 Foo Street';
+        $consigneeCity = 'Foo Valley';
+        $consigneeCountry = 'US';
+        $consigneePhone = '1 800';
+        $packageDetailsCurrency = 'USD';
+        $packageDetailsOrderedProduct = 'BMD';
+        $packageDetailsPackageId = '3000000001-1';
+        $packageDetailsWeight = '1200';
+        $packageDetailsWeightUom = 'G';
+
+        $jsonRequest = <<<JSON
+{
+  "shipments": [
+    {
+      "pickupAccount": "$pickupAccount",
+      "distributionCenter": "$distributionCenter",
+      "packages": [
+        {
+          "consigneeAddress": {
+            "address1": "$consigneeAddress1",
+            "city": "$consigneeCity",
+            "country": "$consigneeCountry",
+            "phone": "$consigneePhone"
+          },
+          "packageDetails": {
+            "currency": "$packageDetailsCurrency",
+            "orderedProduct": "$packageDetailsOrderedProduct",
+            "packageId": "$packageDetailsPackageId",
+            "weight": "$packageDetailsWeight",
+            "weightUom": "$packageDetailsWeightUom"
+          }
+        }
+      ]
+    }
+  ]
+}
+JSON;
+        $jsonRequest = preg_replace("/\s+/", "", $jsonRequest);
+        $shipmentData = json_decode($jsonRequest, true);
+
+        $consigneeAddress = $this->objectManager->create(ConsigneeAddressRequestType::class, [
+            'address1' => $shipmentData['shipments'][0]['packages'][0]['consigneeAddress']['address1'],
+            'city' => $shipmentData['shipments'][0]['packages'][0]['consigneeAddress']['city'],
+            'country' => $shipmentData['shipments'][0]['packages'][0]['consigneeAddress']['country'],
+            'phone' => $shipmentData['shipments'][0]['packages'][0]['consigneeAddress']['phone'],
+        ]);
+        $packageDetails = $this->objectManager->create(PackageDetailsRequestType::class, [
+            'currency' => $shipmentData['shipments'][0]['packages'][0]['packageDetails']['currency'],
+            'orderedProduct' => $shipmentData['shipments'][0]['packages'][0]['packageDetails']['orderedProduct'],
+            'packageId' => $shipmentData['shipments'][0]['packages'][0]['packageDetails']['packageId'],
+            'weight' => $shipmentData['shipments'][0]['packages'][0]['packageDetails']['weight'],
+            'weightUom' => $shipmentData['shipments'][0]['packages'][0]['packageDetails']['weightUom'],
+        ]);
+        $package = $this->objectManager->create(PackageRequestType::class, [
+            'consigneeAddress' => $consigneeAddress,
+            'packageDetails' => $packageDetails,
+        ]);
+
+        $shipment = $this->objectManager->create(ShipmentRequestType::class, [
+            'pickupAccount' => $shipmentData['shipments'][0]['pickupAccount'],
+            'distributionCenter' => $shipmentData['shipments'][0]['distributionCenter'],
+            'packages' => [$package],
+        ]);
+        $labelRequest = $this->objectManager->create(LabelRequest::class, [
+            'shipments' => [$shipment],
+        ]);
+        $labelRequest = json_encode($labelRequest);
+
+        $this->assertSame($jsonRequest, $labelRequest);
     }
 
     /**
