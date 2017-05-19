@@ -28,7 +28,6 @@ namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Config\Block\System\Config\Form\Field;
-use Dhl\Shipping\Model\Config\ModuleConfig;
 
 /**
  * Dhl Shipping Disable Form Field Block
@@ -45,14 +44,9 @@ class ApiType extends Field
     const API_TYPE_GL = 'Global Label API';
 
     /**
-     * @var ModuleConfig
+     * @var Context
      */
-    private $config;
-
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    private $scopeConfig;
+    private $context;
 
     /**
      * @var \Magento\Config\Model\Config\ScopeDefiner
@@ -62,22 +56,17 @@ class ApiType extends Field
     /**
      * ApiType constructor.
      * @param Context $context
-     * @param ModuleConfig $config
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner
      * @param array $data
      */
     public function __construct(
         Context $context,
-        ModuleConfig $config,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->config = $config;
-        $this->scopeConfig = $scopeConfig;
         $this->scopeDefiner = $scopeDefiner;
+        $this->context = $context;
     }
 
     /**
@@ -89,7 +78,10 @@ class ApiType extends Field
         $element->setDisabled(true);
         $element->setData('is_disable_inheritance', true);
 
-        $shippingOrigin = $this->scopeConfig->getValue('shipping/origin/country_id', $this->scopeDefiner->getScope());
+        $shippingOrigin = $this->context->getScopeConfig()->getValue(
+            'shipping/origin/country_id',
+            $this->scopeDefiner->getScope()
+        );
         switch ($shippingOrigin) {
             case 'DE':
             case 'AT':
