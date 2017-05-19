@@ -56,6 +56,7 @@ use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Shipping\Api\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Api\Webservice\RequestMapper\AppDataMapperInterface;
+use Dhl\Shipping\Webservice\ShippingInfo\Info;
 
 /**
  * AppDataMapper
@@ -360,7 +361,7 @@ class AppDataMapper implements AppDataMapperInterface
         $addressParts = $this->streetSplitter->splitStreet($request->getShipperAddressStreet());
 
         $address = $this->addressFactory->create([
-            'street'                 => $request->getShipperAddressStreet(),
+            'street'                 => [$request->getShipperAddressStreet1(), $request->getShipperAddressStreet2()],
             'streetName'             => $addressParts['street_name'],
             'streetNumber'           => $addressParts['street_number'],
             'addressAddition'        => $addressParts['supplement'],
@@ -397,6 +398,7 @@ class AppDataMapper implements AppDataMapperInterface
         $storeId = $request->getOrderShipment()->getStoreId();
 
         $addressId = $request->getOrderShipment()->getOrder()->getShippingAddress()->getEntityId();
+        /** @var Info $shippingInfo */
         $shippingInfo = $this->orderInfoRepository->getInfoData($addressId);
         if (!$shippingInfo) {
             $addressParts = $this->streetSplitter->splitStreet($request->getRecipientAddressStreet());
@@ -409,7 +411,7 @@ class AppDataMapper implements AppDataMapperInterface
         }
 
         $address = $this->addressFactory->create([
-            'street'                 => $request->getRecipientAddressStreet(),
+            'street'                 => [$request->getRecipientAddressStreet1(), $request->getRecipientAddressStreet2()],
             'streetName'             => $addressParts['street_name'],
             'streetNumber'           => $addressParts['street_number'],
             'addressAddition'        => $addressParts['supplement'],
@@ -454,7 +456,7 @@ class AppDataMapper implements AppDataMapperInterface
         $addressParts = $this->streetSplitter->splitStreet($request->getShipperAddressStreet());
 
         $address = $this->addressFactory->create([
-            'street'                 => $request->getRecipientAddressStreet(),
+            'street'                 => [$request->getShipperAddressStreet1(), $request->getShipperAddressStreet2()],
             'streetName'             => $addressParts['street_name'],
             'streetNumber'           => $addressParts['street_number'],
             'addressAddition'        => $addressParts['supplement'],

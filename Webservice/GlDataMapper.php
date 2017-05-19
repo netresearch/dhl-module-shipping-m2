@@ -26,7 +26,18 @@
 namespace Dhl\Shipping\Webservice;
 
 use \Dhl\Shipping\Api\Data\Webservice\RequestType;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
 use \Dhl\Shipping\Api\Webservice\RequestMapper\GlDataMapperInterface;
+use Dhl\Shipping\Gla\Request\Type\ConsigneeAddressRequestType;
+use Dhl\Shipping\Gla\Request\Type\CustomsDetailsRequestType;
+use \Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
+use Dhl\Shipping\Gla\Request\Type\PackageRequestType;
+use Dhl\Shipping\Gla\Request\Type\ReturnAddressRequestType;
+use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
 
 /**
  * GlDataMapper
@@ -42,14 +53,140 @@ use \Dhl\Shipping\Api\Webservice\RequestMapper\GlDataMapperInterface;
 class GlDataMapper implements GlDataMapperInterface
 {
     /**
+     * @param ShipmentDetails\ShipmentDetailsInterface $shipmentDetails
+     * @param PackageInterface $package
+     * @return PackageDetailsRequestType
+     */
+    private function getPackageDetails(ShipmentDetails\ShipmentDetailsInterface $shipmentDetails, $package)
+    {
+        // no conversions for GLAPI
+        $currencyCode = $package->getDeclaredValue()->getCurrencyCode();
+        $weightUom = $package->getWeight()->getUnitOfMeasurement();
+        $dimensionsUom = $package->getDimensions()->getUnitOfMeasurement();
+
+        $packageDetailsType = new PackageDetailsRequestType(
+            $package->getDeclaredValue()->getCurrencyCode(),
+            $shipmentDetails->getProduct(),
+            $package->getPackageId(),
+            $package->getWeight()->getValue($weightUom),
+            $weightUom,
+            $shipmentDetails->getBankData()->getAccountReference(),
+            implode(' ', $shipmentDetails->getBankData()->getNotes()),
+            null,
+            $package->getDeclaredValue()->getValue($currencyCode),
+            null,
+            null,
+            $dimensionsUom,
+            $package->getDimensions()->getHeight($dimensionsUom),
+            $package->getDimensions()->getLength($dimensionsUom),
+            $package->getDimensions()->getWidth($dimensionsUom),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        return $packageDetailsType;
+    }
+
+    /**
+     * @param Contact\ReceiverInterface $receiver
+     * @return ConsigneeAddressRequestType
+     */
+    private function getReceiver(Contact\ReceiverInterface $receiver)
+    {
+        $street = $receiver->getAddress()->getStreet();
+        $name = $receiver->getName();
+
+        $receiverType = new ConsigneeAddressRequestType(
+            $street[0],
+            $receiver->getAddress()->getCity(),
+            $receiver->getAddress()->getCountryCode(),
+            $receiver->getPhone(),
+            $street[1],
+            null,
+            $receiver->getCompanyName(),
+            $receiver->getEmail(),
+            $receiver->getId()->getNumber(),
+            $receiver->getId()->getType(),
+            $name[0],
+            $receiver->getAddress()->getPostalCode(),
+            $receiver->getAddress()->getState()
+        );
+
+        return $receiverType;
+    }
+
+    /**
+     * @param Contact\ReturnReceiverInterface $returnReceiver
+     * @return ReturnAddressRequestType
+     */
+    private function getReturnReceiver(Contact\ReturnReceiverInterface $returnReceiver)
+    {
+        $street = $returnReceiver->getAddress()->getStreet();
+        $name = $returnReceiver->getName();
+
+        $returnReceiverType = new ReturnAddressRequestType(
+            $street[0],
+            $returnReceiver->getAddress()->getCity(),
+            $returnReceiver->getAddress()->getCountryCode(),
+            $returnReceiver->getAddress()->getState(),
+            $street[1],
+            null,
+            $returnReceiver->getCompanyName(),
+            $name[0],
+            $returnReceiver->getAddress()->getPostalCode()
+        );
+
+        return $returnReceiverType;
+    }
+
+    /**
+     * @param CustomsDetails\CustomsDetailsInterface $customsDetails
+     * @return CustomsDetailsRequestType[]
+     */
+    private function getExportDocument(CustomsDetails\CustomsDetailsInterface $customsDetails)
+    {
+        $customsDetailsTypes = [];
+
+        return $customsDetailsTypes;
+    }
+
+    /**
      * Create api specific request object from framework standardized object.
      *
      * @param \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder
-     * @return object The "BCS shipment order" or "GL API shipment" entity
+     * @return ShipmentRequestType The "GL API shipment" entity
      */
     public function mapShipmentOrder(RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder)
     {
-        // TODO: Implement mapShipmentOrder() method.
+        $packageTypes = [];
+
+        $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
+        $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
+        $customsDetailsType = $this->getExportDocument($shipmentOrder->getCustomsDetails());
+
+        foreach ($shipmentOrder->getPackages() as $package) {
+            $packageDetailsType = $this->getPackageDetails($shipmentOrder->getShipmentDetails(), $package);
+            $packageType = new PackageRequestType(
+                $receiverType,
+                $packageDetailsType,
+                $returnReceiverType,
+                $customsDetailsType
+            );
+            $packageTypes[]= $packageType;
+        }
+
+        $shipmentType = new ShipmentRequestType(
+            $shipmentOrder->getShipmentDetails()->getPickupAccountNumber(),
+            $shipmentOrder->getShipmentDetails()->getDistributionCenter(),
+            $packageTypes
+        );
+
+        return $shipmentType;
     }
 
     /**
