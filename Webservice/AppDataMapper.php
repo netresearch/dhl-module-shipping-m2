@@ -48,11 +48,13 @@ use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\S
 use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
 use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
 use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
+use Dhl\Shipping\Api\Util\BcsShippingProductsInterface;
+use Dhl\Shipping\Api\Util\GlShippingProductsInterface;
+use Dhl\Shipping\Api\Util\ShippingProductsInterface;
 use \Dhl\Shipping\Api\Webservice\RequestValidatorInterface;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Shipping\Api\Util\StreetSplitterInterface;
-use \Dhl\Shipping\Api\Webservice\BcsAccessDataInterface;
 use \Dhl\Shipping\Api\Webservice\RequestMapper\AppDataMapperInterface;
 
 /**
@@ -82,9 +84,9 @@ class AppDataMapper implements AppDataMapperInterface
     private $moduleConfig;
 
     /**
-     * @var BcsAccessDataInterface
+     * @var ShippingProductsInterface|BcsShippingProductsInterface|GlShippingProductsInterface
      */
-    private $bcsAccessData;
+    private $shippingProducts;
 
     /**
      * @var StreetSplitterInterface
@@ -182,7 +184,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param BcsConfigInterface $bcsConfig
      * @param GlConfigInterface $glConfig
      * @param ModuleConfigInterface $moduleConfig
-     * @param BcsAccessDataInterface $bcsAccessData
+     * @param ShippingProductsInterface $shippingProducts
      * @param StreetSplitterInterface $streetSplitter
      * @param ShippingInfoRepositoryInterface $orderInfoRepository
      * @param BankDataInterfaceFactory $bankDataFactory
@@ -206,7 +208,7 @@ class AppDataMapper implements AppDataMapperInterface
         BcsConfigInterface $bcsConfig,
         GlConfigInterface $glConfig,
         ModuleConfigInterface $moduleConfig,
-        BcsAccessDataInterface $bcsAccessData,
+        ShippingProductsInterface $shippingProducts,
         StreetSplitterInterface $streetSplitter,
         ShippingInfoRepositoryInterface $orderInfoRepository,
         BankDataInterfaceFactory $bankDataFactory,
@@ -229,7 +231,7 @@ class AppDataMapper implements AppDataMapperInterface
         $this->bcsConfig                    = $bcsConfig;
         $this->glConfig                     = $glConfig;
         $this->moduleConfig                 = $moduleConfig;
-        $this->bcsAccessData                = $bcsAccessData;
+        $this->shippingProducts             = $shippingProducts;
         $this->streetSplitter               = $streetSplitter;
         $this->orderInfoRepository          = $orderInfoRepository;
         $this->bankDataFactory              = $bankDataFactory;
@@ -316,19 +318,28 @@ class AppDataMapper implements AppDataMapperInterface
 
         $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
         $qtyShipped = $request->getOrderShipment()->getTotalQty();
-        $product = $this->bcsAccessData->getProductCode(
+        //FIXME(nr): product selection needs to be done in packaging popup
+        $products = $this->shippingProducts->getApplicableCodes(
             $request->getShipperAddressCountryCode(),
             $request->getRecipientAddressCountryCode(),
             $this->moduleConfig->getEuCountryList()
         );
+        $productCode = $products[0];
+
+        $ekp = $this->bcsConfig->getAccountEkp($storeId);
+        $participations = $this->bcsConfig->getAccountParticipations($storeId);
+
+        $billingNumber = $this->shippingProducts->getBillingNumber($productCode, $ekp, $participations);
+        $returnBillingNumber = $this->shippingProducts->getReturnBillingNumber($productCode, $ekp, $participations);
 
         $shipmentDetails = $this->shipmentDetailsFactory->create([
             'isPrintOnlyIfCodeable'       => $this->bcsConfig->isPrintOnlyIfCodeable($storeId),
             'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
-            'product'                     => $product,
-            'accountNumber'               => $this->bcsAccessData->getBillingNumber($product),
-            'returnShipmentAccountNumber' => $this->bcsAccessData->getReturnShipmentBillingNumber($product),
+            'product'                     => $productCode,
+            'accountNumber'               => $billingNumber,
+            'returnShipmentAccountNumber' => $returnBillingNumber,
             'pickupAccountNumber'         => $this->glConfig->getPickupAccountNumber($storeId),
+            'distributionCenter'          => $this->glConfig->getDistributionCenter($storeId),
             'reference'                   => $request->getOrderShipment()->getOrder()->getIncrementId(),
             'returnShipmentReference'     => $request->getOrderShipment()->getOrder()->getIncrementId(),
             'shipmentDate'                => date("Y-m-d"),
@@ -524,7 +535,7 @@ class AppDataMapper implements AppDataMapperInterface
     {
         $packages    = [];
         $allPackages = $request->getData('packages');
-        $packageId   = $request->getPackageId();
+        $packageId   = $request->getData('package_id');
         $package     = $allPackages[$packageId];
 
         $weight = $this->packageWeightFactory->create([

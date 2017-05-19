@@ -95,20 +95,27 @@
                     </depends>
                 </field>
                 <!-- 250 Pickup Account Number Sandbox -->
-                <field id="gl_pickup_number_sandbox" type="text" translate="label" sortOrder="250" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="gl_pickup_number_sandbox" type="text" translate="label" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Pickup Account Number</label>
-                    <validate>number</validate>
+                    <validate>validate-digits validate-length maximum-length-10</validate>
                     <depends>
                         <field id="sandbox_mode">1</field>
                         <field id="api_type">Global Label API</field>
                     </depends>
                 </field>
                 <!-- 260 Pickup Account Number Production -->
-                <field id="gl_pickup_number_production" type="text" translate="label" sortOrder="260" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="gl_pickup_number_production" type="text" translate="label" sortOrder="260" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Pickup Account Number</label>
-                    <validate>number</validate>
+                    <validate>validate-digits</validate>
                     <depends>
                         <field id="sandbox_mode">0</field>
+                        <field id="api_type">Global Label API</field>
+                    </depends>
+                </field>
+                <!-- 270 Distribution Center -->
+                <field id="gl_distribution_center" type="text" translate="label" sortOrder="270" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Distribution Center</label>
+                    <depends>
                         <field id="api_type">Global Label API</field>
                     </depends>
                 </field>

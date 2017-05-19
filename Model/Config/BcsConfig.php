@@ -170,6 +170,24 @@ class BcsConfig implements BcsConfigInterface
     /**
      * Obtain DHL Business Customer Shipping contract data: participation numbers.
      *
+     * @param mixed  $store
+     *
+     * @return string[]
+     */
+    public function getAccountParticipations($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            $participations = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION, $store);
+        } else {
+            $participations = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION, $store);
+        }
+
+        return array_column($participations, 'participation', 'procedure');
+    }
+
+    /**
+     * Obtain DHL Business Customer Shipping contract data: participation number for a given procedure.
+     *
      * @param string $procedure
      * @param mixed  $store
      *
@@ -178,20 +196,17 @@ class BcsConfig implements BcsConfigInterface
     public function getAccountParticipation($procedure, $store = null)
     {
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            $participations =
-                $this->configAccessor->getConfigValue(
-                    self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION,
-                    $store
-                );
+            $participations = $this->configAccessor->getConfigValue(
+                self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION,
+                $store
+            );
         } else {
-            $participations =
-                $this->configAccessor->getConfigValue(
-                    self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION,
-                    $store
-                );
+            $participations = $this->configAccessor->getConfigValue(
+                self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION,
+                $store
+            );
         }
         $participations = array_column($participations, 'participation', 'procedure');
-
         return isset($participations[$procedure]) ? $participations[$procedure] : '';
     }
 

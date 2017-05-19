@@ -108,7 +108,10 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
      */
     public function logDebug($shipmentOrder, $expectation)
     {
-        $soapClientMock = $this->getMock(BcsSoapClient::class, ['createShipmentOrder'], [], '', false);
+        $soapClientMock = $this->getMockBuilder(BcsSoapClient::class)
+            ->setMethods(['createShipmentOrder'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $soapClientMock
             ->expects($this->once())
             ->method('createShipmentOrder')
@@ -118,7 +121,10 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
         $this->logger->expects($this->never())->method('wsWarning');
         $this->logger->expects($this->never())->method('wsError');
 
-        $parserMock = $this->getMock(ResponseParser::class, ['parseCreateShipmentResponse'], [], '', false);
+        $parserMock = $this->getMockBuilder(ResponseParser::class)
+            ->setMethods(['parseCreateShipmentResponse'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $parserMock
             ->expects($this->once())
             ->method('parseCreateShipmentResponse')
@@ -143,7 +149,10 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
     public function logError($shipmentOrder)
     {
         $soapFault = new \SoapFault('1', 'error');
-        $soapClientMock = $this->getMock(BcsSoapClient::class, ['createShipmentOrder'], [], '', false);
+        $soapClientMock = $this->getMockBuilder(BcsSoapClient::class)
+            ->setMethods(['createShipmentOrder'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $soapClientMock
             ->expects($this->once())
             ->method('createShipmentOrder')
@@ -171,7 +180,10 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
         /** @var CreateShipmentStatusException|\PHPUnit_Framework_MockObject_MockObject $wsException */
         $wsException = $this->getMock(CreateShipmentStatusException::class, [], [], '', false);
 
-        $soapClientMock = $this->getMock(BcsSoapClient::class, ['createShipmentOrder'], [], '', false);
+        $soapClientMock = $this->getMockBuilder(BcsSoapClient::class)
+            ->setMethods(['createShipmentOrder'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $soapClientMock
             ->expects($this->once())
             ->method('createShipmentOrder')
