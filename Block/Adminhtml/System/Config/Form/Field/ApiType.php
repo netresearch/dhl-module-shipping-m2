@@ -50,15 +50,34 @@ class ApiType extends Field
     private $config;
 
     /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @var \Magento\Config\Model\Config\ScopeDefiner
+     */
+    private $scopeDefiner;
+
+    /**
      * ApiType constructor.
      * @param Context $context
      * @param ModuleConfig $config
-     * @param mixed[] $data
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner
+     * @param array $data
      */
-    public function __construct(Context $context, ModuleConfig $config, array $data = [])
-    {
+    public function __construct(
+        Context $context,
+        ModuleConfig $config,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner,
+        array $data = []
+    ) {
         parent::__construct($context, $data);
         $this->config = $config;
+        $this->scopeConfig = $scopeConfig;
+        $this->scopeDefiner = $scopeDefiner;
     }
 
     /**
@@ -68,8 +87,9 @@ class ApiType extends Field
     protected function _getElementHtml(AbstractElement $element)
     {
         $element->setDisabled(true);
+        $element->setData('is_disable_inheritance', true);
 
-        $shippingOrigin = $this->config->getShipperCountry();
+        $shippingOrigin = $this->scopeConfig->getValue('shipping/origin/country_id', $this->scopeDefiner->getScope());
         switch ($shippingOrigin) {
             case 'DE':
             case 'AT':
