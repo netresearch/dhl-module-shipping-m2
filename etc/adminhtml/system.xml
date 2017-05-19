@@ -7,7 +7,7 @@
                 <label>DHL Shipping</label>
 
                 <!-- 010 Api Type -->
-                <field id="api_type" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="api_type" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Type</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\ApiType</frontend_model>
                     <tooltip>Your configuration options can be differ from each website scope, depending on your shipping origin.</tooltip>
