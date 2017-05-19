@@ -169,6 +169,15 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_distribution_center USXXX1
+     */
+    public function getDistributionCenter()
+    {
+        $this->assertEquals('USXXX1', $this->config->getDistributionCenter());
+    }
+
+    /**
+     * @test
      * @magentoConfigFixture default/carriers/dhlshipping/page_size 4321
      */
     public function getPageSize()

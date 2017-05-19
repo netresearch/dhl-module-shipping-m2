@@ -114,7 +114,7 @@ class GlConfig implements GlConfigInterface
      * Obtain Pickup number.
      *
      * @param mixed $store
-     * @return mixed
+     * @return string
      */
     public function getPickupAccountNumber($store = null)
     {
@@ -123,6 +123,17 @@ class GlConfig implements GlConfigInterface
         }
 
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER, $store);
+    }
+
+    /**
+     * Obtain Distribution Center.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getDistributionCenter($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DISTRIBUTION_CENTER, $store);
     }
 
     /**

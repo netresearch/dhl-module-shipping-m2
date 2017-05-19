@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-use Dhl\Shipping\Api\Webservice\BcsAccessDataInterface;
+use Dhl\Shipping\Util\ShippingProducts;
 
 /**
  * Procedure
@@ -63,14 +63,14 @@ class Procedure implements \Magento\Framework\Option\ArrayInterface
     public function toArray()
     {
         return [
-            BcsAccessDataInterface::PROCEDURE_PAKET_NATIONAL          => __('DHL Paket: V01PAK'),
-            BcsAccessDataInterface::PROCEDURE_WELTPAKET               => __('DHL Paket International: V53WPAK'),
-            BcsAccessDataInterface::PROCEDURE_PAKET_AUSTRIA           => __('DHL Paket Austria: V86PARCEL'),
-            BcsAccessDataInterface::PROCEDURE_PAKET_CONNECT           => __('DHL PAKET Connect: V87PARCEL'),
-            BcsAccessDataInterface::PROCEDURE_PAKET_INTERNATIONAL     => __('DHL PAKET International: V82PARCEL'),
-            BcsAccessDataInterface::PROCEDURE_RETURNSHIPMENT_NATIONAL => __('Retoure DHL Paket: V07PAK'),
-            BcsAccessDataInterface::PROCEDURE_RETURNSHIPMENT_AUSTRIA  => __('Retoure DHL Paket Austria: V86PARCEL'),
-            BcsAccessDataInterface::PROCEDURE_RETURNSHIPMENT_CONNECT  => __('Retoure DHL Paket Connect: V87PARCEL'),
+            ShippingProducts::PROCEDURE_PAKET_NATIONAL          => __('DHL Paket: V01PAK'),
+            ShippingProducts::PROCEDURE_WELTPAKET               => __('DHL Paket International: V53WPAK'),
+            ShippingProducts::PROCEDURE_PAKET_AUSTRIA           => __('DHL Paket Austria: V86PARCEL'),
+            ShippingProducts::PROCEDURE_PAKET_CONNECT           => __('DHL PAKET Connect: V87PARCEL'),
+            ShippingProducts::PROCEDURE_PAKET_INTERNATIONAL     => __('DHL PAKET International: V82PARCEL'),
+            ShippingProducts::PROCEDURE_RETURNSHIPMENT_NATIONAL => __('Retoure DHL Paket: V07PAK'),
+            ShippingProducts::PROCEDURE_RETURNSHIPMENT_AUSTRIA  => __('Retoure DHL Paket Austria: V86PARCEL'),
+            ShippingProducts::PROCEDURE_RETURNSHIPMENT_CONNECT  => __('Retoure DHL Paket Connect: V87PARCEL'),
         ];
     }
 }
