@@ -252,6 +252,7 @@ class ShipmentOrderProvider
             '123',
             '456',
             '345',
+            'USXXX1',
             'ref',
             'shipRef',
             'shipmentDate',
