@@ -17,7 +17,7 @@
         "magento/module-sales": "^100.1.4",
         "magento/module-shipping": "^100.1.2",
         "magento/module-store": "^100.1.4",
-        "magento/zendframework1": "~1.12.16"
+        "magento/zendframework1": "^1.12.16"
     },
     "require-dev": {
       "magento/module-offline-payments": "^100.1.1"
