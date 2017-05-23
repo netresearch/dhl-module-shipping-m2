@@ -52,22 +52,48 @@ use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
  */
 class GlDataMapper implements GlDataMapperInterface
 {
+    private $weightUomMap = [
+        \Zend_Measure_Weight::GRAM => 'G',
+        \Zend_Measure_Weight::KILOGRAM => 'KG',
+        \Zend_Measure_Weight::OUNCE => 'OZ',
+        \Zend_Measure_Weight::POUND => 'LB',
+    ];
+
+    private $dimensionUomMap = [
+        \Zend_Measure_Length::INCH => 'IN',
+        \Zend_Measure_Length::CENTIMETER => 'CM',
+        \Zend_Measure_Length::MILLIMETER => 'MM',
+        \Zend_Measure_Length::FEET => 'FT',
+        \Zend_Measure_Length::METER => 'M',
+        \Zend_Measure_Length::YARD => 'Y',
+    ];
+
     /**
      * @param ShipmentDetails\ShipmentDetailsInterface $shipmentDetails
      * @param PackageInterface $package
+     * @param string $sequenceNumber
      * @return PackageDetailsRequestType
      */
-    private function getPackageDetails(ShipmentDetails\ShipmentDetailsInterface $shipmentDetails, $package)
-    {
-        // no conversions for GLAPI
+    private function getPackageDetails(
+        ShipmentDetails\ShipmentDetailsInterface $shipmentDetails,
+        PackageInterface $package,
+        $sequenceNumber
+    ) {
+        // no weight conversions for GLAPI but unit mapping
         $currencyCode = $package->getDeclaredValue()->getCurrencyCode();
         $weightUom = $package->getWeight()->getUnitOfMeasurement();
-        $dimensionsUom = $package->getDimensions()->getUnitOfMeasurement();
+        if (isset($this->weightUomMap[$weightUom])) {
+            $weightUom = $this->weightUomMap[$weightUom];
+        }
+        $dimensionUom = $package->getDimensions()->getUnitOfMeasurement();
+        if (isset($this->dimensionUomMap[$dimensionUom])) {
+            $dimensionUom = $this->dimensionUomMap[$dimensionUom];
+        }
 
         $packageDetailsType = new PackageDetailsRequestType(
             $package->getDeclaredValue()->getCurrencyCode(),
             $shipmentDetails->getProduct(),
-            $package->getPackageId(),
+            $sequenceNumber,
             $package->getWeight()->getValue($weightUom),
             $weightUom,
             $shipmentDetails->getBankData()->getAccountReference(),
@@ -76,10 +102,10 @@ class GlDataMapper implements GlDataMapperInterface
             $package->getDeclaredValue()->getValue($currencyCode),
             null,
             null,
-            $dimensionsUom,
-            $package->getDimensions()->getHeight($dimensionsUom),
-            $package->getDimensions()->getLength($dimensionsUom),
-            $package->getDimensions()->getWidth($dimensionsUom),
+            $dimensionUom,
+            $package->getDimensions()->getHeight($dimensionUom),
+            $package->getDimensions()->getLength($dimensionUom),
+            $package->getDimensions()->getWidth($dimensionUom),
             null,
             null,
             null,
@@ -170,7 +196,11 @@ class GlDataMapper implements GlDataMapperInterface
         $customsDetailsType = $this->getExportDocument($shipmentOrder->getCustomsDetails());
 
         foreach ($shipmentOrder->getPackages() as $package) {
-            $packageDetailsType = $this->getPackageDetails($shipmentOrder->getShipmentDetails(), $package);
+            $packageDetailsType = $this->getPackageDetails(
+                $shipmentOrder->getShipmentDetails(),
+                $package,
+                $shipmentOrder->getSequenceNumber()
+            );
             $packageType = new PackageRequestType(
                 $receiverType,
                 $packageDetailsType,
