@@ -27,7 +27,7 @@
 namespace Dhl\Shipping\Webservice\Client;
 
 use \Dhl\Shipping\Api\Config\GlConfigInterface;
-use Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface;
+use \Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface;
 
 /**
  * Business Customer Shipping API SOAP client
@@ -75,25 +75,19 @@ class GlRestClient implements GlRestClientInterface
      */
     public function authenticate()
     {
-        $state = md5(time());
-        $this->zendClient = $this->zendClientFactory->create();
+        $uri              = $this->config->getApiEndpoint() . 'v1/auth/accesstoken';
+        $this->zendClient = $this->zendClientFactory->create(['uri' => $uri]);
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_GET);
-        $this->zendClient->setParameterGet([
-            'username' => $this->config->getAuthUsername(),
-            'password' => $this->config->getAuthPassword(),
-            'state' => $state,
-        ]);
-
+        $this->zendClient->setAuth($this->config->getAuthUsername(), $this->config->getAuthPassword());
+        $t = $this->zendClient->getRequest();
         try {
             $this->zendClient->send();
 
             $response = $this->zendClient->getResponse();
             if ($response->isSuccess()) {
                 $responseType = json_decode($response->getBody(), true);
-                if ($state !== $responseType['state']) {
-                    //TODO(nr): throw exception
-                }
                 $this->config->saveAuthToken($responseType['access_token']);
+
                 return $this->zendClient->getLastRawResponse();
             }
 
@@ -111,7 +105,8 @@ class GlRestClient implements GlRestClientInterface
      */
     public function generateLabels($rawRequest)
     {
-        $this->zendClient = $this->zendClientFactory->create();
+        $uri = $this->config->getApiEndpoint().'label/v1';
+        $this->zendClient = $this->zendClientFactory->create(['uri'=>$uri]);
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_POST);
         $this->zendClient->setHeaders([
             'Authorization' => 'Bearer ' . $this->config->getAuthToken(),
@@ -135,8 +130,8 @@ class GlRestClient implements GlRestClientInterface
             }
 
             // http status error
-            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_403
-                && $response->getBody() === 'INVALID_TOKEN'
+            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401
+//                && $response->getBody() === 'INVALID_TOKEN'
             ) {
                 $this->authenticate();
                 return $this->generateLabels($rawRequest);

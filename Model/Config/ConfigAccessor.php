@@ -27,6 +27,7 @@
 namespace Dhl\Shipping\Model\Config;
 
 use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
+use \Magento\Framework\App\Config\ConfigTypeInterface;
 use \Magento\Framework\App\Config\Storage\WriterInterface;
 use \Magento\Framework\App\Config\ScopeConfigInterface;
 use \Magento\Store\Model\ScopeInterface;
@@ -59,6 +60,11 @@ class ConfigAccessor implements ConfigAccessorInterface
     private $scopeConfig;
 
     /**
+     * @var ConfigTypeInterface
+     */
+    private $systemConfigType;
+
+    /**
      * Config constructor.
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $scopeConfig
@@ -67,11 +73,13 @@ class ConfigAccessor implements ConfigAccessorInterface
     public function __construct(
         StoreManagerInterface $storeManager,
         ScopeConfigInterface $scopeConfig,
-        WriterInterface $configWriter
+        WriterInterface $configWriter,
+        ConfigTypeInterface $systemConfigType
     ) {
-        $this->storeManager = $storeManager;
-        $this->scopeConfig  = $scopeConfig;
-        $this->configWriter = $configWriter;
+        $this->storeManager     = $storeManager;
+        $this->scopeConfig      = $scopeConfig;
+        $this->configWriter     = $configWriter;
+        $this->systemConfigType = $systemConfigType;
     }
 
     /**
@@ -90,6 +98,7 @@ class ConfigAccessor implements ConfigAccessorInterface
         }
 
         $this->configWriter->save($path, $value, $scope, $scopeId);
+        $this->systemConfigType->clean();
     }
 
     /**

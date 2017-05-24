@@ -74,6 +74,7 @@
     <preference for="Dhl\Shipping\Api\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Shipping\Webservice\Adapter\BcsAdapter" />
     <preference for="Dhl\Shipping\Api\Webservice\Adapter\GlAdapterInterface" type="Dhl\Shipping\Webservice\Adapter\GlAdapter" />
     <preference for="Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface" type="Dhl\Shipping\Webservice\Client\BcsSoapClient" />
+    <preference for="Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface" type="Dhl\Shipping\Webservice\Client\GlRestClient" />
     <preference for="Dhl\Shipping\Api\Webservice\RequestMapper\AppDataMapperInterface" type="Dhl\Shipping\Webservice\AppDataMapper" />
     <preference for="Dhl\Shipping\Api\Webservice\RequestMapper\BcsDataMapperInterface" type="Dhl\Shipping\Webservice\BcsDataMapper" />
     <preference for="Dhl\Shipping\Api\Webservice\RequestMapper\GlDataMapperInterface" type="Dhl\Shipping\Webservice\GlDataMapper" />
@@ -82,6 +83,21 @@
     <preference for="Dhl\Shipping\Api\Webservice\ResponseParser\GlResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\GlResponseParser" />
 
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory" type="Dhl\Shipping\Webservice\RequestServiceFactory" />
+
+    <!-- third party library adapter -->
+    <virtualType name="Dhl\Shipping\Http\VirtualClient" type="Zend\Http\Client" shared="false" />
+
+    <!-- argument di overrides -->
+    <type name="Zend\Http\ClientFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">\Dhl\Shipping\Http\VirtualClient</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Model\Config\ConfigAccessor">
+        <arguments>
+            <argument name="systemConfigType" xsi:type="object">\Magento\Config\App\Config\Type\System</argument>
+        </arguments>
+    </type>
 
     <!-- observer -->
     <type name="Dhl\Shipping\Observer\DisableCodPaymentObserver">
