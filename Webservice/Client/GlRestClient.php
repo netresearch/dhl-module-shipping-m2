@@ -69,17 +69,18 @@ class GlRestClient implements GlRestClientInterface
     }
 
     /**
-     * Requests new tokens.
+     * Requests new tokens and save to config.
      *
-     * @return string
+     * @return void
      */
     public function authenticate()
     {
-        $uri              = $this->config->getApiEndpoint() . 'v1/auth/accesstoken';
-        $this->zendClient = $this->zendClientFactory->create(['uri' => $uri]);
+        $this->zendClient = $this->zendClientFactory->create([
+            'uri' => $this->config->getApiEndpoint() . 'v1/auth/accesstoken'
+        ]);
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_GET);
         $this->zendClient->setAuth($this->config->getAuthUsername(), $this->config->getAuthPassword());
-        $t = $this->zendClient->getRequest();
+
         try {
             $this->zendClient->send();
 
@@ -87,8 +88,6 @@ class GlRestClient implements GlRestClientInterface
             if ($response->isSuccess()) {
                 $responseType = json_decode($response->getBody(), true);
                 $this->config->saveAuthToken($responseType['access_token']);
-
-                return $this->zendClient->getLastRawResponse();
             }
 
             //TODO(nr): throw exception
@@ -105,10 +104,20 @@ class GlRestClient implements GlRestClientInterface
      */
     public function generateLabels($rawRequest)
     {
-        $uri = $this->config->getApiEndpoint().'label/v1';
-        $this->zendClient = $this->zendClientFactory->create(['uri'=>$uri]);
+        $this->zendClient = $this->zendClientFactory->create([
+            'uri' => $this->config->getApiEndpoint() . 'label/v1'
+        ]);
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_POST);
+
+        $this->zendClient->setOptions([
+            'trace' => 1,
+            'maxredirects' => 0,
+            'timeout' => 30,
+            'useragent' => 'Magento 2'
+        ]);
         $this->zendClient->setHeaders([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $this->config->getAuthToken(),
             'X-CorrelationID' => hash('crc32', $rawRequest),
         ]);
@@ -130,9 +139,7 @@ class GlRestClient implements GlRestClientInterface
             }
 
             // http status error
-            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401
-//                && $response->getBody() === 'INVALID_TOKEN'
-            ) {
+            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401) {
                 $this->authenticate();
                 return $this->generateLabels($rawRequest);
             }

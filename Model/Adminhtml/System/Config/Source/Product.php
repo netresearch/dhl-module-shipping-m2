@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-use Dhl\Shipping\Api\Config\GlConfigInterface;
+use Dhl\Shipping\Api\Util\GlShippingProductsInterface;
 
 /**
  * Product
@@ -63,14 +63,25 @@ class Product
     public function toArray()
     {
         return [
-            GlConfigInterface::PRODUCT_PKG => 'PKG',
-            GlConfigInterface::PRODUCT_PPS => 'PPS',
-            GlConfigInterface::PRODUCT_PPM => 'PPM',
-            GlConfigInterface::PRODUCT_PLD => 'PLD',
-            GlConfigInterface::PRODUCT_PKD => 'PKD',
-            GlConfigInterface::PRODUCT_PLE => 'PLE',
-            GlConfigInterface::PRODUCT_PLT => 'PLT',
-            GlConfigInterface::PRODUCT_PKM => 'PKM',
-         ];
+            GlShippingProductsInterface::CODE_APAC_PPS => 'GM Packet Plus Standard (PPS)',
+            GlShippingProductsInterface::CODE_APAC_PPM => 'GM Packet Plus Priority Manifest (PPM)',
+            GlShippingProductsInterface::CODE_APAC_PKD => 'GM Packet Standard (PKD)',
+            GlShippingProductsInterface::CODE_APAC_PKG => 'GM Packet Economy (PKG)',
+            GlShippingProductsInterface::CODE_APAC_PKM => 'GM Packet Priority Manifest (PKM)',
+            GlShippingProductsInterface::CODE_APAC_PLT => 'Parcel International Direct (PLT)',
+            GlShippingProductsInterface::CODE_APAC_PLD => 'Parcel International Standard (PLD)',
+            GlShippingProductsInterface::CODE_APAC_PLE => 'Parcel International Direct Expedited (PLE)',
+            GlShippingProductsInterface::CODE_APAC_AP7 => 'GM Paket Pus Manifest Clearance (AP7)',
+            GlShippingProductsInterface::CODE_APAC_PDP => 'GM Parcel Direct Plus (PDP)',
+            GlShippingProductsInterface::CODE_APAC_PDO => 'PDO',
+            GlShippingProductsInterface::CODE_AMER_BMY => 'DHL GM Business Priority (BMY)',
+            GlShippingProductsInterface::CODE_AMER_BMD => 'DHL GM Business Standard (BMD)',
+            GlShippingProductsInterface::CODE_AMER_PKT => 'DHL GM Packet Plus (PKT)',
+            GlShippingProductsInterface::CODE_AMER_PLX => 'DHL GM Parcel Direct Express (PLX)',
+            GlShippingProductsInterface::CODE_AMER_PLY => 'DHL Parcel International Standard (PLY)',
+            GlShippingProductsInterface::CODE_AMER_PLT => 'DHL Parcel International Direct (PLT)',
+            GlShippingProductsInterface::CODE_AMER_PID => 'DHL Parcel International Direct Standard (PID)',
+            GlShippingProductsInterface::CODE_AMER_PIY => 'DHL Parcel International Direct Priority (PIY)',
+        ];
     }
 }
