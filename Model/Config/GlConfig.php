@@ -124,7 +124,7 @@ class GlConfig implements GlConfigInterface
      * @param mixed $store
      * @return void
      */
-    public function saveAuthToken($token, $store = null)
+    public function saveAuthToken($token, $store = 0)
     {
         $this->configAccessor->saveConfigValue(self::CONFIG_XML_PATH_AUTH_TOKEN, $token, $store);
     }
