@@ -25,12 +25,15 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
-use Magento\Backend\Block\Template\Context;
-use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Shipping\Model\Config as ShippingConfig;
+use Magento\Store\Model\ScopeInterface;
 
 /**
- * Dhl Shipping Disable Form Field Block
+ * Config field block for the current API type. API type depends on shipping
+ * origin country in the same scope, it is not meant to be configured manually.
+ * The field is used as reference for config field dependencies.
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -44,44 +47,27 @@ class ApiType extends Field
     const API_TYPE_GL = 'Global Label API';
 
     /**
-     * @var Context
-     */
-    private $context;
-
-    /**
-     * @var \Magento\Config\Model\Config\ScopeDefiner
-     */
-    private $scopeDefiner;
-
-    /**
-     * ApiType constructor.
-     * @param Context $context
-     * @param \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner
-     * @param array $data
-     */
-    public function __construct(
-        Context $context,
-        \Magento\Config\Model\Config\ScopeDefiner $scopeDefiner,
-        array $data = []
-    ) {
-        parent::__construct($context, $data);
-        $this->scopeDefiner = $scopeDefiner;
-        $this->context = $context;
-    }
-
-    /**
      * @param AbstractElement $element
      * @return string
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $element->setDisabled(true);
-        $element->setData('is_disable_inheritance', true);
+        $element->addData([
+            'disabled' => true,
+            'is_disable_inheritance' => true,
+        ]);
 
-        $shippingOrigin = $this->context->getScopeConfig()->getValue(
-            'shipping/origin/country_id',
-            $this->scopeDefiner->getScope()
-        );
+        $scopeId = $this->_request->getParam('website', 0);
+        if ($scopeId) {
+            $shippingOrigin = $this->_scopeConfig->getValue(
+                ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID,
+                ScopeInterface::SCOPE_WEBSITE,
+                $scopeId
+            );
+        } else {
+            $shippingOrigin = $this->_scopeConfig->getValue(ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID);
+        }
+
         switch ($shippingOrigin) {
             case 'DE':
             case 'AT':
