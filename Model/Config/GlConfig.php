@@ -111,6 +111,25 @@ class GlConfig implements GlConfigInterface
     }
 
     /**
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getAuthToken($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTH_TOKEN, $store);
+    }
+
+    /**
+     * @param string $token
+     * @param mixed $store
+     * @return void
+     */
+    public function saveAuthToken($token, $store = null)
+    {
+        $this->configAccessor->saveConfigValue(self::CONFIG_XML_PATH_AUTH_TOKEN, $token, $store);
+    }
+
+    /**
      * Obtain Pickup number.
      *
      * @param mixed $store
@@ -137,6 +156,17 @@ class GlConfig implements GlConfigInterface
     }
 
     /**
+     * Obtain label size config.
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getLabelSize($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_LABEL_SIZE, $store);
+    }
+
+    /**
      * Obtain page size config.
      *
      * @param mixed $store
@@ -156,17 +186,6 @@ class GlConfig implements GlConfigInterface
     public function getPageLayout($store = null)
     {
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PAGE_LAYOUT, $store);
-    }
-
-    /**
-     * Obtain label size config.
-     *
-     * @param mixed $store
-     * @return mixed
-     */
-    public function getLabelSize($store = null)
-    {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_LABEL_SIZE, $store);
     }
 
     /**
