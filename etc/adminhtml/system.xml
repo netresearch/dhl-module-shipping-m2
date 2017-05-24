@@ -10,7 +10,7 @@
                 <field id="api_type" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>API Type</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\ApiType</frontend_model>
-                    <tooltip>Your configuration options can be differ from each website scope, depending on your shipping origin.</tooltip>
+                    <tooltip>Depending on the shipping origin country, other configuration options may be available in website scope.</tooltip>
                 </field>
 
                 <!-- 100 General Settings -->
@@ -96,7 +96,7 @@
                 </field>
                 <!-- 250 Pickup Account Number Sandbox -->
                 <field id="gl_sandbox_pickup_number" type="text" translate="label" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Pickup Account Number</label>
+                    <label>Pickup Account Number (Sandbox)</label>
                     <validate>validate-digits validate-length maximum-length-10</validate>
                     <depends>
                         <field id="sandbox_mode">1</field>
@@ -105,7 +105,7 @@
                 </field>
                 <!-- 260 Pickup Account Number Production -->
                 <field id="gl_pickup_number" type="text" translate="label" sortOrder="260" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Pickup Account Number</label>
+                    <label>Pickup Account Number (Production)</label>
                     <validate>validate-digits</validate>
                     <depends>
                         <field id="sandbox_mode">0</field>
@@ -180,7 +180,7 @@
                     </depends>
                 </field>
                 <!-- 370 Label Size -->
-                <field id="label_size" translate="label" type="select" sortOrder="370" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="label_size" translate="label" type="select" sortOrder="370" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Label Size</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\LabelSize</source_model>
                     <depends>
@@ -188,7 +188,7 @@
                     </depends>
                 </field>
                 <!-- 380 Page Size -->
-                <field id="page_size" translate="label" type="select" sortOrder="380" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="page_size" translate="label" type="select" sortOrder="380" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Page Size</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageSize</source_model>
                     <depends>
@@ -196,11 +196,11 @@
                     </depends>
                 </field>
                 <!-- 390 Page Layout -->
-                <field id="page_layout" translate="label" type="select" sortOrder="390" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="page_layout" translate="label" type="select" sortOrder="390" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Page Layout</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageLayout</source_model>
                     <depends>
-                        <field id="page_size">0</field>
+                        <field id="page_size">A4</field>
                         <field id="api_type">Global Label API</field>
                     </depends>
                 </field>
