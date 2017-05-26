@@ -101,6 +101,7 @@ class GlRestClient implements GlRestClientInterface
      *
      * @param string $rawRequest
      * @return string
+     * @throws \Exception
      */
     public function generateLabels($rawRequest)
     {
@@ -133,18 +134,19 @@ class GlRestClient implements GlRestClientInterface
             $this->zendClient->send();
             $response = $this->zendClient->getResponse();
 
-            // success, return json response
-            if ($response->isSuccess()) {
-                return $response->getBody();
-            }
-
-            // http status error
+            // Unauthorized, invalid token
             if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401) {
                 $this->authenticate();
                 return $this->generateLabels($rawRequest);
             }
 
-            //TODO(nr): throw exception
+            // 400 (Bad Request), 429 (Too many requests), or 503 (Service Unavailable)
+            if (!$response->isSuccess()) {
+                //TODO(nr): throw meaningful exception
+                throw new \Exception($response->getBody());
+            }
+
+            return $response->getBody();
         } catch (\Zend\Http\Exception\RuntimeException $runtimeException) {
             //TODO(nr): throw exception
         }
