@@ -97,7 +97,7 @@ class GlDataMapper implements GlDataMapperInterface
             $package->getWeight()->getValue($package->getWeight()->getUnitOfMeasurement()),
             $weightUom,
             $shipmentDetails->getBankData()->getAccountReference(),
-            implode(' ', $shipmentDetails->getBankData()->getNotes()),
+            null,
             null,
             $package->getDeclaredValue()->getValue($currencyCode),
             null,
