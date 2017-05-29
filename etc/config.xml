@@ -61,6 +61,10 @@
                 <gl_sandbox_api_endpoint>https://api-qa.dhlecommerce.com/</gl_sandbox_api_endpoint>
                 <gl_sandbox_api_auth_username>f3561272-5ea8-4917-8b65-323e6f43d4de</gl_sandbox_api_auth_username>
                 <gl_sandbox_api_auth_password>76110b9c-a675-43f0-b421-3c88edc6920f</gl_sandbox_api_auth_password>
+
+                <label_size>4x4</label_size>
+                <page_size>A4</page_size>
+                <page_layout>1x1</page_layout>
             </dhlshipping>
         </carriers>
     </default>
