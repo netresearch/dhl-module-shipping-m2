@@ -83,14 +83,17 @@ class GlRestClient implements GlRestClientInterface
 
         try {
             $this->zendClient->send();
-
             $response = $this->zendClient->getResponse();
-            if ($response->isSuccess()) {
-                $responseType = json_decode($response->getBody(), true);
-                $this->config->saveAuthToken($responseType['access_token']);
+
+            //TODO(nr): which status must be covered for expected exceptions? (?400 401 429 503?)
+            if (!$response->isSuccess()) {
+                //TODO(nr): throw exception, because without authentification no labels can be created
+                throw new \Exception($response->getBody());
             }
 
-            //TODO(nr): throw exception
+            $responseType = json_decode($response->getBody(), true);
+            $this->config->saveAuthToken($responseType['access_token']);
+
         } catch (\Zend\Http\Exception\RuntimeException $runtimeException) {
             //TODO(nr): throw exception
         }
@@ -100,7 +103,7 @@ class GlRestClient implements GlRestClientInterface
      * Creates shipments.
      *
      * @param string $rawRequest
-     * @return string
+     * @return \Zend\Http\Response
      * @throws \Exception
      */
     public function generateLabels($rawRequest)
@@ -130,26 +133,16 @@ class GlRestClient implements GlRestClientInterface
         ]);
         $this->zendClient->setRawBody($rawRequest);
 
-        try {
-            $this->zendClient->send();
-            $response = $this->zendClient->getResponse();
+        $this->zendClient->send();
+        $response = $this->zendClient->getResponse();
 
-            // Unauthorized, invalid token
-            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401) {
-                $this->authenticate();
-                return $this->generateLabels($rawRequest);
-            }
-
-            // 400 (Bad Request), 429 (Too many requests), or 503 (Service Unavailable)
-            if (!$response->isSuccess()) {
-                //TODO(nr): throw meaningful exception
-                throw new \Exception($response->getBody());
-            }
-
-            return $response->getBody();
-        } catch (\Zend\Http\Exception\RuntimeException $runtimeException) {
-            //TODO(nr): throw exception
+        // Unauthorized, invalid token
+        if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401) {
+            $this->authenticate();
+            return $this->generateLabels($rawRequest);
         }
+
+        return $response;
     }
 
     /**
