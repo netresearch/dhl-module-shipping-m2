@@ -28,6 +28,8 @@ namespace Dhl\Shipping\Webservice\Client;
 
 use \Dhl\Shipping\Api\Config\GlConfigInterface;
 use \Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface;
+use \Dhl\Shipping\Webservice\Exception\CatchableGlWebserviceException;
+use \Dhl\Shipping\Webservice\Exception\FatalGlWebserviceException;
 
 /**
  * Business Customer Shipping API SOAP client
@@ -104,12 +106,12 @@ class GlRestClient implements GlRestClientInterface
      *
      * @param string $rawRequest
      * @return \Zend\Http\Response
-     * @throws \Exception
+     * @throws CatchableGlWebserviceException | FatalGlWebserviceException
      */
     public function generateLabels($rawRequest)
     {
         $this->zendClient = $this->zendClientFactory->create([
-            'uri' => $this->config->getApiEndpoint() . 'label/v1'
+            'uri' => $this->config->getApiEndpoint() . 'shipping/v1/label'
         ]);
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_POST);
 
@@ -142,7 +144,26 @@ class GlRestClient implements GlRestClientInterface
             return $this->generateLabels($rawRequest);
         }
 
-        return $response;
+        if ($response->isSuccess()) {
+            return $response;
+        }
+
+        // 400 (Bad Request), 401 (Unauthorized Access), 429 (Too many requests), or 503 (Service Unavailable)
+        if (in_array(
+                $response->getStatusCode(),
+                [
+                    \Zend\Http\Response::STATUS_CODE_400,
+                    \Zend\Http\Response::STATUS_CODE_401,
+                    \Zend\Http\Response::STATUS_CODE_429,
+                    \Zend\Http\Response::STATUS_CODE_503,
+                ]
+            )
+            && strpos($response->getHeaders()->get('Content-Type')->getFieldValue(), 'application/json') !== false
+        ) {
+            throw new CatchableGlWebserviceException($response->getBody());
+        }
+
+        throw new FatalGlWebserviceException('something went really really wrong. Stop!!!');
     }
 
     /**
