@@ -75,6 +75,15 @@ interface ModuleConfigInterface
     public function getCodPaymentMethods($store = null);
 
     /**
+     * Obtain the default product setting. This is used to highlight one
+     * shipping product in case multiple products apply to the current route.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getDefaultProduct($store = null);
+
+    /**
      * Obtain shipper country from shipping origin configuration.
      *
      * @param mixed $store

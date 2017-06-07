@@ -287,4 +287,15 @@ class ModuleConfigTest extends \PHPUnit_Framework_TestCase
         $config = $this->objectManager->create(ModuleConfig::class);
         $this->assertFalse($config->isCodPaymentMethod('cc'));
     }
+
+    /**
+     * @test
+     * @magentoConfigFixture default/carriers/dhlshipping/default_shipping_product 4321
+     */
+    public function getDefaultProduct()
+    {
+        /** @var ModuleConfig $config */
+        $config = $this->objectManager->create(ModuleConfig::class);
+        $this->assertEquals('4321', $config->getDefaultProduct());
+    }
 }
