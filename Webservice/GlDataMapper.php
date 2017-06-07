@@ -56,7 +56,7 @@ class GlDataMapper implements GlDataMapperInterface
         \Zend_Measure_Weight::GRAM => 'G',
         \Zend_Measure_Weight::KILOGRAM => 'KG',
         \Zend_Measure_Weight::OUNCE => 'OZ',
-        \Zend_Measure_Weight::POUND => 'LB',
+        \Zend_Measure_Weight::POUND => 'LBS',
     ];
 
     private $dimensionUomMap = [
@@ -96,7 +96,7 @@ class GlDataMapper implements GlDataMapperInterface
             $sequenceNumber,
             $package->getWeight()->getValue($package->getWeight()->getUnitOfMeasurement()),
             $weightUom,
-            $shipmentDetails->getBankData()->getAccountReference(),
+            null,
             null,
             null,
             $package->getDeclaredValue()->getValue($currencyCode),

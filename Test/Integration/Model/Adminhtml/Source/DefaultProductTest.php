@@ -25,11 +25,10 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-use Dhl\Shipping\Api\Config\GlConfigInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /**
- * LabelSizeTest
+ * DefaultProductTest
  *
  * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
@@ -37,29 +36,20 @@ use Magento\TestFramework\Helper\Bootstrap;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PageSizeTest extends \PHPUnit_Framework_TestCase
+class DefaultProductTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
      */
     public function toOptionArray()
     {
-        $validOptions = [
-            GlConfigInterface::PAGE_SIZE_A4,
-            GlConfigInterface::PAGE_SIZE_400X400,
-            GlConfigInterface::PAGE_SIZE_400X600,
-        ];
-
-        $source = Bootstrap::getObjectManager()->create(PageSize::class);
+        $source = Bootstrap::getObjectManager()->create(DefaultProduct::class);
         $options = $source->toOptionArray();
 
-        $this->assertCount(count($validOptions), $options);
+        $this->assertNotEmpty($options);
         foreach ($options as $sourceOption) {
             $this->assertArrayHasKey('value', $sourceOption);
             $this->assertArrayHasKey('label', $sourceOption);
-
-            $this->assertContains($sourceOption['value'], $validOptions);
-            $this->assertContains($sourceOption['label'], $validOptions);
         }
     }
 }

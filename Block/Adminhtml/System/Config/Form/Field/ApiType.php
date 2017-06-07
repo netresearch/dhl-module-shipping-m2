@@ -25,6 +25,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType as Source;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Shipping\Model\Config as ShippingConfig;
@@ -43,19 +44,18 @@ use Magento\Store\Model\ScopeInterface;
  */
 class ApiType extends Field
 {
-    const API_TYPE_GV = 'Geschäftskundenversand API';
-    const API_TYPE_GL = 'Global Label API';
-
     /**
      * @param AbstractElement $element
      * @return string
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $element->addData([
-            'disabled' => true,
-            'is_disable_inheritance' => true,
-        ]);
+        $element->setData('inherit', false);
+        $element->setData('disabled', false);
+
+        if ($this->getData('value')) {
+            return parent::_getElementHtml($element);
+        }
 
         $scopeId = $this->_request->getParam('website', 0);
         if ($scopeId) {
@@ -71,12 +71,12 @@ class ApiType extends Field
         switch ($shippingOrigin) {
             case 'DE':
             case 'AT':
-                $element->setData('value', self::API_TYPE_GV);
+                $element->setData('value', Source::API_TYPE_BCS);
                 break;
             default:
-                $element->setData('value', self::API_TYPE_GL);
+                $element->setData('value', Source::API_TYPE_GLA);
         }
 
-        return $element->getElementHtml();
+        return parent::_getElementHtml($element);
     }
 }

@@ -319,7 +319,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
         $qtyShipped = $request->getOrderShipment()->getTotalQty();
-        //FIXME(nr): product selection needs to be done in packaging popup
+        //FIXME(nr): product selection needs to be done in packaging popup (manually) or using default (autocreate)
         $products = $this->shippingProducts->getApplicableCodes(
             $request->getShipperAddressCountryCode(),
             $request->getRecipientAddressCountryCode(),
