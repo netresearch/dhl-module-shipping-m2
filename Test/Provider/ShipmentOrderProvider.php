@@ -66,7 +66,6 @@ class ShipmentOrderProvider
         return $shipmentOrder;
     }
 
-
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
@@ -96,7 +95,6 @@ class ShipmentOrderProvider
 
         return  $exportType;
     }
-
 
     /**
      * @return CustomsDetails
@@ -199,7 +197,7 @@ class ShipmentOrderProvider
     private static function getContactAddressObject()
     {
         $address =  new \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Address(
-            'street',
+            ['street'],
             'streetName',
             'streetNumber',
             'addressAddition',

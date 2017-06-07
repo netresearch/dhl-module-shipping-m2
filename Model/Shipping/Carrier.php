@@ -25,6 +25,7 @@
  */
 namespace Dhl\Shipping\Model\Shipping;
 
+use Dhl\Shipping\Api\Config\ModuleConfigInterface;
 use \Magento\Quote\Model\Quote\Address\RateRequest;
 use \Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
 use \Magento\Shipping\Model\Carrier\CarrierInterface;
@@ -46,6 +47,16 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @var \Magento\Framework\DataObjectFactory
      */
     private $dataObjectFactory;
+
+    /**
+     * @var ModuleConfigInterface
+     */
+    private $config;
+
+    /**
+     * @var \Dhl\Shipping\Api\Util\ShippingProductsInterface
+     */
+    private $shippingProducts;
 
     /**
      * @var \Dhl\Shipping\Api\Webservice\GatewayInterface
@@ -70,6 +81,8 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param \Magento\Directory\Helper\Data $directoryData
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
      * @param \Magento\Framework\DataObjectFactory $dataObjectFactory
+     * @param \Dhl\Shipping\Api\Config\ModuleConfigInterface $config
+     * @param \Dhl\Shipping\Api\Util\ShippingProductsInterface $shippingProducts
      * @param \Dhl\Shipping\Api\Webservice\GatewayInterface $webserviceGateway
      * @param array $data
      */
@@ -90,12 +103,16 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         \Magento\Directory\Helper\Data $directoryData,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        \Dhl\Shipping\Api\Config\ModuleConfigInterface $config,
+        \Dhl\Shipping\Api\Util\ShippingProductsInterface $shippingProducts,
         \Dhl\Shipping\Api\Webservice\GatewayInterface $webserviceGateway,
         array $data = []
     ) {
         $this->_code = self::CODE;
 
         $this->dataObjectFactory = $dataObjectFactory;
+        $this->config = $config;
+        $this->shippingProducts = $shippingProducts;
         $this->webserviceGateway = $webserviceGateway;
 
         parent::__construct(
@@ -119,6 +136,47 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     }
 
     /**
+     * Obtain the shipping products that match the given route. List might get
+     * lengthy, so we move the product that was configured as default to the top.
+     *
+     * @param string $countryShipper
+     * @param string $countryRecipient
+     * @return string[]
+     */
+    private function getShippingProducts($countryShipper, $countryRecipient)
+    {
+        // read available codes
+        if (!$countryShipper || !$countryRecipient) {
+            $codes = $this->shippingProducts->getAllCodes();
+        } else {
+            $euCountries = $this->config->getEuCountryList();
+            $codes = $this->shippingProducts->getApplicableCodes($countryShipper, $countryRecipient, $euCountries);
+        }
+
+        // obtain human readable names, combine to array
+        $names = array_map(function ($code) {
+            return $this->shippingProducts->getProductName($code);
+        }, $codes);
+        $shippingProducts = array_combine($codes, $names);
+
+        // move default product to top of the list, if available
+        $defaultProduct = $this->config->getDefaultProduct();
+        if ($defaultProduct) {
+            uksort($shippingProducts, function ($keyA, $keyB) use ($defaultProduct) {
+                if ($keyA == $defaultProduct) {
+                    return -1;
+                }
+                if ($keyB == $defaultProduct) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
+
+        return $shippingProducts;
+    }
+
+    /**
      * The DHL Shipping shipping carrier does not calculate rates.
      *
      * @param RateRequest $request
@@ -137,6 +195,26 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     public function getAllowedMethods()
     {
         return [];
+    }
+
+    /**
+     * Return container types of carrier
+     *
+     * @param \Magento\Framework\DataObject|null $params
+     * @return string[]
+     */
+    public function getContainerTypes(\Magento\Framework\DataObject $params = null)
+    {
+        if ($params == null) {
+            $countryShipper = '';
+            $countryRecipient = '';
+        } else {
+            $countryShipper = $params->getData('country_shipper');
+            $countryRecipient = $params->getData('country_recipient');
+        }
+
+        $products = $this->getShippingProducts($countryShipper, $countryRecipient);
+        return $products;
     }
 
     /**

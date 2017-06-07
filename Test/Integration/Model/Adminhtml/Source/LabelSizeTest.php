@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Config;
+namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
 use Dhl\Shipping\Api\Config\GlConfigInterface;
-use \Magento\TestFramework\ObjectManager;
+use Magento\TestFramework\Helper\Bootstrap;
 
 /**
  * LabelSizeTest
@@ -40,38 +40,25 @@ use \Magento\TestFramework\ObjectManager;
 class LabelSizeTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    /**
-     * @var \Dhl\Shipping\Model\Adminhtml\System\Config\Source\LabelSize
-     */
-    private $model;
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->objectManager = ObjectManager::getInstance();
-        $this->model = $this->objectManager->create(
-            \Dhl\Shipping\Model\Adminhtml\System\Config\Source\LabelSize::class
-        );
-    }
-
-    /**
      * @test
      */
     public function toOptionArray()
     {
-        $result = $this->model->toOptionArray();
-        $this->assertArrayHasKey('value' ,$result[0]);
-        $this->assertArrayHasKey('label' ,$result[0]);
-        $this->assertEquals(1, $result[0]['value']);
-        $this->assertEquals('4x4', $result[0]['label']);
-        $this->assertArrayHasKey('value' ,$result[1]);
-        $this->assertArrayHasKey('label' ,$result[1]);
-        $this->assertEquals('4x6', $result[1]['label']);
-        $this->assertEquals(0, $result[1]['value']);
+        $validOptions = [
+            GlConfigInterface::LABEL_SIZE_4X4,
+            GlConfigInterface::LABEL_SIZE_4X6,
+        ];
+
+        $source = Bootstrap::getObjectManager()->create(LabelSize::class);
+        $options = $source->toOptionArray();
+
+        $this->assertCount(count($validOptions), $options);
+        foreach ($options as $sourceOption) {
+            $this->assertArrayHasKey('value', $sourceOption);
+            $this->assertArrayHasKey('label', $sourceOption);
+
+            $this->assertContains($sourceOption['value'], $validOptions);
+            $this->assertContains($sourceOption['label'], $validOptions);
+        }
     }
 }

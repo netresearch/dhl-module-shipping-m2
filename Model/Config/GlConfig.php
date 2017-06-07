@@ -156,21 +156,10 @@ class GlConfig implements GlConfigInterface
     }
 
     /**
-     * Obtain label size config.
+     * Obtain preferred PDF page size.
      *
      * @param mixed $store
-     * @return mixed
-     */
-    public function getLabelSize($store = null)
-    {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_LABEL_SIZE, $store);
-    }
-
-    /**
-     * Obtain page size config.
-     *
-     * @param mixed $store
-     * @return mixed
+     * @return string
      */
     public function getPageSize($store = null)
     {
@@ -178,25 +167,24 @@ class GlConfig implements GlConfigInterface
     }
 
     /**
-     * Obtain page size config.
+     * Obtain preferred label size on the printed PDF.
      *
      * @param mixed $store
-     * @return mixed
+     * @return string
+     */
+    public function getLabelSize($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_LABEL_SIZE, $store);
+    }
+
+    /**
+     * Obtain preferred page layout (number of labels per page).
+     *
+     * @param mixed $store
+     * @return string
      */
     public function getPageLayout($store = null)
     {
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PAGE_LAYOUT, $store);
     }
-
-    /**
-     * Obtain label size config.
-     *
-     * @param mixed $store
-     * @return mixed
-     */
-    public function getDefaultProduct($store = null)
-    {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PRODUCT, $store);
-    }
-
 }

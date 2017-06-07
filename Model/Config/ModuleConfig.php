@@ -29,6 +29,7 @@ namespace Dhl\Shipping\Model\Config;
 use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
 use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
 use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 
 /**
@@ -44,13 +45,14 @@ class ModuleConfig implements ModuleConfigInterface
 {
     const CONFIG_XML_PATH_TITLE = 'carriers/dhlshipping/title';
 
-    const CONFIG_XML_PATH_LOGGING_ENABLED  = 'carriers/dhlshipping/logging_enabled';
+    const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
     const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlshipping/log_level';
 
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
 
     const CONFIG_XML_PATH_DHLMETHODS = 'carriers/dhlshipping/shipment_dhlmethods';
     const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
+    const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
 
     /**
      * @var ConfigAccessorInterface
@@ -161,6 +163,18 @@ class ModuleConfig implements ModuleConfigInterface
         }
 
         return $codPaymentMethods;
+    }
+
+    /**
+     * Obtain the default product setting. This is used to highlight one
+     * shipping product in case multiple products apply to the current route.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getDefaultProduct($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PRODUCT, $store);
     }
 
     /**

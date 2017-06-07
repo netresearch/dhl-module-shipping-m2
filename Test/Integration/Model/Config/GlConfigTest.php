@@ -178,7 +178,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/page_size 4321
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_page_size 4321
      */
     public function getPageSize()
     {
@@ -187,7 +187,7 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/label_size 4321
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_label_size 4321
      */
     public function getLabelSize()
     {
@@ -196,19 +196,10 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/page_layout 4321
+     * @magentoConfigFixture default/carriers/dhlshipping/gl_page_layout 4321
      */
     public function getPageLayout()
     {
         $this->assertEquals('4321', $this->config->getPageLayout());
-    }
-
-    /**
-     * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/default_product 4321
-     */
-    public function getDefaultProduct()
-    {
-        $this->assertEquals('4321', $this->config->getDefaultProduct());
     }
 }
