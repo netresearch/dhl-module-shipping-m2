@@ -319,13 +319,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
         $qtyShipped = $request->getOrderShipment()->getTotalQty();
-        //FIXME(nr): product selection needs to be done in packaging popup (manually) or using default (autocreate)
-        $products = $this->shippingProducts->getApplicableCodes(
-            $request->getShipperAddressCountryCode(),
-            $request->getRecipientAddressCountryCode(),
-            $this->moduleConfig->getEuCountryList()
-        );
-        $productCode = $products[0];
+        $productCode = $request->getData('packaging_type');
 
         $ekp = $this->bcsConfig->getAccountEkp($storeId);
         $participations = $this->bcsConfig->getAccountParticipations($storeId);
