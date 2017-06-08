@@ -28,11 +28,12 @@ namespace Dhl\Shipping\Webservice\Client;
 
 use \Dhl\Shipping\Api\Config\GlConfigInterface;
 use \Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface;
-use \Dhl\Shipping\Webservice\Exception\CatchableGlWebserviceException;
-use \Dhl\Shipping\Webservice\Exception\FatalGlWebserviceException;
+use \Dhl\Shipping\Webservice\Exception\GlOperationException;
+use Dhl\Shipping\Webservice\Exception\GlAuthorizationException;
+use \Dhl\Shipping\Webservice\Exception\GlCommunicationException;
 
 /**
- * Business Customer Shipping API SOAP client
+ * Global Label API REST client
  *
  * @category Dhl
  * @package  Dhl\Shipping\Api
@@ -71,9 +72,10 @@ class GlRestClient implements GlRestClientInterface
     }
 
     /**
-     * Requests new tokens and save to config.
+     * Request new access token and save to config.
      *
-     * @return void
+     * @throws GlAuthorizationException
+     * @throws GlCommunicationException
      */
     public function authenticate()
     {
@@ -82,22 +84,25 @@ class GlRestClient implements GlRestClientInterface
         ]);
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_GET);
         $this->zendClient->setAuth($this->config->getAuthUsername(), $this->config->getAuthPassword());
+        $this->zendClient->setOptions([
+            'trace' => 1,
+            'maxredirects' => 0,
+            'timeout' => 30,
+            'useragent' => 'Magento 2'
+        ]);
 
         try {
             $this->zendClient->send();
             $response = $this->zendClient->getResponse();
 
-            //TODO(nr): which status must be covered for expected exceptions? (?400 401 429 503?)
-            if (!$response->isSuccess()) {
-                //TODO(nr): throw exception, because without authentification no labels can be created
-                throw new \Exception($response->getBody());
+            if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401) {
+                throw GlAuthorizationException::create($response->getBody());
             }
 
             $responseType = json_decode($response->getBody(), true);
             $this->config->saveAuthToken($responseType['access_token']);
-
         } catch (\Zend\Http\Exception\RuntimeException $runtimeException) {
-            //TODO(nr): throw exception
+            throw new GlCommunicationException($runtimeException->getMessage());
         }
     }
 
@@ -106,7 +111,7 @@ class GlRestClient implements GlRestClientInterface
      *
      * @param string $rawRequest
      * @return \Zend\Http\Response
-     * @throws CatchableGlWebserviceException | FatalGlWebserviceException
+     * @throws GlOperationException | GlCommunicationException
      */
     public function generateLabels($rawRequest)
     {
@@ -135,35 +140,36 @@ class GlRestClient implements GlRestClientInterface
         ]);
         $this->zendClient->setRawBody($rawRequest);
 
-        $this->zendClient->send();
-        $response = $this->zendClient->getResponse();
+        try {
+            $this->zendClient->send();
+            $response = $this->zendClient->getResponse();
+        } catch (\Zend\Http\Exception\RuntimeException $runtimeException) {
+            throw new GlCommunicationException($runtimeException->getMessage());
+        }
 
-        // Unauthorized, invalid token
+        // Unauthorized, request token and retry
         if ($response->getStatusCode() === \Zend\Http\Response::STATUS_CODE_401) {
             $this->authenticate();
             return $this->generateLabels($rawRequest);
         }
 
-        if ($response->isSuccess()) {
-            return $response;
+        // error responses with json body: 400 (Bad Request), 429 (Too many requests), or 503 (Service Unavailable)
+        $errorCodes = [
+            \Zend\Http\Response::STATUS_CODE_400,
+            \Zend\Http\Response::STATUS_CODE_429,
+            \Zend\Http\Response::STATUS_CODE_503,
+        ];
+        if (in_array($response->getStatusCode(), $errorCodes)) {
+            //TODO(nr): decode body in exception, no need for parser
+            throw new GlOperationException($response->getBody());
         }
 
-        // 400 (Bad Request), 401 (Unauthorized Access), 429 (Too many requests), or 503 (Service Unavailable)
-        if (in_array(
-                $response->getStatusCode(),
-                [
-                    \Zend\Http\Response::STATUS_CODE_400,
-                    \Zend\Http\Response::STATUS_CODE_401,
-                    \Zend\Http\Response::STATUS_CODE_429,
-                    \Zend\Http\Response::STATUS_CODE_503,
-                ]
-            )
-            && strpos($response->getHeaders()->get('Content-Type')->getFieldValue(), 'application/json') !== false
-        ) {
-            throw new CatchableGlWebserviceException($response->getBody());
+        // unknown error response codes
+        if (!$response->isSuccess()) {
+            throw new GlCommunicationException($response->getBody());
         }
 
-        throw new FatalGlWebserviceException('something went really really wrong. Stop!!!');
+        return $response;
     }
 
     /**
