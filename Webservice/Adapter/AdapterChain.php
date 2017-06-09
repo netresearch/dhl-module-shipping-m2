@@ -155,10 +155,14 @@ class AdapterChain implements AdapterChainInterface
             $responseStatus = $this->getResponseStatus($labels, $invalidOrders);
         } catch (\Exception $e) {
             $labels = [];
+            $message = $e->getMessage();
+            if ($e->getPrevious()) {
+                $message = $message . ' ' . $e->getPrevious()->getMessage();
+            }
             $responseStatus = new ResponseStatus(
                 ResponseStatusInterface::STATUS_FAILURE,
                 'Error',
-                sprintf(self::MSG_STATUS_NOT_CREATED, $e->getMessage())
+                sprintf(self::MSG_STATUS_NOT_CREATED, $message)
             );
         }
 

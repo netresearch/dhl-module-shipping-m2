@@ -222,7 +222,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @see AbstractCarrierOnline::requestToShipment()
      * @see \Magento\Shipping\Model\Shipping\LabelGenerator::create()
      *
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param \Magento\Shipping\Model\Shipment\Request|\Magento\Framework\DataObject $request
      * @return \Magento\Framework\DataObject
      */
     protected function _doShipmentRequest(\Magento\Framework\DataObject $request)
@@ -242,12 +242,35 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             $result->setData(
                 [
                     'tracking_number' => $response->getCreatedItem($sequenceNumber)->getTrackingNumber(),
-                    'shipping_label_content'   => $response->getCreatedItem($sequenceNumber)->getLabel(),
+                    'shipping_label_content' => $response->getCreatedItem($sequenceNumber)->getLabel(),
                 ]
             );
         }
 
         return $result;
+    }
+
+    /**
+     * For multi package shipments. Delete requested shipments if the current shipment
+     * request is failed
+     *
+     * In case one request succeeded and another request failed, Magento will
+     * discard the successfully created label. That means, labels created through
+     * BCS API must be cancelled.
+     *
+     * @api
+     * @param string[][] $data Arrays of info data with tracking_number and label_content
+     * @return bool
+     */
+    public function rollBack($data)
+    {
+        $shipmentNumbers = array_map(function (array $info) {
+            return $info['tracking_number'];
+        }, $data);
+
+        $this->webserviceGateway->cancelLabels($shipmentNumbers);
+
+        return parent::rollBack($data);
     }
 
     /**

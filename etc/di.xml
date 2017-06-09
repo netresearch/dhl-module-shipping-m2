@@ -81,7 +81,6 @@
     <preference for="Dhl\Shipping\Api\Webservice\RequestValidatorInterface" type="Dhl\Shipping\Webservice\RequestValidator" />
     <preference for="Dhl\Shipping\Api\Webservice\ResponseParser\BcsResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\BcsResponseParser" />
     <preference for="Dhl\Shipping\Api\Webservice\ResponseParser\GlResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\GlResponseParser" />
-    <preference for="Dhl\Shipping\Api\Webservice\ResponseParser\GlErrorResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\GlErrorResponseParser" />
 
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory" type="Dhl\Shipping\Webservice\RequestServiceFactory" />
 
