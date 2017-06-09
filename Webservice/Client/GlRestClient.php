@@ -88,6 +88,7 @@ class GlRestClient implements GlRestClientInterface
             'trace' => 1,
             'maxredirects' => 0,
             'timeout' => 30,
+            //TODO(nr): provide product and module versions
             'useragent' => 'Magento 2'
         ]);
 
@@ -111,7 +112,8 @@ class GlRestClient implements GlRestClientInterface
      *
      * @param string $rawRequest
      * @return \Zend\Http\Response
-     * @throws GlOperationException | GlCommunicationException
+     * @throws GlOperationException
+     * @throws GlCommunicationException
      */
     public function generateLabels($rawRequest)
     {
@@ -124,6 +126,7 @@ class GlRestClient implements GlRestClientInterface
             'trace' => 1,
             'maxredirects' => 0,
             'timeout' => 30,
+            //TODO(nr): provide product and module versions
             'useragent' => 'Magento 2'
         ]);
         $this->zendClient->setHeaders([
@@ -160,8 +163,7 @@ class GlRestClient implements GlRestClientInterface
             \Zend\Http\Response::STATUS_CODE_503,
         ];
         if (in_array($response->getStatusCode(), $errorCodes)) {
-            //TODO(nr): decode body in exception, no need for parser
-            throw new GlOperationException($response->getBody());
+            throw GlOperationException::create($response->getBody());
         }
 
         // unknown error response codes
