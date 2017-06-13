@@ -29,9 +29,8 @@ namespace Dhl\Shipping\Util;
 use \Magento\Framework\App\ProductMetadataInterface;
 use \Magento\Framework\Module\ModuleListInterface;
 
-
 /**
- * Version
+ * Detect application and module versions.
  *
  * @category Dhl
  * @package  Dhl\Shipping\Util
@@ -42,35 +41,42 @@ use \Magento\Framework\Module\ModuleListInterface;
 class Version
 {
     /**
+     * @var ModuleListInterface
+     */
+    private $moduleMetadata;
+
+    /**
      * @var ProductMetadataInterface
      */
     private $productMetadata;
 
     /**
      * Version constructor.
+     * @param ModuleListInterface $moduleMetadata
      * @param ProductMetadataInterface $productMetadata
      */
     public function __construct(
+        ModuleListInterface $moduleMetadata,
         ProductMetadataInterface $productMetadata
     ) {
+        $this->moduleMetadata = $moduleMetadata;
         $this->productMetadata = $productMetadata;
     }
 
     /**
-     * @todo(nr): read version from module.xml
-     * @see \Magento\Framework\Component\ComponentRegistrarInterface::getPath
-     * @see \Magento\Framework\Module\ModuleList\Loader::load
-     *   or, if it is the same
-     * @link https://magento.stackexchange.com/a/99535
+     * Detect module version.
+     * Use setup version instead of querying the module.xml file.
      *
      * @return string
      */
     public function getModuleVersion()
     {
-        return '?';
+        return $this->moduleMetadata->getOne('Dhl_Shipping')['setup_version'];
     }
 
     /**
+     * Detect application version.
+     *
      * @return string
      */
     public function getProductVersion()
