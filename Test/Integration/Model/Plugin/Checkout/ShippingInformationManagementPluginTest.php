@@ -72,13 +72,10 @@ class ShippingInformationManagementPluginTest extends \PHPUnit_Framework_TestCas
 
         $this->objectManager = ObjectManager::getInstance();
 
-        $this->shippingAddress = $this->getMock(
-            ShippingAddress::class,
-            ['getShippingRateByCode', 'getName'],
-            [],
-            '',
-            false
-        );
+        $this->shippingAddress = $this->getMockBuilder(ShippingAddress::class)
+            ->setMethods(['getShippingRateByCode', 'getName'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->shippingAddress
             ->expects($this->once())
             ->method('getShippingRateByCode')
@@ -89,23 +86,38 @@ class ShippingInformationManagementPluginTest extends \PHPUnit_Framework_TestCas
         ]);
 
         /** @var Quote|\PHPUnit_Framework_MockObject_MockObject $quote */
-        $quote = $this->getMock(Quote::class, ['getShippingAddress'], [], '', false);
+        $quote = $this->getMockBuilder(Quote::class)
+            ->setMethods(['getShippingAddress'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $quote->setItemsCount(1);
         $quote->setStoreId(1);
         $quote->expects($this->any())->method('getShippingAddress')->willReturn($this->shippingAddress);
 
-        $quoteRepository = $this->getMock(QuoteRepository::class, ['getActive', 'save'], [], '', false);
+        $quoteRepository = $this->getMockBuilder(QuoteRepository::class)
+            ->setMethods(['getActive', 'save'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $quoteRepository
             ->expects($this->any())
             ->method('getActive')
             ->willReturn($quote);
         $this->objectManager->addSharedInstance($quoteRepository, QuoteRepository::class);
 
-        $this->infoRepository = $this->getMock(QuoteShippingInfoRepository::class, ['save'], [], '', false);
+        $this->infoRepository = $this->getMockBuilder(QuoteShippingInfoRepository::class)
+            ->setMethods(['save'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->objectManager->addSharedInstance($this->infoRepository, QuoteShippingInfoRepository::class);
 
-        $paymentManagement = $this->getMock(\Magento\Quote\Model\PaymentMethodManagement::class, ['getList'], [], '', false);
-        $cartTotalsRepository = $this->getMock(\Magento\Quote\Model\Cart\CartTotalRepository::class, ['get'], [], '', false);
+        $paymentManagement = $this->getMockBuilder(\Magento\Quote\Model\PaymentMethodManagement::class)
+            ->setMethods(['getList'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $cartTotalsRepository = $this->getMockBuilder(\Magento\Quote\Model\Cart\CartTotalRepository::class)
+            ->setMethods(['get'])
+            ->disableOriginalConstructor()
+            ->getMock();
         /** @var ShippingInformationManagement $subject */
         $this->shippingInfoManagement = $this->objectManager->create(ShippingInformationManagement::class, [
             'paymentMethodManagement' => $paymentManagement,
