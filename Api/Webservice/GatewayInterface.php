@@ -27,10 +27,15 @@ namespace Dhl\Shipping\Api\Webservice;
 
 use \Dhl\Shipping\Api\Data\Webservice\ResponseType;
 use \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
+use \Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
 
 /**
  * GatewayInterface
  *
+ * The webservice gateway is the central entry point for all API operations. It
+ * can be used from within the carrier model, grid mass actions, or cron tasks.
+ *
+ * @api
  * @category Dhl
  * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
@@ -41,13 +46,13 @@ interface GatewayInterface
 {
     /**
      * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
-     * @return CreateShipmentResponseCollection|ResponseType\CreateShipmentResponseInterface[]
+     * @return ResponseType\CreateShipmentResponseInterface|ResponseType\CreateShipment\LabelInterface[]
      */
     public function createLabels(array $shipmentRequests);
 
     /**
      * @param string[] $shipmentNumbers
-     * @return ResponseType\DeleteShipmentResponseInterface
+     * @return ResponseType\DeleteShipmentResponseInterface|ResponseType\Generic\ItemStatusInterface[]
      */
     public function cancelLabels(array $shipmentNumbers);
 }

@@ -72,8 +72,13 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
         $this->objectManager = ObjectManager::getInstance();
 
-        $this->requestMapper = $this->getMock(\Dhl\Shipping\Webservice\BcsDataMapper::class, [], [], '', false);
-        $this->logger = $this->getMock(Logger::class, ['wsDebug', 'log', 'wsWarning', 'wsError'], [], '', false);
+        $this->requestMapper = $this->getMockBuilder(\Dhl\Shipping\Webservice\BcsDataMapper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->logger = $this->getMockBuilder(Logger::class)
+            ->setMethods(['wsDebug', 'log', 'wsWarning', 'wsError'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $this->objectManager->addSharedInstance($this->logger, \Dhl\Shipping\Webservice\Logger::class);
     }
 
@@ -108,6 +113,8 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
      */
     public function logDebug($shipmentOrder, $expectation)
     {
+        $this->markTestSkipped('Logging is being reworked.');
+
         $soapClientMock = $this->getMockBuilder(BcsSoapClient::class)
             ->setMethods(['createShipmentOrder'])
             ->disableOriginalConstructor()
@@ -148,6 +155,8 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
      */
     public function logError($shipmentOrder)
     {
+        $this->markTestSkipped('Logging is being reworked.');
+
         $soapFault = new \SoapFault('1', 'error');
         $soapClientMock = $this->getMockBuilder(BcsSoapClient::class)
             ->setMethods(['createShipmentOrder'])
@@ -167,7 +176,7 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
             'dataMapper' => $this->requestMapper,
         ]);
 
-        $this->setExpectedException(\SoapFault::class);
+        $this->expectException(\SoapFault::class);
         $bcsAdapter->createLabels([$shipmentOrder]);
     }
 
@@ -177,8 +186,12 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
      */
     public function logWarning($shipmentOrder)
     {
+        $this->markTestSkipped('Logging is being reworked.');
+
         /** @var CreateShipmentStatusException|\PHPUnit_Framework_MockObject_MockObject $wsException */
-        $wsException = $this->getMock(CreateShipmentStatusException::class, [], [], '', false);
+        $wsException = $this->getMockBuilder(CreateShipmentStatusException::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $soapClientMock = $this->getMockBuilder(BcsSoapClient::class)
             ->setMethods(['createShipmentOrder'])
@@ -198,7 +211,7 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
             'dataMapper' => $this->requestMapper,
         ]);
 
-        $this->setExpectedException(CreateShipmentStatusException::class);
+        $this->expectException(CreateShipmentStatusException::class);
         $this->bcsAdapter->createLabels([$shipmentOrder]);
     }
 }

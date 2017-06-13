@@ -45,6 +45,7 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Ab
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  *
+ * @todo(nr): move to lib if possible
  * @SuppressWarnings(MEQP2.Classes.ObjectInstantiation)
  */
 class BcsDataMapper implements BcsDataMapperInterface

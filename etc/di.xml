@@ -97,6 +97,11 @@
             <argument name="systemConfigType" xsi:type="object">\Magento\Config\App\Config\Type\System</argument>
         </arguments>
     </type>
+    <type name="Dhl\Shipping\Model\Shipping\Carrier">
+        <arguments>
+            <argument name="webserviceGateway" xsi:type="object">\Dhl\Shipping\Api\Webservice\GatewayInterface\Proxy</argument>
+        </arguments>
+    </type>
 
     <!-- observer -->
     <type name="Dhl\Shipping\Observer\DisableCodPaymentObserver">
