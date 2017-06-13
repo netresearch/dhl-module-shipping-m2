@@ -64,7 +64,10 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         $this->objectManager = ObjectManager::getInstance();
         $this->carrier = $this->objectManager->create(Carrier::class);
 
-        $this->webserviceGateway = $this->getMock(Gateway::class, ['createLabels'], [], '', false);
+        $this->webserviceGateway = $this->getMockBuilder(Gateway::class)
+            ->setMethods(['createLabels', 'cancelLabels'])
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**
@@ -114,6 +117,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @magentoAppArea adminhtml
      */
     public function requestToShipmentError()
     {
@@ -157,6 +161,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @magentoAppArea adminhtml
      */
     public function requestToShipmentSuccess()
     {

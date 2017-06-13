@@ -63,13 +63,19 @@ class UnitConverterTest extends \PHPUnit_Framework_TestCase
         $rateGbpToEur = 1.1723;
         $rateGbpToUsd = 1.2494;
 
-        $currencyMock = $this->getMock(\Magento\Directory\Model\Currency::class, ['getRate'], [], '', false);
+        $currencyMock = $this->getMockBuilder(\Magento\Directory\Model\Currency::class)
+            ->setMethods(['getRate'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $currencyMock
             ->expects($this->any())
             ->method('getRate')
             ->willReturnOnConsecutiveCalls($rateUsdToEur, $rateGbpToEur, $rateGbpToUsd);
 
-        $currencyFactoryMock = $this->getMock(CurrencyFactory::class, ['create'], [], '', false);
+        $currencyFactoryMock = $this->getMockBuilder(CurrencyFactory::class)
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $currencyFactoryMock->expects($this->any())
             ->method('create')
             ->willReturn($currencyMock);

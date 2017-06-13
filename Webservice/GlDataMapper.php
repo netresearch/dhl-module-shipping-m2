@@ -48,6 +48,7 @@ use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  *
+ * @todo(nr): move to lib if possible
  * @SuppressWarnings(MEQP2.Classes.ObjectInstantiation)
  */
 class GlDataMapper implements GlDataMapperInterface
@@ -217,16 +218,5 @@ class GlDataMapper implements GlDataMapperInterface
         );
 
         return $shipmentType;
-    }
-
-    /**
-     * Create api specific request object from framework standardized object.
-     *
-     * @param \Dhl\Shipping\Api\Data\Webservice\RequestType\GetTokenRequestInterface $request
-     * @return object
-     */
-    public function mapGetTokenRequest(RequestType\GetTokenRequestInterface $request)
-    {
-        // TODO: Implement mapGetTokenRequest() method.
     }
 }

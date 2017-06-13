@@ -86,7 +86,10 @@ class ConfigAccessorTest extends \PHPUnit_Framework_TestCase
         $path  = GlConfig::CONFIG_XML_PATH_AUTH_USERNAME;
         $value = 'myTestValue';
 
-        $writerMock = $this->getMock(ConfigWriter::class, ['save'], [], '', false);
+        $writerMock = $this->getMockBuilder(ConfigWriter::class)
+            ->setMethods(['save'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $writerMock
             ->expects($this->once())
             ->method('save')

@@ -68,8 +68,14 @@ class QuoteShippingInfoRepositoryTest extends \PHPUnit_Framework_TestCase
             'info' => $info
         ]]);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
-        $factoryMock  = $this->getMock(QuoteShippingInfoFactory::class, ['create'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['load'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factoryMock = $this->getMockBuilder(QuoteShippingInfoFactory::class)
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $factoryMock
             ->expects($this->once())
             ->method('create')
@@ -101,8 +107,14 @@ class QuoteShippingInfoRepositoryTest extends \PHPUnit_Framework_TestCase
             'info' => $info,
         ]]);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
-        $factoryMock  = $this->getMock(QuoteShippingInfoFactory::class, ['create'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['load'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factoryMock = $this->getMockBuilder(QuoteShippingInfoFactory::class)
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $factoryMock
             ->expects($this->once())
             ->method('create')

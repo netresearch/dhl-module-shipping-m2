@@ -82,7 +82,8 @@ class ShipmentResponseProvider
         $labels = [];
         $labels[$sequenceNumber] = self::getSuccessItem($sequenceNumber);
 
-        $response = new CreateShipmentResponseCollection($responseStatus, $labels);
+        $response = new CreateShipmentResponseCollection($labels);
+        $response->setStatus($responseStatus);
         return $response;
     }
 
@@ -113,7 +114,8 @@ class ShipmentResponseProvider
     public static function provideSingleErrorResponse()
     {
         $responseStatus = new ResponseStatus(ResponseStatus::STATUS_FAILURE, 'Error', 'Hard validation error occured.');
-        $response = new CreateShipmentResponseCollection($responseStatus);
+        $response = new CreateShipmentResponseCollection();
+        $response->setStatus($responseStatus);
 
         return $response;
     }

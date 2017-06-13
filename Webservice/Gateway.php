@@ -25,16 +25,15 @@
  */
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Webservice\Adapter\AdapterChainInterface;
 use \Dhl\Shipping\Api\Webservice\GatewayInterface;
 use \Dhl\Shipping\Api\Webservice\RequestMapper;
 use \Dhl\Shipping\Api\Data\Webservice\RequestType;
 use \Dhl\Shipping\Api\Data\Webservice\ResponseType;
-use Dhl\Shipping\Webservice\Adapter\AdapterChain;
-use Dhl\Shipping\Webservice\Exception\ApiAdapterException;
+use \Dhl\Shipping\Webservice\Adapter\AdapterChain;
+use \Dhl\Shipping\Webservice\Exception\ApiAdapterException;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
-use Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
+use \Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
 
 /**
  * Gateway
@@ -73,7 +72,7 @@ class Gateway implements GatewayInterface
     /**
      * @api
      * @param \Magento\Shipping\Model\Shipment\Request[] $shipmentRequests
-     * @return CreateShipmentResponseCollection|ResponseType\CreateShipmentResponseInterface[]
+     * @return ResponseType\CreateShipmentResponseInterface|ResponseType\CreateShipment\LabelInterface[]
      */
     public function createLabels(array $shipmentRequests)
     {
@@ -104,7 +103,7 @@ class Gateway implements GatewayInterface
     /**
      * @api
      * @param string[] $shipmentNumbers
-     * @return DeleteShipmentResponseCollection|ResponseType\DeleteShipmentResponseInterface
+     * @return ResponseType\DeleteShipmentResponseInterface|ResponseType\Generic\ItemStatusInterface[]
      */
     public function cancelLabels(array $shipmentNumbers)
     {

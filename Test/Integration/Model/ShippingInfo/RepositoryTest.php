@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Shipping;
+namespace Dhl\Shipping\Model\ShippingInfo;
 
 use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteShippingInfo as ShippingInfoResource;
 use \Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo;
@@ -86,7 +86,10 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             'info' => $info
         ]]);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['save'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['save'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $resourceMock
             ->expects($this->once())
             ->method('save')
@@ -108,12 +111,16 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function saveException()
     {
         $message = 'Exception Foo!';
-        $this->setExpectedException(CouldNotSaveException::class, $message);
+        $this->expectException(CouldNotSaveException::class);
+        $this->expectExceptionMessage($message);
 
         /** @var  QuoteShippingInfo $orderShippingInfo */
         $quoteShippingInfo = $this->objectManager->create(QuoteShippingInfo::class);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['save'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['save'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $resourceMock
             ->expects($this->once())
             ->method('save')
@@ -144,13 +151,19 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             'info' => $info
         ]]);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load', 'delete'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['load', 'delete'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $resourceMock
             ->expects($this->once())
             ->method('delete')
             ->with($quoteShippingInfo);
 
-        $factoryMock  = $this->getMock(QuoteShippingInfoFactory::class, ['create'], [], '', false);
+        $factoryMock = $this->getMockBuilder(QuoteShippingInfoFactory::class)
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $factoryMock
             ->expects($this->once())
             ->method('create')
@@ -172,12 +185,16 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
     public function deleteException()
     {
         $message = 'Exception Foo!';
-        $this->setExpectedException(CouldNotDeleteException::class, $message);
+        $this->expectException(CouldNotDeleteException::class);
+        $this->expectExceptionMessage($message);
 
         /** @var  QuoteShippingInfo $quoteShippingInfo */
         $quoteShippingInfo = $this->objectManager->create(QuoteShippingInfo::class);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['delete'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['delete'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $resourceMock
             ->expects($this->once())
             ->method('delete')
@@ -207,8 +224,14 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
             'info' => $json
         ]]);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
-        $factoryMock  = $this->getMock(QuoteShippingInfoFactory::class, ['create'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['load'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factoryMock = $this->getMockBuilder(QuoteShippingInfoFactory::class)
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $factoryMock
             ->expects($this->once())
             ->method('create')
@@ -234,8 +257,14 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
         /** @var  QuoteShippingInfo $quoteShippingInfo */
         $quoteShippingInfo = $this->objectManager->create(QuoteShippingInfo::class);
 
-        $resourceMock = $this->getMock(ShippingInfoResource::class, ['load'], [], '', false);
-        $factoryMock  = $this->getMock(QuoteShippingInfoFactory::class, ['create'], [], '', false);
+        $resourceMock = $this->getMockBuilder(ShippingInfoResource::class)
+            ->setMethods(['load'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $factoryMock = $this->getMockBuilder(QuoteShippingInfoFactory::class)
+            ->setMethods(['create'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $factoryMock
             ->expects($this->once())
             ->method('create')
