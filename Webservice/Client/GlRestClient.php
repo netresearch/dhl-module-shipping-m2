@@ -28,6 +28,7 @@ namespace Dhl\Shipping\Webservice\Client;
 
 use \Dhl\Shipping\Api\Config\GlConfigInterface;
 use \Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface;
+use Dhl\Shipping\Util\Version;
 use \Dhl\Shipping\Webservice\Exception\GlOperationException;
 use Dhl\Shipping\Webservice\Exception\GlAuthorizationException;
 use \Dhl\Shipping\Webservice\Exception\GlCommunicationException;
@@ -49,6 +50,11 @@ class GlRestClient implements GlRestClientInterface
     private $config;
 
     /**
+     * @var Version
+     */
+    private $version;
+
+    /**
      * @var \Zend\Http\ClientFactory
      */
     private $zendClientFactory;
@@ -61,13 +67,16 @@ class GlRestClient implements GlRestClientInterface
     /**
      * GlRestClient constructor.
      * @param GlConfigInterface $config
+     * @param Version $version
      * @param \Zend\Http\ClientFactory $zendClientFactory
      */
     public function __construct(
         GlConfigInterface $config,
+        Version $version,
         \Zend\Http\ClientFactory $zendClientFactory
     ) {
         $this->config = $config;
+        $this->version = $version;
         $this->zendClientFactory = $zendClientFactory;
     }
 
@@ -88,8 +97,7 @@ class GlRestClient implements GlRestClientInterface
             'trace' => 1,
             'maxredirects' => 0,
             'timeout' => 30,
-            //TODO(nr): provide product and module versions
-            'useragent' => 'Magento 2'
+            'useragent' => $this->version->getFullVersion('Magento/%1$s DHL-plug-in/%2$s'),
         ]);
 
         try {
@@ -126,8 +134,7 @@ class GlRestClient implements GlRestClientInterface
             'trace' => 1,
             'maxredirects' => 0,
             'timeout' => 30,
-            //TODO(nr): provide product and module versions
-            'useragent' => 'Magento 2'
+            'useragent' => $this->version->getFullVersion('Magento/%1$s DHL-plug-in/%2$s'),
         ]);
         $this->zendClient->setHeaders([
             'Content-Type' => 'application/json',

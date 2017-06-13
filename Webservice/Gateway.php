@@ -30,8 +30,11 @@ use \Dhl\Shipping\Api\Webservice\GatewayInterface;
 use \Dhl\Shipping\Api\Webservice\RequestMapper;
 use \Dhl\Shipping\Api\Data\Webservice\RequestType;
 use \Dhl\Shipping\Api\Data\Webservice\ResponseType;
+use Dhl\Shipping\Webservice\Adapter\AdapterChain;
+use Dhl\Shipping\Webservice\Exception\ApiAdapterException;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
+use Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
 
 /**
  * Gateway
@@ -45,7 +48,7 @@ use \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
 class Gateway implements GatewayInterface
 {
     /**
-     * @var AdapterChainInterface
+     * @var AdapterChain
      */
     private $apiAdapters;
 
@@ -56,11 +59,11 @@ class Gateway implements GatewayInterface
 
     /**
      * Gateway constructor.
-     * @param AdapterChainInterface $apiAdapters
+     * @param AdapterChain $apiAdapters
      * @param RequestMapper\AppDataMapperInterface $dataMapper
      */
     public function __construct(
-        AdapterChainInterface $apiAdapters,
+        AdapterChain $apiAdapters,
         RequestMapper\AppDataMapperInterface $dataMapper
     ) {
         $this->apiAdapters = $apiAdapters;
@@ -88,19 +91,31 @@ class Gateway implements GatewayInterface
         }
 
         // send shipment orders to APIs
-        $response = $this->apiAdapters->createLabels($shipmentOrders, $invalidRequests);
+        try {
+            $labels = $this->apiAdapters->createLabels($shipmentOrders);
+            $response = CreateShipmentResponseCollection::fromResponse($labels, $invalidRequests);
+        } catch (ApiAdapterException $exception) {
+            $response = CreateShipmentResponseCollection::fromError($exception, $invalidRequests);
+        }
+
         return $response;
     }
 
     /**
      * @api
      * @param string[] $shipmentNumbers
-     * @return ResponseType\DeleteShipmentResponseInterface
+     * @return DeleteShipmentResponseCollection|ResponseType\DeleteShipmentResponseInterface
      */
     public function cancelLabels(array $shipmentNumbers)
     {
-        // send shipment orders to APIs
-        $response = $this->apiAdapters->cancelLabels($shipmentNumbers);
+        // send shipment cancellation requests to APIs
+        try {
+            $items = $this->apiAdapters->cancelLabels($shipmentNumbers);
+            $response = DeleteShipmentResponseCollection::fromResponse($items);
+        } catch (ApiAdapterException $exception) {
+            $response = DeleteShipmentResponseCollection::fromError($exception);
+        }
+
         return $response;
     }
 }
