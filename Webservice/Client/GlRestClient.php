@@ -28,9 +28,9 @@ namespace Dhl\Shipping\Webservice\Client;
 
 use \Dhl\Shipping\Api\Config\GlConfigInterface;
 use \Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface;
-use Dhl\Shipping\Util\Version;
+use \Dhl\Shipping\Util\Version;
 use \Dhl\Shipping\Webservice\Exception\GlOperationException;
-use Dhl\Shipping\Webservice\Exception\GlAuthorizationException;
+use \Dhl\Shipping\Webservice\Exception\GlAuthorizationException;
 use \Dhl\Shipping\Webservice\Exception\GlCommunicationException;
 
 /**
@@ -55,29 +55,24 @@ class GlRestClient implements GlRestClientInterface
     private $version;
 
     /**
-     * @var \Zend\Http\ClientFactory
-     */
-    private $zendClientFactory;
-
-    /**
      * @var \Zend\Http\Client
      */
     private $zendClient;
 
     /**
      * GlRestClient constructor.
+     *
      * @param GlConfigInterface $config
-     * @param Version $version
-     * @param \Zend\Http\ClientFactory $zendClientFactory
+     * @param Version           $version
      */
     public function __construct(
         GlConfigInterface $config,
         Version $version,
-        \Zend\Http\ClientFactory $zendClientFactory
+        \Zend\Http\Client $zendClient
     ) {
-        $this->config = $config;
-        $this->version = $version;
-        $this->zendClientFactory = $zendClientFactory;
+        $this->config     = $config;
+        $this->version    = $version;
+        $this->zendClient = $zendClient;
     }
 
     /**
@@ -88,9 +83,8 @@ class GlRestClient implements GlRestClientInterface
      */
     public function authenticate()
     {
-        $this->zendClient = $this->zendClientFactory->create([
-            'uri' => $this->config->getApiEndpoint() . 'v1/auth/accesstoken'
-        ]);
+        $this->zendClient->reset();
+        $this->zendClient->setUri($this->config->getApiEndpoint() . 'v1/auth/accesstoken');
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_GET);
         $this->zendClient->setAuth($this->config->getAuthUsername(), $this->config->getAuthPassword());
         $this->zendClient->setOptions([
@@ -125,9 +119,8 @@ class GlRestClient implements GlRestClientInterface
      */
     public function generateLabels($rawRequest)
     {
-        $this->zendClient = $this->zendClientFactory->create([
-            'uri' => $this->config->getApiEndpoint() . 'shipping/v1/label'
-        ]);
+        $this->zendClient->reset();
+        $this->zendClient->setUri($this->config->getApiEndpoint() . 'shipping/v1/label');
         $this->zendClient->setMethod(\Zend\Http\Request::METHOD_POST);
 
         $this->zendClient->setOptions([

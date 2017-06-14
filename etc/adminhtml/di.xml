@@ -33,4 +33,13 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Dhl\Shipping\Plugin\AdapterChainPlugin">
+        <arguments>
+            <argument name="httpClients" xsi:type="array">
+                <item name="soapClient" xsi:type="object">\Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface</item>
+                <item name="restClient" xsi:type="object">\Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

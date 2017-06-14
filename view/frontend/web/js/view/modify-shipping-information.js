@@ -17,7 +17,7 @@ define([
             }
 
             // append extra data collected during checkout for server side processing
-            // @see \Dhl\Shipping\Model\Plugin\Checkout\ShippingInformationManagementPlugin
+            // @see \Dhl\Shipping\Plugin\Checkout\ShippingInformationManagementPlugin
             shippingAddress['extension_attributes']['dhlshipping'] = {
                 services: ['wunschtermin'],
                 postalFacility: 'type, station id, postnumber'
