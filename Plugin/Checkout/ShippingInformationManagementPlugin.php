@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Plugin\Checkout;
+namespace Dhl\Shipping\Plugin\Checkout;
 
 use Dhl\Shipping\Api\Data\ShippingInfo\InfoInterface;
 use \Dhl\Shipping\Webservice\ShippingInfo\Serializer;

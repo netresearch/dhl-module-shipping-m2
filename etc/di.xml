@@ -84,9 +84,14 @@
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory" type="Dhl\Shipping\Webservice\RequestServiceFactory" />
 
     <!-- third party library adapter -->
-    <virtualType name="Dhl\Shipping\Http\VirtualClient" type="Zend\Http\Client" shared="false" />
+    <virtualType name="Dhl\Shipping\Http\VirtualClient" type="Zend\Http\Client"/>
 
     <!-- argument di overrides -->
+    <type name="Dhl\Shipping\Webservice\Client\GlRestClient">
+        <arguments>
+            <argument name="zendClient" xsi:type="object">\Dhl\Shipping\Http\VirtualClient</argument>
+        </arguments>
+    </type>
     <type name="Zend\Http\ClientFactory">
         <arguments>
             <argument name="instanceName" xsi:type="string">\Dhl\Shipping\Http\VirtualClient</argument>
@@ -112,14 +117,14 @@
 
     <!-- plugins -->
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="initShippingInfo" type="Dhl\Shipping\Model\Plugin\Checkout\ShippingInformationManagementPlugin" />
+        <plugin name="initShippingInfo" type="Dhl\Shipping\Plugin\Checkout\ShippingInformationManagementPlugin" />
     </type>
-    <type name="Dhl\Shipping\Webservice\Adapter\BcsAdapter">
-        <plugin name="logBcsApiCalls" type="Dhl\Shipping\Model\Plugin\BcsAdapterPlugin" />
+    <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">
+        <plugin name="logWsApiCalls" type="Dhl\Shipping\Plugin\AdapterChainPlugin" />
     </type>
 
     <!-- passing arguments -->
-    <type name="Dhl\Shipping\Model\Plugin\Checkout\ShippingInformationManagementPlugin">
+    <type name="Dhl\Shipping\Plugin\Checkout\ShippingInformationManagementPlugin">
         <arguments>
             <argument name="quoteInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoRepository</argument>
         </arguments>

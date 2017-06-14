@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Plugin;
+namespace Dhl\Shipping\Plugin;
 
 use \Dhl\Shipping\Webservice\Client\BcsSoapClient;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentStatusException;
@@ -88,7 +88,7 @@ class BcsAdapterPluginTest extends \PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         $this->objectManager->removeSharedInstance(PluginList::class);
-        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Model\Plugin\BcsAdapterPlugin::class);
+        $this->objectManager->removeSharedInstance(\Dhl\Shipping\Plugin\BcsAdapterPlugin::class);
 
         parent::tearDown();
     }
