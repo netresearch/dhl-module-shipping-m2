@@ -61,7 +61,10 @@ class UpdateCarrierObserverTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->objectManager = new ObjectManager($this);
-        $this->config = $this->getMock(ModuleConfig::class, ['canProcessShipping'], [], '', false);
+        $this->config = $this->getMockBuilder(ModuleConfig::class)
+            ->setMethods(['canProcessShipping'])
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**
@@ -84,9 +87,14 @@ class UpdateCarrierObserverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         /** @var Event|MockObject $eventMock */
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $eventMock->expects($this->once())
             ->method('getData')
             ->with('order', null)
@@ -124,9 +132,14 @@ class UpdateCarrierObserverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         /** @var Event|MockObject $eventMock */
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
         $eventMock->expects($this->once())
             ->method('getData')
             ->with('order', null)

@@ -367,13 +367,10 @@ class AppDataMapper implements AppDataMapperInterface
         ]);
 
         $shipper = $this->shipperFactory->create([
-            'contactPerson' => $this->bcsConfig->getContactPerson($storeId),
-            'name'          => [
-                $request->getShipperContactPersonName(),
-                $request->getShipperContactCompanyName(),
-                $this->bcsConfig->getShipperCompanyAddition($storeId),
-            ],
             'companyName'   => $request->getShipperContactCompanyName(),
+            'name'          => null,
+            'nameAddition'  => $this->bcsConfig->getShipperCompanyAddition($storeId),
+            'contactPerson' => $request->getShipperContactPersonName(),
             'phone'         => $request->getShipperContactPhoneNumber(),
             'email'         => $request->getData('shipper_email'),
             'address'       => $address,
@@ -422,12 +419,10 @@ class AppDataMapper implements AppDataMapperInterface
         ]);
 
         $receiver = $this->receiverFactory->create([
-            'contactPerson' => $request->getRecipientContactPersonName(),
-            'name'          => [
-                $request->getRecipientContactPersonName(),
-                $request->getRecipientContactCompanyName(),
-            ],
             'companyName'   => $request->getRecipientContactCompanyName(),
+            'name'          => $request->getRecipientContactPersonName(),
+            'nameAddition'  => null,
+            'contactPerson' => $request->getRecipientContactPersonName(),
             'phone'         => $request->getRecipientContactPhoneNumber(),
             'email'         => $request->getData('recipient_email'),
             'address'       => $address,
@@ -462,13 +457,10 @@ class AppDataMapper implements AppDataMapperInterface
         ]);
 
         $returnReceiver = $this->returnReceiverFactory->create([
-            'contactPerson' => $this->bcsConfig->getContactPerson($storeId),
-            'name'          => [
-                $request->getShipperContactPersonName(),
-                $request->getShipperContactCompanyName(),
-                $this->bcsConfig->getShipperCompanyAddition($storeId),
-            ],
             'companyName'   => $request->getShipperContactCompanyName(),
+            'name'          => null,
+            'nameAddition'  => $this->bcsConfig->getShipperCompanyAddition($storeId),
+            'contactPerson' => $request->getShipperContactPersonName(),
             'phone'         => $request->getShipperContactPhoneNumber(),
             'email'         => $request->getData('shipper_email'),
             'address'       => $address,

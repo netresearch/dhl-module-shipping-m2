@@ -147,11 +147,12 @@ class ShipmentOrderProvider
     {
         $address = self::getContactAddressObject();
         $returnReceiver = new ShipmentOrder\Contact\ReturnReceiver(
-            'Theo',
-            ['name'],
-            'companyName',
-            'phone',
-            'email@email.de',
+            'Shipper Company Name',
+            'Theo Shipper Name',
+            'Shipper Company Returns Division',
+            'Theo Contact Me',
+            '1800 FOO',
+            'foo@email.de',
             $address
         );
 
@@ -166,11 +167,12 @@ class ShipmentOrderProvider
         $address  = self::getContactAddressObject();
         $idCard   = self::getIdCardObject();
         $receiver = new ShipmentOrder\Contact\Receiver(
-            'Theo',
-            ['name'],
-            'companyName',
-            'phone',
-            'email@email.de',
+            'Theo Receiver Company',
+            'Theo Receiver Name',
+            'Receiver Company Division',
+            'Theo Contact Me',
+            '1800 BAR',
+            'bar@email.de',
             $address,
             $idCard
         );
@@ -218,11 +220,12 @@ class ShipmentOrderProvider
     {
         $address = self::getContactAddressObject();
         $shipper = new ShipmentOrder\Contact\Shipper(
-            'Theo',
-            ['name'],
-            'companyName',
-            'phone',
-            'email@email.de',
+            'Shipper Company Name',
+            'Theo Shipper Name',
+            'Shipper Company Division',
+            'Theo Contact Me',
+            '1800 FOO',
+            'foo@email.de',
             $address
         );
 

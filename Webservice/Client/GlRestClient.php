@@ -83,16 +83,20 @@ class GlRestClient implements GlRestClientInterface
      */
     public function authenticate()
     {
-        $this->zendClient->reset();
-        $this->zendClient->setUri($this->config->getApiEndpoint() . 'v1/auth/accesstoken');
-        $this->zendClient->setMethod(\Zend\Http\Request::METHOD_GET);
-        $this->zendClient->setAuth($this->config->getAuthUsername(), $this->config->getAuthPassword());
-        $this->zendClient->setOptions([
-            'trace' => 1,
-            'maxredirects' => 0,
-            'timeout' => 30,
-            'useragent' => $this->version->getFullVersion('Magento/%1$s DHL-plug-in/%2$s'),
-        ]);
+        try {
+            $this->zendClient->reset();
+            $this->zendClient->setUri($this->config->getApiEndpoint() . 'v1/auth/accesstoken');
+            $this->zendClient->setMethod(\Zend\Http\Request::METHOD_GET);
+            $this->zendClient->setAuth($this->config->getAuthUsername(), $this->config->getAuthPassword());
+            $this->zendClient->setOptions([
+                'trace' => 1,
+                'maxredirects' => 0,
+                'timeout' => 30,
+                'useragent' => $this->version->getFullVersion('Magento/%1$s DHL-plug-in/%2$s'),
+            ]);
+        } catch (\Zend\Http\Exception\InvalidArgumentException $argumentException) {
+            throw GlCommunicationException::setup($argumentException->getMessage());
+        }
 
         try {
             $this->zendClient->send();
@@ -105,7 +109,7 @@ class GlRestClient implements GlRestClientInterface
             $responseType = json_decode($response->getBody(), true);
             $this->config->saveAuthToken($responseType['access_token']);
         } catch (\Zend\Http\Exception\RuntimeException $runtimeException) {
-            throw new GlCommunicationException($runtimeException->getMessage());
+            throw GlCommunicationException::runtime($runtimeException->getMessage());
         }
     }
 
@@ -119,35 +123,39 @@ class GlRestClient implements GlRestClientInterface
      */
     public function generateLabels($rawRequest)
     {
-        $this->zendClient->reset();
-        $this->zendClient->setUri($this->config->getApiEndpoint() . 'shipping/v1/label');
-        $this->zendClient->setMethod(\Zend\Http\Request::METHOD_POST);
+        try {
+            $this->zendClient->reset();
+            $this->zendClient->setUri($this->config->getApiEndpoint() . 'shipping/v1/label');
+            $this->zendClient->setMethod(\Zend\Http\Request::METHOD_POST);
 
-        $this->zendClient->setOptions([
-            'trace' => 1,
-            'maxredirects' => 0,
-            'timeout' => 30,
-            'useragent' => $this->version->getFullVersion('Magento/%1$s DHL-plug-in/%2$s'),
-        ]);
-        $this->zendClient->setHeaders([
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $this->config->getAuthToken(),
-            'X-CorrelationID' => hash('crc32', $rawRequest),
-        ]);
-        $this->zendClient->setParameterGet([
-            'format' => 'PDF',
-            'labelSize' => $this->config->getLabelSize(),
-            'pageSize' => $this->config->getPageSize(),
-            'layout' => $this->config->getPageLayout(),
-        ]);
-        $this->zendClient->setRawBody($rawRequest);
+            $this->zendClient->setOptions([
+                'trace' => 1,
+                'maxredirects' => 0,
+                'timeout' => 30,
+                'useragent' => $this->version->getFullVersion('Magento/%1$s DHL-plug-in/%2$s'),
+            ]);
+            $this->zendClient->setHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->config->getAuthToken(),
+                'X-CorrelationID' => hash('crc32', $rawRequest),
+            ]);
+            $this->zendClient->setParameterGet([
+                'format' => 'PDF',
+                'labelSize' => $this->config->getLabelSize(),
+                'pageSize' => $this->config->getPageSize(),
+                'layout' => $this->config->getPageLayout(),
+            ]);
+            $this->zendClient->setRawBody($rawRequest);
+        } catch (\Zend\Http\Exception\InvalidArgumentException $argumentException) {
+            throw GlCommunicationException::setup($argumentException->getMessage());
+        }
 
         try {
             $this->zendClient->send();
             $response = $this->zendClient->getResponse();
         } catch (\Zend\Http\Exception\RuntimeException $runtimeException) {
-            throw new GlCommunicationException($runtimeException->getMessage());
+            throw GlCommunicationException::runtime($runtimeException->getMessage());
         }
 
         // Unauthorized, request token and retry

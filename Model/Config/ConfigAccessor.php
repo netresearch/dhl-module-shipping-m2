@@ -69,6 +69,7 @@ class ConfigAccessor implements ConfigAccessorInterface
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $scopeConfig
      * @param WriterInterface $configWriter
+     * @param ConfigTypeInterface $systemConfigType
      */
     public function __construct(
         StoreManagerInterface $storeManager,

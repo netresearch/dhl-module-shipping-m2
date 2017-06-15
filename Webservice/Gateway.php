@@ -107,6 +107,11 @@ class Gateway implements GatewayInterface
      */
     public function cancelLabels(array $shipmentNumbers)
     {
+        if (empty($shipmentNumbers)) {
+            $response = DeleteShipmentResponseCollection::fromResponse([]);
+            return $response;
+        }
+
         // send shipment cancellation requests to APIs
         try {
             $items = $this->apiAdapters->cancelLabels($shipmentNumbers);
