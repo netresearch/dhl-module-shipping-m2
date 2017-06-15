@@ -126,7 +126,6 @@
                 <!-- 330 Client ID -->
                 <field id="gl_api_auth_username" type="text" translate="label" sortOrder="330" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Client ID</label>
-                    <validate>validate-digits</validate>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
@@ -134,29 +133,6 @@
                 <!-- 340 Client Secret -->
                 <field id="gl_api_auth_password" type="text" translate="label" sortOrder="340" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Client Secret</label>
-                    <validate>validate-digits</validate>
-                    <depends>
-                        <field id="api_type">gla</field>
-                    </depends>
-                </field>
-                <!-- 350 Pickup Account Number Sandbox -->
-                <field id="gl_sandbox_pickup_number" type="text" translate="label" sortOrder="350" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Pickup Account Number (Sandbox)</label>
-                    <validate>validate-digits validate-length maximum-length-10</validate>
-                    <depends>
-                        <field id="api_type">gla</field>
-                    </depends>
-                </field>
-                <!-- 360 Client ID Sandbox -->
-                <field id="gl_sandbox_api_auth_username" type="text" translate="label" sortOrder="360" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Client ID (Sandbox)</label>
-                    <depends>
-                        <field id="api_type">gla</field>
-                    </depends>
-                </field>
-                <!-- 370 Client Secret Sandbox -->
-                <field id="gl_sandbox_api_auth_password" type="text" translate="label" sortOrder="370" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Client Secret (Sandbox)</label>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
@@ -259,13 +235,6 @@
                 <!-- 720 Dispatching Information -->
                 <field id="bcs_shipper_contact_dispatchinfo" translate="label" type="text" sortOrder="720" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Dispatching Information</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 730 First Name and Last Name of Contact Person -->
-                <field id="bcs_shipper_contact_person" translate="label" type="text" sortOrder="730" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>First Name and Last Name of Contact Person</label>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>

@@ -60,13 +60,10 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->objectManager = new ObjectManager($this);
-        $this->configAccessor = $this->getMock(
-            ConfigAccessor::class,
-            ['saveConfigValue', 'getConfigValue'],
-            [],
-            '',
-            false
-        );
+        $this->configAccessor = $this->getMockBuilder(ConfigAccessor::class)
+            ->setMethods(['saveConfigValue', 'getConfigValue'])
+            ->disableOriginalConstructor()
+            ->getMock();
     }
 
     /**

@@ -109,7 +109,6 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
      * @magentoConfigFixture default/carriers/dhlshipping/gl_api_auth_password password
      */
     public function getAuthPassword()
@@ -119,27 +118,6 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
-     * @magentoConfigFixture default/carriers/dhlshipping/gl_sandbox_api_auth_password sandbox
-     */
-    public function getAuthPasswordSandboxMode()
-    {
-        $this->assertEquals('sandbox', $this->config->getAuthPassword());
-    }
-
-    /**
-     * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
-     * @magentoConfigFixture default/carriers/dhlshipping/gl_sandbox_api_auth_username sandbox
-     */
-    public function getAuthUsernameSandboxMode()
-    {
-        $this->assertEquals('sandbox', $this->config->getAuthUsername());
-    }
-
-    /**
-     * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
      * @magentoConfigFixture default/carriers/dhlshipping/gl_api_auth_username username
      */
     public function getAuthUsername()
@@ -149,31 +127,32 @@ class GlConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 0
      * @magentoConfigFixture default/carriers/dhlshipping/gl_pickup_number 1234
+     * @magentoConfigFixture fixturestore_store carriers/dhlshipping/gl_pickup_number 9876
      */
-    public function getProductionPickupAccountNumber()
+    public function getPickupAccountNumber()
     {
-        $this->assertEquals('1234', $this->config->getPickupAccountNumber());
-    }
+        $storeCode = 'fixturestore';
+        /** @var \Magento\Store\Model\Store $store */
+        $store = $this->objectManager->create(\Magento\Store\Model\Store::class)->load($storeCode);
 
-    /**
-     * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/sandbox_mode 1
-     * @magentoConfigFixture default/carriers/dhlshipping/gl_sandbox_pickup_number 4321
-     */
-    public function getSandboxPickupAccountNumber()
-    {
-        $this->assertEquals('4321', $this->config->getPickupAccountNumber());
+        $this->assertEquals('1234', $this->config->getPickupAccountNumber());
+        $this->assertEquals('9876', $this->config->getPickupAccountNumber($store->getId()));
     }
 
     /**
      * @test
      * @magentoConfigFixture default/carriers/dhlshipping/gl_distribution_center USXXX1
+     * @magentoConfigFixture fixturestore_store carriers/dhlshipping/gl_distribution_center THXXX9
      */
     public function getDistributionCenter()
     {
+        $storeCode = 'fixturestore';
+        /** @var \Magento\Store\Model\Store $store */
+        $store = $this->objectManager->create(\Magento\Store\Model\Store::class)->load($storeCode);
+
         $this->assertEquals('USXXX1', $this->config->getDistributionCenter());
+        $this->assertEquals('THXXX9', $this->config->getDistributionCenter($store->getId()));
     }
 
     /**

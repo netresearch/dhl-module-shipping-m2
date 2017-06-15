@@ -312,15 +312,6 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/bcs_shipper_contact_person person
-     */
-    public function getContactPerson()
-    {
-        $this->assertEquals('person', $this->config->getContactPerson());
-    }
-
-    /**
-     * @test
      * @magentoConfigFixture default/carriers/dhlshipping/bcs_shipper_contact_company_addition company
      */
     public function getShipperCompanyAddition()

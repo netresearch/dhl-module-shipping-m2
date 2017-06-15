@@ -100,9 +100,17 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $resultMock = $this->getMock(DataObject::class, ['getData'], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultMock = $this->getMockBuilder(DataObject::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $observerMock->expects($this->once())->method('getEvent')->willReturn($eventMock);
         $eventMock->expects($this->once())->method('getData')->with('result', null)->willReturn($resultMock);
@@ -127,9 +135,17 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $resultMock = $this->getMock(DataObject::class, ['getData'], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultMock = $this->getMockBuilder(DataObject::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $observerMock->expects($this->once())->method('getEvent')->willReturn($eventMock);
         $eventMock->expects($this->once())->method('getData')->with('result', null)->willReturn($resultMock);
@@ -163,10 +179,20 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $resultMock = $this->getMock(DataObject::class, ['getData'], [], '', false);
-        $paymentMethodMock = $this->getMock(Cashondelivery::class, [], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultMock = $this->getMockBuilder(DataObject::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $paymentMethodMock = $this->getMockBuilder(Cashondelivery::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $observerMock->expects($this->exactly(2))->method('getEvent')->willReturn($eventMock);
 
@@ -211,10 +237,20 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $resultMock = $this->getMock(DataObject::class, ['getData'], [], '', false);
-        $paymentMethodMock = $this->getMock(Checkmo::class, [], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultMock = $this->getMockBuilder(DataObject::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $paymentMethodMock = $this->getMockBuilder(Checkmo::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $observerMock->expects($this->exactly(2))->method('getEvent')->willReturn($eventMock);
 
@@ -269,10 +305,20 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $resultMock = $this->getMock(DataObject::class, ['getData', 'setData'], [], '', false);
-        $paymentMethodMock = $this->getMock(Checkmo::class, [], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultMock = $this->getMockBuilder(DataObject::class)
+            ->setMethods(['getData', 'setData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $paymentMethodMock = $this->getMockBuilder(Checkmo::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $observerMock->expects($this->exactly(2))->method('getEvent')->willReturn($eventMock);
 
@@ -343,10 +389,20 @@ class DisableCodPaymentObserverTest extends \PHPUnit_Framework_TestCase
         ]);
 
         /** @var Observer|MockObject $observerMock */
-        $observerMock = $this->getMock(Observer::class, [], [], '', false);
-        $eventMock = $this->getMock(Event::class, ['getData'], [], '', false);
-        $resultMock = $this->getMock(DataObject::class, ['getData', 'setData'], [], '', false);
-        $paymentMethodMock = $this->getMock(Checkmo::class, [], [], '', false);
+        $observerMock = $this->getMockBuilder(Observer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $eventMock = $this->getMockBuilder(Event::class)
+            ->setMethods(['getData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $resultMock = $this->getMockBuilder(DataObject::class)
+            ->setMethods(['getData', 'setData'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $paymentMethodMock = $this->getMockBuilder(Checkmo::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $observerMock->expects($this->exactly(2))->method('getEvent')->willReturn($eventMock);
 

@@ -120,15 +120,16 @@ class BcsDataMapper implements BcsDataMapperInterface
     private function getShipper(Contact\ShipperInterface $shipper)
     {
         // shipper name
-        $shipperName = $shipper->getName();
-        $nameType = new BcsApi\NameType($shipperName[0], $shipperName[1], $shipperName[2]);
+        $nameType = new BcsApi\NameType(
+            $shipper->getCompanyName(),
+            $shipper->getNameAddition(),
+            null
+        );
 
         // shipper address
         $countryType = new BcsApi\CountryType($shipper->getAddress()->getCountryCode());
-        //TODO(nr): obtain country name
         $countryType->setCountry($shipper->getAddress()->getCountryCode());
         $countryType->setState($shipper->getAddress()->getState());
-
         $addressType = new BcsApi\NativeAddressType(
             $shipper->getAddress()->getStreetName(),
             $shipper->getAddress()->getStreetNumber(),
@@ -153,17 +154,15 @@ class BcsDataMapper implements BcsDataMapperInterface
      */
     private function getReceiver(Contact\ReceiverInterface $receiver)
     {
-        $receiverName = $receiver->getName();
 
         // receiver address
         $countryType = new BcsApi\CountryType($receiver->getAddress()->getCountryCode());
-        //TODO(nr): obtain country name
         $countryType->setCountry($receiver->getAddress()->getCountryCode());
         $countryType->setState($receiver->getAddress()->getState());
 
         $addressType = new BcsApi\ReceiverNativeAddressType(
-            isset($receiverName[1]) ? $receiverName[1] : null,
-            isset($receiverName[2]) ? $receiverName[2] : null,
+            $receiver->getCompanyName(),
+            $receiver->getNameAddition(),
             $receiver->getAddress()->getStreetName(),
             $receiver->getAddress()->getStreetNumber(),
             $receiver->getAddress()->getPostalCode(),
@@ -179,7 +178,7 @@ class BcsDataMapper implements BcsDataMapperInterface
         $communicationType->setPhone($receiver->getPhone());
 
         $receiverType = new BcsApi\ReceiverType(
-            $receiverName[0],
+            $receiver->getName(),
             $addressType,
             null, //TODO(nr): handle postal facilities
             null,
@@ -196,12 +195,14 @@ class BcsDataMapper implements BcsDataMapperInterface
     private function getReturnReceiver(Contact\ReturnReceiverInterface $returnReceiver)
     {
         // return receiver name
-        $shipperName = $returnReceiver->getName();
-        $nameType = new BcsApi\NameType($shipperName[0], $shipperName[1], $shipperName[2]);
+        $nameType = new BcsApi\NameType(
+            $returnReceiver->getCompanyName(),
+            $returnReceiver->getNameAddition(),
+            null
+        );
 
         // return receiver address
         $countryType = new BcsApi\CountryType($returnReceiver->getAddress()->getCountryCode());
-        //TODO(nr): obtain country name
         $countryType->setCountry($returnReceiver->getAddress()->getCountryCode());
         $countryType->setState($returnReceiver->getAddress()->getState());
 
