@@ -284,18 +284,6 @@ class BcsConfig implements BcsConfigInterface
     }
 
     /**
-     * Obtain communication contact person.
-     *
-     * @param mixed $store
-     *
-     * @return string
-     */
-    public function getContactPerson($store = null)
-    {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPPER_CONTACT_PERSON, $store);
-    }
-
-    /**
      * Obtain name of shipper (first name part)
      *
      * @deprecated Shipment request uses name of currently logged in admin

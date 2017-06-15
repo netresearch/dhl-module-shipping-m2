@@ -88,10 +88,6 @@ class GlConfig implements GlConfigInterface
      */
     public function getAuthUsername($store = null)
     {
-        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME, $store);
-        }
-
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTH_USERNAME, $store);
     }
 
@@ -103,10 +99,6 @@ class GlConfig implements GlConfigInterface
      */
     public function getAuthPassword($store = null)
     {
-        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD, $store);
-        }
-
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTH_PASSWORD, $store);
     }
 
@@ -137,10 +129,6 @@ class GlConfig implements GlConfigInterface
      */
     public function getPickupAccountNumber($store = null)
     {
-        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER_SANDBOX, $store);
-        }
-
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PICKUP_NUMBER, $store);
     }
 

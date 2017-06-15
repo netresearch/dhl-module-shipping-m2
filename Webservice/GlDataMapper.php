@@ -126,7 +126,6 @@ class GlDataMapper implements GlDataMapperInterface
     private function getReceiver(Contact\ReceiverInterface $receiver)
     {
         $street = $receiver->getAddress()->getStreet();
-        $name = $receiver->getName();
 
         $receiverType = new ConsigneeAddressRequestType(
             $street[0],
@@ -139,7 +138,7 @@ class GlDataMapper implements GlDataMapperInterface
             $receiver->getEmail(),
             $receiver->getId()->getNumber(),
             $receiver->getId()->getType(),
-            $name[0],
+            $receiver->getName(),
             $receiver->getAddress()->getPostalCode(),
             $receiver->getAddress()->getState()
         );
@@ -154,7 +153,6 @@ class GlDataMapper implements GlDataMapperInterface
     private function getReturnReceiver(Contact\ReturnReceiverInterface $returnReceiver)
     {
         $street = $returnReceiver->getAddress()->getStreet();
-        $name = $returnReceiver->getName();
 
         $returnReceiverType = new ReturnAddressRequestType(
             $street[0],
@@ -164,7 +162,7 @@ class GlDataMapper implements GlDataMapperInterface
             $street[1],
             null,
             $returnReceiver->getCompanyName(),
-            $name[0],
+            $returnReceiver->getName(),
             $returnReceiver->getAddress()->getPostalCode()
         );
 
