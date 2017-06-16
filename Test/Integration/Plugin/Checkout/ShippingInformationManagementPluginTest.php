@@ -28,7 +28,6 @@ namespace Dhl\Shipping\Plugin;
 use \Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoRepository;
 use \Magento\Checkout\Model\ShippingInformation;
 use \Magento\Checkout\Model\ShippingInformationManagement;
-use \Magento\Framework\DataObject;
 use \Magento\Quote\Model\Quote;
 use \Magento\Quote\Model\QuoteRepository;
 use \Magento\Quote\Model\Quote\Address as ShippingAddress;
