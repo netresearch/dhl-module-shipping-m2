@@ -11,5 +11,5 @@ RUN chmod u+rwx /run.sh
 
 WORKDIR /var/www/magetwo.nrdev.de
 
-CMD ["mysql","3307"]
+CMD ["mysql","3306"]
 ENTRYPOINT ["/run.sh"]

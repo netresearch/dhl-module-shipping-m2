@@ -24,7 +24,7 @@ class ExtensionProperties extends Task
 
         while ($reader->read()) {
             if ($reader->nodeType == XMLReader::ELEMENT && $reader->name == 'module') {
-                $this->project->setProperty('extension.name', $reader->getAttribute('name'));
+                $this->project->setProperty('extension.name', $reader->getAttribute('name') . '_Module_M2');
                 $this->project->setProperty('extension.version', $reader->getAttribute('setup_version'));
                 break;
             }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="DHL Shipping for Magento2" default="dist">
+    <property name="phpunit-version" value="5.7"/>
     <property name="composer-name" value="dhl/module-shipping-m2"/>
     <property name="app-versions" value="2.1"
               description="Different versions of host applications, determines the versions installed in docker containers"/>
@@ -43,6 +44,9 @@
     </target>
     <target name="docker-up" description="Starts docker container configured in specified directory">
         <echo message="Start up docker Container for app version ${app-version} and PHP${php-version}"/>
+        <exec dir="docker/${app-version}/${php-version}"
+              command="docker-compose pull --ignore-pull-failures #--parallel"
+              passthru="true"/>
         <exec dir="docker/${app-version}/${php-version}"
               command="docker-compose up -d"
               passthru="true"/>
@@ -170,7 +174,7 @@
         />
         <exec dir="docker/${last-app}/${last-php}"
               command="docker-compose exec -T env
-              /var/www/magetwo.nrdev.de/vendor/bin/phpunit
+              /var/www/magetwo.nrdev.de/phpunit-${phpunit-version}
               -c ${docker.extensionPath}/Test/Integration/phpunit.xml
               --bootstrap ${docker.MAGENTO_ROOT_PATH}dev/tests/integration/framework/bootstrap.php
               --coverage-html ${docker.REPORT_PATH}coverage-report/
@@ -193,7 +197,7 @@
     <target name="phpunit">
         <exec dir="docker/${app-dir}/${php-dir}"
               command="docker-compose exec -T env
-              /var/www/magetwo.nrdev.de/vendor/bin/phpunit
+              /var/www/magetwo.nrdev.de/phpunit-${phpunit-version}
               -c ${docker.extensionPath}/Test/Integration/phpunit.xml
               --bootstrap ${docker.MAGENTO_ROOT_PATH}dev/tests/integration/framework/bootstrap.php
               --no-coverage"
@@ -223,6 +227,7 @@
             <fileset dir="../" >
                 <exclude name="build/**"/>
                 <exclude name="**/composer.json" />
+                <exclude name="Test/**"/>
             </fileset>
         </copy>
         <copy todir="./tmp/app/code/Dhl/Shipping/">
