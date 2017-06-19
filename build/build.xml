@@ -48,6 +48,9 @@
               command="docker-compose pull --ignore-pull-failures #--parallel"
               passthru="true"/>
         <exec dir="docker/${app-version}/${php-version}"
+              command="docker pull registry.netresearch.de/magento-ci/base:${app-version}"
+              passthru="true"/>
+        <exec dir="docker/${app-version}/${php-version}"
               command="docker-compose up -d"
               passthru="true"/>
         <exec dir="docker/${app-version}/${php-version}"
