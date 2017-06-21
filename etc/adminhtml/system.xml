@@ -12,6 +12,7 @@
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType</source_model>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\ApiType</frontend_model>
                     <comment>Select an API connection to configure.</comment>
+                    <tooltip>If you are shipping from Germany or Austria, select Business Customer Shipping. If you are shipping from other countries, select eCommerce Global API.</tooltip>
                 </field>
 
                 <!-- 100 General Settings -->
@@ -42,6 +43,7 @@
                     <label>Enable Logging</label>
                     <comment/>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <tooltip>Please ensure that the global Magento logging is also activated. Data will be written to the existing Magento logs.</tooltip>
                 </field>
                 <!-- 160 Log Level -->
                 <field id="log_level" translate="label comment" type="select" sortOrder="160" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -115,6 +117,7 @@
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
+                    <comment>Please enter the number you received from DHL.</comment>
                 </field>
                 <!-- 320 Distribution Center -->
                 <field id="gl_distribution_center" type="text" translate="label" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -122,6 +125,7 @@
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
+                    <comment>Primary DHL eCommerce Distribution center assigned to your products/services. This will be provided by DHL.</comment>
                 </field>
                 <!-- 330 Client ID -->
                 <field id="gl_api_auth_username" type="text" translate="label" sortOrder="330" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -129,13 +133,16 @@
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
+                    <comment>This is a hash-value which will be provided by DHL.</comment>
                 </field>
                 <!-- 340 Client Secret -->
-                <field id="gl_api_auth_password" type="text" translate="label" sortOrder="340" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="gl_api_auth_password" type="password" translate="label" sortOrder="340" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Client Secret</label>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment>This is a hash-value which will be provided by DHL.</comment>
                 </field>
 
                 <!-- 400 General Shipping Settings -->
@@ -154,6 +161,7 @@
                 <field id="default_shipping_product" translate="label" type="select" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Product</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DefaultProduct</source_model>
+                    <comment>This product will be pre-selected for shipping label creation. You can still select another product when creating shipping labels manually.</comment>
                 </field>
 
                 <!-- 500 BCS Shipping Settings -->
