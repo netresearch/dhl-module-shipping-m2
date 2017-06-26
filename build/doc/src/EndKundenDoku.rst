@@ -38,7 +38,7 @@ die *eCommerce Global Label API* genutzt werden.
 Voraussetzungen
 ===============
 
-Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Moduls erfüllt sein:
+Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Moduls erfüllt sein.
 
 Magento® 2
 ----------
