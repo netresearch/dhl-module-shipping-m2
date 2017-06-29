@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="dhl_autocreate" instance="Dhl\Shipping\Cron\AutoCreate" method="run">
+            <schedule>H/15 * * * *</schedule>
+        </job>
+    </group>
+</config>
