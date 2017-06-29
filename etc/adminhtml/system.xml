@@ -485,7 +485,7 @@
                 </field>
 
                 <!-- 900 Automatic shipment creation -->
-                <field id="fields_bank_data" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="cron_configuration" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Automatic Shipment creation</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
