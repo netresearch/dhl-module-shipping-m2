@@ -37,9 +37,10 @@ class Service implements \Magento\Framework\Option\ArrayInterface
     public function toOptionArray()
     {
         $optionArray = [
-            'service_1' => 'Service 1',
-            'service_2' => 'Service 2',
-            'service_3' => 'Service 3',
+            ['value'=> 'service_1', 'label' => 'Service 1'],
+            ['value'=> 'service_2', 'label' => 'Service 2'],
+            ['value'=> 'service_3', 'label' => 'Service 3'],
+            ['value'=> 'service_4', 'label' => 'Service 4'],
         ];
         // @TODO retrieve actual available services
 
