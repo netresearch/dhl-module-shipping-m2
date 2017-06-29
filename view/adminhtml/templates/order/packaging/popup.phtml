@@ -1,0 +1,100 @@
+<?php
+/**
+ * Temando Shipping
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 7
+ *
+ * @category  Dhl
+ * @package   Dhl_Shipping
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @copyright 2016 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+?>
+<?php /** @var \Magento\Shipping\Block\Adminhtml\Order\Packaging $block */ ?>
+<?php
+$shippingMethod = $block->getShipment()->getOrder()->getShippingMethod();
+$sizeSource = $block->getSourceSizeModel()->toOptionArray();
+$girthEnabled = $block->isDisplayGirthValue() && $block->isGirthAllowed() ? 1 : 0;
+?>
+<script>
+    require([
+        "jquery",
+        "prototype",
+        "Magento_Shipping/order/packaging",
+        "Magento_Ui/js/modal/modal"
+    ], function(jQuery){
+
+        packaging = new Packaging(<?php /* @escapeNotVerified */ echo $block->getConfigDataJson() ?>);
+        packaging.changeContainerType($$('select[name=package_container]')[0]);
+        packaging.checkSizeAndGirthParameter(
+            $$('select[name=package_container]')[0],
+            <?php /* @escapeNotVerified */ echo $girthEnabled; ?>
+        );
+        packaging.setConfirmPackagingCallback(function(){
+            packaging.setParamsCreateLabelRequest($('edit_form').serialize(true));
+            packaging.sendCreateLabelRequest();
+        });
+        packaging.setLabelCreatedCallback(function(response){
+            setLocation("<?php /* @escapeNotVerified */ echo $block->getUrl(
+                'sales/order/view',
+                ['order_id' => $block->getShipment()->getOrderId()]
+            ); ?>");
+        });
+        packaging.setCancelCallback(function() {
+            if ($('create_shipping_label')) {
+                packaging.cleanPackages();
+                $('create_shipping_label').checked = false;
+                toggleCreateLabelCheckbox();
+            }
+        });
+        packaging.setItemQtyCallback(function(itemId){
+            var item = $$('[name="shipment[items]['+itemId+']"]')[0];
+            if (item && !isNaN(item.value)) {
+                return item.value;
+            }
+        });
+        jQuery('#packaging_window').modal({
+            type: 'slide',
+            title: '<?php /* @escapeNotVerified */ echo __('Create Packages') ?>',
+            buttons: [
+                {
+                    text: '<?php /* @escapeNotVerified */ echo __('Cancel') ?>',
+                    'class': 'action-secondary',
+                    click: function () {
+                        packaging.cancelPackaging();
+                        this.closeModal();
+                    }
+                }, {
+                    text: '<?php /* @escapeNotVerified */ echo __('Save') ?>',
+                    'attr': {'disabled':'disabled', 'data-action':'save-packages'},
+                    'class': 'action-primary _disabled',
+                    click: function () {
+                        packaging.confirmPackaging();
+                    }
+                }, {
+                    text: '<?php /* @escapeNotVerified */ echo __('Add Package') ?>',
+                    'attr': {'data-action':'add-packages'},
+                    'class': 'action-secondary',
+                    click: function () {
+                        packaging.newPackage();
+                    }
+                }
+            ]
+        });
+    });
+</script>
+<?php echo $block->getChildHtml('dhl_shipping_packaging_content') ?>
