@@ -335,6 +335,7 @@ class AppDataMapper implements AppDataMapperInterface
             'returnShipmentAccountNumber' => $returnBillingNumber,
             'pickupAccountNumber'         => $this->glConfig->getPickupAccountNumber($storeId),
             'distributionCenter'          => $this->glConfig->getDistributionCenter($storeId),
+            'customerPrefix'              => $this->glConfig->getCustomerPrefix($storeId),
             'reference'                   => $request->getOrderShipment()->getOrder()->getIncrementId(),
             'returnShipmentReference'     => $request->getOrderShipment()->getOrder()->getIncrementId(),
             'shipmentDate'                => date("Y-m-d"),

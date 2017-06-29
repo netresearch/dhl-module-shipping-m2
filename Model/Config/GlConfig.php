@@ -175,4 +175,15 @@ class GlConfig implements GlConfigInterface
     {
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PAGE_LAYOUT, $store);
     }
+
+    /**
+     * Obtain merchants customer prefix
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getCustomerPrefix($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CUSTOMER_PREFIX, $store);
+    }
 }

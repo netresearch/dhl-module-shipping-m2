@@ -119,6 +119,15 @@
                     </depends>
                     <comment>Please enter the number you received from DHL.</comment>
                 </field>
+                <!-- 315 Unique Customer Prefix -->
+                <field id="gl_customer_prefix" type="text" translate="label" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Customer Prefix</label>
+                    <validate>validate-alphanum</validate>
+                    <depends>
+                        <field id="api_type">gla</field>
+                    </depends>
+                    <comment>Please enter the customer prefix you received from DHL.</comment>
+                </field>
                 <!-- 320 Distribution Center -->
                 <field id="gl_distribution_center" type="text" translate="label" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Distribution Center</label>

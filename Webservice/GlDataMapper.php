@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Webservice;
 
 use \Dhl\Shipping\Api\Data\Webservice\RequestType;
@@ -79,7 +80,8 @@ class GlDataMapper implements GlDataMapperInterface
         ShipmentDetails\ShipmentDetailsInterface $shipmentDetails,
         PackageInterface $package,
         $sequenceNumber
-    ) {
+    )
+    {
         // no weight conversions for GLAPI but unit mapping
         $currencyCode = $package->getDeclaredValue()->getCurrencyCode();
         $weightUom = $package->getWeight()->getUnitOfMeasurement();
@@ -94,7 +96,7 @@ class GlDataMapper implements GlDataMapperInterface
         $packageDetailsType = new PackageDetailsRequestType(
             $package->getDeclaredValue()->getCurrencyCode(),
             $shipmentDetails->getProduct(),
-            $sequenceNumber,
+            $this->getPackageId($shipmentDetails, $sequenceNumber),
             $package->getWeight()->getValue($package->getWeight()->getUnitOfMeasurement()),
             $weightUom,
             null,
@@ -206,7 +208,7 @@ class GlDataMapper implements GlDataMapperInterface
                 $returnReceiverType,
                 $customsDetailsType
             );
-            $packageTypes[]= $packageType;
+            $packageTypes[] = $packageType;
         }
 
         $shipmentType = new ShipmentRequestType(
@@ -216,5 +218,24 @@ class GlDataMapper implements GlDataMapperInterface
         );
 
         return $shipmentType;
+    }
+
+    /**
+     * Generate unique packageId
+     *
+     * @param ShipmentDetails\ShipmentDetailsInterface $shipmentDetails
+     * @param $sequenceNumber
+     * @return string
+     */
+    private function getPackageId(ShipmentDetails\ShipmentDetailsInterface $shipmentDetails, $sequenceNumber)
+    {
+        $reducedTimeStamp = time() - 946684800; // time since 2001
+        $uniquePackageId = sprintf(
+            '%s-%s-%s',
+            $shipmentDetails->getCustomerPrefix(),
+            $sequenceNumber,
+            $reducedTimeStamp
+        );
+        return $uniquePackageId;
     }
 }
