@@ -120,7 +120,7 @@
                     <comment>Please enter the number you received from DHL.</comment>
                 </field>
                 <!-- 315 Unique Customer Prefix -->
-                <field id="gl_customer_prefix" type="text" translate="label" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="gl_customer_prefix" type="text" translate="label" sortOrder="315" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Customer Prefix</label>
                     <validate>required-entry validate-alphanum validate-length maximum-length-5</validate>
                     <depends>
@@ -480,6 +480,40 @@
                 <field id="bcs_bankdata_account_reference" translate="label" type="text" sortOrder="870" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Account Reference to Customer Profile</label>
                     <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+
+                <!-- 900 Automatic shipment creation -->
+                <field id="fields_bank_data" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Automatic Shipment creation</label>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+
+                <!-- 910 Cron Job -->
+                <field id="cron_enabled" translate="label" type="select" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable automatic shipment creation.</comment>
+                </field>
+
+                <!-- 920 Cron Order Status -->
+                <field id="cron_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allowed Order Statuses</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <comment>Select the order statuses that allow automatic shipment creation.</comment>
+                    <depends>
+                        <field id="cron_enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- 930 Cron Services -->
+                <field id="cron_services" translate="label" type="multiselect" sortOrder="930" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Service Selection</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service</source_model>
+                    <comment>Select the services that should be enabled for automatic shipment creation.</comment>
+                    <depends>
+                        <field id="cron_enabled">1</field>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>

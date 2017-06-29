@@ -51,6 +51,10 @@ class ModuleConfig implements ModuleConfigInterface
     const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
     const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
 
+    const CONFIG_XML_PATH_CRON_ENABLED = 'carriers/dhlshipping/cron_enabled';
+    const CONFIG_XML_PATH_CRON_ORDER_STATUS = 'carriers/dhlshipping/cron_order_status';
+    const CONFIG_XML_PATH_CRON_SERVICES = 'carriers/dhlshipping/cron_services';
+
     /**
      * @var ConfigAccessorInterface
      */
@@ -253,11 +257,45 @@ class ModuleConfig implements ModuleConfigInterface
     public function isCrossBorderRoute(
         $destinationCountryId,
         $storeId = null
-    ) {
+    )
+    {
         return $this->routeConfig->isCrossBorderRoute(
             $this->getShipperCountry($storeId),
             $destinationCountryId,
             $this->getEuCountries($storeId)
         );
+    }
+
+    /**
+     * Check if automatic shipment creation is enabled for store
+     *
+     * @param null $store
+     * @return bool
+     */
+    public function isCronEnabled($store = null)
+    {
+        return (bool) $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ENABLED, $store);
+    }
+
+    /**
+     * Get allowed order statuses for automatic shipment creation
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getCronOrderStatuses($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ORDER_STATUS, $store);
+    }
+
+    /**
+     * Get preselected services for automatic shipping creation
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getCronServices($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_SERVICES, $store);
     }
 }
