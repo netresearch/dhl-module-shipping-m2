@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Serialized;
 
 use \Magento\Config\Model\Config\Backend\Serialized\ArraySerialized as BaseArraySerialized;
@@ -49,7 +50,11 @@ class ArraySerialized extends BaseArraySerialized implements ProcessorInterface
      */
     public function processValue($value)
     {
-        return unserialize($value);
+        $result = json_decode($value);
+        if ($result === null) {
+            $result = unserialize($value);
+        }
+        return $result;
     }
 
     /**
@@ -61,7 +66,7 @@ class ArraySerialized extends BaseArraySerialized implements ProcessorInterface
     {
         $oldValue = $this->_config->getValue(
             $this->getPath(),
-            $this->getScope() ? : ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
+            $this->getScope() ?: ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
             $this->getScopeCode()
         );
         if (is_array($oldValue)) {
