@@ -225,4 +225,34 @@ class ModuleConfig implements ModuleConfigInterface
     {
         return in_array($paymentMethod, $this->getCodPaymentMethods($store));
     }
+
+    /**
+     * Get OriginCountry from config.
+     *
+     * @param int $store
+     * @return mixed
+     */
+    public function getOriginCountry($store = null)
+    {
+        return $this->configAccessor->getConfigValue(ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, $store);
+    }
+
+    /**
+     * Get Eu Countries.
+     *
+     * @param $storeId
+     * @return array
+     */
+    public function getEuCountries($storeId)
+    {
+        $euCountries = explode(
+            ',',
+            $this->configAccessor->getConfigValue(
+                \Magento\Shipping\Helper\Carrier::XML_PATH_EU_COUNTRIES_LIST,
+                $storeId
+            )
+        );
+
+        return $euCountries;
+    }
 }

@@ -129,4 +129,12 @@ interface ModuleConfigInterface
      * @return bool
      */
     public function isCodPaymentMethod($paymentMethod, $store = null);
+
+    /**
+     * Get origin country from config.
+     *
+     * @param int $store
+     * @return mixed
+     */
+    public function getOriginCountry($store = null);
 }
