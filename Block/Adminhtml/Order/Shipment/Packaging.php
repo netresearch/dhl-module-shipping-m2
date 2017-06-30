@@ -25,6 +25,15 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
+use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Api\Util\ShippingRoutesInterface;
+use \Magento\Backend\Block\Template\Context;
+use \Magento\Framework\Json\EncoderInterface;
+use \Magento\Framework\Json\DecoderInterface;
+use \Magento\Shipping\Model\Carrier\Source\GenericInterface;
+use \Magento\Framework\Registry;
+use \Magento\Shipping\Model\CarrierFactory;
+
 /**
  * Packaging
  *
@@ -37,39 +46,55 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
 {
     /**
-     * @var \Magento\Framework\Json\DecoderInterface
+     * @var DecoderInterface
      */
-    private $jsonDecoder;
+    private $_jsonDecoder;
+
+    /** @var  ShippingRoutesInterface */
+    private $shippingRoutes;
+
+    /** @var  ModuleConfigInterface */
+    private $moduleConfig;
 
     /**
      * Packaging constructor.
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
-     * @param \Magento\Framework\Json\DecoderInterface $jsonDecoder
-     * @param \Magento\Shipping\Model\Carrier\Source\GenericInterface $sourceSizeModel
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Shipping\Model\CarrierFactory $carrierFactory
+     * @param Context $context
+     * @param EncoderInterface $jsonEncoder
+     * @param DecoderInterface $jsonDecoder
+     * @param GenericInterface $sourceSizeModel
+     * @param Registry $coreRegistry
+     * @param CarrierFactory $carrierFactory
      * @param array $data
+     * @param ShippingRoutesInterface $shippingRoutes
+     * @param ModuleConfigInterface $moduleConfig
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Json\EncoderInterface $jsonEncoder,
-        \Magento\Framework\Json\DecoderInterface $jsonDecoder,
-        \Magento\Shipping\Model\Carrier\Source\GenericInterface $sourceSizeModel,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Shipping\Model\CarrierFactory $carrierFactory,
-        array $data = []
+        Context $context,
+        EncoderInterface $jsonEncoder,
+        DecoderInterface $jsonDecoder,
+        GenericInterface $sourceSizeModel,
+        Registry $coreRegistry,
+        CarrierFactory $carrierFactory,
+        array $data = [],
+        ModuleConfigInterface $moduleConfig,
+        ShippingRoutesInterface $shippingRoutes
     ) {
+        $this->shippingRoutes = $shippingRoutes;
         $this->_jsonDecoder = $jsonDecoder;
+        $this->moduleConfig = $moduleConfig;
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
 
-//    /**
-//     * @return string
-//     */
-//    public function getConfigDataJson()
-//    {
-//        return $this->jsonDecoder->decode(parent::getConfigDataJson());
-//    }
+    /**
+     * @return bool
+     */
+    public function displayCustomsValue()
+    {
+        $originCountryId = $this->moduleConfig->getOriginCountry($this->getShipment()->getStoreId());
+        $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
+        $euCountries     = $this->moduleConfig->getEuCountryList($this->getShipment()->getStoreId());
+
+        return $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
+    }
 
 }

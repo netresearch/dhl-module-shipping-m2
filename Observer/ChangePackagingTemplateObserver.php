@@ -26,7 +26,6 @@
 namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Model\Shipping\Carrier;
-use \Magento\Checkout\Model\Session as CheckoutSession;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
 
@@ -45,17 +44,11 @@ class ChangePackagingTemplateObserver implements ObserverInterface
     /**
      * @var \Magento\Framework\Registry
      */
-    private $registry;
+    private $coreRegistry;
 
-    /** @var  \Magento\Shipping\Helper\Carrier */
-    private $carrierHelper;
-
-    public function __construct(
-        \Magento\Framework\Registry $registry,
-        \Magento\Shipping\Helper\Carrier $carrierHelper
-    ) {
-        $this->carrierHelper = $carrierHelper;
-        $this->registry = $registry;
+    public function __construct(\Magento\Framework\Registry $registry)
+    {
+        $this->coreRegistry = $registry;
     }
 
     /**
@@ -68,15 +61,11 @@ class ChangePackagingTemplateObserver implements ObserverInterface
             && $block->getNameInLayout() === 'shipment_packaging'
         ) {
             /** @var \Magento\Sales\Model\Order\Shipment $currentShipment */
-            $currentShipment = $this->registry->registry('current_shipment');
+            $currentShipment = $this->coreRegistry->registry('current_shipment');
             /** @var \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order $order */
             $order = $currentShipment->getOrder();
             $shippingMethod = $order->getShippingMethod(true);
-            $recipientCountry = $order->getShippingAddress()->getCountryId();
-
-            if ($shippingMethod->getData('carrier_code') === Carrier::CODE
-                && $this->carrierHelper->isCountryInEU($recipientCountry)
-            ) {
+            if ($shippingMethod->getData('carrier_code') === Carrier::CODE) {
                 $block->setTemplate('Dhl_Shipping::order/packaging/popup.phtml');
             }
         }

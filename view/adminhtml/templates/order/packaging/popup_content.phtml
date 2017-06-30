@@ -202,9 +202,14 @@
                 </table>
             <?php endif; ?>
         </div>
+
+        <!--our child blocks go here -->
+        <?php if ($block->displayCustomsValue()):?>
             <div>
                 <?php echo $block->getChildHtml('dhl_shipment_packaging_export_documents') ?>
             </div>
+        <?php endif;?>
+
             <div class="admin__page-subsection" data-role="package-items">
                 <div class="grid_prepare admin__page-subsection">
             </div>
