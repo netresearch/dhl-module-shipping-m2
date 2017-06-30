@@ -36,6 +36,10 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
  */
 class Customs extends \Magento\Backend\Block\Template
 {
+    const BCS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_bcs.phtml';
+
+    const GL_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_gl.phtml';
+
     /**
      * @var \Magento\Framework\Registry
      */
@@ -65,15 +69,13 @@ class Customs extends \Magento\Backend\Block\Template
      */
     public function getTermsOfTrade()
     {
-//        $carrierTerms = Mage::getSingleton('dhl_versenden/shipping_carrier_versenden')->getCode('terms_of_trade');
 
-        $terms = array(
-            array('value' => '', 'label' => __('--Please Select--')),
-        );
-
-//        foreach ($carrierTerms as $carrierTerm) {
-//            $terms[]= array('value' => $carrierTerm, 'label' => $carrierTerm);
-//        }
+        $terms = [
+            [
+                'value' => '',
+                'label' => __('--Please Select--')
+            ]
+        ];
 
         return $terms;
     }
@@ -87,5 +89,10 @@ class Customs extends \Magento\Backend\Block\Template
     {
         $orderInfo = $this->getShipment()->getOrder();
         return $orderInfo->getBaseCurrency()->getCurrencyCode();
+    }
+
+    public function getTemplate()
+    {
+        return self::BCS_TEMPLATE;
     }
 }
