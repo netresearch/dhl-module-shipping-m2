@@ -485,7 +485,7 @@
                 </field>
 
                 <!-- 900 Automatic shipment creation -->
-                <field id="cron_configuration" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="cron_configuration" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Automatic Shipment creation</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
@@ -498,13 +498,10 @@
                 </field>
 
                 <!-- 920 Cron Order Status -->
-                <field id="cron_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="cron_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Allowed Order Statuses</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
                     <comment>Select the order statuses that allow automatic shipment creation.</comment>
-                    <depends>
-                        <field id="cron_enabled">1</field>
-                    </depends>
                 </field>
 
                 <!-- 930 Cron Services -->

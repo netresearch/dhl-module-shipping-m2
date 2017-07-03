@@ -24,7 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace DHL\Shipping\Cron;
+namespace Dhl\Shipping\Cron;
 
 use Dhl\Shipping\Api\Config\ModuleConfigInterface as Config;
 use Dhl\Shipping\Model\Shipping\Carrier;
@@ -81,13 +81,21 @@ class AutoCreate
         $this->storesConfig = $storesConfig;
     }
 
+    /**
+     * @return mixed[]
+     */
     public function run()
     {
         $orders = $this->orderRepository->getList($this->createSearchCriteria());
-        foreach ($orders as $order) {
+        $shippedOrders = [];
+        foreach ($orders->getItems() as $order) {
             // @TODO ship order
-            $order;
+            $shippedOrders[] = $order->getIncrementId();
         }
+        return [
+            'count' => $orders->getTotalCount(),
+            'items' => $shippedOrders
+        ];
     }
 
     /**
@@ -95,25 +103,61 @@ class AutoCreate
      */
     private function createSearchCriteria()
     {
+        $this->addOrderStatusFilter();
+        $this->addCarrierFilter();
+        $this->addStoreIdFilter();
+        return $this->searchCriteriaBuilder->create();
+    }
+
+    /**
+     * Restrict search to orders shipped with Dhl Shipping carrier
+     *
+     */
+    private function addCarrierFilter()
+    {
+        $this->searchCriteriaBuilder->addFilter(
+            'shipping_method',
+            Carrier::CODE . '_%',
+            'like'
+        );
+    }
+
+    /**
+     * Restrict search to orders to statuses defined in config
+     *
+     */
+    private function addOrderStatusFilter()
+    {
+        $this->searchCriteriaBuilder->addFilter(
+            'status',
+            $this->config->getCronOrderStatuses(),
+            'in'
+        );
+    }
+
+    /**
+     * Restrict search to stores that don't have autocreation disabled
+     */
+    private function addStoreIdFilter()
+    {
+        // find stores where autocreate is DISabled
         $inActiveStores = array_filter(
             $this->storesConfig->getStoresConfigByPath(Config::CONFIG_XML_PATH_CRON_ENABLED),
             function ($value) {
                 return !(bool)$value;
             }
         );
-        return $this->searchCriteriaBuilder
-            ->addFilter(
-                'shipping_method',
-                Carrier::CODE,
-                'like'
-            )->addFilter(
-                'state',
-                $this->config->getCronOrderStatuses(),
-                'in'
-            )->addFilter(
+        if (!empty($inActiveStores)) {
+            $this->searchCriteriaBuilder->addFilter(
                 'store_id',
                 array_keys($inActiveStores),
                 'not_in'
-            )->create();
+            );
+        }
+    }
+
+    private function addShipmentFilter()
+    {
+
     }
 }
