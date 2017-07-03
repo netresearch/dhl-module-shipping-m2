@@ -31,6 +31,15 @@ use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
 use \Magento\Framework\Registry;
 
+/**
+ * Grid
+ *
+ * @category Dhl
+ * @package  Dhl\Shipping
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 {
     const BCS_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_bcs.phtml';
