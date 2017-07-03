@@ -26,18 +26,18 @@
 
 namespace DHL\Shipping\Cron;
 
-use Magento\Framework\Api\Search\SearchCriteriaFactory;
-use Magento\Sales\Model\OrderRepository;
+use Dhl\Shipping\Api\Config\ModuleConfigInterface as Config;
+use Dhl\Shipping\Model\Shipping\Carrier;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Api\Data\OrderSearchResultInterfaceFactory;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
+use Magento\Store\Model\StoresConfig;
 
 class AutoCreate
 {
     /**
-     * @var SearchCriteriaFactory
-     */
-    private $searchCriteriaFactory;
-    /**
-     * @var OrderRepository
+     * @var OrderSearchResultInterfaceFactory
      */
     private $orderRepository;
     /**
@@ -46,31 +46,74 @@ class AutoCreate
     private $labelGenerator;
 
     /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+    /**
+     * @var Config
+     */
+    private $config;
+    /**
+     * @var StoresConfig
+     */
+    private $storesConfig;
+
+    /**
      * AutoCreate constructor.
      * @param LabelGenerator $labelGenerator
-     * @param OrderRepository $orderRepository
-     * @param SearchCriteriaFactory $searchCriteriaFactory
+     * @param OrderRepositoryInterface $orderRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param Config $config
+     * @param StoresConfig $storesConfig
+     * @internal param OrderRepositoryInterface $orderCollection
      */
     public function __construct(
         LabelGenerator $labelGenerator,
-        OrderRepository $orderRepository,
-        SearchCriteriaFactory $searchCriteriaFactory
+        OrderRepositoryInterface $orderRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        Config $config,
+        StoresConfig $storesConfig
     ) {
         $this->labelGenerator = $labelGenerator;
         $this->orderRepository = $orderRepository;
-        $this->searchCriteriaFactory = $searchCriteriaFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->config = $config;
+        $this->storesConfig = $storesConfig;
     }
 
     public function run()
     {
-        $this->orderRepository;
+        $orders = $this->orderRepository->getList($this->createSearchCriteria());
+        foreach ($orders as $order) {
+            // @TODO ship order
+            $order;
+        }
     }
 
+    /**
+     * @return \Magento\Framework\Api\SearchCriteria
+     */
     private function createSearchCriteria()
     {
-        $searchCriteria = $this->searchCriteriaFactory->create(
-            []
+        $inActiveStores = array_filter(
+            $this->storesConfig->getStoresConfigByPath(Config::CONFIG_XML_PATH_CRON_ENABLED),
+            function ($value) {
+                return !(bool)$value;
+            }
         );
+        return $this->searchCriteriaBuilder
+            ->addFilter(
+                'shipping_method',
+                Carrier::CODE,
+                'like'
+            )->addFilter(
+                'state',
+                $this->config->getCronOrderStatuses(),
+                'in'
+            )->addFilter(
+                'store_id',
+                array_keys($inActiveStores),
+                'not_in'
+            )->create();
     }
-
 }

@@ -24,6 +24,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Config;
 
 use Dhl\Shipping\Util\ShippingRoutesInterface;
@@ -40,20 +41,6 @@ use \Magento\Shipping\Model\Config as ShippingConfig;
  */
 class ModuleConfig implements ModuleConfigInterface
 {
-    const CONFIG_XML_PATH_TITLE = 'carriers/dhlshipping/title';
-
-    const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
-    const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlshipping/log_level';
-
-    const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
-
-    const CONFIG_XML_PATH_DHLMETHODS = 'carriers/dhlshipping/shipment_dhlmethods';
-    const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
-    const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
-
-    const CONFIG_XML_PATH_CRON_ENABLED = 'carriers/dhlshipping/cron_enabled';
-    const CONFIG_XML_PATH_CRON_ORDER_STATUS = 'carriers/dhlshipping/cron_order_status';
-    const CONFIG_XML_PATH_CRON_SERVICES = 'carriers/dhlshipping/cron_services';
 
     /**
      * @var ConfigAccessorInterface
@@ -73,7 +60,8 @@ class ModuleConfig implements ModuleConfigInterface
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         ShippingRoutesInterface $routeConfig
-    ) {
+    )
+    {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
     }
@@ -102,7 +90,7 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function isSandboxModeEnabled($store = null)
     {
-        return (bool) $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
+        return (bool)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
     }
 
     /**
@@ -274,7 +262,7 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function isCronEnabled($store = null)
     {
-        return (bool) $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ENABLED, $store);
+        return (bool)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ENABLED, $store);
     }
 
     /**
