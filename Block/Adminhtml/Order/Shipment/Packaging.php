@@ -48,7 +48,7 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
     /**
      * @var DecoderInterface
      */
-    private $_jsonDecoder;
+    private $jsonDecoder;
 
     /** @var  ShippingRoutesInterface */
     private $shippingRoutes;
@@ -75,12 +75,12 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         GenericInterface $sourceSizeModel,
         Registry $coreRegistry,
         CarrierFactory $carrierFactory,
-        array $data = [],
         ModuleConfigInterface $moduleConfig,
-        ShippingRoutesInterface $shippingRoutes
+        ShippingRoutesInterface $shippingRoutes,
+        array $data = []
     ) {
         $this->shippingRoutes = $shippingRoutes;
-        $this->_jsonDecoder = $jsonDecoder;
+        $this->jsonDecoder = $jsonDecoder;
         $this->moduleConfig = $moduleConfig;
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
