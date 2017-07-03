@@ -96,5 +96,4 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
 
         return $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
     }
-
 }
