@@ -36,6 +36,17 @@ namespace Dhl\Shipping\Model\Config;
  */
 interface ModuleConfigInterface
 {
+    const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlshipping/log_level';
+    const CONFIG_XML_PATH_DHLMETHODS = 'carriers/dhlshipping/shipment_dhlmethods';
+    const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
+    const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
+    const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
+    const CONFIG_XML_PATH_CRON_ORDER_STATUS = 'carriers/dhlshipping/cron_order_status';
+    const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
+    const CONFIG_XML_PATH_CRON_ENABLED = 'carriers/dhlshipping/cron_enabled';
+    const CONFIG_XML_PATH_TITLE = 'carriers/dhlshipping/title';
+    const CONFIG_XML_PATH_CRON_SERVICES = 'carriers/dhlshipping/cron_services';
+
     /**
      * Check if logging is enabled
      *
@@ -138,4 +149,28 @@ interface ModuleConfigInterface
      * @return bool
      */
     public function isCrossBorderRoute($destinationCountryId, $storeId = null);
+
+    /**
+     * Get preselected services for automatic shipping creation
+     *
+     * @param null $store
+     * @return string[]
+     */
+    public function getCronServices($store = null);
+
+    /**
+     * Get allowed order statuses for automatic shipment creation
+     *
+     * @param null $store
+     * @return string[]
+     */
+    public function getCronOrderStatuses($store = null);
+
+    /**
+     * Check if automatic shipment creation is enabled for store
+     *
+     * @param null $store
+     * @return bool
+     */
+    public function isCronEnabled($store = null);
 }
