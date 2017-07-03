@@ -42,11 +42,11 @@ use \Magento\Framework\Registry;
  */
 class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 {
-    const BCS_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_bcs.phtml';
+    const BCS_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_bcs.phtml';
 
-    const GL_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_gl.phtml';
+    const GL_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_gl.phtml';
 
-    const STANDART_TEMPLATE ='Magento_Shipping::order/packaging/grid.phtml';
+    const STANDARD_TEMPLATE ='Magento_Shipping::order/packaging/grid.phtml';
 
     /** @var  ShippingRoutesInterface */
     private $shippingRoutes;
@@ -84,14 +84,23 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         $bcsCountries    = ['DE','AT'];
 
         $isCrossBorder = $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
-        $usedTemplate  = self::STANDART_TEMPLATE;
+        $usedTemplate  = self::STANDARD_TEMPLATE;
 
         if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
-            $usedTemplate = self::BCS_TEMPLATE;
+            $usedTemplate = self::BCS_GRID_TEMPLATE;
         } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {
-            $usedTemplate = self::GL_TEMPLATE;
+            $usedTemplate = self::GL_GRID_TEMPLATE;
         }
 
         return $usedTemplate;
+    }
+
+    /**
+     * @param $storeId
+     * @return mixed
+     */
+    public function getCountryOfOrigin($storeId)
+    {
+        return $this->moduleConfig->getOriginCountry($storeId);
     }
 }

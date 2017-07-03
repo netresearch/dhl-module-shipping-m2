@@ -7,6 +7,7 @@
 // @codingStandardsIgnoreFile
 
 ?>
+<?php /**@var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging\Grid $block */ ?>
 <div class="grid">
     <p style="background-color: red ; font-size: 15px">BCS!</p>
     <?php $randomId = rand(); ?>
@@ -24,8 +25,8 @@
                             <label for="select-items-<?php /* @noEscape */ echo $randomId; ?>"></label>
                         </label>
                     </th>
-                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Product Name') ?></th>
-                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Customs Description') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Product Name ') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Country of Origin') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Tariff Number') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Weight') ?></th>
                     <th class="data-grid-th" <?php echo $block->displayCustomsValue() ? '' : 'style="display: none;"' ?>>
@@ -64,13 +65,9 @@
                         <?php /* @escapeNotVerified */ echo $item->getName(); ?>
                     </td>
 
-                    <td class="name">
-                        <input name="customs_description"
-                               type="text" title="<?php echo __('Customs Description') ?>"
-                               class="input-text required-entry validate-length maximum-length-256" maxlength="256"
-                               value="<?php echo $item->getName(); ?>" />
+                    <td>
+                        <?php /* @escapeNotVerified */ echo $block->getCountryOfOrigin($_order->getStoreId()); ?>
                     </td>
-
 
                     <td class="tariff-number">
                         <input name="customs_tariff_number"

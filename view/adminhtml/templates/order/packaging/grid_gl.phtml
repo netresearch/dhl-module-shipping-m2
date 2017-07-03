@@ -24,8 +24,8 @@
                             <label for="select-items-<?php /* @noEscape */ echo $randomId; ?>"></label>
                         </label>
                     </th>
-                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Product Name') ?></th>
-                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Customs Description') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Item Description') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Country of Origin') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Tariff Number') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Weight') ?></th>
                     <th class="data-grid-th" <?php echo $block->displayCustomsValue() ? '' : 'style="display: none;"' ?>>
@@ -60,10 +60,6 @@
                         </label>
                     </td>
 
-                    <td>
-                        <?php /* @escapeNotVerified */ echo $item->getName(); ?>
-                    </td>
-
                     <td class="name">
                         <input name="customs_description"
                                type="text" title="<?php echo __('Customs Description') ?>"
@@ -71,6 +67,10 @@
                                value="<?php echo $item->getName(); ?>" />
                     </td>
 
+
+                    <td>
+                        <?php /* @escapeNotVerified */ echo $block->getCountryOfOrigin($_order->getStoreId()); ?>
+                    </td>
 
                     <td class="tariff-number">
                         <input name="customs_tariff_number"
