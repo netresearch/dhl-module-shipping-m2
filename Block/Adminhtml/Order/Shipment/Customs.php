@@ -24,6 +24,8 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
+use Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
 
 /**
  * Customs
@@ -36,9 +38,15 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
  */
 class Customs extends \Magento\Backend\Block\Template
 {
-    const BCS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_bcs.phtml';
+    const BCS_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_bcs.phtml';
 
-    const GL_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_gl.phtml';
+    const GL_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_gl.phtml';
+
+    /** @var  ShippingRoutesInterface */
+    private $shippingRoutes;
+
+    /** @var  ModuleConfigInterface */
+    private $moduleConfig;
 
     /**
      * @var \Magento\Framework\Registry
@@ -48,8 +56,12 @@ class Customs extends \Magento\Backend\Block\Template
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magento\Backend\Block\Template\Context $context,
+        ModuleConfigInterface $moduleConfig,
+        ShippingRoutesInterface $shippingRoutes,
         array $data = []
     ) {
+        $this->shippingRoutes = $shippingRoutes;
+        $this->moduleConfig = $moduleConfig;
         $this->coreRegistry = $registry;
         parent::__construct($context, $data);
     }
@@ -91,8 +103,28 @@ class Customs extends \Magento\Backend\Block\Template
         return $orderInfo->getBaseCurrency()->getCurrencyCode();
     }
 
+    /**
+     * Return Template bases on origin country and crossborder shipping.
+     *
+     * @return string
+     */
     public function getTemplate()
     {
-        return self::BCS_TEMPLATE;
+
+        $originCountryId = $this->moduleConfig->getOriginCountry($this->getShipment()->getStoreId());
+        $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
+        $euCountries     = $this->moduleConfig->getEuCountryList($this->getShipment()->getStoreId());
+        $bcsCountries    = ['DE','AT'];
+
+        $isCrossBorder = $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
+        $usedTemplate  = '';
+
+        if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
+            $usedTemplate = self::BCS_CUSTOMS_TEMPLATE;
+        } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {
+            $usedTemplate = self::GL_CUSTOMS_TEMPLATE;
+        }
+
+        return $usedTemplate;
     }
 }
