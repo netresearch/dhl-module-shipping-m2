@@ -90,6 +90,8 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
      */
     public function displayCustomsValue()
     {
+        return true;
+
         $originCountryId = $this->moduleConfig->getOriginCountry($this->getShipment()->getStoreId());
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
         $euCountries     = $this->moduleConfig->getEuCountryList($this->getShipment()->getStoreId());
