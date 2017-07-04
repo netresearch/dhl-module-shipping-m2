@@ -25,7 +25,7 @@
  */
 ?>
 <?php /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
-<div id="packaging-dhlversenden-customs">
+<div data-name="dhl_shipping_package_info">
     <p style="background-color: red ; font-size: 15px">BCS</p>
     <div><?php echo __('Customs Declaration') ?></div>
     <table cellspacing="0" class="data">
@@ -43,7 +43,7 @@
         <tbody>
         <tr>
             <td>
-                <select id="customs_terms_of_trade" name="customs[terms_of_trade]"
+                <select data-module="dhl_shipping" data-name="terms_of_trade"
                         title="<?php echo __('Terms of Trade') ?>">
                     <?php foreach ($block->getTermsOfTrade() as $termInfo): ?>
                         <option value="<?php echo $termInfo['value'] ?>">
@@ -53,25 +53,25 @@
                 </select>
             </td>
             <td>
-                <input id="customs_additional_fee" name="customs[additional_fee]" type="text"
+                <input data-module="dhl_shipping" data-name="additional_fee" type="text"
                        title="" value="0"
                        class="input-text required-entry validate-number"/>
                 <span class="customs-value-currency">[<?php echo $block->getCustomValueCurrencyCode(); ?>]</span>
             </td>
             <td>
-                <input id="customs_place_of_commital" name="customs[place_of_commital]" type="text"
+                <input data-module="dhl_shipping" data-name="place_of_commital" type="text"
                        class="input-text required-entry validate-length maximum-length-35" maxlength="35" />
             </td>
             <td>
-                <input id="customs_permit_number" name="customs[permit_number]" type="text"
+                <input data-module="dhl_shipping" data-name="permit_number" type="text"
                        class="input-text validate-length maximum-length-10" maxlength="10" />
             </td>
             <td>
-                <input id="customs_attestation_number" name="customs[attestation_number]" type="text"
+                <input data-module="dhl_shipping" data-name="attestation_number" type="text"
                        class="input-text validate-length maximum-length-35" maxlength="35" />
             </td>
             <td>
-                <input id="customs_export_notification" name="customs[export_notification]" type="checkbox"
+                <input data-module="dhl_shipping" data-name="export_notification" type="checkbox"
                        class="input-text validate-length maximum-length-35" maxlength="35" />
             </td>
         </tr>

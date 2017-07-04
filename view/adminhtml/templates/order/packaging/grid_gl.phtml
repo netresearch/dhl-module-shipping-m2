@@ -61,7 +61,7 @@
                     </td>
 
                     <td class="name">
-                        <input name="customs_description"
+                        <input data-module="dhl_shipping" data-name="customs_item_description"
                                type="text" title="<?php echo __('Customs Description') ?>"
                                class="input-text required-entry validate-length maximum-length-256" maxlength="256"
                                value="<?php echo $item->getName(); ?>" />
@@ -69,11 +69,13 @@
 
 
                     <td>
+                        <span data-module="dhl_shipping" data-name="item_origin_country">
                         <?php /* @escapeNotVerified */ echo $block->getCountryOfOrigin($_order->getStoreId()); ?>
+                            </span>
                     </td>
 
-                    <td class="tariff-number">
-                        <input name="customs_tariff_number"
+                    <td>
+                        <input data-module="dhl_shipping" data-name="hs_code"
                                type="text" class="input-text required-entry validate-length maximum-length-10"
                                title="<?php echo __('Tariff Number') ?>" maxlength="10" />
                     </td>

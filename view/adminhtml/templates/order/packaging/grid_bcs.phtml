@@ -66,11 +66,13 @@
                     </td>
 
                     <td>
+                        <span data-module="dhl_shipping" data-name="item_origin_country">
                         <?php /* @escapeNotVerified */ echo $block->getCountryOfOrigin($_order->getStoreId()); ?>
+                            </span>
                     </td>
 
                     <td class="tariff-number">
-                        <input name="customs_tariff_number"
+                        <input data-module="dhl_shipping" data-name="tariff_number"
                                type="text" class="input-text required-entry validate-length maximum-length-10"
                                title="<?php echo __('Tariff Number') ?>" maxlength="10" />
                     </td>
