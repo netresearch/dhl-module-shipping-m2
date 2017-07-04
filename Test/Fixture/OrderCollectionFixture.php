@@ -193,7 +193,8 @@ final class OrderCollectionFixture
                                               'row_total_incl_tax' => $orderItemQty * $orderItemUnitPrice,
                                               'base_row_total_incl_tax' => $orderItemQty * $orderItemUnitPrice,
                                               'qty_ordered' => $productData['qty'],
-                                              'qty_shipped' => $productData['qty'],
+                                              'qty_shipped' => 0,
+                                              'qty_to_ship' => 0,
                                               'qty_refunded' => 0,
                                               'qty_canceled' => 0,
                                           ]
