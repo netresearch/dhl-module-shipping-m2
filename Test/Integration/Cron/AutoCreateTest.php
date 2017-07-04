@@ -22,7 +22,7 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Test\Integration\Model\Cron;
+namespace Dhl\Shipping\Test\Integration\Cron;
 
 use Dhl\Shipping\Api\Config\ModuleConfigInterface;
 use Dhl\Shipping\Cron\AutoCreate;
@@ -73,7 +73,13 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
 
         $this->moduleConfig = $this->getMockBuilder(ModuleConfig::class)
                                    ->disableOriginalConstructor()
-                                   ->setMethods(['getCronOrderStatuses'])
+                                   ->setMethods(
+                                       [
+                                           'getCronOrderStatuses',
+                                           'canProcessRoute',
+                                           'getDefaultProduct'
+                                       ]
+                                   )
                                    ->getMock();
 
         $this->storesConfig = $this->getMockBuilder(StoresConfig::class)
@@ -107,6 +113,14 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                )
                            );
 
+        $this->moduleConfig->expects($this->exactly(5))
+                           ->method('canProcessRoute')
+                           ->will($this->returnValue(true));
+
+        $this->moduleConfig->expects($this->exactly(5))
+                           ->method('getDefaultProduct')
+                           ->will($this->returnValue('foo'));
+
         $this->storesConfig->expects($this->once())
                            ->method('getStoresConfigByPath')
                            ->with(ModuleConfigInterface::CONFIG_XML_PATH_CRON_ENABLED)
@@ -128,7 +142,11 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(
             OrderCollectionFixture::getAutoCreateOrderIncrementIds(),
-            $result['items']
+            $result['orderIds']
+        );
+        $this->assertEquals(
+            count(OrderCollectionFixture::getAutoCreateOrderIncrementIds()),
+            count($result['shipments'])
         );
     }
 

@@ -29,9 +29,11 @@ namespace Dhl\Shipping\Cron;
 use Dhl\Shipping\Api\Config\ModuleConfigInterface as Config;
 use Dhl\Shipping\Model\Shipping\Carrier;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderSearchResultInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Shipping\Model\Shipping\LabelGenerator;
+use Magento\Sales\Model\Order;
+use Dhl\Shipping\Cron\AutoCreate\LabelGeneratorInterface;
 use Magento\Store\Model\StoresConfig;
 
 class AutoCreate
@@ -41,7 +43,7 @@ class AutoCreate
      */
     private $orderRepository;
     /**
-     * @var LabelGenerator
+     * @var LabelGeneratorInterface
      */
     private $labelGenerator;
 
@@ -59,8 +61,14 @@ class AutoCreate
     private $storesConfig;
 
     /**
+     * @var Order\ShipmentFactory
+     */
+    private $shipmentFactory;
+
+    /**
      * AutoCreate constructor.
-     * @param LabelGenerator $labelGenerator
+     * @param LabelGeneratorInterface $labelGenerator
+     * @param Order\ShipmentFactory $shipmentFactory
      * @param OrderRepositoryInterface $orderRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Config $config
@@ -68,13 +76,15 @@ class AutoCreate
      * @internal param OrderRepositoryInterface $orderCollection
      */
     public function __construct(
-        LabelGenerator $labelGenerator,
+        LabelGeneratorInterface $labelGenerator,
+        Order\ShipmentFactory $shipmentFactory,
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Config $config,
         StoresConfig $storesConfig
     ) {
         $this->labelGenerator = $labelGenerator;
+        $this->shipmentFactory = $shipmentFactory;
         $this->orderRepository = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->config = $config;
@@ -87,14 +97,30 @@ class AutoCreate
     public function run()
     {
         $orders = $this->orderRepository->getList($this->createSearchCriteria());
+        $shipments = [];
         $shippedOrders = [];
+        /** @var Order $order */
         foreach ($orders->getItems() as $order) {
-            // @TODO ship order
-            $shippedOrders[] = $order->getIncrementId();
+            $canProcessRoute = $this->config->canProcessRoute(
+                $order->getShippingAddress()
+                      ->getCountryId()
+            );
+
+            if (!$order->canShip() || !$canProcessRoute) {
+                continue;
+            }
+
+            try {
+                $shipments[] = $this->createAndSubmitShipment($order);
+                $shippedOrders[] = $order->getIncrementId();
+            } catch (LocalizedException $exception) {
+                // @TODO log exception
+            }
         }
         return [
             'count' => $orders->getTotalCount(),
-            'items' => $shippedOrders
+            'orderIds' => $shippedOrders,
+            'shipments' => $shipments
         ];
     }
 
@@ -156,8 +182,29 @@ class AutoCreate
         }
     }
 
-    private function addShipmentFilter()
+    /**
+     * @param $order
+     *
+     * @return Order\Shipment
+     */
+    private function createAndSubmitShipment($order)
     {
-
+        /** @var Order\Shipment $shipment */
+        $shipment = $this->shipmentFactory->create($order);
+        $shipment->addComment('Shipment automatically created by Dhl Shipping.');
+        $shipment->register();
+        $shipment->setPackages(
+            [
+                [
+                    'params' => [
+                        'container' => $this->config->getDefaultProduct($shipment->getStoreId()),
+                        'weight' => $shipment->getTotalWeight(),
+                    ],
+                    'items' => $shipment->getAllItems()
+                ]
+            ]
+        );
+        $this->labelGenerator->create($shipment);
+        return $shipment;
     }
 }
