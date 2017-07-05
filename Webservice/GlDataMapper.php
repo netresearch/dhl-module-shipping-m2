@@ -112,7 +112,7 @@ class GlDataMapper implements GlDataMapperInterface
             null,
             null,
             null,
-            null,
+            $shipmentDetails->getShipmentComment(),
             null,
             null,
             null
