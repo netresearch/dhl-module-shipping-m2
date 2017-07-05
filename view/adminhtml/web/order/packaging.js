@@ -36,12 +36,18 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                     };
 
                     // ******** customs package params are added here**************
+
                     this.dhlShipping.params[packageId] = {};
                     pack.select('div[data-name="dhl_shipping_package_info"] [data-module^=dhl_shipping]').each(function (element) {
                         var fieldName = element.dataset.name;
                         if(element.tagName == 'INPUT'){
                             this.dhlShipping.params[packageId][fieldName] = element.value;
                         }
+
+                        if(element.tagName == 'SELECT'){
+                            this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
+                        }
+
                     }.bind(this));
 
                     // ***** add customs package params end
@@ -84,10 +90,14 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                         this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[params]' + '[dimension_units]'] = packagesParams[packageId]['dimension_units'];
                         this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[params]' + '[content_type]'] = packagesParams[packageId]['content_type'];
                         this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[params]' + '[content_type_other]'] = packagesParams[packageId]['content_type_other'];
-                        // our customs params
+
+                        // **** our customs params ********
+
                         _.forEach(this.dhlShipping.params[packageId], function (value, key) {
                             this.paramsCreateLabelRequest['packages[' + packageId + '][params][customs][' + key + ']'] = value;
                         }.bind(this));
+
+                        // **** our customs params end ********
 
                         if ('undefined' != typeof packagesParams[packageId]['size']) {
                             this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[params]' + '[size]'] = packagesParams[packageId]['size'];
@@ -112,20 +122,10 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                                 this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[items]' + '[' + packedItemId + '][order_item_id]'] = package.defaultItemsOrderItemId[packedItemId];
 
                                 // ******** customs item params are added here**************
+
                                 _.forEach(this.dhlShipping.items[packedItemId], function (value, key) {
                                     this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[items]' + '[' + packedItemId + ']['+key+']'] = value;
                                 }.bind(this));
-                                // if ('undefined' != typeof this.packages[packageId]['items'][packedItemId]['hs_code']) {
-                                //     this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[items]' + '[' + packedItemId + '][hs_code]'] = this.packages[packageId]['items'][packedItemId]['hs_code']
-                                // }
-                                //
-                                // if ('undefined' != typeof this.packages[packageId]['items'][packedItemId]['item_origin_country']) {
-                                //     this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[items]' + '[' + packedItemId + '][item_origin_country]'] = this.packages[packageId]['items'][packedItemId]['item_origin_country']
-                                // }
-                                //
-                                // if ('undefined' != typeof this.packages[packageId]['items'][packedItemId]['item_description']) {
-                                //     this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[items]' + '[' + packedItemId + '][item_description]'] = this.packages[packageId]['items'][packedItemId]['item_description']
-                                // }
 
                                 //******** customs item params end **************
                             }
@@ -242,8 +242,10 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                                 var fieldName = element.dataset.name;
                                 if(element.tagName == 'INPUT'){
                                     this.dhlShipping.items[itemId][fieldName] = element.value;
-                                } else {
-                                    this.dhlShipping.items[itemId][fieldName] = element.innerText;
+                                }
+
+                                if (element.tagName == 'SELECT') {
+                                    this.dhlShipping.items[itemId][fieldName] = element.options[element.selectedIndex].value;
                                 }
                             }.bind(this));
 
