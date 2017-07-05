@@ -43,13 +43,11 @@
         <tbody>
         <tr>
             <td>
-                <select data-module="dhl_shipping" data-name="terms_of_trade"
-                        title="<?php echo __('Terms of Trade') ?>">
-                    <?php foreach ($block->getTermsOfTrade() as $termInfo): ?>
-                        <option value="<?php echo $termInfo['value'] ?>">
-                            <?php echo $termInfo['label']; ?>
-                        </option>
-                    <?php endforeach; ?>
+                <select data-module="dhl_shipping" data-name="terms_of_trade" title="<?php echo __('Terms of Trade') ?>">
+                    <option value="DDP">DDP</option>
+                    <option value="DXV">DXV</option>
+                    <option value="DDU">DDU</option>
+                    <option value="DDP">DDX</option>
                 </select>
             </td>
             <td>

@@ -29,6 +29,7 @@ use Dhl\Shipping\Api\Config\ModuleConfigInterface;
 use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
+use Magento\Catalog\Model\ProductFactory;
 use \Magento\Framework\Registry;
 
 /**
@@ -54,6 +55,13 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     /** @var  ModuleConfigInterface */
     private $moduleConfig;
 
+    /** @var  ProductFactory */
+    private $productFactory;
+    /**
+     * @var string[]
+     */
+    private $countriesOfManufacture = [];
+
     /**
      * Grid constructor.
      * @param Context $context
@@ -61,6 +69,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param Registry $registry
      * @param ModuleConfigInterface $moduleConfig
      * @param ShippingRoutesInterface $shippingRoutes
+     * @param ProductFactory $productFactory
      * @param array $data
      */
     public function __construct(
@@ -69,8 +78,10 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         Registry $registry,
         ModuleConfigInterface $moduleConfig,
         ShippingRoutesInterface $shippingRoutes,
+        ProductFactory $productFactory,
         array $data = []
     ) {
+        $this->productFactory   = $productFactory;
         $this->shippingRoutes = $shippingRoutes;
         $this->moduleConfig = $moduleConfig;
         parent::__construct($context, $shipmentItemFactory, $registry, $data);
@@ -98,11 +109,39 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     }
 
     /**
-     * @param $storeId
-     * @return mixed
+     * Obtain the given product's country of manufacture.
+     *
+     * @param int $productId
+     * @return string
      */
-    public function getCountryOfOrigin($storeId)
+    public function getCountryOfManufacture($productId)
     {
-        return $this->moduleConfig->getOriginCountry($storeId);
+        if (empty($this->countriesOfManufacture)) {
+            /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
+            $items = $this->getCollection();
+
+            $productIds = array_map(function (\Magento\Sales\Model\Order\Shipment\Item $item) {
+                return $item->getProductId();
+            }, $items);
+
+            /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
+            $productCollection = $this->productFactory->create()->getCollection();
+            $productCollection
+                ->addStoreFilter($this->getShipment()->getStoreId())
+                ->addFieldToFilter('entity_id', ['in' => $productIds])
+                ->addAttributeToSelect('country_of_manufacture', true);
+            ;
+
+            while ($product = $productCollection->fetchItem()) {
+                $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');
+            }
+        }
+
+        if (!isset($this->countriesOfManufacture[$productId])) {
+            // fallback to shipper country
+            return $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
+        }
+
+        return $this->countriesOfManufacture[$productId];
     }
 }
