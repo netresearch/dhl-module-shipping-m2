@@ -30,6 +30,7 @@ use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
 use Magento\Catalog\Model\ProductFactory;
+use \Magento\Directory\Model\ResourceModel\Country\Collection as CountryCollection;
 use \Magento\Framework\Registry;
 
 /**
@@ -57,6 +58,10 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     /** @var  ProductFactory */
     private $productFactory;
+
+    /** @var  CountryCollection */
+    private $countryCollection;
+
     /**
      * @var string[]
      */
@@ -79,8 +84,10 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         ModuleConfigInterface $moduleConfig,
         ShippingRoutesInterface $shippingRoutes,
         ProductFactory $productFactory,
+        CountryCollection $countryCollection,
         array $data = []
     ) {
+        $this->countryCollection = $countryCollection;
         $this->productFactory   = $productFactory;
         $this->shippingRoutes = $shippingRoutes;
         $this->moduleConfig = $moduleConfig;
@@ -97,7 +104,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         $isCrossBorder = $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
         $usedTemplate  = self::STANDARD_TEMPLATE;
 
-        return self::GL_GRID_TEMPLATE;
+        return self::BCS_GRID_TEMPLATE;
 
         if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::BCS_GRID_TEMPLATE;
@@ -143,5 +150,15 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         }
 
         return $this->countriesOfManufacture[$productId];
+    }
+
+    /**
+     * Get countries for select field.
+     *
+     * @return array
+     */
+    public function getCountries()
+    {
+        return $this->countryCollection->toOptionArray();
     }
 }

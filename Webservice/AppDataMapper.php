@@ -510,7 +510,9 @@ class AppDataMapper implements AppDataMapperInterface
             'permitNumber'                 => '',
             'attestationNumber'            => '',
             'isWithElectronicExportNtfctn' => false,
-            'positions'                    => [],
+            'positions'                    => [
+                // create ExportItems here
+            ],
         ]);
 
         return $customsDetails;
