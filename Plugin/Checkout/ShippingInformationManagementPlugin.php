@@ -25,10 +25,10 @@
  */
 namespace Dhl\Shipping\Plugin\Checkout;
 
-use Dhl\Shipping\Api\Data\ShippingInfo\InfoInterface;
+use Dhl\Shipping\Webservice\ShippingInfo\InfoInterface;
 use \Dhl\Shipping\Webservice\ShippingInfo\Serializer;
-use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
-use \Dhl\Shipping\Api\Util\StreetSplitterInterface;
+use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory;
 use \Magento\Checkout\Api\Data\ShippingInformationInterface;
 use \Magento\Checkout\Model\ShippingInformationManagement;

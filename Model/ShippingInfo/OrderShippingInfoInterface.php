@@ -18,39 +18,22 @@
  *
  * @category  Dhl
  * @package   Dhl\Shipping
- * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Api\Config;
+namespace Dhl\Shipping\Model\ShippingInfo;
 
 /**
- * ConfigAccessorInterface
+ * DHL Shipping Info, solely for metadata pool…
  *
  * @category Dhl
  * @package  Dhl\Shipping
- * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface ConfigAccessorInterface
+interface OrderShippingInfoInterface extends ShippingInfoInterface
 {
-    /**
-     * Save config value to storage.
-     *
-     * @param string $path
-     * @param string $value
-     * @param mixed $scopeId
-     */
-    public function saveConfigValue($path, $value, $scopeId = 0);
-
-    /**
-     * Read config value from storage.
-     *
-     * @param $path
-     * @param int $scopeId
-     * @return mixed
-     */
-    public function getConfigValue($path, $scopeId = null);
 }

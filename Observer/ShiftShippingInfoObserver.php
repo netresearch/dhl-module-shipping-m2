@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Observer;
 
-use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
 use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;

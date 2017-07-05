@@ -25,8 +25,6 @@
  */
 namespace Dhl\Shipping\Model\ShippingInfo;
 
-use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
-use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
 use Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo as ShippingInfoResource;
 use \Magento\Framework\Exception\NoSuchEntityException;
 

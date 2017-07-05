@@ -26,7 +26,6 @@
  */
 namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
 use \Magento\Framework\App\Config\ConfigTypeInterface;
 use \Magento\Framework\App\Config\Storage\WriterInterface;
 use \Magento\Framework\App\Config\ScopeConfigInterface;

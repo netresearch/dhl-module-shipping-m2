@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Setup;
 
-use Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use Dhl\Shipping\Model\ShippingInfo\ShippingInfoInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;

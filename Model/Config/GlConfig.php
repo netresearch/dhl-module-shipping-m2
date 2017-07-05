@@ -26,9 +26,7 @@
  */
 namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
-use \Dhl\Shipping\Api\Config\GlConfigInterface;
-use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Config\GlConfigInterface;
 
 /**
  * GlApiConfig

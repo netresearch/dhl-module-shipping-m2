@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Util;
 
-use Dhl\Shipping\Api\Util\Serializer\SerializerInterface;
+use Dhl\Shipping\Util\Serializer\SerializerInterface;
 use Dhl\Shipping\Gla\Request\LabelRequest;
 use Dhl\Shipping\Gla\Request\Type\ConsigneeAddressRequestType;
 use Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
