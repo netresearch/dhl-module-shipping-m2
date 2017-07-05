@@ -103,7 +103,7 @@ class Customs extends \Magento\Backend\Block\Template
         $isCrossBorder = $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
         $usedTemplate  = '';
 
-        return self::GL_CUSTOMS_TEMPLATE;
+        return self::BCS_CUSTOMS_TEMPLATE;
 
         if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::BCS_CUSTOMS_TEMPLATE;

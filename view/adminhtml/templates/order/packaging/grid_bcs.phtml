@@ -25,12 +25,11 @@
                             <label for="select-items-<?php /* @noEscape */ echo $randomId; ?>"></label>
                         </label>
                     </th>
-                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Product Name ') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Item Description') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Country of Origin') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Tariff Number') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Weight') ?></th>
-                    <th class="data-grid-th" <?php echo $block->displayCustomsValue() ? '' : 'style="display: none;"' ?>>
-                        <?php /* @escapeNotVerified */ echo __('Customs Value') ?>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Customs Value') ?>
                     </th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Qty Ordered') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Qty') ?></th>
@@ -61,14 +60,23 @@
                         </label>
                     </td>
 
-                    <td>
-                        <?php /* @escapeNotVerified */ echo $item->getName(); ?>
+                    <td class="name">
+                        <input data-module="dhl_shipping" data-name="customs_item_description"
+                               type="text" title="<?php echo __('Customs Description') ?>"
+                               class="input-text required-entry validate-length maximum-length-256" maxlength="256"
+                               value="<?php echo $item->getName(); ?>" />
                     </td>
 
                     <td>
-                        <span data-module="dhl_shipping" data-name="item_origin_country">
-                        <?php /* @escapeNotVerified */ echo $block->getCountryOfManufacture($_orderItem->getProductId()); ?>
-                            </span>
+                        <select data-module="dhl_shipping" data-name="item_origin_country"
+                                title="<?php echo __('Country of Origin') ?>">
+                            <?php $selectedCountry = $block->getCountryOfManufacture($_orderItem->getProductId()); ?>
+                            <?php foreach ($block->getCountries() as $countryInfo): ?>
+                                <option
+                                    value="<?php echo $countryInfo['value'] ?>" <?php if ($countryInfo['value'] == $selectedCountry): echo 'selected="selected"'; endif; ?>>
+                                    <?php echo $countryInfo['label']; ?>
+                                </option>
+                            <?php endforeach; ?>
                     </td>
 
                     <td class="tariff-number">
@@ -81,14 +89,8 @@
                         <?php /* @escapeNotVerified */ echo $item->getWeight(); ?>
                     </td>
                     <?php
-                    if ($block->displayCustomsValue()) {
                         $customsValueDisplay = '';
                         $customsValueValidation = ' validate-zero-or-greater ';
-                    } else {
-                        $customsValueDisplay = ' style="display: none;" ';
-                        $customsValueValidation = '';
-                    }
-
                     ?>
                     <td <?php /* @escapeNotVerified */ echo $customsValueDisplay ?>>
                         <input type="text"
