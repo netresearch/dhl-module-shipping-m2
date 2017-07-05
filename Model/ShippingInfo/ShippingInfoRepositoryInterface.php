@@ -17,42 +17,52 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Shipping\Webservice
+ * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Api\Webservice;
-
-use \Dhl\Shipping\Api\Webservice\Client\HttpClientInterface;
+namespace Dhl\Shipping\Model\ShippingInfo;
 
 /**
- * LoggerInterface
+ * ShippingInfoRepositoryInterface
  *
  * @category Dhl
- * @package  Dhl\Shipping\Webservice
+ * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface WebserviceLoggerInterface
+interface ShippingInfoRepositoryInterface
 {
     /**
-     * @param HttpClientInterface $httpClient
-     * @param array               $context
+     * Save DHL Shipping Info. PK equals Address ID.
+     *
+     * @param ShippingInfoInterface $entity
+     * @return ShippingInfoInterface
      */
-    public function wsDebug(HttpClientInterface $httpClient, array $context = []);
+    public function save(ShippingInfoInterface $entity);
 
     /**
-     * @param HttpClientInterface $httpClient
-     * @param array               $context
+     * Retrieve DHL Shipping Info by Address id.
+     *
+     * @param int $addressId Order Address ID or Quote Address ID
+     * @return ShippingInfoInterface
      */
-    public function wsWarning(HttpClientInterface $httpClient, array $context = []);
+    public function getById($addressId);
 
     /**
-     * @param HttpClientInterface $httpClient
-     * @param array               $context
+     * Delete DHL Shipping Info
+     *
+     * @param ShippingInfoInterface $entity
+     * @return bool
      */
-    public function wsError(HttpClientInterface $httpClient, array $context = []);
+    public function delete(ShippingInfoInterface $entity);
+
+    /**
+     * @param $addressId
+     * @return \Dhl\Shipping\Webservice\ShippingInfo\AbstractInfo|null
+     */
+    public function getInfoData($addressId);
 }

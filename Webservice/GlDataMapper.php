@@ -26,13 +26,13 @@
 
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Data\Webservice\RequestType;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
-use \Dhl\Shipping\Api\Webservice\RequestMapper\GlDataMapperInterface;
+use \Dhl\Shipping\Webservice\RequestType;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
+use \Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface;
 use Dhl\Shipping\Gla\Request\Type\ConsigneeAddressRequestType;
 use Dhl\Shipping\Gla\Request\Type\CustomsDetailsRequestType;
 use \Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
@@ -185,7 +185,7 @@ class GlDataMapper implements GlDataMapperInterface
     /**
      * Create api specific request object from framework standardized object.
      *
-     * @param \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder
+     * @param RequestType\CreateShipment\ShipmentOrderInterfaceFactory $shipmentOrder
      * @return ShipmentRequestType The "GL API shipment" entity
      */
     public function mapShipmentOrder(RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder)

@@ -25,10 +25,10 @@
  */
 namespace Dhl\Shipping\Webservice\Adapter;
 
-use \Dhl\Shipping\Api\Data\Webservice\RequestType;
-use \Dhl\Shipping\Api\Data\Webservice\ResponseType;
-use \Dhl\Shipping\Api\Data\Webservice\ResponseType\Generic\ResponseStatusInterface;
-use Dhl\Shipping\Api\Webservice\Adapter\AdapterInterface;
+use \Dhl\Shipping\Webservice\RequestType;
+use \Dhl\Shipping\Webservice\ResponseType;
+use \Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatusInterface;
+use Dhl\Shipping\Webservice\Adapter\AdapterInterface;
 use Dhl\Shipping\Webservice\Exception\ApiAdapterException;
 use \Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
 use \Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatus;

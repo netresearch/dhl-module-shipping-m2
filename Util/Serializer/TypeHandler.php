@@ -26,7 +26,7 @@
 namespace Dhl\Shipping\Util\Serializer;
 
 use \Magento\Framework\ObjectManagerInterface;
-use \Dhl\Shipping\Api\Util\Serializer\Reflection\ReflectionInterface;
+use \Dhl\Shipping\Util\Serializer\Reflection\ReflectionInterface;
 use \Dhl\Shipping\Util\Serializer\Reflection\AbstractTypeHandler;
 
 /**

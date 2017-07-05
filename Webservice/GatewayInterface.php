@@ -23,9 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Api\Webservice;
+namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Data\Webservice\ResponseType;
+use \Dhl\Shipping\Webservice\ResponseType;
 use \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
 use \Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
 

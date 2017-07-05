@@ -27,7 +27,7 @@ namespace Dhl\Shipping\Observer;
 
 use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Dhl\Shipping\Webservice\ShippingInfo\Serializer;
-use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
 use \Magento\Directory\Model\CountryFactory;
 use \Magento\Framework\App\RequestInterface;
 use \Magento\Framework\Event\Observer;

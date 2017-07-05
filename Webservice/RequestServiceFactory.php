@@ -59,7 +59,7 @@ class RequestServiceFactory extends AbstractServiceFactory
      *
      * @param string $instanceCode
      * @param mixed[] $data
-     * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceInterface
+     * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceInterface
      */
     public function create($instanceCode, array $data = [])
     {

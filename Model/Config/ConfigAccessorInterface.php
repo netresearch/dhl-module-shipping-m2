@@ -18,46 +18,39 @@
  *
  * @category  Dhl
  * @package   Dhl\Shipping
- * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Api\Data;
+namespace Dhl\Shipping\Model\Config;
 
 /**
- * CheckoutInfoInterface
+ * ConfigAccessorInterface
  *
  * @category Dhl
  * @package  Dhl\Shipping
- * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface CheckoutInfoInterface
+interface ConfigAccessorInterface
 {
-    const SERVICES = 'services';
-    const POSTAL_FACILITY = 'postal_facility';
+    /**
+     * Save config value to storage.
+     *
+     * @param string $path
+     * @param string $value
+     * @param mixed $scopeId
+     */
+    public function saveConfigValue($path, $value, $scopeId = 0);
 
     /**
-     * @return string[]
+     * Read config value from storage.
+     *
+     * @param $path
+     * @param int $scopeId
+     * @return mixed
      */
-    public function getServices();
-
-    /**
-     * @param string[] $services
-     * @return self
-     */
-    public function setServices(array $services);
-
-    /**
-     * @return string
-     */
-    public function getPostalFacility();
-
-    /**
-     * @param string $postalFacility
-     * @return self
-     */
-    public function setPostalFacility($postalFacility);
+    public function getConfigValue($path, $scopeId = null);
 }

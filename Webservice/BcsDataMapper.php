@@ -25,14 +25,14 @@
  */
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\GetVersionRequestInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
-use \Dhl\Shipping\Api\Webservice\RequestMapper\BcsDataMapperInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
+use \Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
 use \Dhl\Shipping\Bcs as BcsApi;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 
@@ -329,7 +329,7 @@ class BcsDataMapper implements BcsDataMapperInterface
      * Create api specific request object from framework standardized object.
      * TODO(nr): shipment numbers are a simple type, no need to convert something?
      *
-     * @param \Dhl\Shipping\Api\Data\Webservice\RequestType\DeleteShipmentRequestInterface[] $numbers
+     * @param \Dhl\Shipping\Webservice\RequestType\DeleteShipmentRequestInterface[] $numbers
      * @return string[]
      */
     public function mapShipmentNumbers(array $numbers)

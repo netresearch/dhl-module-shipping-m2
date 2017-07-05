@@ -26,9 +26,9 @@
 
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use \Dhl\Shipping\Api\Webservice\Client\HttpClientInterface;
-use \Dhl\Shipping\Api\Webservice\WebserviceLoggerInterface;
+use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Webservice\Client\HttpClientInterface;
+use \Dhl\Shipping\Webservice\WebserviceLoggerInterface;
 use \Magento\Framework\Logger\Monolog;
 
 /**

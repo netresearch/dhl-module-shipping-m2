@@ -25,8 +25,6 @@
  */
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Webservice\UnitConverterInterface;
-
 /**
  * UnitConverter
  *

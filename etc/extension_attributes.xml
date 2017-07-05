@@ -25,9 +25,9 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
     <extension_attributes for="Magento\Quote\Api\Data\AddressInterface">
-        <attribute code="dhlshipping" type="\Dhl\Shipping\Api\Data\CheckoutInfoInterface"/>
+        <attribute code="dhlshipping" type="\Dhl\Shipping\Model\ShippingInfo\CheckoutInfoInterface"/>
     </extension_attributes>
     <extension_attributes for="Magento\Sales\Api\Data\OrderAddressInterface">
-        <attribute code="dhlshipping" type="\Dhl\Shipping\Api\Data\CheckoutInfoInterface"/>
+        <attribute code="dhlshipping" type="\Dhl\Shipping\Model\ShippingInfo\CheckoutInfoInterface"/>
     </extension_attributes>
 </config>

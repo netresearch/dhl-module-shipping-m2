@@ -25,8 +25,6 @@
  */
 namespace Dhl\Shipping\Model\ShippingInfo;
 
-use \Dhl\Shipping\Api\Data;
-use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
 use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\AbstractShippingInfo as ShippingInfoResource;
 use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Magento\Framework\Exception\CouldNotDeleteException;
@@ -52,11 +50,11 @@ abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryI
     /**
      * Save DHL Shipping Info. PK equals Address ID.
      *
-     * @param Data\ShippingInfoInterface $shippingInfo
-     * @return Data\ShippingInfoInterface
+     * @param ShippingInfoInterface $shippingInfo
+     * @return ShippingInfoInterface
      * @throws CouldNotSaveException
      */
-    public function save(Data\ShippingInfoInterface $shippingInfo)
+    public function save(ShippingInfoInterface $shippingInfo)
     {
         try {
             $this->shippingInfoResource->save($shippingInfo);
@@ -70,7 +68,7 @@ abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryI
      * Retrieve DHL Shipping Info by Address id.
      *
      * @param int $addressId Order Address ID or Quote Address ID
-     * @return Data\ShippingInfoInterface
+     * @return ShippingInfoInterface
      * @throws NoSuchEntityException
      */
     abstract public function getById($addressId);
@@ -78,11 +76,11 @@ abstract class AbstractShippingInfoRepository implements ShippingInfoRepositoryI
     /**
      * Delete DHL Shipping Info
      *
-     * @param Data\ShippingInfoInterface $shippingInfo
+     * @param ShippingInfoInterface $shippingInfo
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function delete(Data\ShippingInfoInterface $shippingInfo)
+    public function delete(ShippingInfoInterface $shippingInfo)
     {
         try {
             $this->shippingInfoResource->delete($shippingInfo);

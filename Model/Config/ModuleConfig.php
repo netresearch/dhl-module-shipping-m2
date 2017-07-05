@@ -26,10 +26,7 @@
  */
 namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
-use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
-use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
+use Dhl\Shipping\Util\ShippingRoutesInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 
 /**

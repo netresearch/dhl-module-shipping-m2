@@ -25,7 +25,6 @@
  */
 namespace Dhl\Shipping\Model\ShippingInfo;
 
-use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
 use \Magento\Framework\Model\AbstractModel;
 
 /**

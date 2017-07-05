@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Api\Data;
+namespace Dhl\Shipping\Model\ShippingInfo;
 
 /**
- * DHL Shipping Info, solely for metadata pool…
+ * CheckoutInfoInterface
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -34,6 +34,30 @@ namespace Dhl\Shipping\Api\Data;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface OrderShippingInfoInterface extends ShippingInfoInterface
+interface CheckoutInfoInterface
 {
+    const SERVICES = 'services';
+    const POSTAL_FACILITY = 'postal_facility';
+
+    /**
+     * @return string[]
+     */
+    public function getServices();
+
+    /**
+     * @param string[] $services
+     * @return self
+     */
+    public function setServices(array $services);
+
+    /**
+     * @return string
+     */
+    public function getPostalFacility();
+
+    /**
+     * @param string $postalFacility
+     * @return self
+     */
+    public function setPostalFacility($postalFacility);
 }
