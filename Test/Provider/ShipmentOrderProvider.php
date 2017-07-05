@@ -254,10 +254,12 @@ class ShipmentOrderProvider
             '456',
             '345',
             'USXXX1',
+            'PREFX',
             'ref',
             'shipRef',
             'shipmentDate',
-            $bankData
+            $bankData,
+            ''
         );
 
         return $shipmentDetails;
