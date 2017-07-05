@@ -70,7 +70,7 @@
 
                     <td>
                         <span data-module="dhl_shipping" data-name="item_origin_country">
-                        <?php /* @escapeNotVerified */ echo $block->getCountryOfOrigin($_order->getStoreId()); ?>
+                        <?php /* @escapeNotVerified */ echo $block->getCountryOfManufacture($_orderItem->getProductId()); ?>
                             </span>
                     </td>
 

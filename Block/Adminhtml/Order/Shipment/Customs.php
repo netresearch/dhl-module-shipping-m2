@@ -77,22 +77,6 @@ class Customs extends \Magento\Backend\Block\Template
     }
 
     /**
-     * @return mixed[]
-     */
-    public function getTermsOfTrade()
-    {
-
-        $terms = [
-            [
-                'value' => '',
-                'label' => __('--Please Select--')
-            ]
-        ];
-
-        return $terms;
-    }
-
-    /**
      * Get Currency Code for Custom Value
      *
      * @return string
