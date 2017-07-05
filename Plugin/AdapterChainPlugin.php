@@ -26,9 +26,9 @@
 
 namespace Dhl\Shipping\Plugin;
 
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Shipping\Api\Data\Webservice\ResponseType\CreateShipment\LabelInterface;
-use \Dhl\Shipping\Api\Webservice\Client\HttpClientInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Shipping\Webservice\ResponseType\CreateShipment\LabelInterface;
+use \Dhl\Shipping\Webservice\Client\HttpClientInterface;
 use \Dhl\Shipping\Webservice\Adapter\AdapterChain;
 use \Dhl\Shipping\Webservice\Exception\ApiCommunicationException;
 use \Dhl\Shipping\Webservice\Exception\ApiOperationException;

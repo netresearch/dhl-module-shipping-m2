@@ -28,8 +28,8 @@
     <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">
         <arguments>
             <argument name="adapters" xsi:type="array">
-                <item name="bcsAdapter" xsi:type="object">\Dhl\Shipping\Api\Webservice\Adapter\BcsAdapterInterface</item>
-                <item name="glAdapter" xsi:type="object">\Dhl\Shipping\Api\Webservice\Adapter\GlAdapterInterface</item>
+                <item name="bcsAdapter" xsi:type="object">\Dhl\Shipping\Webservice\Adapter\BcsAdapterInterface</item>
+                <item name="glAdapter" xsi:type="object">\Dhl\Shipping\Webservice\Adapter\GlAdapterInterface</item>
             </argument>
         </arguments>
     </type>
@@ -37,8 +37,8 @@
     <type name="Dhl\Shipping\Plugin\AdapterChainPlugin">
         <arguments>
             <argument name="httpClients" xsi:type="array">
-                <item name="soapClient" xsi:type="object">\Dhl\Shipping\Api\Webservice\Client\BcsSoapClientInterface</item>
-                <item name="restClient" xsi:type="object">\Dhl\Shipping\Api\Webservice\Client\GlRestClientInterface</item>
+                <item name="soapClient" xsi:type="object">\Dhl\Shipping\Webservice\Client\BcsSoapClientInterface</item>
+                <item name="restClient" xsi:type="object">\Dhl\Shipping\Webservice\Client\GlRestClientInterface</item>
             </argument>
         </arguments>
     </type>

@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-use Dhl\Shipping\Api\Util\ShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProductsInterface;
 use Magento\Framework\Option\ArrayInterface;
 
 /**

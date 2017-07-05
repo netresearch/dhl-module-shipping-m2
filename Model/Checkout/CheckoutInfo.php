@@ -27,7 +27,7 @@
 
 namespace Dhl\Shipping\Model\Checkout;
 
-use \Dhl\Shipping\Api\Data\CheckoutInfoInterface;
+use \Dhl\Shipping\Model\ShippingInfo\CheckoutInfoInterface;
 use \Magento\Framework\Model\AbstractModel;
 
 /**

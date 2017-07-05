@@ -25,10 +25,10 @@
  */
 namespace Dhl\Shipping\Model;
 
-use \Dhl\Shipping\Api\Config\ConfigAccessorInterface;
-use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use \Dhl\Shipping\Model\Config\ConfigAccessor;
-use \Dhl\Shipping\Model\Config\ModuleConfig;
+use Dhl\Shipping\Model\Config\ConfigAccessorInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ConfigAccessor;
+use Dhl\Shipping\Model\Config\ModuleConfig;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use \Magento\Shipping\Helper\Carrier as CarrierHelper;
 use \Magento\Shipping\Model\Config as ShippingConfig;

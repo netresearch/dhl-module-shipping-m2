@@ -25,7 +25,6 @@
  */
 namespace Dhl\Shipping\Model\ShippingInfo;
 
-use Dhl\Shipping\Api\Data\QuoteShippingInfoInterface;
 use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteShippingInfo as ShippingInfoResource;
 
 /**

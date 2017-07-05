@@ -26,36 +26,35 @@
 
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Config\BcsConfigInterface;
-use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use \Dhl\Shipping\Api\Config\GlConfigInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
-use \Dhl\Shipping\Api\ShippingInfoRepositoryInterface;
-use Dhl\Shipping\Api\Util\BcsShippingProductsInterface;
-use Dhl\Shipping\Api\Util\GlShippingProductsInterface;
-use Dhl\Shipping\Api\Util\ShippingProductsInterface;
-use \Dhl\Shipping\Api\Webservice\RequestValidatorInterface;
+use \Dhl\Shipping\Config\BcsConfigInterface;
+use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Config\GlConfigInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
+use \Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
+use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
+use Dhl\Shipping\Util\BcsShippingProductsInterface;
+use Dhl\Shipping\Util\GlShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProductsInterface;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
-use \Dhl\Shipping\Api\Util\StreetSplitterInterface;
-use \Dhl\Shipping\Api\Webservice\RequestMapper\AppDataMapperInterface;
+use \Dhl\Shipping\Util\StreetSplitterInterface;
+use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
 use Dhl\Shipping\Webservice\ShippingInfo\Info;
 
 /**
@@ -350,7 +349,7 @@ class AppDataMapper implements AppDataMapperInterface
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
-     * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface
+     * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface
      */
     private function getShipper(\Magento\Shipping\Model\Shipment\Request $request)
     {
@@ -385,7 +384,7 @@ class AppDataMapper implements AppDataMapperInterface
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
-     * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface
+     * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface
      */
     private function getReceiver(\Magento\Shipping\Model\Shipment\Request $request)
     {
@@ -440,7 +439,7 @@ class AppDataMapper implements AppDataMapperInterface
      *
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
-     * @return \Dhl\Shipping\Api\Data\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface
+     * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface
      */
     private function getReturnReceiver(\Magento\Shipping\Model\Shipment\Request $request)
     {

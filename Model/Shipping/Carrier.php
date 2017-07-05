@@ -25,7 +25,9 @@
  */
 namespace Dhl\Shipping\Model\Shipping;
 
-use Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Util\ShippingProductsInterface;
+use Dhl\Shipping\Webservice\GatewayInterface;
 use \Magento\Quote\Model\Quote\Address\RateRequest;
 use \Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
 use \Magento\Shipping\Model\Carrier\CarrierInterface;
@@ -54,12 +56,12 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     private $config;
 
     /**
-     * @var \Dhl\Shipping\Api\Util\ShippingProductsInterface
+     * @var ShippingProductsInterface
      */
     private $shippingProducts;
 
     /**
-     * @var \Dhl\Shipping\Api\Webservice\GatewayInterface
+     * @var GatewayInterface
      */
     private $webserviceGateway;
 
@@ -81,9 +83,9 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param \Magento\Directory\Helper\Data $directoryData
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
      * @param \Magento\Framework\DataObjectFactory $dataObjectFactory
-     * @param \Dhl\Shipping\Api\Config\ModuleConfigInterface $config
-     * @param \Dhl\Shipping\Api\Util\ShippingProductsInterface $shippingProducts
-     * @param \Dhl\Shipping\Api\Webservice\GatewayInterface $webserviceGateway
+     * @param ModuleConfigInterface $config
+     * @param ShippingProductsInterface $shippingProducts
+     * @param GatewayInterface $webserviceGateway
      * @param array $data
      */
     public function __construct(
@@ -103,9 +105,9 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         \Magento\Directory\Helper\Data $directoryData,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
-        \Dhl\Shipping\Api\Config\ModuleConfigInterface $config,
-        \Dhl\Shipping\Api\Util\ShippingProductsInterface $shippingProducts,
-        \Dhl\Shipping\Api\Webservice\GatewayInterface $webserviceGateway,
+        ModuleConfigInterface $config,
+        ShippingProductsInterface $shippingProducts,
+        GatewayInterface $webserviceGateway,
         array $data = []
     ) {
         $this->_code = self::CODE;

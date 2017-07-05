@@ -25,10 +25,10 @@
  */
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Webservice\GatewayInterface;
-use \Dhl\Shipping\Api\Webservice\RequestMapper;
-use \Dhl\Shipping\Api\Data\Webservice\RequestType;
-use \Dhl\Shipping\Api\Data\Webservice\ResponseType;
+use \Dhl\Shipping\Webservice\GatewayInterface;
+use \Dhl\Shipping\Webservice\RequestMapper;
+use \Dhl\Shipping\Webservice\RequestType;
+use \Dhl\Shipping\Webservice\ResponseType;
 use \Dhl\Shipping\Webservice\Adapter\AdapterChain;
 use \Dhl\Shipping\Webservice\Exception\ApiAdapterException;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;

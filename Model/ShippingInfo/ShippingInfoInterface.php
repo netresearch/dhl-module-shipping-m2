@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Api\Data;
+namespace Dhl\Shipping\Model\ShippingInfo;
 
 /**
- * DHL Shipping Info, solely for metadata pool…
+ * Entity for address extension attribute
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -34,6 +34,32 @@ namespace Dhl\Shipping\Api\Data;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface QuoteShippingInfoInterface extends ShippingInfoInterface
+interface ShippingInfoInterface
 {
+    const ADDRESS_ID = 'address_id';
+    const INFO = 'info';
+
+    /**
+     * @return int
+     */
+    public function getAddressId();
+
+    /**
+     * @param int $addressId
+     *
+     * @return self
+     */
+    public function setAddressId($addressId);
+
+    /**
+     * @return string
+     */
+    public function getInfo();
+
+    /**
+     * @param string $info
+     *
+     * @return self
+     */
+    public function setInfo($info);
 }

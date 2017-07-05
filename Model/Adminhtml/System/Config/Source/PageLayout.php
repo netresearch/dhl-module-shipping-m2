@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-use \Dhl\Shipping\Api\Config\GlConfigInterface;
+use \Dhl\Shipping\Config\GlConfigInterface;
 
 /**
  * PageLayout

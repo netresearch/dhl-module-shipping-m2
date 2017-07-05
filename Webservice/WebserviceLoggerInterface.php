@@ -17,52 +17,42 @@
  * PHP version 7
  *
  * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Webservice
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Api;
+namespace Dhl\Shipping\Webservice;
+
+use Dhl\Shipping\Webservice\Client\HttpClientInterface;
 
 /**
- * ShippingInfoRepositoryInterface
+ * LoggerInterface
  *
  * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Webservice
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface ShippingInfoRepositoryInterface
+interface WebserviceLoggerInterface
 {
     /**
-     * Save DHL Shipping Info. PK equals Address ID.
-     *
-     * @param Data\ShippingInfoInterface $entity
-     * @return Data\ShippingInfoInterface
+     * @param HttpClientInterface $httpClient
+     * @param array               $context
      */
-    public function save(Data\ShippingInfoInterface $entity);
+    public function wsDebug(HttpClientInterface $httpClient, array $context = []);
 
     /**
-     * Retrieve DHL Shipping Info by Address id.
-     *
-     * @param int $addressId Order Address ID or Quote Address ID
-     * @return Data\ShippingInfoInterface
+     * @param HttpClientInterface $httpClient
+     * @param array               $context
      */
-    public function getById($addressId);
+    public function wsWarning(HttpClientInterface $httpClient, array $context = []);
 
     /**
-     * Delete DHL Shipping Info
-     *
-     * @param Data\ShippingInfoInterface $entity
-     * @return bool
+     * @param HttpClientInterface $httpClient
+     * @param array               $context
      */
-    public function delete(Data\ShippingInfoInterface $entity);
-
-    /**
-     * @param $addressId
-     * @return \Dhl\Shipping\Webservice\ShippingInfo\AbstractInfo|null
-     */
-    public function getInfoData($addressId);
+    public function wsError(HttpClientInterface $httpClient, array $context = []);
 }
