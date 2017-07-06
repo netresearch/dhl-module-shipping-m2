@@ -25,8 +25,9 @@ DHL Versenden (Shipping) M2: Paketversand für DHL Geschäftskunden
 Das Modul *DHL Versenden (Shipping)* für Magento® 2 ermöglicht es Händlern mit einem
 DHL-Konto Sendungsaufträge anzulegen und DHL-Versandscheine (Paketaufkleber) abzurufen.
 
-Dazu kann wahlweise die *DHL Geschäftskundenversand API (Business Customer Shipping)* oder
-die *eCommerce Global Label API* genutzt werden.
+Es werden die Schnittstellen *DHL Geschäftskundenversand API (Business Customer Shipping)*
+und *eCommerce Global Label API* unterstützt. Die tatsächlich nutzbaren Schnittstellen
+hängen vom Absenderstandort ab.
 
 .. raw:: pdf
 
@@ -382,8 +383,8 @@ entfernt.
    :scale: 75 %
 
 Zur Stornierung des Versandauftrags nutzen Sie bitte den bekannten Zugang über die DHL
-Website (z.B. das Geschäftskundenportal). Das entsprechende Feature wird zukünftig im
-DHL-Modul nachgerüstet.
+Website (abhängig von der genutzten Anbindung, z.B. das Geschäftskundenportal). Ein
+entsprechendes Feature für den Geschäftskundenversand wird zukünftig im Modul nachgerüstet.
 
 .. admonition:: Hinweis
 
