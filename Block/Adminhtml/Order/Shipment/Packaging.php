@@ -26,10 +26,8 @@
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
 use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use \Dhl\Shipping\Api\Util\ShippingRoutesInterface;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Framework\Json\EncoderInterface;
-use \Magento\Framework\Json\DecoderInterface;
 use \Magento\Shipping\Model\Carrier\Source\GenericInterface;
 use \Magento\Framework\Registry;
 use \Magento\Shipping\Model\CarrierFactory;
@@ -45,14 +43,6 @@ use \Magento\Shipping\Model\CarrierFactory;
  */
 class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
 {
-    /**
-     * @var DecoderInterface
-     */
-    private $jsonDecoder;
-
-    /** @var  ShippingRoutesInterface */
-    private $shippingRoutes;
-
     /** @var  ModuleConfigInterface */
     private $moduleConfig;
 
@@ -60,27 +50,21 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
      * Packaging constructor.
      * @param Context $context
      * @param EncoderInterface $jsonEncoder
-     * @param DecoderInterface $jsonDecoder
      * @param GenericInterface $sourceSizeModel
      * @param Registry $coreRegistry
      * @param CarrierFactory $carrierFactory
      * @param array $data
-     * @param ShippingRoutesInterface $shippingRoutes
      * @param ModuleConfigInterface $moduleConfig
      */
     public function __construct(
         Context $context,
         EncoderInterface $jsonEncoder,
-        DecoderInterface $jsonDecoder,
         GenericInterface $sourceSizeModel,
         Registry $coreRegistry,
         CarrierFactory $carrierFactory,
         ModuleConfigInterface $moduleConfig,
-        ShippingRoutesInterface $shippingRoutes,
         array $data = []
     ) {
-        $this->shippingRoutes = $shippingRoutes;
-        $this->jsonDecoder = $jsonDecoder;
         $this->moduleConfig = $moduleConfig;
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
@@ -90,12 +74,8 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
      */
     public function displayCustomsValue()
     {
-        return true;
-
-        $originCountryId = $this->moduleConfig->getOriginCountry($this->getShipment()->getStoreId());
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
-        $euCountries     = $this->moduleConfig->getEuCountryList($this->getShipment()->getStoreId());
 
-        return $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
+        return $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
     }
 }
