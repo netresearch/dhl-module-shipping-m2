@@ -25,7 +25,6 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 use Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
 
 /**
  * Customs
@@ -42,9 +41,6 @@ class Customs extends \Magento\Backend\Block\Template
 
     const GL_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_gl.phtml';
 
-    /** @var  ShippingRoutesInterface */
-    private $shippingRoutes;
-
     /** @var  ModuleConfigInterface */
     private $moduleConfig;
 
@@ -57,10 +53,8 @@ class Customs extends \Magento\Backend\Block\Template
         \Magento\Framework\Registry $registry,
         \Magento\Backend\Block\Template\Context $context,
         ModuleConfigInterface $moduleConfig,
-        ShippingRoutesInterface $shippingRoutes,
         array $data = []
     ) {
-        $this->shippingRoutes = $shippingRoutes;
         $this->moduleConfig = $moduleConfig;
         $this->coreRegistry = $registry;
         parent::__construct($context, $data);
@@ -94,16 +88,13 @@ class Customs extends \Magento\Backend\Block\Template
      */
     public function getTemplate()
     {
-
-        $originCountryId = $this->moduleConfig->getOriginCountry($this->getShipment()->getStoreId());
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
-        $euCountries     = $this->moduleConfig->getEuCountryList($this->getShipment()->getStoreId());
-        $bcsCountries    = ['DE','AT'];
-
-        $isCrossBorder = $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
-        $usedTemplate  = '';
-
-        return self::BCS_CUSTOMS_TEMPLATE;
+        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
+        $bcsCountries = ['DE', 'AT'];
+        $usedTemplate = '';
+        $originCountryId = $this->moduleConfig->getShipperCountry(
+            $this->getShipment()->getStoreId()
+        );
 
         if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::BCS_CUSTOMS_TEMPLATE;
