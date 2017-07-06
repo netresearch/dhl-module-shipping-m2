@@ -131,10 +131,11 @@ interface ModuleConfigInterface
     public function isCodPaymentMethod($paymentMethod, $store = null);
 
     /**
-     * Get origin country from config.
+     * Checks if the route is crossing borders for given store configuration
      *
-     * @param int $store
-     * @return mixed
+     * @param int $destinationCountryId
+     * @param int|null $storeId
+     * @return bool
      */
-    public function getOriginCountry($store = null);
+    public function isCrossBorderRoute($destinationCountryId, $storeId = null);
 }

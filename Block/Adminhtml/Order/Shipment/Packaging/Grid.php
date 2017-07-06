@@ -26,7 +26,6 @@
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
 use Dhl\Shipping\Api\Config\ModuleConfigInterface;
-use Dhl\Shipping\Api\Util\ShippingRoutesInterface;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
 use Magento\Catalog\Model\ProductFactory;
@@ -50,9 +49,6 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     const STANDARD_TEMPLATE ='Magento_Shipping::order/packaging/grid.phtml';
 
-    /** @var  ShippingRoutesInterface */
-    private $shippingRoutes;
-
     /** @var  ModuleConfigInterface */
     private $moduleConfig;
 
@@ -73,7 +69,6 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param ItemFactory $shipmentItemFactory
      * @param Registry $registry
      * @param ModuleConfigInterface $moduleConfig
-     * @param ShippingRoutesInterface $shippingRoutes
      * @param ProductFactory $productFactory
      * @param array $data
      */
@@ -82,29 +77,24 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         ItemFactory $shipmentItemFactory,
         Registry $registry,
         ModuleConfigInterface $moduleConfig,
-        ShippingRoutesInterface $shippingRoutes,
         ProductFactory $productFactory,
         CountryCollection $countryCollection,
         array $data = []
     ) {
         $this->countryCollection = $countryCollection;
         $this->productFactory   = $productFactory;
-        $this->shippingRoutes = $shippingRoutes;
         $this->moduleConfig = $moduleConfig;
         parent::__construct($context, $shipmentItemFactory, $registry, $data);
     }
 
     public function getTemplate()
     {
-        $originCountryId = $this->moduleConfig->getOriginCountry($this->getShipment()->getStoreId());
+        $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
-        $euCountries     = $this->moduleConfig->getEuCountryList($this->getShipment()->getStoreId());
         $bcsCountries    = ['DE','AT'];
 
-        $isCrossBorder = $this->shippingRoutes->isCrossBorderRoute($originCountryId, $destCountryId, $euCountries);
+        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
         $usedTemplate  = self::STANDARD_TEMPLATE;
-
-        return self::BCS_GRID_TEMPLATE;
 
         if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::BCS_GRID_TEMPLATE;
@@ -127,17 +117,18 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
             /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
             $items = $this->getCollection();
 
-            $productIds = array_map(function (\Magento\Sales\Model\Order\Shipment\Item $item) {
-                return $item->getProductId();
-            }, $items);
+            $productIds = array_map(
+                function (\Magento\Sales\Model\Order\Shipment\Item $item) {
+                    return $item->getProductId();
+                },
+                $items
+            );
 
             /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
             $productCollection = $this->productFactory->create()->getCollection();
-            $productCollection
-                ->addStoreFilter($this->getShipment()->getStoreId())
+            $productCollection->addStoreFilter($this->getShipment()->getStoreId())
                 ->addFieldToFilter('entity_id', ['in' => $productIds])
                 ->addAttributeToSelect('country_of_manufacture', true);
-            ;
 
             while ($product = $productCollection->fetchItem()) {
                 $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');

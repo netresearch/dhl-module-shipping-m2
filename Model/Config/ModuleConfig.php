@@ -227,17 +227,6 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
-     * Get OriginCountry from config.
-     *
-     * @param int $store
-     * @return mixed
-     */
-    public function getOriginCountry($store = null)
-    {
-        return $this->configAccessor->getConfigValue(ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, $store);
-    }
-
-    /**
      * Get Eu Countries.
      *
      * @param $storeId
@@ -254,5 +243,21 @@ class ModuleConfig implements ModuleConfigInterface
         );
 
         return $euCountries;
+    }
+
+    /**
+     * @param int $destinationCountryId
+     * @param int | null $storeId
+     * @return bool
+     */
+    public function isCrossBorderRoute(
+        $destinationCountryId,
+        $storeId = null
+    ) {
+        return $this->routeConfig->isCrossBorderRoute(
+            $this->getShipperCountry($storeId),
+            $destinationCountryId,
+            $this->getEuCountries($storeId)
+        );
     }
 }
