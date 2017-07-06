@@ -22,9 +22,12 @@
 DHL Shipping (Versenden) M2 for DHL Business Customers
 ======================================================
 
-The module *DHL Shipping (Versenden)* for Magento® 2 enables merchants with a DHL Business 
-Account to create shipments via the DHL Business Customer API (webservice) and 
-retrieve shipping labels.
+The module *DHL Shipping (Versenden)* for Magento® 2 enables merchants with a
+DHL account to create shipments and retrieve shipping labels.
+
+The webservices *DHL Business Customer Shipping (Geschäftskundenversand) API*
+and *eCommerce Global Label API* are supported. Which of these webservices
+can be used depends on the shipping origin.
 
 .. raw:: pdf
 
@@ -61,7 +64,7 @@ Further information can also be found in the files *README.md* and *composer.jso
 the module package. If in doubt: the version information in the file *composer.json*
 supersedes any other information.
 
-See also https://github.com/netresearch/dhl-module-shipping-m2/tree/0.1.0
+See also https://github.com/netresearch/dhl-module-shipping-m2/tree/0.2.0
 
 To connect to the API (webservice), the PHP SOAP extension must be installed 
 and enabled on the web server.
@@ -73,12 +76,20 @@ Hints for using the module
 Shipping origin and currency
 ----------------------------
 
-The extension *DHL Shipping (Versenden)* for Magento® 2 is intended for merchants located
-in Germany or Austria.  Make sure the shipment origin address (your shop address) is correctly
-set in the three configuration sections mentioned in `Module configuration`_.
+When using the *DHL Business Customer Shipping (Geschäftskundenversand) API* shipments
+must originate from Germany or Austria. The sender address of the shop must be located
+in one of those countries.
 
-The base currency of the installation is assumed to be Euro. There is no conversion 
-from other currencies.
+When using the *eCommerce Global Label API* shipments can be sent from / to the following
+countries: USA, China (incl. Hong Kong), Singapore, Thailand, Malaysia. Please also note
+the information in section `International shipments`_ further down.
+
+In any case, make sure that the sender address information in the configuration sections
+mentioned in `Module configuration`_ is correct.
+
+The base currency is assumed to be the official currency of the sender country which is
+set in the Magento configuration. There is no automated conversion between currencies.
+
 
 
 Installation and configuration
@@ -123,13 +134,14 @@ and *Origin* are filled in completely:
   * City
   * Street Address
 
-Next, the configuration sections for the DHL module are explained.
+If you are shipping from multiple countries, you can configure different sender addresses
+on the Store or StoreView level.
 
 .. admonition:: Note
 
    The section *Shipping Methods → DHL* is a core part of Magento® 2 which connects
-   to the webservice of DHL USA only. These settings are not relevant for DHL Business
-   Shipping (Versenden).
+   to the webservice of DHL USA only. These settings are not relevant for the *DHL Shipping
+   (Versenden)* module.
 
 .. raw:: pdf
 
@@ -138,12 +150,17 @@ Next, the configuration sections for the DHL module are explained.
 General Settings
 ~~~~~~~~~~~~~~~~
 
-In the configuration section *General Settings* you can choose if you want to run 
-the module in *Sandbox Mode* to test the integration, or using the production mode.
+In the configuration section *General Settings* you configure which API connection should
+be used. This setting depends on your DHL account / contract. Choose between:
 
-You can also configure the logging. If the logging is enabled in the DHL module, the
-webservice messages will be recorded in the log files in ``var/log``. There will be
-*no separate* log file for the DHL module.
+* DHL Business Customer Shipping (Geschäftskundenversand), or
+* DHL eCommerce Global Label API
+
+You can choose if you want to run the module in *Sandbox Mode* to test the integration,
+or using the production mode.
+
+If the logging is enabled in the DHL module, the webservice messages will be recorded
+in the log files in ``var/log``. There will be *no separate* log file for the DHL module.
 
 You can choose between three log levels:
 
@@ -157,21 +174,36 @@ You can choose between three log levels:
    Make sure to clear or rotate the log files regularly. The log level *Debug* should
    only be set while resolving problems, because it can result in very large log files.
 
+Configuration options that are not described here are not relevant.
+
 Account Data
 ~~~~~~~~~~~~
 
-The section *Account Data* holds your access credentials for the DHL webservice 
-which are required for production mode. Customers with a DHL contract will get 
-this information directly from the DHL team (Vertrieb DHL Paket).
+The next configuration section holds your access credentials for the DHL webservice 
+which are required for production mode. You will get this information directly from
+DHL.
 
-Enter the following data:
+The input fields are only visible if the Sandbox Mode is disabled.
+
+When using *DHL Business Customer Shipping (Geschäftskundenversand)* enter the
+following data:
 
 * Username (German: Benutzername)
 * Signature (German: Passwort)
 * EKP (DHL account number, 10 digits)
-* Participation numbers (German: Teilnahmenummern, two digits each)
+* Participation numbers (German: Teilnahmenummern, two digits per number)
 
-The input fields are only visible if the Sandbox mode is disabled.
+When using the *eCommerce Global Label API* you don't need the above data. Enter the
+following data instead which you received from DHL:
+
+* Pickup Account Number (5 to 10 digits)
+* Distribution Center (6 digits)
+* Client ID
+* Client Secret
+
+.. raw:: pdf
+
+   PageBreak
 
 Shipment Orders
 ~~~~~~~~~~~~~~~
@@ -187,18 +219,25 @@ the DHL webservice is made.
   reject the shipment.
 * *Shipping Methods for DHL Versenden*: Select which shipping methods should be
   used for calculating shipping costs in the checkout. Only shipping methods that are
-  selected here will be handled via DHL Versenden (Business Customer Shipping) 
-  when creating shipments.
+  selected here will be handled by the DHL extension when creating shipments.
+* *Default product*: Set the DHL product which should be used by default for creating
+  shipments. Please note the information in section `Module configuration`_ regarding
+  the sender (origin) address.
 * *Cash On Delivery payment methods for DHL Versenden*: Select which payment methods
   should be treated as Cash On Delivery (COD) payment methods. This is necessary 
   to transmit the additional charge for Cash On Delivery to the DHL webservice 
-  and create Cash On Delivery labels.
+  and create Cash On Delivery labels. This service is only availabe when using the
+  *DHL Business Customer Shipping (Geschäftskundenversand)*.
 
 Contact Data
 ~~~~~~~~~~~~
 
-In the section *Contact Data* you configure the shipper (sender) data which should 
-be used when creating shipments with DHL.
+In the section *Contact Data* you configure which additional sender information
+should be transmitted to DHL. The sender information from the general Magento
+configuration will also be used.
+
+When using the *eCommerce Global Label API* no additional information can be entered
+here.
 
 Bank Data
 ~~~~~~~~~
@@ -206,6 +245,9 @@ Bank Data
 In the section *Bank Data* you configure the bank account to be used for Cash On 
 Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer 
 will be transferred to this bank account.
+
+This section is not visible when using the *eCommerce Global Label API* because it
+does not allow Cash On Delivery shipments.
 
 
 Workflow and features
@@ -220,7 +262,7 @@ process.
 Checkout
 ~~~~~~~~
 
-In the `module configuration`_ the shipping methods have been selected for which DHL 
+In the `Module configuration`_ the shipping methods have been selected for which DHL 
 shipments and labels should be created. If the customer now selects one of those 
 shipping methods in the checkout, the shipment can later be processed by DHL.
 
@@ -234,10 +276,6 @@ Admin Order
 When creating orders via the Admin Panel, the Cash On Delivery payment methods
 will be disabled if Cash On Delivery is not  available for the delivery address
 (same behaviour as in the checkout).
-
-.. raw:: pdf
-
-   PageBreak
 
 Creating a shipment
 -------------------
@@ -261,22 +299,25 @@ You will get to the page *New shipment for order*. Activate the checkbox
 .. image:: images/en/button_submit_shipment.png
    :scale: 75 %
 
-Now a popup window for selecting the articles in the package will be opened. Click 
+Now a popup window for selecting the articles in the package will be opened. The
+default product from the section `Shipment Orders`_ will be pre-selected. Click 
 the button *Add products*, select the products, and confirm by clicking 
 *Add selected product(s) to package*. The package dimensions are optional.
 
 .. admonition:: Note
 
    Splitting the products / items into multiple packages is currently not supported 
-   by the DHL webservice. As an alternative, you can create several shipments for 
-   one order (partial shipment).
+   by the DHL webservice. As an alternative, you can create several Magento® shipments
+   for one order (partial shipment) For each shipment you can then create a separate
+   DHL label.
 
 The button *OK* in the popup window is now enabled. When clicking it, the shipment 
 will be transmitted to DHL and (if the transmission was successful) a shipping 
 label will be retrieved.
 
 If there was an error, the message from the DHL webservice will be displayed at the top
-of the popup, and you can correct the data accordingly, see also `Troubleshooting`_.
+of the popup, and you can correct the data accordingly, see also `Troubleshooting`_. You
+might have to scroll up in the popup to see the error message.
 
 .. raw:: pdf
 
@@ -285,8 +326,13 @@ of the popup, and you can correct the data accordingly, see also `Troubleshootin
 International shipments
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Only shipments within the EU can be processed, because the extension cannot create the
-export documents (customs declaration).
+When using *DHL Business Customer Shipping (Geschäftskundenversand)* only shipments
+within the EU can be processed, because the extension cannot create the export documents
+(customs declaration). This feature will be implemented in a later module version.
+
+When using the *eCommerce Global Label API* you can only ship within the origin country
+(e.g. from China to China, but not from China to the USA). Also note the information
+regarding the allowed countries in the section `Shipping origin and currency`_ further up.
 
 Everything else is the same as described in the section `National shipments`_.
 
@@ -323,9 +369,9 @@ deletes the tracking number in Magento.
 .. image:: images/en/shipping_and_tracking.png
    :scale: 75 %
 
-To completely cancel the shipment, please use the DHL Business Customer Portal
-(German: Geschäftskundenportal). This feature will be implemented into the DHL module
-at a later time.
+To cancel the shipment, please use the usual way via the DHL website (depending on the
+API connection you are using, e.g. the DHL Business Customer Portal). This feature will
+be implemented for Business Customer Shipping into the DHL module at a later time.
 
 .. admonition:: Note
 
@@ -342,9 +388,11 @@ Troubleshooting
 During the transmission of shipments to DHL, errors can occur. These are often 
 caused by an invalid address or an invalid combination of additional services.
 
-When creating shipments manually, the error message will be directly visible.
-If the logging is enabled in the `Module Configuration`_, you can also 
-check the shipments in the log files.
+When creating shipments manually, the error message will be directly visible in
+the popup. You might have to scroll up inside the popup to see the message.
+
+If the logging is enabled in the `Module Configuration`_, you can also check the
+shipments in the log files.
 
 Erroneous shipment requests can be corrected as follows:
 
