@@ -52,6 +52,8 @@ use Dhl\Shipping\Util\BcsShippingProductsInterface;
 use Dhl\Shipping\Util\GlShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProductsInterface;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Shipping\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
@@ -159,6 +161,11 @@ class AppDataMapper implements AppDataMapperInterface
     private $packageFactory;
 
     /**
+     * @var PackageItemInterfaceFactory
+     */
+    private $packageItemFactory;
+
+    /**
      * @var Service\ServiceCollectionInterface
      */
     private $serviceCollection;
@@ -177,6 +184,9 @@ class AppDataMapper implements AppDataMapperInterface
      * @var RequestValidatorInterface
      */
     private $requestValidator;
+
+    /** @var  ExportPositionFactory */
+    private $exportPositionFactory;
 
     /**
      * AppDataMapper constructor.
@@ -226,7 +236,9 @@ class AppDataMapper implements AppDataMapperInterface
         PackageInterfaceFactory $packageFactory,
         Service\ServiceCollectionInterface $serviceCollection,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
-        RequestValidatorInterface $requestValidator
+        RequestValidatorInterface $requestValidator,
+        ExportPositionFactory $exportPositionFactory,
+        PackageItemInterfaceFactory $packageItemInterfaceFactory
     ) {
         $this->bcsConfig                    = $bcsConfig;
         $this->glConfig                     = $glConfig;
@@ -250,6 +262,8 @@ class AppDataMapper implements AppDataMapperInterface
         $this->serviceCollection            = $serviceCollection;
         $this->shipmentOrderFactory         = $shipmentOrderFactory;
         $this->requestValidator             = $requestValidator;
+        $this->exportPositionFactory        = $exportPositionFactory;
+        $this->packageItemFactory           = $packageItemInterfaceFactory;
     }
 
     /**
@@ -487,48 +501,35 @@ class AppDataMapper implements AppDataMapperInterface
         return $this->serviceCollection;
     }
 
-    /**
-     * TODO(nr): allow international shipping
-     *
-     * @param \Magento\Shipping\Model\Shipment\Request $request
-     *
-     * @return CustomsDetails\CustomsDetailsInterface
-     */
-    private function getCustomsDetails(\Magento\Shipping\Model\Shipment\Request $request)
-    {
-        $exportType = $this->exportTypeInterfaceFactory->create([
-            'type' => '',
-            'description' => '',
-        ]);
-
-        $customsDetails = $this->customsDetailsFactory->create([
-            'invoiceNumber'                => '???',
-            'exportType'                   => $exportType,
-            'termsOfTrade'                 => '',
-            'placeOfCommital'              => '',
-            'additionalFee'                => '',
-            'permitNumber'                 => '',
-            'attestationNumber'            => '',
-            'isWithElectronicExportNtfctn' => false,
-            'positions'                    => [
-                // create ExportItems here
-            ],
-        ]);
-
-        return $customsDetails;
-    }
 
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
-     * @return PackageInterface[]
+     * @return PackageInterface
      */
-    private function getPackages(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getPackage(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $packages    = [];
         $allPackages = $request->getData('packages');
         $packageId   = $request->getData('package_id');
         $package     = $allPackages[$packageId];
+
+        $packageItems = [];
+        foreach ($package['items'] as $item) {
+            /** @var PackageItem $packageItem */
+            $packageItem = $this->packageItemFactory->create([
+                'qty' => isset($item['qty']) ? $item['qty'] : null,
+                'customsValue' => isset($item['customs_value']) ? $item['customs_value'] : null,
+                'customsItemDescription' => isset($item['customs_item_description']) ? $item['customs_item_description'] : null,
+                'price' => isset($item['price']) ? $item['price'] : null,
+                'name' => isset($item['name']) ? $item['name'] : null,
+                'weight' => isset($item['weight']) ?  $item['weight'] : null,
+                'productId' => isset($item['product_id']) ? $item['product_id'] : null,
+                'orderItemId' => isset($item['order_item_id']) ? $item['order_item_id'] :  null,
+                'tariffNumber' => isset($item['tariff_number']) ? $item['tariff_number'] :  null,
+                'itemOriginCountry' => isset($item['item_origin_country']) ? $item['item_origin_country'] : null,
+            ]);
+            $packageItems[]= $packageItem;
+        }
 
         $weight = $this->packageWeightFactory->create([
             'value'             => $package['params']['weight'],
@@ -554,15 +555,25 @@ class AppDataMapper implements AppDataMapperInterface
             'currencyCode' => $request->getData('base_currency_code'),
         ]);
 
+        $packageParams = isset($package['params']) ? $package['params'] : [];
+        $packageCustomsParams = isset($packageParams['customs']) ? $packageParams['customs'] : [];
+
         //FIXME(nr): should declared value include tax?
-        $packages[] = $this->packageFactory->create([
+        $package = $this->packageFactory->create([
             'packageId'     => $packageId,
             'weight'        => $weight,
             'dimensions'    => $dimensions,
             'declaredValue' => $declaredValue,
+            'termsOfTrade'=> isset($packageCustomsParams['terms_of_trade']) ? $packageCustomsParams['terms_of_trade'] : '',
+            'additionalFee' => isset($packageCustomsParams['additional_fee']) ? $packageCustomsParams['additional_fee'] : '',
+            'placeOfCommital' => isset($packageCustomsParams['place_of_commital']) ? $packageCustomsParams['place_of_commital'] : '',
+            'permitNumber' => isset($packageCustomsParams['permit_number']) ? $packageCustomsParams['permit_number'] : '',
+            'attestationNumber' => isset($packageCustomsParams['attestation_number']) ? $packageCustomsParams['attestation_number'] : '',
+            'exportNotification' => isset($packageCustomsParams['export_notification']) ? : false,
+            'items'         => $packageItems,
         ]);
 
-        return $packages;
+        return $package;
     }
 
     /**
@@ -581,8 +592,7 @@ class AppDataMapper implements AppDataMapperInterface
         $receiver        = $this->getReceiver($request);
         $returnReceiver  = $this->getReturnReceiver($request);
         $services        = $this->getServices($request);
-        $customsDetails  = $this->getCustomsDetails($request);
-        $packages        = $this->getPackages($request);
+        $package         = $this->getPackage($request);
 
         $shipmentOrder = $this->shipmentOrderFactory->create([
             'sequenceNumber'  => $sequenceNumber,
@@ -591,8 +601,7 @@ class AppDataMapper implements AppDataMapperInterface
             'receiver'        => $receiver,
             'returnReceiver'  => $returnReceiver,
             'services'        => $services,
-            'customsDetails'  => $customsDetails,
-            'packages'        => $packages,
+            'packages'        => [$package],
         ]);
 
         $shipmentOrder = $this->requestValidator->validateShipmentOrder($shipmentOrder);

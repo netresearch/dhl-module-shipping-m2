@@ -143,7 +143,7 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
 
                                 // ******** customs item params are added here**************
 
-                                _.forEach(this.dhlShipping.items[packedItemId], function (value, key) {
+                                _.forEach(this.dhlShipping.items[packageId][packedItemId], function (value, key) {
                                     this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[items]' + '[' + packedItemId + ']['+key+']'] = value;
                                 }.bind(this));
 
@@ -240,6 +240,7 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                     packagePrepare.insert(new Element('div').addClassName('grid_prepare'));
                     packagePrepare.insert({after: packagePrepareGrid});
                     packItems = packagePrepareGrid.removeClassName('grid_prepare').addClassName('package_items');
+                    this.dhlShipping.items[packageId] = {};
                     packItems.select('.grid tbody tr').each(function (item) {
                         var itemId = item.select('[type="checkbox"]')[0].value;
                         var qtyValue = parseFloat(item.select('[name="qty"]')[0].value);
@@ -257,15 +258,16 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                             this.packages[packageId]['items'][itemId]['qty'] = qtyValue;
 
                             // ************ add our item params to package items****************
-                            this.dhlShipping.items[itemId] = {};
-                            packItems.select('[data-module^=dhl_shipping]').each(function (element) {
+
+                            this.dhlShipping.items[packageId][itemId] = {};
+                            item.select('[data-module^=dhl_shipping]').each(function (element) {
                                 var fieldName = element.dataset.name;
                                 if(element.tagName == 'INPUT'){
-                                    this.dhlShipping.items[itemId][fieldName] = element.value;
+                                    this.dhlShipping.items[packageId][itemId][fieldName] = element.value;
                                 }
 
                                 if (element.tagName == 'SELECT') {
-                                    this.dhlShipping.items[itemId][fieldName] = element.options[element.selectedIndex].value;
+                                    this.dhlShipping.items[packageId][itemId][fieldName] = element.options[element.selectedIndex].value;
                                 }
                             }.bind(this));
 
