@@ -23,7 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\ShippingInfo;
+namespace Dhl\Shipping\Model\ShippingInfo\Api\Data;
+
+use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoInterface;
 
 /**
  * DHL Shipping Info, solely for metadata pool…
