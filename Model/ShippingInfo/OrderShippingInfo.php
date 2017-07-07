@@ -36,7 +36,7 @@ use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderShippingInfo as Shipping
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class OrderShippingInfo extends AbstractShippingInfo implements OrderShippingInfoInterface
+class OrderShippingInfo extends AbstractShippingInfo implements Api\Data\OrderShippingInfoInterface
 {
     protected $_cacheTag = 'dhlshipping_order_info';
     protected $_eventPrefix = 'dhlshipping_order_info';

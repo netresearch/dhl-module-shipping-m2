@@ -47,6 +47,7 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDe
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
 use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
 use Dhl\Shipping\Util\BcsShippingProductsInterface;
 use Dhl\Shipping\Util\GlShippingProductsInterface;
@@ -190,7 +191,6 @@ class AppDataMapper implements AppDataMapperInterface
 
     /**
      * AppDataMapper constructor.
-     *
      * @param BcsConfigInterface $bcsConfig
      * @param GlConfigInterface $glConfig
      * @param ModuleConfigInterface $moduleConfig
@@ -207,12 +207,14 @@ class AppDataMapper implements AppDataMapperInterface
      * @param CustomsDetails\CustomsDetailsInterfaceFactory $customsDetailsFactory
      * @param CustomsDetails\ExportTypeInterfaceFactory $exportTypeInterfaceFactory
      * @param WeightInterfaceFactory $packageWeightFactory
-     * @param DimensionsInterfaceFactory $packageDimensionsFactory ,
+     * @param DimensionsInterfaceFactory $packageDimensionsFactory
      * @param MonetaryValueInterfaceFactory $packageValueFactory
      * @param PackageInterfaceFactory $packageFactory
      * @param Service\ServiceCollectionInterface $serviceCollection
      * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
      * @param RequestValidatorInterface $requestValidator
+     * @param ExportPositionFactory $exportPositionFactory
+     * @param PackageItemInterfaceFactory $packageItemInterfaceFactory
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
@@ -501,7 +503,6 @@ class AppDataMapper implements AppDataMapperInterface
         return $this->serviceCollection;
     }
 
-
     /**
      * @param \Magento\Shipping\Model\Shipment\Request $request
      *
@@ -515,18 +516,20 @@ class AppDataMapper implements AppDataMapperInterface
 
         $packageItems = [];
         foreach ($package['items'] as $item) {
+            $itemObject = new \Magento\Framework\DataObject();
+            $itemObject->setData($item);
             /** @var PackageItem $packageItem */
             $packageItem = $this->packageItemFactory->create([
-                'qty' => isset($item['qty']) ? $item['qty'] : null,
-                'customsValue' => isset($item['customs_value']) ? $item['customs_value'] : null,
-                'customsItemDescription' => isset($item['customs_item_description']) ? $item['customs_item_description'] : null,
-                'price' => isset($item['price']) ? $item['price'] : null,
-                'name' => isset($item['name']) ? $item['name'] : null,
-                'weight' => isset($item['weight']) ?  $item['weight'] : null,
-                'productId' => isset($item['product_id']) ? $item['product_id'] : null,
-                'orderItemId' => isset($item['order_item_id']) ? $item['order_item_id'] :  null,
-                'tariffNumber' => isset($item['tariff_number']) ? $item['tariff_number'] :  null,
-                'itemOriginCountry' => isset($item['item_origin_country']) ? $item['item_origin_country'] : null,
+                'qty' => $itemObject->getData('qty'),
+                'customsValue' => $itemObject->getData('customs_value'),
+                'customsItemDescription' => $itemObject->getData('customs_item_description'),
+                'price' => $itemObject->getData('price'),
+                'name' =>  $itemObject->getData('name'),
+                'weight' => $itemObject->getData('weight'),
+                'productId' => $itemObject->getData('product_id'),
+                'orderItemId' => $itemObject->getData('order_item_id'),
+                'tariffNumber' => $itemObject->getData('tariff_number'),
+                'itemOriginCountry' => $itemObject->getData('item_origin_country'),
             ]);
             $packageItems[]= $packageItem;
         }
@@ -555,22 +558,23 @@ class AppDataMapper implements AppDataMapperInterface
             'currencyCode' => $request->getData('base_currency_code'),
         ]);
 
-        $packageParams = isset($package['params']) ? $package['params'] : [];
-        $packageCustomsParams = isset($packageParams['customs']) ? $packageParams['customs'] : [];
+        $packageParams = isset($package['params']) ? $package['params'] : ['customs'];
+        $packageItemObject = new \Magento\Framework\DataObject();
+        $packageItemObject->setData($packageParams['customs']);
 
         //FIXME(nr): should declared value include tax?
         $package = $this->packageFactory->create([
-            'packageId'     => $packageId,
-            'weight'        => $weight,
-            'dimensions'    => $dimensions,
-            'declaredValue' => $declaredValue,
-            'termsOfTrade'=> isset($packageCustomsParams['terms_of_trade']) ? $packageCustomsParams['terms_of_trade'] : '',
-            'additionalFee' => isset($packageCustomsParams['additional_fee']) ? $packageCustomsParams['additional_fee'] : '',
-            'placeOfCommital' => isset($packageCustomsParams['place_of_commital']) ? $packageCustomsParams['place_of_commital'] : '',
-            'permitNumber' => isset($packageCustomsParams['permit_number']) ? $packageCustomsParams['permit_number'] : '',
-            'attestationNumber' => isset($packageCustomsParams['attestation_number']) ? $packageCustomsParams['attestation_number'] : '',
-            'exportNotification' => isset($packageCustomsParams['export_notification']) ? : false,
-            'items'         => $packageItems,
+            'packageId'          => $packageId,
+            'weight'             => $weight,
+            'dimensions'         => $dimensions,
+            'declaredValue'      => $declaredValue,
+            'termsOfTrade'       => $packageItemObject->getData('terms_of_trade'),
+            'additionalFee'      => $packageItemObject->getData('additional_fee'),
+            'placeOfCommital'    => $packageItemObject->getData('place_of_commital'),
+            'permitNumber'       => $packageItemObject->getData('permit_number'),
+            'attestationNumber'  => $packageItemObject->getData('attestation_number'),
+            'exportNotification' => $packageItemObject->getData('export_notification'),
+            'items'              => $packageItems,
         ]);
 
         return $package;

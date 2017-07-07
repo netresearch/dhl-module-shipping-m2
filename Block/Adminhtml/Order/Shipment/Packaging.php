@@ -74,8 +74,14 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
      */
     public function displayCustomsValue()
     {
+        return true;
+
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
 
         return $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
     }
+
+
+
+
 }
