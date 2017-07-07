@@ -33,8 +33,8 @@
     <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
 
     <!-- library preferences -->
-    <preference for="Dhl\Shipping\QuoteShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo" />
-    <preference for="Dhl\Shipping\OrderShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo" />
+    <preference for="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo" />
+    <preference for="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo" />
     <preference for="Dhl\Shipping\Webservice\ShippingInfo\InfoInterface" type="Dhl\Shipping\Webservice\ShippingInfo\Info"/>
 
     <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Dimensions" />
@@ -53,6 +53,7 @@
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\CustomsDetailsInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\CustomsDetails" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportTypeInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportType" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPosition" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem" />
 
     <preference for="Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseInterface" type="Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection" />
     <preference for="Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseInterface" type="Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection" />
