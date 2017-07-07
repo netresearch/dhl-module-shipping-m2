@@ -24,7 +24,7 @@
 
 namespace Dhl\Shipping\Test\Integration\Cron;
 
-use Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Cron\AutoCreate;
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Test\Fixture\OrderCollectionFixture;
