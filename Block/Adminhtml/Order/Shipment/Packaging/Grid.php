@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
-use Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
 use Magento\Catalog\Model\ProductFactory;

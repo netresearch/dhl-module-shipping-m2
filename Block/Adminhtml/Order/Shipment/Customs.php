@@ -24,7 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
-use Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
 /**
  * Customs

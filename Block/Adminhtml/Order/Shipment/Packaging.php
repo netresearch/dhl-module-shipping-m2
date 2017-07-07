@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
-use \Dhl\Shipping\Api\Config\ModuleConfigInterface;
+use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Framework\Json\EncoderInterface;
 use \Magento\Shipping\Model\Carrier\Source\GenericInterface;
