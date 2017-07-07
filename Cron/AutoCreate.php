@@ -26,7 +26,7 @@
 
 namespace Dhl\Shipping\Cron;
 
-use Dhl\Shipping\Api\Config\ModuleConfigInterface as Config;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface as Config;
 use Dhl\Shipping\Model\Shipping\Carrier;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
