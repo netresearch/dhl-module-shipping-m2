@@ -33,8 +33,8 @@
     <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
 
     <!-- library preferences -->
-    <preference for="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo" />
-    <preference for="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo" />
+    <preference for="Dhl\Shipping\Model\ShippingInfo\Api\Data\QuoteShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo" />
+    <preference for="Dhl\Shipping\Model\ShippingInfo\Api\Data\OrderShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo" />
     <preference for="Dhl\Shipping\Webservice\ShippingInfo\InfoInterface" type="Dhl\Shipping\Webservice\ShippingInfo\Info"/>
 
     <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Dimensions" />
@@ -160,7 +160,7 @@
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">
-                <item name="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoInterface" xsi:type="array">
+                <item name="Dhl\Shipping\Model\ShippingInfo\Api\Data\QuoteShippingInfoInterface" xsi:type="array">
                     <item name="entityTableName" xsi:type="string">dhlshipping_quote_address</item>
                     <item name="identifierField" xsi:type="string">address_id</item>
                 </item>
@@ -170,7 +170,7 @@
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">
-                <item name="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoInterface" xsi:type="array">
+                <item name="Dhl\Shipping\Model\ShippingInfo\Api\Data\OrderShippingInfoInterface" xsi:type="array">
                     <item name="entityTableName" xsi:type="string">dhlshipping_order_address</item>
                     <item name="identifierField" xsi:type="string">address_id</item>
                 </item>

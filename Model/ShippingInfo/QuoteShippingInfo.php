@@ -36,7 +36,7 @@ use \Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteShippingInfo as Shipping
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class QuoteShippingInfo extends AbstractShippingInfo implements QuoteShippingInfoInterface
+class QuoteShippingInfo extends AbstractShippingInfo implements Api\Data\QuoteShippingInfoInterface
 {
     protected $_cacheTag = 'dhlshipping_quote_info';
     protected $_eventPrefix = 'dhlshipping_quote_info';
