@@ -96,8 +96,6 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
         $usedTemplate  = self::STANDARD_TEMPLATE;
 
-        return self::BCS_GRID_TEMPLATE;
-
         if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::BCS_GRID_TEMPLATE;
         } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {
