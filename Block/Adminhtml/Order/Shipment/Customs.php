@@ -96,8 +96,6 @@ class Customs extends \Magento\Backend\Block\Template
             $this->getShipment()->getStoreId()
         );
 
-        return self::BCS_CUSTOMS_TEMPLATE;
-
         if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::BCS_CUSTOMS_TEMPLATE;
         } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {

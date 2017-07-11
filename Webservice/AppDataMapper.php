@@ -519,18 +519,38 @@ class AppDataMapper implements AppDataMapperInterface
             $itemObject = new \Magento\Framework\DataObject();
             $itemObject->setData($item);
             /** @var PackageItem $packageItem */
-            $packageItem = $this->packageItemFactory->create([
-                'qty' => $itemObject->getData('qty'),
-                'customsValue' => $itemObject->getData('customs_value'),
-                'customsItemDescription' => $itemObject->getData('customs_item_description'),
-                'price' => $itemObject->getData('price'),
-                'name' =>  $itemObject->getData('name'),
-                'weight' => $itemObject->getData('weight'),
-                'productId' => $itemObject->getData('product_id'),
-                'orderItemId' => $itemObject->getData('order_item_id'),
-                'tariffNumber' => $itemObject->getData('tariff_number'),
-                'itemOriginCountry' => $itemObject->getData('item_origin_country'),
-            ]);
+            $itemWeight = $this->packageWeightFactory->create(
+                [
+                    'value' => $itemObject->getData('weight'),
+                    'unitOfMeasurement' => $package['params']['weight_units'],
+                ]
+            );
+            $itemCustomsValue = $this->monetaryValueFactory->create(
+                [
+                    'value' => $itemObject->getData('customs_value'),
+                    'currencyCode' => $request->getData('base_currency_code')
+                ]
+            );
+            $itemPrice = $this->monetaryValueFactory->create(
+                [
+                    'value' => $itemObject->getData('price'),
+                    'currencyCode' => $request->getData('base_currency_code')
+                ]
+            );
+            $packageItem = $this->packageItemFactory->create(
+                [
+                    'qty' => $itemObject->getData('qty'),
+                    'customsValue' => $itemCustomsValue,
+                    'customsItemDescription' => $itemObject->getData('customs_item_description'),
+                    'price' => $itemPrice,
+                    'name' => $itemObject->getData('name'),
+                    'weight' => $itemWeight,
+                    'productId' => $itemObject->getData('product_id'),
+                    'orderItemId' => $itemObject->getData('order_item_id'),
+                    'tariffNumber' => $itemObject->getData('tariff_number'),
+                    'itemOriginCountry' => $itemObject->getData('item_origin_country'),
+                ]
+            );
             $packageItems[]= $packageItem;
         }
 
@@ -553,29 +573,40 @@ class AppDataMapper implements AppDataMapperInterface
         });
         $packageValue = number_format($packageValue / 1000, 2, '.', '');
 
+        //FIXME(nr): should declared value include tax?
         $declaredValue = $this->monetaryValueFactory->create([
             'value'        => $packageValue,
             'currencyCode' => $request->getData('base_currency_code'),
         ]);
 
         $packageParams = isset($package['params']) ? $package['params'] : ['customs'];
-        $packageItemObject = new \Magento\Framework\DataObject();
-        $packageItemObject->setData($packageParams['customs']);
+        $packageCustoms = new \Magento\Framework\DataObject();
+        $packageCustoms->setData($packageParams['customs']);
 
-        //FIXME(nr): should declared value include tax?
-        $package = $this->packageFactory->create([
-            'packageId'          => $packageId,
-            'weight'             => $weight,
-            'dimensions'         => $dimensions,
-            'declaredValue'      => $declaredValue,
-            'termsOfTrade'       => $packageItemObject->getData('terms_of_trade'),
-            'additionalFee'      => $packageItemObject->getData('additional_fee'),
-            'placeOfCommital'    => $packageItemObject->getData('place_of_commital'),
-            'permitNumber'       => $packageItemObject->getData('permit_number'),
-            'attestationNumber'  => $packageItemObject->getData('attestation_number'),
-            'exportNotification' => $packageItemObject->getData('export_notification'),
-            'items'              => $packageItems,
-        ]);
+        $additionalFee = $this->monetaryValueFactory->create(
+            [
+                'value' => $packageCustoms->getData('additional_fee'),
+                'currencyCode' => $request->getData('base_currency_code'),
+            ]
+        );
+        $package = $this->packageFactory->create(
+            [
+                'packageId' => $packageId,
+                'weight' => $weight,
+                'dimensions' => $dimensions,
+                'declaredValue' => $declaredValue,
+                'exportType' => $packageCustoms->getData('export_type'),
+                'termsOfTrade' => $packageCustoms->getData('terms_of_trade'),
+                'additionalFee' => $additionalFee,
+                'placeOfCommital' => $packageCustoms->getData('place_of_commital'),
+                'permitNumber' => $packageCustoms->getData('permit_number'),
+                'attestationNumber' => $packageCustoms->getData('attestation_number'),
+                'exportNotification' => (bool)$packageCustoms->getData('export_notification'),
+                'dangerousGoodsCategory' => $packageCustoms->getData('dangerous_goods_category'),
+                'exportTypeDescription' => $packageCustoms->getData('export_type_description'),
+                'items' => $packageItems,
+            ]
+        );
 
         return $package;
     }

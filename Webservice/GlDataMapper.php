@@ -104,7 +104,7 @@ class GlDataMapper implements GlDataMapperInterface
             null,
             $package->getDeclaredValue()->getValue($currencyCode),
             null,
-            null,
+            $package->getDangerousGoodsCategory(),
             $dimensionUom,
             $package->getDimensions()->getHeight($package->getDimensions()->getUnitOfMeasurement()),
             $package->getDimensions()->getLength($package->getDimensions()->getUnitOfMeasurement()),
@@ -172,10 +172,10 @@ class GlDataMapper implements GlDataMapperInterface
     }
 
     /**
-     * @param CustomsDetails\CustomsDetailsInterface $customsDetails
+     * @param RequestType\CreateShipment\ShipmentOrderInterface $customsDetails
      * @return CustomsDetailsRequestType[]
      */
-    private function getExportDocument(CustomsDetails\CustomsDetailsInterface $customsDetails)
+    private function getExportDocument(RequestType\CreateShipment\ShipmentOrderInterface $customsDetails)
     {
         $customsDetailsTypes = [];
 
@@ -185,7 +185,7 @@ class GlDataMapper implements GlDataMapperInterface
     /**
      * Create api specific request object from framework standardized object.
      *
-     * @param RequestType\CreateShipment\ShipmentOrderInterfaceFactory $shipmentOrder
+     * @param RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder
      * @return ShipmentRequestType The "GL API shipment" entity
      */
     public function mapShipmentOrder(RequestType\CreateShipment\ShipmentOrderInterface $shipmentOrder)
@@ -194,7 +194,7 @@ class GlDataMapper implements GlDataMapperInterface
 
         $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
         $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
-        $customsDetailsType = $this->getExportDocument($shipmentOrder->getCustomsDetails());
+        $customsDetailsType = $this->getExportDocument($shipmentOrder);
 
         foreach ($shipmentOrder->getPackages() as $package) {
             $packageDetailsType = $this->getPackageDetails(

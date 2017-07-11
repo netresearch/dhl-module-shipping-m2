@@ -25,7 +25,8 @@
  */
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use \Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
@@ -225,44 +226,47 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param CustomsDetails\CustomsDetailsInterface $customsDetails
+     * @param PackageInterface[] $packages
      * @return BcsApi\ExportDocumentType
      */
-    private function getExportDocument(CustomsDetails\CustomsDetailsInterface $customsDetails)
-    {
+    private function getExportDocument(
+        array $packages
+    ) {
+        $package = current($packages);
         $exportDocumentType = new BcsApi\ExportDocumentType(
-            $customsDetails->getExportType()->getType(),
-            $customsDetails->getPlaceOfCommital(),
-            $customsDetails->getAdditionalFee()
+            $package->getExportType(),
+            $package->getPlaceOfCommital(),
+            $package->getAdditionalFee()
+                    ->getValue('EUR')
         );
 
-        $exportDocumentType->setInvoiceNumber($customsDetails->getInvoiceNumber());
-        $exportDocumentType->setExportTypeDescription($customsDetails->getExportType()->getDescription());
-        $exportDocumentType->setTermsOfTrade($customsDetails->getTermsOfTrade());
-        $exportDocumentType->setPermitNumber($customsDetails->getPermitNumber());
-        $exportDocumentType->setAttestationNumber($customsDetails->getAttestationNumber());
+//        $exportDocumentType->setInvoiceNumber($package->getInvoiceNumber());
+        $exportDocumentType->setExportTypeDescription($package->getExportTypeDescription());
+        $exportDocumentType->setTermsOfTrade($package->getTermsOfTrade());
+        $exportDocumentType->setPermitNumber($package->getPermitNumber());
+        $exportDocumentType->setAttestationNumber($package->getAttestationNumber());
         $exportDocumentType->setWithElectronicExportNtfctn(
-            new BcsApi\Serviceconfiguration($customsDetails->isWithElectronicExportNtfctn())
+            new BcsApi\Serviceconfiguration($package->getExportNotification())
         );
 
         $exportDocPositions = [];
-        foreach ($customsDetails->getPositions() as $position) {
+        /** @var PackageItemInterface $position */
+        foreach ($package->getItems() as $position) {
             $exportDocPosition = new BcsApi\ExportDocPosition(
-                $position->getItemDescription(),
-                $position->getCountryOfOrigin(),
-                $position->getHsCode(),
+                $position->getCustomsItemDescription(),
+                $position->getItemOriginCountry(),
+                $position->getTariffNumber(),
                 $position->getQty(),
-                $position->getWeight()->getValue(\Zend_Measure_Weight::KILOGRAM),
-                $position->getDeclaredValue()->getValue('EUR')
+                $position->getWeight()
+                         ->getValue(\Zend_Measure_Weight::KILOGRAM),
+                $position->getCustomsValue()
+                         ->getValue('EUR')
             );
-            $exportDocPositions[]= $exportDocPosition;
+            $exportDocPositions[] = $exportDocPosition;
         }
 
         $exportDocumentType->setExportDocPosition($exportDocPositions);
 
-        return null;
-
-        //TODO(nr): return customs details (only if applicable)
         return $exportDocumentType;
     }
 
@@ -288,8 +292,7 @@ class BcsDataMapper implements BcsDataMapperInterface
         $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
 
         // customs declaration
-        $exportDocumentType = $this->getExportDocument($shipmentOrder->getCustomsDetails());
-
+        $exportDocumentType = $this->getExportDocument($shipmentOrder->getPackages());
 
         // shipment definition, label format, print only if codeable
         $shipmentType = new BcsApi\Shipment(
