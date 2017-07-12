@@ -26,6 +26,7 @@
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
 use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Util\ShippingRoutes;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Framework\Json\EncoderInterface;
 use \Magento\Shipping\Model\Carrier\Source\GenericInterface;
@@ -78,5 +79,4 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
 
         return $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
     }
-
 }

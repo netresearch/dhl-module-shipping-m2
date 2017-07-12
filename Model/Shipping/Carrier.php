@@ -26,11 +26,13 @@
 namespace Dhl\Shipping\Model\Shipping;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Util\ExportTypeInterface;
 use Dhl\Shipping\Util\ShippingProductsInterface;
 use Dhl\Shipping\Webservice\GatewayInterface;
 use \Magento\Quote\Model\Quote\Address\RateRequest;
 use \Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
 use \Magento\Shipping\Model\Carrier\CarrierInterface;
+use Magento\Shipping\Model\Shipping\LabelGenerator;
 
 /**
  * Carrier
@@ -66,6 +68,16 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     private $webserviceGateway;
 
     /**
+     * @var ExportTypeInterface
+     */
+    private $exportTypes;
+
+    /**
+     * @var LabelGenerator
+     */
+    private $labelGenerator;
+
+    /**
      * Carrier constructor.
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
@@ -83,8 +95,10 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param \Magento\Directory\Helper\Data $directoryData
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
      * @param \Magento\Framework\DataObjectFactory $dataObjectFactory
+     * @param LabelGenerator $labelGenerator
      * @param ModuleConfigInterface $config
      * @param ShippingProductsInterface $shippingProducts
+     * @param ExportTypeInterface $exportTypes
      * @param GatewayInterface $webserviceGateway
      * @param array $data
      */
@@ -105,8 +119,10 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         \Magento\Directory\Helper\Data $directoryData,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\DataObjectFactory $dataObjectFactory,
+        LabelGenerator $labelGenerator,
         ModuleConfigInterface $config,
         ShippingProductsInterface $shippingProducts,
+        ExportTypeInterface $exportTypes,
         GatewayInterface $webserviceGateway,
         array $data = []
     ) {
@@ -116,6 +132,8 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         $this->config = $config;
         $this->shippingProducts = $shippingProducts;
         $this->webserviceGateway = $webserviceGateway;
+        $this->exportTypes = $exportTypes;
+        $this->labelGenerator = $labelGenerator;
 
         parent::__construct(
             $scopeConfig,
@@ -243,8 +261,12 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         } else {
             $result->setData(
                 [
-                    'tracking_number' => $response->getCreatedItem($sequenceNumber)->getTrackingNumber(),
-                    'shipping_label_content' => $response->getCreatedItem($sequenceNumber)->getLabel(),
+                    'tracking_number' => $response->getCreatedItem($sequenceNumber)
+                                                  ->getTrackingNumber(),
+                    'shipping_label_content' => $this->labelGenerator->combineLabelsPdf(
+                        $response->getCreatedItem($sequenceNumber)
+                                 ->getAllLabels()
+                    )->render(),
                 ]
             );
         }
@@ -297,4 +319,24 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
 
         return $tracking;
     }
+
+    public function getContentTypes(\Magento\Framework\DataObject $params)
+    {
+        if ($params == null) {
+            $countryShipper = '';
+            $countryRecipient = '';
+        } else {
+            $countryShipper = $params->getData('country_shipper');
+            $countryRecipient = $params->getData('country_recipient');
+        }
+
+        $contentTypes = $this->exportTypes->getApplicableTypes(
+            $countryShipper,
+            $countryRecipient,
+            $this->config->getEuCountryList()
+        );
+        return $contentTypes;
+    }
+
+
 }
