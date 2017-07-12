@@ -23,8 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Setup;
 
+use Magento\Config\Model\Config;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UninstallInterface;
@@ -40,20 +42,66 @@ use Magento\Framework\Setup\UninstallInterface;
  */
 class Uninstall implements UninstallInterface
 {
+
+    /**
+     * Eav setup factory
+     * @var EavSetupFactory
+     */
+    private $eavSetupFactory;
+
+    /**
+     * Init
+     * @param CategorySetupFactory $categorySetupFactory
+     */
+    public function __construct(\Magento\Eav\Setup\EavSetupFactory $eavSetupFactory)
+    {
+        $this->eavSetupFactory = $eavSetupFactory;
+    }
+
     /**
      * Remove data that was created during module installation.
      *
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
      */
-    public function uninstall(SchemaSetupInterface $setup, ModuleContextInterface $context)
-    {
+    public function uninstall(
+        SchemaSetupInterface $setup,
+        ModuleContextInterface $context
+    ) {
         $uninstaller = $setup;
 
-        $configTable = $uninstaller->getTable('core_config_data');
+        $this->deleteShippingAddressTable($uninstaller);
+        $this->removeConfigurations($uninstaller);
+        $this->deleteAttributes($uninstaller);
+    }
 
-        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_QUOTE_ADDRESS);
-        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_ORDER_ADDRESS);
-        $uninstaller->getConnection()->delete($configTable, "`path` LIKE 'carriers/dhlshipping/%'");
+    /**
+     * @param $uninstaller
+     */
+    private function deleteShippingAddressTable($uninstaller)
+    {
+        $uninstaller->getConnection()
+                    ->dropTable(ShippingSetup::TABLE_QUOTE_ADDRESS);
+        $uninstaller->getConnection()
+                    ->dropTable(ShippingSetup::TABLE_ORDER_ADDRESS);
+    }
+
+    private function removeConfigurations($uninstaller)
+    {
+        $configTable = $uninstaller->getTable('core_config_data');
+        $uninstaller->getConnection()
+                    ->delete(
+                        $configTable,
+                        "`path` LIKE 'carriers/dhlshipping/%'"
+                    );
+    }
+
+    private function deleteAttributes($uninstaller)
+    {
+        $eavSetup = $this->eavSetupFactory->create(['setup' => $uninstaller]);
+        $eavSetup->removeAttribute(
+            \Magento\Catalog\Model\Product::ENTITY,
+            ShippingSetup::ATTRIBUTE_CODE_DANGEROUS_GOODS
+        );
     }
 }
