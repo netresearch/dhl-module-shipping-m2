@@ -52,19 +52,11 @@ class ShippingSetup
                 'group' => 'General',
                 'type' => 'varchar',
                 'label' => 'Dangerous Goods Category',
-                'input' => 'select',
-                'source' => '',
-                'frontend' => '',
-                'backend' => '',
+                'input' => 'text',
                 'required' => false,
                 'sort_order' => 50,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
-                'is_used_in_grid' => false,
-                'is_visible_in_grid' => false,
-                'is_filterable_in_grid' => false,
-                'visible' => false,
-                'is_html_allowed_on_front' => false,
-                'visible_on_front' => false
+                'visible' => true,
             ]
         );
     }

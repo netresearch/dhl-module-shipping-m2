@@ -269,6 +269,9 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                                 if (element.tagName === 'SELECT') {
                                     this.dhlShipping.items[packageId][itemId][fieldName] = element.options[element.selectedIndex].value;
                                 }
+                                if(element.dataset.updatepackage && element.innerText.length){
+                                    packageBlock.select('input[data-name='+element.dataset.name+']').first().value = element.innerText;
+                                }
                                 element.disabled ='disabled';
                             }.bind(this));
 

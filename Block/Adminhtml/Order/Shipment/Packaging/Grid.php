@@ -23,9 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Setup\ShippingSetup;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
 use Magento\Catalog\Model\ProductFactory;
@@ -47,7 +49,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     const GL_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_gl.phtml';
 
-    const STANDARD_TEMPLATE ='Magento_Shipping::order/packaging/grid.phtml';
+    const STANDARD_TEMPLATE = 'Magento_Shipping::order/packaging/grid.phtml';
 
     /** @var  ModuleConfigInterface */
     private $moduleConfig;
@@ -62,6 +64,10 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @var string[]
      */
     private $countriesOfManufacture = [];
+    /**
+     * @var string[]
+     */
+    private $dangerousGoodsCategries = [];
 
     /**
      * Grid constructor.
@@ -83,23 +89,46 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         array $data = []
     ) {
         $this->countryCollection = $countryCollection;
-        $this->productFactory   = $productFactory;
+        $this->productFactory = $productFactory;
         $this->moduleConfig = $moduleConfig;
-        parent::__construct($context, $shipmentItemFactory, $registry, $data);
+        parent::__construct(
+            $context,
+            $shipmentItemFactory,
+            $registry,
+            $data
+        );
     }
 
     public function getTemplate()
     {
-        $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
-        $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
-        $bcsCountries    = ['DE','AT'];
+        $originCountryId = $this->moduleConfig->getShipperCountry(
+            $this->getShipment()->getStoreId()
+        );
+        $destCountryId = $this->getShipment()->getShippingAddress()->getCountryId();
+        $bcsCountries = [
+            'DE',
+            'AT'
+        ];
 
-        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
-        $usedTemplate  = self::STANDARD_TEMPLATE;
+        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute(
+            $destCountryId,
+            $this->getShipment()->getStoreId()
+        );
+        $usedTemplate = self::STANDARD_TEMPLATE;
 
-        if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
+        if ($isCrossBorder
+            && in_array(
+                $originCountryId,
+                $bcsCountries
+            )
+        ) {
             $usedTemplate = self::BCS_GRID_TEMPLATE;
-        } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {
+        } elseif ($isCrossBorder
+            && !in_array(
+                $originCountryId,
+                $bcsCountries
+            )
+        ) {
             $usedTemplate = self::GL_GRID_TEMPLATE;
         }
 
@@ -116,29 +145,14 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     {
         if (empty($this->countriesOfManufacture)) {
             /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
-            $items = $this->getCollection();
-
-            $productIds = array_map(
-                function (\Magento\Sales\Model\Order\Shipment\Item $item) {
-                    return $item->getProductId();
-                },
-                $items
-            );
-
-            /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
-            $productCollection = $this->productFactory->create()->getCollection();
-            $productCollection->addStoreFilter($this->getShipment()->getStoreId())
-                ->addFieldToFilter('entity_id', ['in' => $productIds])
-                ->addAttributeToSelect('country_of_manufacture', true);
-
-            while ($product = $productCollection->fetchItem()) {
-                $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');
-            }
+            $this->initItemAttributes();
         }
 
         if (!isset($this->countriesOfManufacture[$productId])) {
             // fallback to shipper country
-            return $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
+            return $this->moduleConfig->getShipperCountry(
+                $this->getShipment()->getStoreId()
+            );
         }
 
         return $this->countriesOfManufacture[$productId];
@@ -152,5 +166,47 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     public function getCountries()
     {
         return $this->countryCollection->toOptionArray();
+    }
+
+    public function getDangerousGoodsCategory($productId)
+    {
+        if (empty($this->dangerousGoodsCategries)) {
+            $this->initItemAttributes();
+        }
+
+        return $this->dangerousGoodsCategries[$productId];
+    }
+
+    private function initItemAttributes()
+    {
+        $items = $this->getCollection();
+
+        $productIds = array_map(
+            function (\Magento\Sales\Model\Order\Shipment\Item $item) {
+                return $item->getProductId();
+            },
+            $items
+        );
+
+        /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
+        $productCollection = $this->productFactory->create()->getCollection();
+        $productCollection->addStoreFilter($this->getShipment()->getStoreId())
+            ->addFieldToFilter(
+                'entity_id',
+                ['in' => $productIds]
+            )->addAttributeToSelect(
+                'country_of_manufacture',
+                true
+            )->addAttributeToSelect(
+                ShippingSetup::ATTRIBUTE_CODE_DANGEROUS_GOODS,
+                true
+            );
+
+        while ($product = $productCollection->fetchItem()) {
+            $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');
+            $this->dangerousGoodsCategries[$product->getId()] = $product->getData(
+                ShippingSetup::ATTRIBUTE_CODE_DANGEROUS_GOODS
+            );
+        }
     }
 }
