@@ -23,7 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Setup;
+
+use Magento\Eav\Setup\EavSetup;
 
 /**
  * ShippingSetup
@@ -38,4 +41,31 @@ class ShippingSetup
 {
     const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
     const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
+    const ATTRIBUTE_CODE_DANGEROUS_GOODS = 'dhl_dangerous_goods_category';
+
+    public static function addDangerousGoodsCategoryAttribute(EavSetup $eavSetup)
+    {
+        $eavSetup->addAttribute(
+            \Magento\Catalog\Model\Product::ENTITY,
+            self::ATTRIBUTE_CODE_DANGEROUS_GOODS,
+            [
+                'group' => 'General',
+                'type' => 'varchar',
+                'label' => 'Dangerous Goods Category',
+                'input' => 'select',
+                'source' => '',
+                'frontend' => '',
+                'backend' => '',
+                'required' => false,
+                'sort_order' => 50,
+                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
+                'is_used_in_grid' => false,
+                'is_visible_in_grid' => false,
+                'is_filterable_in_grid' => false,
+                'visible' => false,
+                'is_html_allowed_on_front' => false,
+                'visible_on_front' => false
+            ]
+        );
+    }
 }
