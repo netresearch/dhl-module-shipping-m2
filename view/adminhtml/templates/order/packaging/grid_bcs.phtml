@@ -26,7 +26,6 @@
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging\Grid $block */
 ?>
 <div class="grid">
-    <p style="background-color: red ; font-size: 15px">BCS!</p>
     <?php $randomId = rand(); ?>
     <div class="admin__table-wrapper">
         <table class="data-grid">
@@ -88,9 +87,13 @@
                         <select data-module="dhl_shipping" data-name="item_origin_country"
                                 title="<?php echo __('Country of Origin') ?>">
                             <?php $selectedCountry = $block->getCountryOfManufacture($_orderItem->getProductId()); ?>
-                            <?php foreach ($block->getCountries() as $countryInfo): ?>
+                            <?php foreach ($block->getCountries() as $countryInfo) : ?>
                                 <option
-                                    value="<?php echo $countryInfo['value'] ?>" <?php if ($countryInfo['value'] == $selectedCountry): echo 'selected="selected"'; endif; ?>>
+                                        value="<?php echo $countryInfo['value'] ?>"
+                                    <?php if ($countryInfo['value'] == $selectedCountry) :
+                                        echo 'selected="selected"';
+                                    endif; ?>
+                                >
                                     <?php echo $countryInfo['label']; ?>
                                 </option>
                             <?php endforeach; ?>
@@ -105,14 +108,10 @@
                     <td data-role="item-weight">
                         <?php /* @escapeNotVerified */ echo $item->getWeight(); ?>
                     </td>
-                    <?php
-                        $customsValueDisplay = '';
-                        $customsValueValidation = ' validate-zero-or-greater ';
-                    ?>
-                    <td <?php /* @escapeNotVerified */ echo $customsValueDisplay ?>>
+                    <td>
                         <input type="text"
                                name="customs_value"
-                               class="input-text admin__control-text <?php /* @escapeNotVerified */ echo $customsValueValidation ?>"
+                               class="input-text admin__control-text validate-zero-or-greater"
                                value="<?php /* @escapeNotVerified */ echo $block->formatPrice($item->getPrice()); ?>"
                                size="10"
                                onblur="packaging.recalcContainerWeightAndCustomsValue(this);">

@@ -27,7 +27,6 @@ namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Shipping\Carrier;
-use Dhl\Shipping\Util\ShippingRoutes;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
 
@@ -77,27 +76,7 @@ class ChangePackagingTemplateObserver implements ObserverInterface
             $shippingMethod = $order->getShippingMethod(true);
             if ($shippingMethod->getData('carrier_code') === Carrier::CODE) {
                 $block->setTemplate('Dhl_Shipping::order/packaging/popup.phtml');
-                $block->setMultiPackageDisabled($this->isMultiPackageAllowed($currentShipment));
             }
         }
-    }
-
-    /**
-     * Does the carrier support multiple packages
-     *
-     * @param \Magento\Sales\Model\Order\Shipment $shipment
-     * @return bool
-     */
-    public function isMultiPackageAllowed(\Magento\Sales\Model\Order\Shipment $shipment)
-    {
-        return in_array(
-            $this->moduleConfig->getShipperCountry(
-                $shipment->getStoreId()
-            ),
-            [
-                ShippingRoutes::COUNTRY_CODE_GERMANY,
-                ShippingRoutes::COUNTRY_CODE_AUSTRIA
-            ]
-        );
     }
 }

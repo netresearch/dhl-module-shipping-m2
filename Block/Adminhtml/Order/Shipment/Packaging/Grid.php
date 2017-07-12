@@ -70,6 +70,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param Registry $registry
      * @param ModuleConfigInterface $moduleConfig
      * @param ProductFactory $productFactory
+     * @param CountryCollection $countryCollection
      * @param array $data
      */
     public function __construct(
