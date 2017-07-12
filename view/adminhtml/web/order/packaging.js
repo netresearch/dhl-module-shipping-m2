@@ -262,13 +262,14 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                             this.dhlShipping.items[packageId][itemId] = {};
                             item.select('[data-module^=dhl_shipping]').each(function (element) {
                                 var fieldName = element.dataset.name;
-                                if(element.tagName == 'INPUT'){
+                                if(element.tagName === 'INPUT'){
                                     this.dhlShipping.items[packageId][itemId][fieldName] = element.value;
                                 }
 
-                                if (element.tagName == 'SELECT') {
+                                if (element.tagName === 'SELECT') {
                                     this.dhlShipping.items[packageId][itemId][fieldName] = element.options[element.selectedIndex].value;
                                 }
+                                element.disabled ='disabled';
                             }.bind(this));
 
                             // ************  END ****************

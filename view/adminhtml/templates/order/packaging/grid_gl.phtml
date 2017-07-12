@@ -106,10 +106,9 @@
                         <?php /* @escapeNotVerified */ echo $item->getWeight(); ?>
                     </td>
                     <?php
-                        $customsValueDisplay = '';
                         $customsValueValidation = ' validate-zero-or-greater ';
                     ?>
-                    <td <?php /* @escapeNotVerified */ echo $customsValueDisplay ?>>
+                    <td>
                         <input type="text"
                                name="customs_value"
                                class="input-text admin__control-text <?php /* @escapeNotVerified */ echo $customsValueValidation ?>"
@@ -121,6 +120,7 @@
                         <?php /* @escapeNotVerified */ echo $item->getOrderItem()->getQtyOrdered()*1; ?>
                     </td>
                     <td>
+                        <input data-module="dhl_shipping" data-name="sku" type="hidden" name="sku" value="<?php /* @escapeNotVerified */ echo $item->getSku(); ?>">
                         <input type="hidden" name="price" value="<?php /* @escapeNotVerified */ echo $item->getPrice(); ?>">
                         <input type="text"
                                name="qty"
