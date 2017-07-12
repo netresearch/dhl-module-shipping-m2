@@ -86,12 +86,7 @@ $girthEnabled = $block->isDisplayGirthValue() && $block->isGirthAllowed() ? 1 : 
                     }
                 }, {
                     text: '<?php /* @escapeNotVerified */ echo __('Add Package') ?>',
-                    'attr': {
-                        'data-action':'add-packages'
-                        <?php if ($block->getMultiPackageDisabled()):?>
-                        , 'disabled':'disabled'
-                        <?php endif; ?>
-                    },
+                    'attr': {'data-action':'add-packages'},
                     'class': 'action-secondary',
                     click: function () {
                         packaging.newPackage();

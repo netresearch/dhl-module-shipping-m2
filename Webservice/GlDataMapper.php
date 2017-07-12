@@ -46,6 +46,7 @@ use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
  * @category Dhl
  * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Paul Siedler <paul.siedler@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  *
