@@ -25,20 +25,17 @@
  */
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
 <div data-name="dhl_shipping_package_info">
-    <p style="background-color: red ; font-size: 15px">Global Label</p>
-    <div><?php echo __('Customs Declaration') ?></div>
-    <table cellspacing="0" class="data">
+    <table cellspacing="0" class="data-table admin__control-table">
         <thead>
-        <tr class="headings">
+        <tr>
             <th class="no-link"><span class="nobr"><?php echo __('Dangerous Goods Category') ?></span></th>
-            <th class="no-link last"><span class="nobr"><?php echo __('Package Description') ?></span></th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>
                 <input data-name="dangerous_goods_category" data-module="dhl_shipping" type="text"
-                       class="input-text validate-length maximum-length-2" maxlength="2"
+                       class="input-text admin__control-text validate-length maximum-length-2" maxlength="2"
                 />
             </td>
         </tr>

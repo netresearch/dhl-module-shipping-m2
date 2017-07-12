@@ -69,6 +69,7 @@
     <preference for="Dhl\Shipping\Util\ShippingProductsInterface" type="Dhl\Shipping\Util\ShippingProducts" />
     <preference for="Dhl\Shipping\Util\ShippingRoutesInterface" type="Dhl\Shipping\Util\ShippingRoutes" />
     <preference for="Dhl\Shipping\Util\StreetSplitterInterface" type="Dhl\Shipping\Util\StreetSplitter" />
+    <preference for="Dhl\Shipping\Util\ExportTypeInterface" type="Dhl\Shipping\Util\ExportType" />
 
     <preference for="Dhl\Shipping\Webservice\UnitConverterInterface" type="Dhl\Shipping\Webservice\UnitConverter" />
     <preference for="Dhl\Shipping\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Shipping\Webservice\Adapter\BcsAdapter" />

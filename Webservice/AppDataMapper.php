@@ -59,6 +59,7 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Ab
 use \Dhl\Shipping\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
 use Dhl\Shipping\Webservice\ShippingInfo\Info;
+use Magento\Framework\DataObject;
 
 /**
  * AppDataMapper
@@ -510,78 +511,55 @@ class AppDataMapper implements AppDataMapperInterface
      */
     private function getPackage(\Magento\Shipping\Model\Shipment\Request $request)
     {
-        $allPackages = $request->getData('packages');
-        $packageId   = $request->getData('package_id');
-        $package     = $allPackages[$packageId];
+        $packageId = $request->getData('package_id');
+        $packageParams = $request->getPackageParams();
+        $packageCustoms = new DataObject($packageParams->getData('customs'));
 
-        $packageItems = [];
-        foreach ($package['items'] as $item) {
-            $itemObject = new \Magento\Framework\DataObject();
-            $itemObject->setData($item);
-            /** @var PackageItem $packageItem */
-            $itemWeight = $this->packageWeightFactory->create(
-                [
-                    'value' => $itemObject->getData('weight'),
-                    'unitOfMeasurement' => $package['params']['weight_units'],
-                ]
-            );
-            $itemCustomsValue = $this->monetaryValueFactory->create(
-                [
-                    'value' => $itemObject->getData('customs_value'),
-                    'currencyCode' => $request->getData('base_currency_code')
-                ]
-            );
-            $itemPrice = $this->monetaryValueFactory->create(
-                [
-                    'value' => $itemObject->getData('price'),
-                    'currencyCode' => $request->getData('base_currency_code')
-                ]
-            );
-            $packageItem = $this->packageItemFactory->create(
-                [
-                    'qty' => $itemObject->getData('qty'),
-                    'customsValue' => $itemCustomsValue,
-                    'customsItemDescription' => $itemObject->getData('customs_item_description'),
-                    'price' => $itemPrice,
-                    'name' => $itemObject->getData('name'),
-                    'weight' => $itemWeight,
-                    'productId' => $itemObject->getData('product_id'),
-                    'orderItemId' => $itemObject->getData('order_item_id'),
-                    'tariffNumber' => $itemObject->getData('tariff_number'),
-                    'itemOriginCountry' => $itemObject->getData('item_origin_country'),
-                ]
-            );
-            $packageItems[]= $packageItem;
-        }
+        $packageItems = $this->getPackageItems(
+            $request
+        );
 
-        $weight = $this->packageWeightFactory->create([
-            'value'             => $package['params']['weight'],
-            'unitOfMeasurement' => $package['params']['weight_units'],
-        ]);
-        $dimensions = $this->packageDimensionsFactory->create([
-            'length'            => $package['params']['length'],
-            'width'             => $package['params']['width'],
-            'height'            => $package['params']['height'],
-            'unitOfMeasurement' => $package['params']['dimension_units'],
-        ]);
+        $weight = $this->packageWeightFactory->create(
+            [
+                'value' => $packageParams->getData('weight'),
+                'unitOfMeasurement' => $packageParams->getData('weight_units'),
+            ]
+        );
+        $dimensions = $this->packageDimensionsFactory->create(
+            [
+                'length' => $packageParams->getData('length'),
+                'width' => $packageParams->getData('width'),
+                'height' => $packageParams->getData('height'),
+                'unitOfMeasurement' => $packageParams->getData('dimension_units'),
+            ]
+        );
 
-        $packageValue = array_reduce($package['items'], function ($carry, $item) {
-            $price  = $item['price'] * 1000;
-            $carry += ($price * $item['qty']);
+        $packageValue = array_reduce(
+            $request->getPackageItems(),
+            function (
+                $carry,
+                $item
+            ) {
+                $price = $item['price'] * 1000;
+                $carry += ($price * $item['qty']);
 
-            return $carry;
-        });
-        $packageValue = number_format($packageValue / 1000, 2, '.', '');
+                return $carry;
+            }
+        );
+        $packageValue = number_format(
+            $packageValue / 1000,
+            2,
+            '.',
+            ''
+        );
 
         //FIXME(nr): should declared value include tax?
-        $declaredValue = $this->monetaryValueFactory->create([
-            'value'        => $packageValue,
-            'currencyCode' => $request->getData('base_currency_code'),
-        ]);
-
-        $packageParams = isset($package['params']) ? $package['params'] : ['customs'];
-        $packageCustoms = new \Magento\Framework\DataObject();
-        $packageCustoms->setData($packageParams['customs']);
+        $declaredValue = $this->monetaryValueFactory->create(
+            [
+                'value' => $packageValue,
+                'currencyCode' => $request->getData('base_currency_code'),
+            ]
+        );
 
         $additionalFee = $this->monetaryValueFactory->create(
             [
@@ -595,7 +573,7 @@ class AppDataMapper implements AppDataMapperInterface
                 'weight' => $weight,
                 'dimensions' => $dimensions,
                 'declaredValue' => $declaredValue,
-                'exportType' => $packageCustoms->getData('export_type'),
+                'exportType' => $packageParams->getData('content_type'),
                 'termsOfTrade' => $packageCustoms->getData('terms_of_trade'),
                 'additionalFee' => $additionalFee,
                 'placeOfCommital' => $packageCustoms->getData('place_of_commital'),
@@ -603,7 +581,7 @@ class AppDataMapper implements AppDataMapperInterface
                 'attestationNumber' => $packageCustoms->getData('attestation_number'),
                 'exportNotification' => (bool)$packageCustoms->getData('export_notification'),
                 'dangerousGoodsCategory' => $packageCustoms->getData('dangerous_goods_category'),
-                'exportTypeDescription' => $packageCustoms->getData('export_type_description'),
+                'exportTypeDescription' => $packageParams->getData('content_type_other'),
                 'items' => $packageItems,
             ]
         );
@@ -641,5 +619,55 @@ class AppDataMapper implements AppDataMapperInterface
 
         $shipmentOrder = $this->requestValidator->validateShipmentOrder($shipmentOrder);
         return $shipmentOrder;
+    }
+
+    /**
+     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @return array
+     */
+    private function getPackageItems(
+        \Magento\Shipping\Model\Shipment\Request $request
+    ): array {
+        $packageItems = [];
+        foreach ($request->getPackageItems() as $item) {
+            $itemObject = new \Magento\Framework\DataObject($item);
+            /** @var PackageItem $packageItem */
+            $itemWeight = $this->packageWeightFactory->create(
+                [
+                    'value' => $itemObject->getData('weight'),
+                    'unitOfMeasurement' => $request->getPackageParams()
+                                                   ->getData('weight_units'),
+                ]
+            );
+            $itemCustomsValue = $this->monetaryValueFactory->create(
+                [
+                    'value' => $itemObject->getData('customs_value'),
+                    'currencyCode' => $request->getData('base_currency_code')
+                ]
+            );
+            $itemPrice = $this->monetaryValueFactory->create(
+                [
+                    'value' => $itemObject->getData('price'),
+                    'currencyCode' => $request->getData('base_currency_code')
+                ]
+            );
+            $packageItem = $this->packageItemFactory->create(
+                [
+                    'qty' => $itemObject->getData('qty'),
+                    'customsValue' => $itemCustomsValue,
+                    'customsItemDescription' => $itemObject->getData('customs_item_description'),
+                    'price' => $itemPrice,
+                    'name' => $itemObject->getData('name'),
+                    'weight' => $itemWeight,
+                    'productId' => $itemObject->getData('product_id'),
+                    'orderItemId' => $itemObject->getData('order_item_id'),
+                    'tariffNumber' => $itemObject->getData('tariff_number'),
+                    'itemOriginCountry' => $itemObject->getData('item_origin_country'),
+                    'sku' => $itemObject->getData('sku')
+                ]
+            );
+            $packageItems[] = $packageItem;
+        }
+        return $packageItems;
     }
 }

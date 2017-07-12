@@ -172,12 +172,30 @@ class GlDataMapper implements GlDataMapperInterface
     }
 
     /**
-     * @param RequestType\CreateShipment\ShipmentOrderInterface $customsDetails
+     * @param PackageInterface $package
      * @return CustomsDetailsRequestType[]
      */
-    private function getExportDocument(RequestType\CreateShipment\ShipmentOrderInterface $customsDetails)
+    private function getExportDocument(PackageInterface $package)
     {
         $customsDetailsTypes = [];
+
+        $currencyCode = $package->getDeclaredValue()
+                                ->getCurrencyCode();
+        /** @var RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface $packageItem */
+        foreach ($package->getItems() as $packageItem) {
+            $itemDetails = new CustomsDetailsRequestType(
+                $packageItem->getCustomsItemDescription(),
+                $packageItem->getCustomsItemDescription(),
+                $packageItem->getCustomsItemDescription(),
+                $packageItem->getItemOriginCountry(),
+                $packageItem->getTariffNumber(),
+                $packageItem->getQty(),
+                $packageItem->getCustomsValue()
+                            ->getValue($currencyCode),
+                $packageItem->getSku()
+            );
+            $customsDetailsTypes[] = $itemDetails;
+        }
 
         return $customsDetailsTypes;
     }
@@ -194,9 +212,9 @@ class GlDataMapper implements GlDataMapperInterface
 
         $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
         $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
-        $customsDetailsType = $this->getExportDocument($shipmentOrder);
 
         foreach ($shipmentOrder->getPackages() as $package) {
+            $customsDetailsType = $this->getExportDocument($package);
             $packageDetailsType = $this->getPackageDetails(
                 $shipmentOrder->getShipmentDetails(),
                 $package,

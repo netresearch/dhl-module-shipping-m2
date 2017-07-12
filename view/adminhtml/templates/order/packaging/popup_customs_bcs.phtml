@@ -25,12 +25,9 @@
  */
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
 <div data-name="dhl_shipping_package_info">
-    <p style="background-color: red ; font-size: 15px">BCS</p>
-    <div><?php echo __('Customs Declaration') ?></div>
-    <table cellspacing="0" class="data">
+    <table cellspacing="0" class="data-table admin__control-table">
         <thead>
         <tr class="headings">
-            <th class="no-link"><span class="nobr"><?php echo __('Export Type') ?></span></th>
             <th class="no-link"><span class="nobr"><?php echo __('Terms of Trade') ?></span></th>
             <th class="no-link"><span class="nobr"><?php echo __('Additional Fee') ?></span></th>
             <th class="no-link"><span class="nobr"><?php echo __('Place of Commital') ?></span></th>
@@ -42,16 +39,6 @@
 
         <tbody>
         <tr>
-            <td>
-                <?php // @FIXME (NR): move values to a block method ?>
-                <select data-module="dhl_shipping" data-name="export_type" title="<?php echo __('Export Type') ?>">
-                    <option value="OTHER">OTHER</option>
-                    <option value="PRESENT">PRESENT</option>
-                    <option value="COMMERCIAL_SAMPLE">COMMERCIAL_SAMPLE</option>
-                    <option value="DOCUMENT">DOCUMENT</option>
-                    <option value="RETURN_OF_GOODS">RETURN_OF_GOODS</option>
-                </select>
-            </td>
             <td>
                 <select data-module="dhl_shipping" data-name="terms_of_trade" title="<?php echo __('Terms of Trade') ?>">
                     <option value="DDP">DDP</option>
