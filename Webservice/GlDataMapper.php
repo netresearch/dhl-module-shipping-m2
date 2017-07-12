@@ -189,7 +189,7 @@ class GlDataMapper implements GlDataMapperInterface
                 $packageItem->getCustomsItemDescription(),
                 $packageItem->getItemOriginCountry(),
                 $packageItem->getTariffNumber(),
-                $packageItem->getQty(),
+                (int) $packageItem->getQty(),
                 $packageItem->getCustomsValue()
                             ->getValue($currencyCode),
                 $packageItem->getSku()
