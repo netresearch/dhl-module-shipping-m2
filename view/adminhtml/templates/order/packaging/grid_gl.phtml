@@ -79,13 +79,15 @@
                     <td class="name">
                         <input data-module="dhl_shipping" data-name="customs_item_description"
                                type="text" title="<?php echo __('Customs Description') ?>"
-                               class="input-text required-entry validate-length maximum-length-256" maxlength="256"
+                               class="input-text admin__control-text required-entry validate-length
+                               maximum-length-256" maxlength="256"
                                value="<?php echo $item->getName(); ?>" />
                     </td>
 
 
                     <td>
                         <select data-module="dhl_shipping" data-name="item_origin_country" name="customs_origin"
+                                class="input-select admin__control-select"
                                 title="<?php echo __('Country of Origin') ?>">
                             <?php $selectedCountry = $block->getCountryOfManufacture($_orderItem->getProductId()); ?>
                             <?php foreach ($block->getCountries() as $countryInfo) : ?>
@@ -107,7 +109,7 @@
 
                     <td>
                         <input data-module="dhl_shipping" data-name="tariff_number"
-                               type="text" class="input-text required-entry validate-length maximum-length-10"
+                               type="text" class="input-text admin__control-text required-entry validate-length maximum-length-10"
                                title="<?php echo __('Tariff Number') ?>" minlength="4" maxlength="10" />
                     </td>
 
