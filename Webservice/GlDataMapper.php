@@ -184,18 +184,20 @@ class GlDataMapper implements GlDataMapperInterface
                                 ->getCurrencyCode();
         /** @var RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface $packageItem */
         foreach ($package->getItems() as $packageItem) {
-            $itemDetails = new CustomsDetailsRequestType(
-                $packageItem->getCustomsItemDescription(),
-                $packageItem->getCustomsItemDescription(),
-                $packageItem->getCustomsItemDescription(),
-                $packageItem->getItemOriginCountry(),
-                $packageItem->getTariffNumber(),
-                (int) $packageItem->getQty(),
-                $packageItem->getCustomsValue()
-                            ->getValue($currencyCode),
-                $packageItem->getSku()
-            );
-            $customsDetailsTypes[] = $itemDetails;
+            // @TODO(nr) should we check shipping routes for crossborder instead?
+            if($packageItem->getCustomsItemDescription()) {
+                $itemDetails = new CustomsDetailsRequestType(
+                    $packageItem->getCustomsItemDescription(),
+                    $packageItem->getCustomsItemDescription(),
+                    $packageItem->getCustomsItemDescription(),
+                    $packageItem->getItemOriginCountry(),
+                    $packageItem->getTariffNumber(),
+                    (int)$packageItem->getQty(),
+                    $packageItem->getCustomsValue()->getValue($currencyCode),
+                    $packageItem->getSku()
+                );
+                $customsDetailsTypes[] = $itemDetails;
+            }
         }
 
         return $customsDetailsTypes;
