@@ -513,7 +513,8 @@ class AppDataMapper implements AppDataMapperInterface
     {
         $packageId = $request->getData('package_id');
         $packageParams = $request->getPackageParams();
-        $packageCustoms = new DataObject($packageParams->getData('customs'));
+        $customsData = $packageParams->getData('customs') ?: [];
+        $packageCustoms = new DataObject($customsData);
 
         $packageItems = $this->getPackageItems(
             $request
