@@ -114,7 +114,7 @@ class GlDataMapper implements GlDataMapperInterface
             null,
             null,
             $shipmentDetails->getShipmentComment(),
-            null,
+            $sequenceNumber,
             null,
             null
         );
