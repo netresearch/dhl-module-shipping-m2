@@ -564,7 +564,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $additionalFee = $this->monetaryValueFactory->create(
             [
-                'value' => $packageCustoms->getData('additional_fee'),
+                'value' => $packageCustoms->getData('additional_fee') ?: 0,
                 'currencyCode' => $request->getData('base_currency_code'),
             ]
         );
@@ -635,7 +635,7 @@ class AppDataMapper implements AppDataMapperInterface
             /** @var PackageItem $packageItem */
             $itemWeight = $this->packageWeightFactory->create(
                 [
-                    'value' => $itemObject->getData('weight'),
+                    'value' => $itemObject->getData('weight') ? : 0,
                     'unitOfMeasurement' => $request->getPackageParams()
                                                    ->getData('weight_units'),
                 ]
