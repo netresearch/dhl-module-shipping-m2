@@ -259,13 +259,14 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             // plain string seems to be expected for errors
             $result->setData('errors', $response->getStatus()->getMessage());
         } else {
+            $createdItems = $response->getCreatedItems();
+            $createdItem = current($createdItems);
+
             $result->setData(
                 [
-                    'tracking_number' => $response->getCreatedItem($sequenceNumber)
-                                                  ->getTrackingNumber(),
+                    'tracking_number' => $createdItem->getTrackingNumber(),
                     'shipping_label_content' => $this->labelGenerator->combineLabelsPdf(
-                        $response->getCreatedItem($sequenceNumber)
-                                 ->getAllLabels()
+                        $createdItem->getAllLabels()
                     )->render(),
                 ]
             );
