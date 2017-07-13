@@ -201,7 +201,7 @@
                 </field>
 
                 <!-- 600 eCommerce Global API Settings -->
-                <field id="fields_shipping_gla" translate="label" sortOrder="600" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="fields_shipping_gla" translate="label" sortOrder="600" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>eCommerce Global API Shipping Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
@@ -209,7 +209,7 @@
                     </depends>
                 </field>
                 <!-- 620 Label Size -->
-                <field id="gl_label_size" translate="label" type="select" sortOrder="620" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="gl_label_size" translate="label" type="select" sortOrder="620" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Label Size</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\LabelSize</source_model>
                     <depends>
@@ -217,7 +217,7 @@
                     </depends>
                 </field>
                 <!-- 630 Page Size -->
-                <field id="gl_page_size" translate="label" type="select" sortOrder="630" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="gl_page_size" translate="label" type="select" sortOrder="630" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Page Size</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageSize</source_model>
                     <depends>
@@ -225,7 +225,7 @@
                     </depends>
                 </field>
                 <!-- 640 Page Layout -->
-                <field id="gl_page_layout" translate="label" type="select" sortOrder="640" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="gl_page_layout" translate="label" type="select" sortOrder="640" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Page Layout</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageLayout</source_model>
                     <depends>
