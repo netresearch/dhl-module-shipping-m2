@@ -45,22 +45,22 @@
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Country of Origin') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Tariff Number') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Weight') ?></th>
-                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Customs Value') ?>
-                    </th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Customs Value') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Qty Ordered') ?></th>
                     <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Qty') ?></th>
                 </tr>
             </thead>
             <tbody>
             <?php $i=0; ?>
-            <?php foreach ($block->getCollection() as $item): ?>
+            <?php foreach ($block->getCollection() as $item) : ?>
                 <?php
                     $_order = $block->getShipment()->getOrder();
                     $_orderItem = $_order->getItemById($item->getOrderItemId());
                 ?>
                 <?php if ($item->getIsVirtual()
                     || ($_orderItem->isShipSeparately() && !($_orderItem->getParentItemId() || $_orderItem->getParentItem()))
-                    || (!$_orderItem->isShipSeparately() && ($_orderItem->getParentItemId() || $_orderItem->getParentItem()))): ?>
+                    || (!$_orderItem->isShipSeparately() && ($_orderItem->getParentItemId() ||
+                            $_orderItem->getParentItem()))) : ?>
                     <?php continue; ?>
                 <?php endif; ?>
                 <tr class="data-grid-controls-row data-row <?php echo ($i++ % 2 != 0) ? '_odd-row' : ''; ?>">
@@ -79,13 +79,14 @@
                     <td class="name">
                         <input data-module="dhl_shipping" data-name="customs_item_description"
                                type="text" title="<?php echo __('Customs Description') ?>"
-                               class="input-text required-entry validate-length maximum-length-256" maxlength="256"
+                               class="input-text admin__control-text required-entry validate-length
+                               maximum-length-256" maxlength="256"
                                value="<?php echo $item->getName(); ?>" />
                     </td>
 
                     <td>
                         <select data-module="dhl_shipping" data-name="item_origin_country"
-                                title="<?php echo __('Country of Origin') ?>">
+                                title="<?php echo __('Country of Origin') ?>" class="admin__control-select">
                             <?php $selectedCountry = $block->getCountryOfManufacture($_orderItem->getProductId()); ?>
                             <?php foreach ($block->getCountries() as $countryInfo) : ?>
                                 <option
@@ -101,7 +102,9 @@
 
                     <td class="tariff-number">
                         <input data-module="dhl_shipping" data-name="tariff_number"
-                               type="text" class="input-text required-entry validate-length maximum-length-10"
+                               type="text"
+                               class="input-text admin__control-text required-entry validate-length
+                               maximum-length-10"
                                title="<?php echo __('Tariff Number') ?>" maxlength="10" />
                     </td>
 
