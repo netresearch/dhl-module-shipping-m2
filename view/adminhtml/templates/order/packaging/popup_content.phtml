@@ -221,7 +221,10 @@
 
         <!--our child blocks go here -->
         <?php if ($block->displayCustomsValue()) :?>
-            <div>
+            <div data-name="dhl_shipping_package_info" class="dhl_shipping_package_info">
+                <img src="<?php echo $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png'); ?>"
+                     class="dhl-logo" title="DHL BCS Additional Services" alt="DHL BCS Additional Services" />
+
                 <?php echo $block->getChildHtml('dhl_shipment_packaging_export_documents') ?>
             </div>
         <?php endif;?>
