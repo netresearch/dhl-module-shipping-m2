@@ -24,24 +24,20 @@
  * @link      http://www.netresearch.de/
  */
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
-<div data-name="dhl_shipping_package_info" class="dhl_shipping_package_info">
-    <img src="<?php echo $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png'); ?>"
-         class="dhl-logo" title="DHL GL Additional Services" alt="DHL GL Additional Services" />
-    <table cellspacing="0" class="data-table admin__control-table">
-        <thead>
-        <tr>
-            <th class="no-link"><span class="nobr"><?php echo __('Dangerous Goods Category') ?></span></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                <input data-name="dangerous_goods_category" data-module="dhl_shipping" type="text"
-                       class="input-text admin__control-text validate-length maximum-length-2" maxlength="2"
-                       style="max-width:220px;"
-                />
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<table cellspacing="0" class="data-table admin__control-table">
+    <thead>
+    <tr>
+        <th class="no-link"><span class="nobr"><?php echo __('Dangerous Goods Category') ?></span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <input data-name="dangerous_goods_category" data-module="dhl_shipping" type="text"
+                   class="input-text admin__control-text validate-length maximum-length-2" maxlength="2"
+                   style="max-width:220px;"
+            />
+        </td>
+    </tr>
+    </tbody>
+</table>
