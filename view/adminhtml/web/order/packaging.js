@@ -216,6 +216,22 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                 return;
             }
 
+            // perform validation on checked items
+            var errorsFound = false;
+            packagePrepareGrid.select('.grid tbody tr').each(function (item) {
+                if (item.select('[type="checkbox"]')[0].checked) {
+                    var tariffInput = item.select('input').each(function (input) {
+                        if (!this.validateElement(input)) {errorsFound = true;}
+                    }.bind(this));
+                }
+            }.bind(this));
+            if (errorsFound) {
+                this.messages.show().update(this.validationErrorMsg);
+                return;
+            } else {
+                this.messages.hide().update();
+            }
+
             // prepare items for packing
             packagePrepareGrid.select('.grid tbody tr').each(function (item) {
                 var checkbox = item.select('[type="checkbox"]')[0];

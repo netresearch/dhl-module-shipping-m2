@@ -6,3 +6,7 @@
 .text-center {
     text-align: center;
 }
+.validation-failed {
+    background: rgba(255,0,0,.05) !important;
+    border-color: #ed8380 !important;
+}
