@@ -207,6 +207,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('tracking_number', $info[0]);
         $this->assertArrayHasKey('label_content', $info[0]);
         $this->assertEquals('22222221337', $info[0]['tracking_number']);
-        $this->assertEquals('%PDF-1.4', $info[0]['label_content']);
+        $this->assertContains('%PDF-1.4', $info[0]['label_content']);
     }
 }

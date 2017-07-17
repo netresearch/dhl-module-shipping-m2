@@ -147,12 +147,12 @@ class ShippingRulesTest extends \PHPUnit_Framework_TestCase
      * @magentoConfigFixture default/shipping/origin/country_id DE
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      */
-    public function cannotProcessBusinessCustomerShippingDeToIntl()
+    public function canProcessBusinessCustomerShippingDeToIntl()
     {
         $destCountryId = 'NZ';
         /** @var ModuleConfig $config */
         $config = $this->objectManager->create(ModuleConfig::class);
-        $this->assertFalse($config->canProcessShipping('tablerate_bestway', $destCountryId));
+        $this->assertTrue($config->canProcessShipping('tablerate_bestway', $destCountryId));
     }
 
     /**
@@ -160,12 +160,12 @@ class ShippingRulesTest extends \PHPUnit_Framework_TestCase
      * @magentoConfigFixture default/shipping/origin/country_id AT
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      */
-    public function cannotProcessBusinessCustomerShippingAtToIntl()
+    public function canProcessBusinessCustomerShippingAtToIntl()
     {
         $destCountryId = 'US';
         /** @var ModuleConfig $config */
         $config = $this->objectManager->create(ModuleConfig::class);
-        $this->assertFalse($config->canProcessShipping('tablerate_bestway', $destCountryId));
+        $this->assertTrue($config->canProcessShipping('tablerate_bestway', $destCountryId));
     }
 
     /**
@@ -199,12 +199,12 @@ class ShippingRulesTest extends \PHPUnit_Framework_TestCase
      * @magentoConfigFixture default/shipping/origin/country_id US
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      */
-    public function cannotProcessEcommerceShippingUsToIntl()
+    public function canProcessEcommerceShippingUsToIntl()
     {
         $destCountryId = 'DE';
         /** @var ModuleConfig $config */
         $config = $this->objectManager->create(ModuleConfig::class);
-        $this->assertFalse($config->canProcessShipping('tablerate_bestway', $destCountryId));
+        $this->assertTrue($config->canProcessShipping('tablerate_bestway', $destCountryId));
     }
 
     /**
