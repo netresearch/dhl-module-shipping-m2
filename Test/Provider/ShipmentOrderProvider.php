@@ -49,7 +49,6 @@ class ShipmentOrderProvider
         $receiver        = self::getReceiverObject();
         $returnReceiver  = self::getReturnReceiverObject();
         $services        = self::getServicesObject();
-        $customsDetails  = self::getCustomDetailsObject();
         $package         = self::getPackageObject();
 
         $shipmentOrder = new ShipmentOrder(
@@ -59,7 +58,6 @@ class ShipmentOrderProvider
             $receiver,
             $returnReceiver,
             $services,
-            $customsDetails,
             [$package]
         );
 
@@ -94,28 +92,6 @@ class ShipmentOrderProvider
         );
 
         return  $exportType;
-    }
-
-    /**
-     * @return CustomsDetails
-     */
-    private static function getCustomDetailsObject()
-    {
-        $exportType = self::getExporTypeObject();
-        $position   = [];//self::getExportPositionObject();
-        $customsDetails = new CustomsDetails(
-            'invoiceNumber',
-            $exportType,
-            'termsOfTrade',
-            'placeOfCommitial',
-            'additionalFee',
-            'permitNumber',
-            'attestationNumber',
-            'true',
-            [$position]
-        );
-
-        return $customsDetails;
     }
 
     /**
