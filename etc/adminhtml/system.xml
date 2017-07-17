@@ -122,7 +122,7 @@
                 <!-- 315 Unique Customer Prefix -->
                 <field id="gl_customer_prefix" type="text" translate="label" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Customer Prefix</label>
-                    <validate>validate-alphanum</validate>
+                    <validate>validate-alphanum validate-length maximum-length-5</validate>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
