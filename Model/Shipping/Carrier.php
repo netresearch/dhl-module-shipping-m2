@@ -262,12 +262,15 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             $createdItems = $response->getCreatedItems();
             $createdItem = current($createdItems);
 
+            $combinedLabel = $this->labelGenerator->combineLabelsPdf(
+                $createdItem->getAllLabels()
+            )->render();
+
+            $trackingNumber = $createdItem->getTrackingNumber() ? : $createdItem->getSequenceNumber();
             $result->setData(
                 [
-                    'tracking_number' => $createdItem->getTrackingNumber(),
-                    'shipping_label_content' => $this->labelGenerator->combineLabelsPdf(
-                        $createdItem->getAllLabels()
-                    )->render(),
+                    'tracking_number' => $trackingNumber,
+                    'shipping_label_content' => $combinedLabel,
                 ]
             );
         }
