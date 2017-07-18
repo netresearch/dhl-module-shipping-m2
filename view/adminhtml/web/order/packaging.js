@@ -286,7 +286,7 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                                     this.dhlShipping.items[packageId][itemId][fieldName] = element.options[element.selectedIndex].value;
                                 }
                                 if(element.dataset.updatepackage && element.innerText.length){
-                                    packageBlock.select('input[data-name='+element.dataset.name+']').first().value = element.innerText;
+                                    packageBlock.select('[data-module="dhl_shipping"][data-name='+element.dataset.name+']').first().value = element.innerText;
                                 }
                                 element.disabled ='disabled';
                             }.bind(this));

@@ -40,9 +40,9 @@ class UpgradeData implements UpgradeDataInterface
 
     /**
      * Init
-     * @param EavSetupFactory $categorySetupFactory
+     * @param EavSetupFactory $eavSetupFactory
      */
-    public function __construct(\Magento\Eav\Setup\EavSetupFactory $eavSetupFactory)
+    public function __construct(EavSetupFactory $eavSetupFactory)
     {
         $this->eavSetupFactory = $eavSetupFactory;
     }

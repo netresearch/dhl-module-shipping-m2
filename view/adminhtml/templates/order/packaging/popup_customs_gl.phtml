@@ -33,10 +33,14 @@
     <tbody>
     <tr>
         <td>
-            <input data-name="dangerous_goods_category" data-module="dhl_shipping" type="text"
-                   class="input-text admin__control-text validate-length maximum-length-2" maxlength="2"
-                   style="max-width:220px;"
-            />
+            <select data-name="dangerous_goods_category" data-module="dhl_shipping"
+                    class="admin__control-select" style="max-width:25%;">
+                <?php foreach ($block->getDangerousGoodsCategoryOptions() as $option) : ?>
+                    <option value="<?php echo $block->escapeHtml($option['value']); ?>">
+                        <?php echo $block->escapeHtml($option['label']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </td>
     </tr>
     </tbody>
