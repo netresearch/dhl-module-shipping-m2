@@ -26,8 +26,8 @@
 
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
+use Dhl\Shipping\Model\Attribute\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Setup\ShippingSetup;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
 use Magento\Catalog\Model\ProductFactory;
@@ -67,7 +67,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     /**
      * @var string[]
      */
-    private $dangerousGoodsCategries = [];
+    private $dangerousGoodsCategories = [];
 
     /**
      * Grid constructor.
@@ -170,11 +170,11 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     public function getDangerousGoodsCategory($productId)
     {
-        if (empty($this->dangerousGoodsCategries)) {
+        if (empty($this->dangerousGoodsCategories)) {
             $this->initItemAttributes();
         }
 
-        return $this->dangerousGoodsCategries[$productId];
+        return $this->dangerousGoodsCategories[$productId];
     }
 
     private function initItemAttributes()
@@ -198,14 +198,14 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
                 'country_of_manufacture',
                 true
             )->addAttributeToSelect(
-                ShippingSetup::ATTRIBUTE_CODE_DANGEROUS_GOODS,
+                DGCategory::CODE,
                 true
             );
 
         while ($product = $productCollection->fetchItem()) {
             $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');
-            $this->dangerousGoodsCategries[$product->getId()] = $product->getData(
-                ShippingSetup::ATTRIBUTE_CODE_DANGEROUS_GOODS
+            $this->dangerousGoodsCategories[$product->getId()] = $product->getData(
+                DGCategory::CODE
             );
         }
     }
