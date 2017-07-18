@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
+use Dhl\Shipping\Model\Attribute\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
 /**
@@ -48,15 +49,19 @@ class Customs extends \Magento\Backend\Block\Template
      * @var \Magento\Framework\Registry
      */
     private $coreRegistry;
+    private $dgCategoryAttribute;
 
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magento\Backend\Block\Template\Context $context,
         ModuleConfigInterface $moduleConfig,
+        DGCategory $category,
+
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
         $this->coreRegistry = $registry;
+        $this->dgCategoryAttribute = $category;
         parent::__construct($context, $data);
     }
 
@@ -103,5 +108,10 @@ class Customs extends \Magento\Backend\Block\Template
         }
 
         return $usedTemplate;
+    }
+
+    public function getDangerousGoodsCategoryOptions()
+    {
+        return $this->dgCategoryAttribute->toOptionArray();
     }
 }

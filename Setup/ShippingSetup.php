@@ -26,6 +26,7 @@
 
 namespace Dhl\Shipping\Setup;
 
+use Dhl\Shipping\Model\Attribute\DGCategory;
 use Magento\Eav\Setup\EavSetup;
 
 /**
@@ -41,19 +42,19 @@ class ShippingSetup
 {
     const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
     const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
-    const ATTRIBUTE_CODE_DANGEROUS_GOODS = 'dhl_dangerous_goods_category';
 
     public static function addDangerousGoodsCategoryAttribute(EavSetup $eavSetup)
     {
         $eavSetup->addAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            self::ATTRIBUTE_CODE_DANGEROUS_GOODS,
+            DGCategory::CODE,
             [
-                'group' => 'General',
+                'group' => '',
                 'type' => 'varchar',
                 'label' => 'Dangerous Goods Category',
-                'input' => 'text',
+                'input' => 'select',
                 'required' => false,
+                'source' => 'Dhl\Shipping\Model\Attribute\DGCategory',
                 'sort_order' => 50,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
                 'visible' => true,
