@@ -184,11 +184,9 @@ PDF;
 
     public static function provideMultipleErrorResponse()
     {
-
     }
 
     public static function provideMixedResponse()
     {
-
     }
 }

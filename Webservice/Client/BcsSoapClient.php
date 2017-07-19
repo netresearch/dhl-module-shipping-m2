@@ -43,7 +43,7 @@ class BcsSoapClient extends \SoapClient implements BcsSoapClientInterface
     /**
      * @var array $classmap The defined classes
      */
-    private static $classmap = array (
+    private static $classmap =  [
         'Version' => 'Dhl\\Shipping\\Bcs\\Version',
         'GetVersionResponse' => 'Dhl\\Shipping\\Bcs\\GetVersionResponse',
         'CreateShipmentOrderRequest' => 'Dhl\\Shipping\\Bcs\\CreateShipmentOrderRequest',
@@ -88,7 +88,7 @@ class BcsSoapClient extends \SoapClient implements BcsSoapClientInterface
         'DeleteShipmentOrderRequest' => 'Dhl\\Shipping\\Bcs\\DeleteShipmentOrderRequest',
         'DeleteShipmentOrderResponse' => 'Dhl\\Shipping\\Bcs\\DeleteShipmentOrderResponse',
         'DeletionState' => 'Dhl\\Shipping\\Bcs\\DeletionState',
-    );
+    ];
 
     /**
      * BcsSoapClient constructor.
