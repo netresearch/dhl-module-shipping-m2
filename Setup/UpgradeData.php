@@ -24,7 +24,6 @@
 
 namespace Dhl\Shipping\Setup;
 
-
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;

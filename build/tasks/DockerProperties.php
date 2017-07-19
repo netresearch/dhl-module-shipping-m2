@@ -54,7 +54,7 @@ class DockerProperties extends Task
         array_walk(
             $variables,
             function ($value) {
-                if(!empty($value)) {
+                if (!empty($value)) {
                     list($k, $v) = explode('=', $value);
                     $this->project->setProperty('docker.' . $k, $v);
                 }

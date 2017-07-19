@@ -24,7 +24,6 @@
 
 namespace Dhl\Shipping\Model\Attribute;
 
-
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 class DGCategory extends AbstractSource
@@ -51,6 +50,4 @@ class DGCategory extends AbstractSource
         }
         return $this->_options;
     }
-
-
 }

@@ -81,8 +81,8 @@ class GlDataMapper implements GlDataMapperInterface
         ShipmentDetails\ShipmentDetailsInterface $shipmentDetails,
         PackageInterface $package,
         $sequenceNumber
-    )
-    {
+    ) {
+    
         // no weight conversions for GLAPI but unit mapping
         $currencyCode = $package->getDeclaredValue()->getCurrencyCode();
         $weightUom = $package->getWeight()->getUnitOfMeasurement();
@@ -185,7 +185,7 @@ class GlDataMapper implements GlDataMapperInterface
         /** @var RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface $packageItem */
         foreach ($package->getItems() as $packageItem) {
             // @TODO(nr) should we check shipping routes for crossborder instead?
-            if($packageItem->getCustomsItemDescription()) {
+            if ($packageItem->getCustomsItemDescription()) {
                 $itemDetails = new CustomsDetailsRequestType(
                     $packageItem->getCustomsItemDescription(),
                     $packageItem->getCustomsItemDescription(),
