@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
+
 use Dhl\Shipping\Model\Attribute\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
@@ -56,7 +57,6 @@ class Customs extends \Magento\Backend\Block\Template
         \Magento\Backend\Block\Template\Context $context,
         ModuleConfigInterface $moduleConfig,
         DGCategory $category,
-
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;

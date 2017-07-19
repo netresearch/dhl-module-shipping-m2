@@ -60,11 +60,11 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                     this.dhlShipping.params[packageId] = {};
                     pack.select('div[data-name="dhl_shipping_package_info"] [data-module^=dhl_shipping]').each(function (element) {
                         var fieldName = element.dataset.name;
-                        if(element.tagName == 'INPUT'){
+                        if (element.tagName == 'INPUT') {
                             this.dhlShipping.params[packageId][fieldName] = element.value;
                         }
 
-                        if(element.tagName == 'SELECT'){
+                        if (element.tagName == 'SELECT') {
                             this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
                         }
 
@@ -221,7 +221,8 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
             packagePrepareGrid.select('.grid tbody tr').each(function (item) {
                 if (item.select('[type="checkbox"]')[0].checked) {
                     var tariffInput = item.select('input').each(function (input) {
-                        if (!this.validateElement(input)) {errorsFound = true;}
+                        if (!this.validateElement(input)) {
+errorsFound = true;}
                     }.bind(this));
                 }
             }.bind(this));
@@ -278,21 +279,20 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                             this.dhlShipping.items[packageId][itemId] = {};
                             item.select('[data-module^=dhl_shipping]').each(function (element) {
                                 var fieldName = element.dataset.name;
-                                if(element.tagName === 'INPUT'){
+                                if (element.tagName === 'INPUT') {
                                     this.dhlShipping.items[packageId][itemId][fieldName] = element.value;
                                 }
 
                                 if (element.tagName === 'SELECT') {
                                     this.dhlShipping.items[packageId][itemId][fieldName] = element.options[element.selectedIndex].value;
                                 }
-                                if(element.dataset.updatepackage && element.innerText.length){
+                                if (element.dataset.updatepackage && element.innerText.length) {
                                     packageBlock.select('[data-module="dhl_shipping"][data-name='+element.dataset.name+']').first().value = element.innerText;
                                 }
                                 element.disabled ='disabled';
                             }.bind(this));
 
                             // ************  END ****************
-
                         } else {
                             this.packages[packageId]['items'][itemId]['qty'] += qtyValue;
                         }

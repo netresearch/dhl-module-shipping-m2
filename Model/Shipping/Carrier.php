@@ -341,6 +341,4 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         );
         return $contentTypes;
     }
-
-
 }
