@@ -62,6 +62,24 @@
                 <gl_label_size>4x4</gl_label_size>
                 <gl_page_size>A4</gl_page_size>
                 <gl_page_layout>1x1</gl_page_layout>
+
+
+                <shipment_autocreate_service_visualcheckofage>0</shipment_autocreate_service_visualcheckofage>
+                <shipment_autocreate_service_returnshipment>0</shipment_autocreate_service_returnshipment>
+                <shipment_autocreate_service_insurance>0</shipment_autocreate_service_insurance>
+                <shipment_autocreate_service_bulkygoods>0</shipment_autocreate_service_bulkygoods>
+
+                <!--service defaults-->
+                <service_preferredlocation_enabled>1</service_preferredlocation_enabled>
+                <service_preferredneighbour_enabled>1</service_preferredneighbour_enabled>
+                <service_parcelannouncement_enabled>1</service_parcelannouncement_enabled>
+                <service_preferredday_enabled>1</service_preferredday_enabled>
+                <service_preferredday_handling_fee>1.80</service_preferredday_handling_fee>
+                <service_preferredday_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredday_handling_fee_text>
+                <service_cutoff_time>13,00,00</service_cutoff_time>
+                <service_preferredtime_enabled>1</service_preferredtime_enabled>
+                <service_preferredtime_handling_fee>4.80</service_preferredtime_handling_fee>
+                <service_preferredtime_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredtime_handling_fee_text>
             </dhlshipping>
         </carriers>
     </default>
