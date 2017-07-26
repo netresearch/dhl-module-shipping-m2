@@ -181,4 +181,21 @@
             </argument>
         </arguments>
     </type>
+    <type name="Dhl\Shipping\Block\Service\Renderer\ServiceRenderer">
+        <arguments>
+            <argument name="mappings" xsi:type="array">
+                <item name="Dhl\Shipping\Service\Cod" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Hidden</item>
+                <item name="Dhl\Shipping\Service\BulkyGoods" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Boolean</item>
+                <item name="Dhl\Shipping\Service\Insurance" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Boolean</item>
+                <item name="Dhl\Shipping\Service\ParcelAnnouncement" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Boolean</item>
+                <item name="Dhl\Shipping\Service\PreferredDay" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Radio</item>
+                <item name="Dhl\Shipping\Service\PreferredLocation" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Text</item>
+                <item name="Dhl\Shipping\Service\PreferredNeighbour" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Text</item>
+                <item name="Dhl\Shipping\Service\PreferredTime" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Radio</item>
+                <item name="Dhl\Shipping\Service\PrintOnlyIfCodeable" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Boolean</item>
+                <item name="Dhl\Shipping\Service\ReturnShipment" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Boolean</item>
+                <item name="Dhl\Shipping\Service\VisualCheckOfAge" xsi:type="string">Dhl\Shipping\Block\Service\Renderer\Type\Select</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
