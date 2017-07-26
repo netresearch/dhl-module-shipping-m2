@@ -175,9 +175,15 @@ class BcsConfig implements BcsConfigInterface
     public function getAccountParticipations($store = null)
     {
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            $participations = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION, $store);
+            $participations = $this->configAccessor->getConfigValue(
+                self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION,
+                $store
+            );
         } else {
-            $participations = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION, $store);
+            $participations = $this->configAccessor->getConfigValue(
+                self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION,
+                $store
+            );
         }
 
         return array_column($participations, 'participation', 'procedure');
