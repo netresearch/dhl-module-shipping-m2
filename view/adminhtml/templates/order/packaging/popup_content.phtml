@@ -219,6 +219,8 @@
             <?php endif; ?>
         </div>
 
+        <?php echo $block->getChildHtml('dhl_shipment_packaging_services');?>
+
         <!--our child blocks go here -->
         <?php if ($block->displayCustomsValue()) :?>
             <div data-name="dhl_shipping_package_info" class="dhl_shipping_package_info">
