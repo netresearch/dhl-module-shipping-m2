@@ -114,7 +114,11 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                         // **** our customs params ********
 
                         _.forEach(this.dhlShipping.params[packageId], function (value, key) {
-                            this.paramsCreateLabelRequest['packages[' + packageId + '][params][customs][' + key + ']'] = value;
+                            if (key.match('service')) {
+                                this.paramsCreateLabelRequest['packages[' + packageId + '][params][services][' + key + ']'] = value;
+                            } else {
+                                this.paramsCreateLabelRequest['packages[' + packageId + '][params][customs][' + key + ']'] = value;
+                            }
                         }.bind(this));
 
                         // **** our customs params end ********
@@ -222,7 +226,8 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                 if (item.select('[type="checkbox"]')[0].checked) {
                     var tariffInput = item.select('input').each(function (input) {
                         if (!this.validateElement(input)) {
-errorsFound = true;}
+                            errorsFound = true;
+                        }
                     }.bind(this));
                 }
             }.bind(this));
