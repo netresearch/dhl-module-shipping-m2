@@ -24,12 +24,10 @@
 
 namespace Dhl\Shipping\Cron\AutoCreate;
 
-use Dhl\Shipping\Model\AutoCreate\Receiver;
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Shipping\Model\CarrierFactory;
-use Magento\Shipping\Model\Shipment\RequestFactory;
 use Magento\Shipping\Model\Shipping\LabelGenerator as CoreLabelGenerator;
 
 class LabelGenerator implements LabelGeneratorInterface
@@ -38,11 +36,6 @@ class LabelGenerator implements LabelGeneratorInterface
      * @var CarrierFactory
      */
     private $carrierFactory;
-
-    /**
-     * @var RequestFactory
-     */
-    private $requestFactory;
 
     /**
      * @var Order\Shipment\TrackFactory
@@ -59,25 +52,31 @@ class LabelGenerator implements LabelGeneratorInterface
     private $transactionFactory;
 
     /**
+     * @var RequestBuilderInterface
+     */
+    private $requestBuilder;
+
+    /**
      * @param CarrierFactory $carrierFactory
-     * @param RequestFactory $requestFactory
      * @param Order\Shipment\TrackFactory $trackFactory
      * @param CoreLabelGenerator $labelGenerator
      * @param TransactionFactory $transactionFactory
-     * @internal param LabelsFactory $labelFactory
+     * @param RequestBuilderInterface $requestBuilder
+     * @internal param RequestFactory $requestFactory
+     * @internal param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         CarrierFactory $carrierFactory,
-        RequestFactory $requestFactory,
         Order\Shipment\TrackFactory $trackFactory,
         CoreLabelGenerator $labelGenerator,
-        TransactionFactory $transactionFactory
+        TransactionFactory $transactionFactory,
+        RequestBuilderInterface $requestBuilder
     ) {
         $this->carrierFactory = $carrierFactory;
-        $this->requestFactory = $requestFactory;
         $this->trackFactory = $trackFactory;
         $this->labelGenerator = $labelGenerator;
         $this->transactionFactory = $transactionFactory;
+        $this->requestBuilder = $requestBuilder;
     }
 
     /**
@@ -88,14 +87,13 @@ class LabelGenerator implements LabelGeneratorInterface
     {
         $order = $orderShipment->getOrder();
         $carrier = $this->carrierFactory->create(
-            $order->getShippingMethod(true)
-                  ->getCarrierCode()
+            $order->getShippingMethod(true)->getCarrierCode()
         );
         $carrier->setStore($orderShipment->getStoreId());
         if (!$carrier->isShippingLabelsAvailable()) {
             throw new LocalizedException(__('Shipping labels is not available.'));
         }
-        $request = $this->prepareShipmentRequest($orderShipment);
+        $request = $this->requestBuilder->setOrderShipment($orderShipment)->create();
         $response = $carrier->requestToShipment($request);
         if ($response->hasErrors()) {
             throw new LocalizedException(__($response->getErrors()));
@@ -107,9 +105,11 @@ class LabelGenerator implements LabelGeneratorInterface
         $trackingNumbers = [];
         $info = $response->getInfo();
         foreach ($info as $inf) {
-            if (!empty($inf['tracking_number']) && !empty($inf['label_content'])) {
-                $labelsContent[] = $inf['label_content'];
+            if (!empty($inf['tracking_number'])) {
                 $trackingNumbers[] = $inf['tracking_number'];
+            }
+            if (!empty($inf['label_content'])) {
+                $labelsContent[] = $inf['label_content'];
             }
         }
         $outputPdf = $this->labelGenerator->combineLabelsPdf($labelsContent);
@@ -152,10 +152,9 @@ class LabelGenerator implements LabelGeneratorInterface
                 );
             } else {
                 $shipment->addTrack(
-                    $this->trackFactory->create()
-                                       ->setNumber($number)
-                                       ->setCarrierCode($carrierCode)
-                                       ->setTitle($carrierTitle)
+                    $this->trackFactory->create()->setNumber($number)->setCarrierCode($carrierCode)->setTitle(
+                        $carrierTitle
+                    )
                 );
             }
         }
@@ -167,20 +166,6 @@ class LabelGenerator implements LabelGeneratorInterface
     private function saveShipment(Order\Shipment $orderShipment)
     {
         $transaction = $this->transactionFactory->create();
-        $transaction->addObject($orderShipment)
-                    ->addObject($orderShipment->getOrder())
-                    ->save();
-    }
-
-    /**
-     * @param Order\Shipment $orderShipment
-     */
-    private function prepareShipmentRequest($orderShipment)
-    {
-        //@TODO finish shipment request preparation
-        $baseCurrencyCode = $orderShipment->getOrder()
-                                          ->getBaseCurrencyCode();
-        $request = $this->requestFactory->create();
-        $request->addData(Receiver::fromShippingAddress($orderShipment->getShippingAddress()));
+        $transaction->addObject($orderShipment)->addObject($orderShipment->getOrder())->save();
     }
 }

@@ -59,7 +59,7 @@ class GlDataMapper implements GlDataMapperInterface
         \Zend_Measure_Weight::GRAM => 'G',
         \Zend_Measure_Weight::KILOGRAM => 'KG',
         \Zend_Measure_Weight::OUNCE => 'OZ',
-        \Zend_Measure_Weight::POUND => 'LB',
+        \Zend_Measure_Weight::LBS => 'LB',
     ];
 
     private $dimensionUomMap = [
