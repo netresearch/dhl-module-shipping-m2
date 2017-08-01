@@ -27,7 +27,6 @@
 namespace Dhl\Shipping\Webservice\Client;
 
 use \Dhl\Shipping\Config\BcsConfigInterface;
-use \Dhl\Shipping\Webservice\Client\BcsSoapClientInterface;
 
 /**
  * Business Customer Shipping API SOAP client
