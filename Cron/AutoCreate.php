@@ -106,7 +106,11 @@ class AutoCreate
                       ->getCountryId()
             );
 
-            if (!$order->canShip() || !$canProcessRoute) {
+            $isCrossBorderRoute = $this->config->isCrossBorderRoute(
+                $order->getShippingAddress()->getCountryId(),
+                $order->getStoreId()
+            );
+            if (!$order->canShip() || !$canProcessRoute || $isCrossBorderRoute) {
                 continue;
             }
 
