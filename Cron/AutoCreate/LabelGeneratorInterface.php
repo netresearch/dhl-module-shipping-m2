@@ -25,13 +25,13 @@
 
 namespace Dhl\Shipping\Cron\AutoCreate;
 
-use Magento\Sales\Model\Order;
+use \Magento\Sales\Api\Data\ShipmentInterface as Shipment;
 
 interface LabelGeneratorInterface
 {
     /**
-     * @param Order\Shipment $order
+     * @param Shipment $order
      * @return void
      */
-    public function create(Order\Shipment $order);
+    public function create(Shipment $order);
 }
