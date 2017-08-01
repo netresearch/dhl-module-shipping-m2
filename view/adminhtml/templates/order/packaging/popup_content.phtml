@@ -219,17 +219,16 @@
             <?php endif; ?>
         </div>
 
-        <?php echo $block->getChildHtml('dhl_shipment_packaging_services');?>
+        <div data-name="dhl_shipping_package_info" class="dhl_shipping_package_info">
+            <img src="<?php echo $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png'); ?>"
+                 class="dhl-logo" title="DHL BCS Additional Services" alt="DHL BCS Additional Services" />
+            <?php echo $block->getChildHtml('dhl_shipment_packaging_services');?>
 
-        <!--our child blocks go here -->
-        <?php if ($block->displayCustomsValue()) :?>
-            <div data-name="dhl_shipping_package_info" class="dhl_shipping_package_info">
-                <img src="<?php echo $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png'); ?>"
-                     class="dhl-logo" title="DHL BCS Additional Services" alt="DHL BCS Additional Services" />
-
-                <?php echo $block->getChildHtml('dhl_shipment_packaging_export_documents') ?>
-            </div>
-        <?php endif;?>
+            <!--our customs child block goes here -->
+            <?php if ($block->displayCustomsValue()) :?>
+                    <?php echo $block->getChildHtml('dhl_shipment_packaging_export_documents') ?>
+            <?php endif;?>
+        </div>
 
             <div class="admin__page-subsection" data-role="package-items">
                 <div class="grid_prepare admin__page-subsection">
