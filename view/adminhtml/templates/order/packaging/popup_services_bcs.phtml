@@ -24,24 +24,31 @@
  * @link      http://www.netresearch.de/
  */
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Services $block */ ?>
-<table cellspacing="0" class="data-table admin__control-table">
-    <thead>
-        <tr class="headings">
+<?php $services = $block->getServiceCollection(); ?>
+<?php if (!empty($services)): ?>
+    <dl>
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\BulkyGoods::CODE)): ?>
             <?php
-
-                foreach ($block->getServiceCollection() as $service) {
-                    /** @var \Dhl\Shipping\Service\ServiceInterface $service */
-                    echo $service->getCode();
-                }
-
+                $code = \Dhl\Shipping\Service\BulkyGoods::CODE;
+                $elementId = "shipment_service_$code";
+                $name = __('Bulky Goods');
             ?>
 
-        </tr>
-    </thead>
+            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+                <input
+                    data-module="dhl_shipping"
+                    data-name="service_bulky_goods"
+                    type="checkbox"
+                    id="<?php /* @noEscape */ echo $elementId ?>"
+                    name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
+                    value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                />
+                <label for="<?php /* @noEscape */ echo $elementId ?>"><?php echo $block->escapeHtml($name) ?></label>
+            </dt>
+            <dd class="service-<?php  /* @noEscape */ echo $code ?>">
+            </dd>
+        <?php endif; ?>
 
-    <tbody>
-        <tr>
 
-        </tr>
-    </tbody>
-</table>
+    </dl>
+<?php endif; ?>

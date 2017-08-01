@@ -86,7 +86,7 @@ class BcsService
 
     private function isServiceEnabled($code, $store = null)
     {
-        $path = "carriers/dhlshipping/service_{$code}_enabled";
+        $path = strtolower("carriers/dhlshipping/service_{$code}_enabled");
         return (bool)$this->configAccessor->getConfigValue($path, $store);
     }
 
@@ -102,20 +102,20 @@ class BcsService
         $services = [];
         $serviceCodes = [
             // customer/checkout services
-            Service\PreferredDay::CODE,
-            Service\PreferredTime::CODE,
-            Service\PreferredLocation::CODE,
-            Service\PreferredNeighbour::CODE,
-            Service\ParcelAnnouncement::CODE,
+            Service\PreferredDay::CODE => true,
+            Service\PreferredTime::CODE => true,
+            Service\PreferredLocation::CODE => true,
+            Service\PreferredNeighbour::CODE => true,
+            Service\ParcelAnnouncement::CODE => true,
             // merchant/admin services
-            Service\VisualCheckOfAge::CODE,
-            Service\ReturnShipment::CODE,
-            Service\Insurance::CODE,
-            Service\BulkyGoods::CODE,
+            Service\VisualCheckOfAge::CODE => false,
+            Service\ReturnShipment::CODE => false,
+            Service\Insurance::CODE => false,
+            Service\BulkyGoods::CODE => false,
         ];
 
-        foreach ($serviceCodes as $serviceCode) {
-            if ($this->isServiceEnabled($serviceCode, $store)) {
+        foreach ($serviceCodes as $serviceCode => $isConfigurable) {
+            if (!$isConfigurable || $this->isServiceEnabled($serviceCode, $store)) {
                 $services[$serviceCode] = Service\ServiceFactory::get($serviceCode);
             }
         }
