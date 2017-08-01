@@ -26,7 +26,8 @@ namespace Dhl\Shipping\Cron\AutoCreate;
 
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Api\Data\ShipmentInterface as Shipment;
+use Magento\Shipping\Model\Order\TrackFactory;
 use Magento\Shipping\Model\CarrierFactory;
 use Magento\Shipping\Model\Shipping\LabelGenerator as CoreLabelGenerator;
 
@@ -38,7 +39,7 @@ class LabelGenerator implements LabelGeneratorInterface
     private $carrierFactory;
 
     /**
-     * @var Order\Shipment\TrackFactory
+     * @var TrackFactory
      */
     private $trackFactory;
     /**
@@ -58,7 +59,7 @@ class LabelGenerator implements LabelGeneratorInterface
 
     /**
      * @param CarrierFactory $carrierFactory
-     * @param Order\Shipment\TrackFactory $trackFactory
+     * @param TrackFactory $trackFactory
      * @param CoreLabelGenerator $labelGenerator
      * @param TransactionFactory $transactionFactory
      * @param RequestBuilderInterface $requestBuilder
@@ -67,7 +68,7 @@ class LabelGenerator implements LabelGeneratorInterface
      */
     public function __construct(
         CarrierFactory $carrierFactory,
-        Order\Shipment\TrackFactory $trackFactory,
+        TrackFactory $trackFactory,
         CoreLabelGenerator $labelGenerator,
         TransactionFactory $transactionFactory,
         RequestBuilderInterface $requestBuilder
@@ -80,10 +81,10 @@ class LabelGenerator implements LabelGeneratorInterface
     }
 
     /**
-     * @param Order\Shipment $orderShipment
+     * @param Shipment $orderShipment
      * @throws LocalizedException
      */
-    public function create(Order\Shipment $orderShipment)
+    public function create(Shipment $orderShipment)
     {
         $order = $orderShipment->getOrder();
         $carrier = $this->carrierFactory->create(
@@ -129,7 +130,7 @@ class LabelGenerator implements LabelGeneratorInterface
 
     /**
      * @see \Magento\Shipping\Model\Shipping\LabelGenerator::addTrackingNumbersToShipment()
-     * @param Order\Shipment $shipment
+     * @param Shipment $shipment
      * @param array $trackingNumbers
      * @param string $carrierCode
      * @param string $carrierTitle
@@ -137,7 +138,7 @@ class LabelGenerator implements LabelGeneratorInterface
      * @return void
      */
     private function addTrackingNumbersToShipment(
-        Order\Shipment $shipment,
+        Shipment $shipment,
         $trackingNumbers,
         $carrierCode,
         $carrierTitle
@@ -161,9 +162,9 @@ class LabelGenerator implements LabelGeneratorInterface
     }
 
     /**
-     * @param Order\Shipment $orderShipment
+     * @param Shipment $orderShipment
      */
-    private function saveShipment(Order\Shipment $orderShipment)
+    private function saveShipment(Shipment $orderShipment)
     {
         $transaction = $this->transactionFactory->create();
         $transaction->addObject($orderShipment)->addObject($orderShipment->getOrder())->save();
