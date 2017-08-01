@@ -28,12 +28,14 @@ namespace Dhl\Shipping\Cron;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface as Config;
 use Dhl\Shipping\Model\Shipping\Carrier;
+use Dhl\Shipping\Cron\AutoCreate\LabelGeneratorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderSearchResultInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
-use Dhl\Shipping\Cron\AutoCreate\LabelGeneratorInterface;
+use Magento\Sales\Api\Data\OrderInterface as Order;
+use Magento\Sales\Api\Data\ShipmentInterface as Shipment;
+use Magento\Sales\Model\Order\ShipmentFactory;
 use Magento\Store\Model\StoresConfig;
 
 class AutoCreate
@@ -61,14 +63,14 @@ class AutoCreate
     private $storesConfig;
 
     /**
-     * @var Order\ShipmentFactory
+     * @var ShipmentFactory
      */
     private $shipmentFactory;
 
     /**
      * AutoCreate constructor.
      * @param LabelGeneratorInterface $labelGenerator
-     * @param Order\ShipmentFactory $shipmentFactory
+     * @param ShipmentFactory $shipmentFactory
      * @param OrderRepositoryInterface $orderRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Config $config
@@ -77,7 +79,7 @@ class AutoCreate
      */
     public function __construct(
         LabelGeneratorInterface $labelGenerator,
-        Order\ShipmentFactory $shipmentFactory,
+        ShipmentFactory $shipmentFactory,
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Config $config,
@@ -92,7 +94,10 @@ class AutoCreate
     }
 
     /**
+     * Queries for orders that could be automatically shipped and processes them via the corresponding API
+     *
      * @return mixed[]
+     * @throws LocalizedException
      */
     public function run()
     {
@@ -118,7 +123,16 @@ class AutoCreate
                 $shipments[] = $this->createAndSubmitShipment($order);
                 $shippedOrders[] = $order->getIncrementId();
             } catch (LocalizedException $exception) {
-                // @TODO log exception
+                $message = $exception->getMessage();
+                throw new LocalizedException(
+                    __(
+                        'Could not create shipment for OrderId %1. Error: %2',
+                        [
+                            $order->getIncrementId(),
+                            $message
+                        ]
+                    )
+                );
             }
         }
         return [
@@ -129,6 +143,8 @@ class AutoCreate
     }
 
     /**
+     * Collect all SearchCriteria
+     *
      * @return \Magento\Framework\Api\SearchCriteria
      */
     private function createSearchCriteria()
@@ -189,11 +205,11 @@ class AutoCreate
     /**
      * @param $order
      *
-     * @return Order\Shipment
+     * @return Shipment
      */
     private function createAndSubmitShipment($order)
     {
-        /** @var Order\Shipment $shipment */
+        /** @var Shipment $shipment */
         $shipment = $this->shipmentFactory->create($order);
         $shipment->addComment('Shipment automatically created by Dhl Shipping.');
         $shipment->register();
