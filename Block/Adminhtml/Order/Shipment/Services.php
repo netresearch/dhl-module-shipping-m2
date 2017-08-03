@@ -63,6 +63,7 @@ class Services extends \Magento\Backend\Block\Template
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Backend\Block\Template\Context $context
      * @param ModuleConfigInterface $moduleConfig
+     * @param BcsService $bcsService
      * @param array $data
      */
     public function __construct(
@@ -96,22 +97,6 @@ class Services extends \Magento\Backend\Block\Template
     public function getTemplate()
     {
         return self::BCS_SERVICES_TEMPLATE;
-
-//        $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
-//        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
-//        $bcsCountries = ['DE', 'AT'];
-//        $usedTemplate = '';
-//        $originCountryId = $this->moduleConfig->getShipperCountry(
-//            $this->getShipment()->getStoreId()
-//        );
-//
-//        if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
-//            $usedTemplate = self::BCS_SERVICES_TEMPLATE;
-//        } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {
-//            $usedTemplate = self::GL_CUSTOMS_TEMPLATE;
-//        }
-//
-//        return $usedTemplate;
     }
 
     /**
@@ -121,5 +106,4 @@ class Services extends \Magento\Backend\Block\Template
     {
         return $this->bcsServices->getServices($this->getShipment()->getStoreId());
     }
-
 }
