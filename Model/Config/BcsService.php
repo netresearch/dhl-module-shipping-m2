@@ -40,6 +40,7 @@ use Dhl\Shipping\Service;
  */
 class BcsService
 {
+    const CONFIG_XML_FIELD_PREFERREDDAY = 'carriers/dhlshipping/service_preferredday_enabled';
     const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE = 'carriers/dhlshipping/service_preferredday_handling_fee';
     const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT = 'carriers/dhlshipping/service_preferredday_handling_fee_text';
     const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE = 'carriers/dhlshipping/service_preferredtime_handling_fee';
