@@ -209,4 +209,55 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('22222221337', $info[0]['tracking_number']);
         $this->assertContains('%PDF-1.4', $info[0]['label_content']);
     }
+
+    /**
+     * @test
+     * @magentoAppArea adminhtml
+     */
+    public function requestToShipmentSuccessWithoutTrack()
+    {
+        $incrementId = '1001';
+        $packageId = '7';
+        $sequenceNumber = "$incrementId-$packageId";
+
+        $response = ShipmentResponseProvider::provideSingleSuccessResponse($sequenceNumber, false);
+        $this->webserviceGateway
+            ->expects($this->once())
+            ->method('createLabels')
+            ->willReturn($response);
+
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $this->objectManager->create(DataObject::class, ['data' => [
+            'increment_id' => $incrementId
+        ]]);
+        $shipment = $this->objectManager->create(DataObject::class, ['data' => [
+            'order' => $order,
+        ]]);
+        $package = [
+            'params' => [
+                'container' => 'foo',
+                'weight' => 42
+            ],
+            'items' => [],
+        ];
+
+        /** @var ShipmentRequest $request */
+        $request = $this->objectManager->create(ShipmentRequest::class, ['data' => [
+            'packages' => [$packageId => $package],
+            'order_shipment' => $shipment,
+        ]]);
+
+        $this->carrier = $this->objectManager->create(Carrier::class, [
+            'webserviceGateway' => $this->webserviceGateway
+        ]);
+
+        $response = $this->carrier->requestToShipment($request);
+        $info = $response->getData('info');
+        $this->assertInternalType('array', $info);
+        $this->assertCount(1, $info);
+        $this->assertArrayHasKey('tracking_number', $info[0]);
+        $this->assertArrayHasKey('label_content', $info[0]);
+        $this->assertEquals(Carrier::NO_TRACK, $info[0]['tracking_number']);
+        $this->assertContains('%PDF-1.4', $info[0]['label_content']);
+    }
 }

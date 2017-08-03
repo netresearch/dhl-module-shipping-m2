@@ -124,6 +124,9 @@
     <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">
         <plugin name="logWsApiCalls" type="Dhl\Shipping\Plugin\AdapterChainPlugin" />
     </type>
+    <type name="\Magento\Sales\Model\Order\Shipment">
+        <plugin name="preventTrackStorage" type="Dhl\Shipping\Plugin\Order\ShippingPlugin" />
+    </type>
 
     <!-- passing arguments -->
     <type name="Dhl\Shipping\Plugin\Checkout\ShippingInformationManagementPlugin">
