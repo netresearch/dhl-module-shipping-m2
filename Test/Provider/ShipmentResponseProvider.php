@@ -105,9 +105,10 @@ PDF;
 
     /**
      * @param string $sequenceNumber
+     * @param bool $withTracking
      * @return CreateShipment\Label
      */
-    private static function getSuccessItem($sequenceNumber)
+    private static function getSuccessItem($sequenceNumber, $withTracking = true)
     {
         $itemStatus = new ItemStatus(
             $sequenceNumber,
@@ -119,7 +120,7 @@ PDF;
         $responseLabel = new CreateShipment\Label(
             $itemStatus,
             $sequenceNumber,
-            '22222221337',
+            $withTracking ? '22222221337' : null,
             self::VALID_PDF_STRING,
             null,
             null,
@@ -131,9 +132,19 @@ PDF;
 
     /**
      * @param string $sequenceNumber
+     * @return CreateShipment\Label
+     */
+    private static function getSuccessItemWithoutTrackingId($sequenceNumber)
+    {
+        return self::getSuccessItem($sequenceNumber, false);
+    }
+
+    /**
+     * @param string $sequenceNumber
+     * @param bool $withTracking
      * @return CreateShipmentResponseCollection
      */
-    public static function provideSingleSuccessResponse($sequenceNumber)
+    public static function provideSingleSuccessResponse($sequenceNumber, $withTracking = true)
     {
         $responseStatus = new ResponseStatus(
             ResponseStatus::STATUS_SUCCESS,
@@ -142,12 +153,18 @@ PDF;
         );
 
         $labels = [];
-        $labels[$sequenceNumber] = self::getSuccessItem($sequenceNumber);
+        if($withTracking){
+            $labels[$sequenceNumber] = self::getSuccessItem($sequenceNumber);
+        } else {
+            $labels[$sequenceNumber] = self::getSuccessItemWithoutTrackingId($sequenceNumber);
+        }
 
         $response = new CreateShipmentResponseCollection($labels);
         $response->setStatus($responseStatus);
         return $response;
     }
+
+
 
     /**
      * @param string[] $sequenceNumbers
