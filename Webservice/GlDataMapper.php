@@ -251,12 +251,15 @@ class GlDataMapper implements GlDataMapperInterface
     private function getPackageId(ShipmentDetails\ShipmentDetailsInterface $shipmentDetails, $sequenceNumber)
     {
         $reducedTimeStamp = time() - 946684800; // time since 2001
-        $uniquePackageId = sprintf(
-            '%s-%s-%s',
+        $uniquePackageId = implode(
+            [
             $shipmentDetails->getCustomerPrefix(),
             $sequenceNumber,
             $reducedTimeStamp
+            ]
         );
+        // remove non-alphanum chars from package id
+        $uniquePackageId = preg_replace('[^a-zA-Z\d]', '', $uniquePackageId);
         return $uniquePackageId;
     }
 }
