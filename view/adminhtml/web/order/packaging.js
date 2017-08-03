@@ -55,22 +55,21 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
 
                     };
 
-                    // ******** customs package params are added here**************
+                    // ******** package params are added here**************
 
                     this.dhlShipping.params[packageId] = {};
                     pack.select('div[data-name="dhl_shipping_package_info"] [data-module^=dhl_shipping]').each(function (element) {
                         var fieldName = element.dataset.name;
-                        if (element.tagName == 'INPUT') {
-                            this.dhlShipping.params[packageId][fieldName] = element.value;
+                        if (element.type == 'checkbox' && element.checked) {
+                            this.dhlShipping.params[packageId][fieldName] = element.checked;
                         }
 
-                        if (element.tagName == 'SELECT') {
+                        if (element.type.match('select')) {
                             this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
                         }
-
                     }.bind(this));
 
-                    // ***** add customs package params end
+                    // ***** add package params end
 
                     if (isNaN(packagesParams[packageId]['customs_value'])) {
                         packagesParams[packageId]['customs_value'] = 0;
@@ -111,7 +110,7 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                         this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[params]' + '[content_type]'] = packagesParams[packageId]['content_type'];
                         this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[params]' + '[content_type_other]'] = packagesParams[packageId]['content_type_other'];
 
-                        // **** our customs params ********
+                        // **** our params ********
 
                         _.forEach(this.dhlShipping.params[packageId], function (value, key) {
                             if (key.match('service')) {
@@ -121,7 +120,7 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                             }
                         }.bind(this));
 
-                        // **** our customs params end ********
+                        // **** our params end ********
 
                         if ('undefined' != typeof packagesParams[packageId]['size']) {
                             this.paramsCreateLabelRequest['packages[' + packageId + ']' + '[params]' + '[size]'] = packagesParams[packageId]['size'];

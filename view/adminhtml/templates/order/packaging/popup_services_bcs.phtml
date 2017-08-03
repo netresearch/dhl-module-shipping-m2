@@ -14,8 +14,6 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * PHP version 5
- *
  * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
@@ -25,30 +23,110 @@
  */
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Services $block */ ?>
 <?php $services = $block->getServiceCollection(); ?>
-<?php if (!empty($services)): ?>
+<?php if (!empty($services)) : ?>
     <dl>
-        <?php if ($services->offsetExists(\Dhl\Shipping\Service\BulkyGoods::CODE)): ?>
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\BulkyGoods::CODE)) : ?>
             <?php
                 $code = \Dhl\Shipping\Service\BulkyGoods::CODE;
-                $elementId = "shipment_service_$code";
                 $name = __('Bulky Goods');
             ?>
-
             <dt class="service-<?php /* @noEscape */ echo $code; ?>">
-                <input
-                    data-module="dhl_shipping"
-                    data-name="service_bulky_goods"
-                    type="checkbox"
-                    id="<?php /* @noEscape */ echo $elementId ?>"
-                    name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                    value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-                />
-                <label for="<?php /* @noEscape */ echo $elementId ?>"><?php echo $block->escapeHtml($name) ?></label>
+
+                <label>
+                    <input
+                        data-module="dhl_shipping"
+                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        type="checkbox"
+                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
+                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                    />
+                    <?php echo $block->escapeHtml($name) ?>
+                </label>
             </dt>
             <dd class="service-<?php  /* @noEscape */ echo $code ?>">
             </dd>
         <?php endif; ?>
 
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\ParcelAnnouncement::CODE)) : ?>
+            <?php
+            $code = \Dhl\Shipping\Service\ParcelAnnouncement::CODE;
+            $name = __('Parcel Announcement');1
+            ?>
+            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+                <label>
+                    <input
+                        data-module="dhl_shipping"
+                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        type="checkbox"
+                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
+                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                    />
+                    <?php echo $block->escapeHtml($name) ?>
+                </label>
+            </dt>
+        <?php endif; ?>
 
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\Insurance::CODE)) : ?>
+            <?php
+            $code = \Dhl\Shipping\Service\Insurance::CODE;
+            $name = __('Insurance');
+            ?>
+            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+                <label>
+                    <input
+                        data-module="dhl_shipping"
+                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        type="checkbox"
+                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
+                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                    />
+                    <?php echo $block->escapeHtml($name) ?>
+                </label>
+            </dt>
+        <?php endif; ?>
+
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\PrintOnlyIfCodeable::CODE)) : ?>
+            <?php
+            $code = \Dhl\Shipping\Service\PrintOnlyIfCodeable::CODE;
+            $name = __('Print only if Codeable');
+            ?>
+            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+                <label>
+                    <input
+                        data-module="dhl_shipping"
+                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        type="checkbox"
+                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
+                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                    />
+                    <?php echo $block->escapeHtml($name) ?>
+                </label>
+            </dt>
+        <?php endif; ?>
+
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\VisualCheckOfAge::CODE)) : ?>
+            <?php
+            $code = \Dhl\Shipping\Service\VisualCheckOfAge::CODE;
+            $name = __('Visual Check of Age');
+            ?>
+            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+                <label>
+                    <input
+                        data-module="dhl_shipping"
+                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        type="checkbox"
+                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
+                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                    />
+                    <?php echo $block->escapeHtml($name) ?>
+                </label>
+            </dt>
+            <dd class="service-select <?php /* @noEscape */ echo $code ?>">
+                <select name="service_setting[visualCheckOfAge]" data-module="dhl_shipping" data-name="service_<?php /* @noEscape */ echo $code ?>">
+                    <option value="A16">A16</option>
+                    <option value="A18">A18</option>
+                </select>
+            </dd>
+        <?php endif; ?>
     </dl>
 <?php endif; ?>
