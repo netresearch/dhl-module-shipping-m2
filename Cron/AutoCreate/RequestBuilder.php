@@ -32,7 +32,7 @@ use Magento\Sales\Model\Order;
 use Magento\Shipping\Model\Shipment\Request;
 use Magento\Shipping\Model\Shipment\RequestFactory;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Shipping\Helper\Data;
+use Magento\Directory\Helper\Data;
 
 class RequestBuilder implements RequestBuilderInterface
 {
@@ -203,37 +203,35 @@ class RequestBuilder implements RequestBuilderInterface
     {
         /** @var Order\Shipment\Package[] $packages */
         $packages = $request->getOrderShipment()->getPackages();
-        $weightUnits = strtoupper(
-            $this->scopeConfig->getValue(
-                Data::XML_PATH_WEIGHT_UNIT,
-                ScopeInterface::SCOPE_STORE,
-                $request->getOrderShipment()->getStoreId()
-            )
+        $weightUnit = $this->scopeConfig->getValue(
+            Data::XML_PATH_WEIGHT_UNIT,
+            ScopeInterface::SCOPE_STORE,
+            $request->getOrderShipment()->getStoreId()
         );
-        array_walk(
-            $packages,
-            function (
-                &$package,
-                $key,
-                $weightUnits
-            ) {
-                $items = [];
-                $weight = 0;
-                /** @var Order\Shipment\Item $item */
-                foreach ($package['items'] as $item) {
-                    $items[] = $item->toArray();
-                    $item['weight_units'] = $weightUnits;
-                    $weight += $item->getWeight();
-                }
-                $package['params']['weight'] = $weight;
-                $package['params']['weight_units'] = $weightUnits;
-                $package['items'] = $items;
-            },
-            $weightUnits
-        );
-        $request->setPackages($packages);
+        $weightUnit = ($weightUnit === 'lbs')
+            ? \Zend_Measure_Weight::POUND
+            : \Zend_Measure_Weight::KILOGRAM;
 
-        //@TODO DHLVM2-42: read service configuration from config and attach to package
+        $setPackageItems = function (&$package, $index) use ($weightUnit) {
+            $items = [];
+            $weight = 0;
+
+            /** @var Order\Shipment\Item $item */
+            foreach ($package['items'] as $item) {
+                $items[] = $item->toArray();
+                $item['weight_units'] = $weightUnit;
+                $weight += $item->getWeight();
+            }
+
+            $package['params']['weight'] = $weight;
+            $package['params']['weight_units'] = $weightUnit;
+            $package['items'] = $items;
+        };
+
+        array_walk($packages, $setPackageItems);
+
+        //TODO(nr): DHLVM2-42: read service configuration from config and attach to package
+        $request->setData('packages', $packages);
     }
 
     public function getData()

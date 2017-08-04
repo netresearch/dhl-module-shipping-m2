@@ -32,6 +32,7 @@
     <preference for="Dhl\Shipping\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig" />
     <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
     <preference for="Dhl\Shipping\Cron\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\Cron\AutoCreate\LabelGenerator" />
+    <preference for="Dhl\Shipping\Cron\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\Cron\AutoCreate\RequestBuilder"/>
 
     <!-- library preferences -->
     <preference for="Dhl\Shipping\Model\ShippingInfo\Api\Data\QuoteShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo" />
