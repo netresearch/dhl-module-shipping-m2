@@ -26,7 +26,7 @@ namespace Dhl\Shipping\Cron\AutoCreate;
 
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Api\Data\ShipmentInterface as Shipment;
+use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Shipping\Model\Order\TrackFactory;
 use Magento\Shipping\Model\CarrierFactory;
 use Magento\Shipping\Model\Shipping\LabelGenerator as CoreLabelGenerator;
@@ -81,10 +81,10 @@ class LabelGenerator implements LabelGeneratorInterface
     }
 
     /**
-     * @param Shipment $orderShipment
+     * @param ShipmentInterface $orderShipment
      * @throws LocalizedException
      */
-    public function create(Shipment $orderShipment)
+    public function create(ShipmentInterface $orderShipment)
     {
         $order = $orderShipment->getOrder();
         $carrier = $this->carrierFactory->create(
@@ -130,7 +130,7 @@ class LabelGenerator implements LabelGeneratorInterface
 
     /**
      * @see \Magento\Shipping\Model\Shipping\LabelGenerator::addTrackingNumbersToShipment()
-     * @param Shipment $shipment
+     * @param ShipmentInterface $shipment
      * @param array $trackingNumbers
      * @param string $carrierCode
      * @param string $carrierTitle
@@ -138,7 +138,7 @@ class LabelGenerator implements LabelGeneratorInterface
      * @return void
      */
     private function addTrackingNumbersToShipment(
-        Shipment $shipment,
+        ShipmentInterface $shipment,
         $trackingNumbers,
         $carrierCode,
         $carrierTitle
@@ -162,11 +162,13 @@ class LabelGenerator implements LabelGeneratorInterface
     }
 
     /**
-     * @param Shipment $orderShipment
+     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $orderShipment
      */
-    private function saveShipment(Shipment $orderShipment)
+    private function saveShipment(ShipmentInterface $orderShipment)
     {
         $transaction = $this->transactionFactory->create();
-        $transaction->addObject($orderShipment)->addObject($orderShipment->getOrder())->save();
+        $transaction->addObject($orderShipment);
+        $transaction->addObject($orderShipment->getOrder());
+        $transaction->save();
     }
 }

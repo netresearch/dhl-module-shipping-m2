@@ -38,12 +38,22 @@ use Magento\Sales\Api\Data\ShipmentInterface as Shipment;
 use Magento\Sales\Model\Order\ShipmentFactory;
 use Magento\Store\Model\StoresConfig;
 
+/**
+ * Cron entry point for automatic shipment creation and label retrieval
+ *
+ * @category Dhl
+ * @package  Dhl\Shipping
+ * @author   Paul Siedler <paul.siedler@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class AutoCreate
 {
     /**
      * @var OrderSearchResultInterfaceFactory
      */
     private $orderRepository;
+
     /**
      * @var LabelGeneratorInterface
      */
@@ -53,10 +63,12 @@ class AutoCreate
      * @var SearchCriteriaBuilder
      */
     private $searchCriteriaBuilder;
+
     /**
      * @var Config
      */
     private $config;
+
     /**
      * @var StoresConfig
      */
@@ -75,7 +87,6 @@ class AutoCreate
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param Config $config
      * @param StoresConfig $storesConfig
-     * @internal param OrderRepositoryInterface $orderCollection
      */
     public function __construct(
         LabelGeneratorInterface $labelGenerator,

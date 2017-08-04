@@ -334,7 +334,9 @@ class BcsDataMapper implements BcsDataMapperInterface
         $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
 
         // customs declaration
+        //fixme(nr): check if export document is necessary. domestic shipments with export document fail.
         $exportDocumentType = $this->getExportDocument($shipmentOrder->getPackages());
+        $exportDocumentType = null;
 
         // shipment definition, label format, print only if codeable
         $shipmentType = new BcsApi\Shipment(
