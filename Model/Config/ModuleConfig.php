@@ -60,8 +60,7 @@ class ModuleConfig implements ModuleConfigInterface
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         ShippingRoutesInterface $routeConfig
-    )
-    {
+    ) {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
     }
@@ -242,10 +241,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param int | null $storeId
      * @return bool
      */
-    public function isCrossBorderRoute(
-        $destinationCountryId,
-        $storeId = null
-    )
+    public function isCrossBorderRoute($destinationCountryId, $storeId = null)
     {
         return $this->routeConfig->isCrossBorderRoute(
             $this->getShipperCountry($storeId),

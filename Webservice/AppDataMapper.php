@@ -29,6 +29,7 @@ namespace Dhl\Shipping\Webservice;
 use \Dhl\Shipping\Config\BcsConfigInterface;
 use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Dhl\Shipping\Config\GlConfigInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use \Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
@@ -49,18 +50,18 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDe
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
 use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
-use Dhl\Shipping\Util\BcsShippingProductsInterface;
-use Dhl\Shipping\Util\GlShippingProductsInterface;
-use Dhl\Shipping\Util\ShippingProductsInterface;
+use \Dhl\Shipping\Util\BcsShippingProductsInterface;
+use \Dhl\Shipping\Util\GlShippingProductsInterface;
+use \Dhl\Shipping\Util\ShippingProductsInterface;
 use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionFactory;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Shipping\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
-use Dhl\Shipping\Webservice\ShippingInfo\Info;
-use Magento\Framework\DataObject;
-use Magento\Sales\Model\Order\Shipment\Package;
+use \Dhl\Shipping\Webservice\ShippingInfo\Info;
+use \Magento\Framework\DataObject;
+use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 
 /**
  * AppDataMapper
@@ -274,10 +275,10 @@ class AppDataMapper implements AppDataMapperInterface
      * Calculate total value of order
      * FIXME(nr): handle partial shipments
      *
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param ShipmentRequest $request
      * @return MonetaryValueInterface
      */
-    public function getOrderValue(\Magento\Shipping\Model\Shipment\Request $request)
+    public function getOrderValue(ShipmentRequest $request)
     {
         $shipmentValue = $request->getOrderShipment()->getOrder()->getBaseGrandTotal();
         $declaredValue = $this->monetaryValueFactory->create([
@@ -292,10 +293,10 @@ class AppDataMapper implements AppDataMapperInterface
      * Calculate total value of (partial) shipment
      * FIXME(nr): obtain value including tax
      *
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param ShipmentRequest $request
      * @return MonetaryValueInterface
      */
-    private function getShipmentValue(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getShipmentValue(ShipmentRequest $request)
     {
         $shipmentValue = 0;
         foreach ($request->getData('packages') as $packageId => $package) {
@@ -317,11 +318,11 @@ class AppDataMapper implements AppDataMapperInterface
     }
 
     /**
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param ShipmentRequest $request
      *
      * @return ShipmentDetailsInterface
      */
-    private function getShipmentDetails(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getShipmentDetails(ShipmentRequest $request)
     {
         $storeId = $request->getOrderShipment()->getStoreId();
 
@@ -365,11 +366,11 @@ class AppDataMapper implements AppDataMapperInterface
     }
 
     /**
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param ShipmentRequest $request
      *
      * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface
      */
-    private function getShipper(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getShipper(ShipmentRequest $request)
     {
         $storeId      = $request->getOrderShipment()->getStoreId();
         $addressParts = $this->streetSplitter->splitStreet($request->getShipperAddressStreet());
@@ -400,11 +401,11 @@ class AppDataMapper implements AppDataMapperInterface
     }
 
     /**
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param ShipmentRequest $request
      *
      * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface
      */
-    private function getReceiver(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getReceiver(ShipmentRequest $request)
     {
         $storeId = $request->getOrderShipment()->getStoreId();
 
@@ -455,11 +456,11 @@ class AppDataMapper implements AppDataMapperInterface
     /**
      * TODO(nr): allow other return receiver than shipping origin.
      *
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param ShipmentRequest $request
      *
      * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface
      */
-    private function getReturnReceiver(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getReturnReceiver(ShipmentRequest $request)
     {
         $storeId      = $request->getOrderShipment()->getStoreId();
         $addressParts = $this->streetSplitter->splitStreet($request->getShipperAddressStreet());
@@ -490,9 +491,11 @@ class AppDataMapper implements AppDataMapperInterface
     }
 
     /**
+     * @param ShipmentRequest $request
+     *
      * @return Service\ServiceCollectionInterface
      */
-    private function getServices(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getServices(ShipmentRequest $request)
     {
         $paymentMethod = $request->getOrderShipment()->getOrder()->getPayment()->getMethod();
         if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
@@ -529,20 +532,63 @@ class AppDataMapper implements AppDataMapperInterface
     }
 
     /**
-     * @param \Magento\Shipping\Model\Shipment\Request $request
+     * @param ShipmentRequest $request
+     * @return PackageItemInterface[]
+     */
+    private function getPackageItems(ShipmentRequest $request)
+    {
+        $packageItems = [];
+        foreach ($request->getData('package_items') as $item) {
+            $itemObject = new \Magento\Framework\DataObject($item);
+            /** @var PackageItem $packageItem */
+            $itemWeight = $this->packageWeightFactory->create([
+                'value' => $itemObject->getData('weight') ? : 0,
+                'unitOfMeasurement' => $request->getData('package_params')->getData('weight_units'),
+            ]);
+
+            $itemCustomsValue = $this->monetaryValueFactory->create([
+                'value' => $itemObject->getData('customs_value'),
+                'currencyCode' => $request->getData('base_currency_code')
+            ]);
+
+            $itemPrice = $this->monetaryValueFactory->create([
+                'value' => $itemObject->getData('price'),
+                'currencyCode' => $request->getData('base_currency_code')
+            ]);
+
+            $packageItem = $this->packageItemFactory->create([
+                'qty' => $itemObject->getData('qty'),
+                'customsValue' => $itemCustomsValue,
+                'customsItemDescription' => $itemObject->getData('customs_item_description'),
+                'price' => $itemPrice,
+                'name' => $itemObject->getData('name'),
+                'weight' => $itemWeight,
+                'productId' => $itemObject->getData('product_id'),
+                'orderItemId' => $itemObject->getData('order_item_id'),
+                'tariffNumber' => $itemObject->getData('tariff_number'),
+                'itemOriginCountry' => $itemObject->getData('item_origin_country'),
+                'sku' => $itemObject->getData('sku')
+            ]);
+            $packageItems[] = $packageItem;
+        }
+        return $packageItems;
+    }
+
+    /**
+     * @param ShipmentRequest $request
      *
      * @return PackageInterface
      */
-    private function getPackage(\Magento\Shipping\Model\Shipment\Request $request)
+    private function getPackage(ShipmentRequest $request)
     {
         $packageId = $request->getData('package_id');
-        $packageParams = $request->getPackageParams();
+
+        /** @var DataObject $packageParams */
+        $packageParams = $request->getData('package_params');
         $customsData = $packageParams->getData('customs') ?: [];
         $packageCustoms = new DataObject($customsData);
 
-        $packageItems = $this->getPackageItems(
-            $request
-        );
+        $packageItems = $this->getPackageItems($request);
 
         $weight = $this->packageWeightFactory->create(
             [
@@ -617,8 +663,8 @@ class AppDataMapper implements AppDataMapperInterface
     /**
      * Convert M2 shipment request to platform independent request object.
      *
-     * @param \Magento\Shipping\Model\Shipment\Request $request
-     * @param string                                   $sequenceNumber
+     * @param ShipmentRequest $request
+     * @param string $sequenceNumber
      *
      * @return ShipmentOrderInterface
      * @throws CreateShipmentValidationException
@@ -644,55 +690,5 @@ class AppDataMapper implements AppDataMapperInterface
 
         $shipmentOrder = $this->requestValidator->validateShipmentOrder($shipmentOrder);
         return $shipmentOrder;
-    }
-
-    /**
-     * @param \Magento\Shipping\Model\Shipment\Request $request
-     * @return array
-     */
-    private function getPackageItems(
-        \Magento\Shipping\Model\Shipment\Request $request
-    ): array {
-        $packageItems = [];
-        foreach ($request->getPackageItems() as $item) {
-            $itemObject = new \Magento\Framework\DataObject($item);
-            /** @var PackageItem $packageItem */
-            $itemWeight = $this->packageWeightFactory->create(
-                [
-                    'value' => $itemObject->getData('weight') ? : 0,
-                    'unitOfMeasurement' => $request->getPackageParams()
-                                                   ->getData('weight_units'),
-                ]
-            );
-            $itemCustomsValue = $this->monetaryValueFactory->create(
-                [
-                    'value' => $itemObject->getData('customs_value'),
-                    'currencyCode' => $request->getData('base_currency_code')
-                ]
-            );
-            $itemPrice = $this->monetaryValueFactory->create(
-                [
-                    'value' => $itemObject->getData('price'),
-                    'currencyCode' => $request->getData('base_currency_code')
-                ]
-            );
-            $packageItem = $this->packageItemFactory->create(
-                [
-                    'qty' => $itemObject->getData('qty'),
-                    'customsValue' => $itemCustomsValue,
-                    'customsItemDescription' => $itemObject->getData('customs_item_description'),
-                    'price' => $itemPrice,
-                    'name' => $itemObject->getData('name'),
-                    'weight' => $itemWeight,
-                    'productId' => $itemObject->getData('product_id'),
-                    'orderItemId' => $itemObject->getData('order_item_id'),
-                    'tariffNumber' => $itemObject->getData('tariff_number'),
-                    'itemOriginCountry' => $itemObject->getData('item_origin_country'),
-                    'sku' => $itemObject->getData('sku')
-                ]
-            );
-            $packageItems[] = $packageItem;
-        }
-        return $packageItems;
     }
 }

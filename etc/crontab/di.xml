@@ -43,5 +43,4 @@
             </argument>
         </arguments>
     </type>
-    <preference for="Dhl\Shipping\Cron\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\Cron\AutoCreate\RequestBuilder"/>
 </config>
