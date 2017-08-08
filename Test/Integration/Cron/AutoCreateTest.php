@@ -55,6 +55,11 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
      */
     private $storesConfig;
 
+    /**
+     * @var AutoCreate\LabelGeneratorInterface| \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $labelGenerator;
+
     public static function createOrdersFixtures()
     {
         OrderCollectionFixture::createOrdersFixture();
@@ -77,7 +82,8 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                        [
                                            'getCronOrderStatuses',
                                            'canProcessRoute',
-                                           'getDefaultProduct'
+                                           'getDefaultProduct',
+                                           'isCrossBorderRoute'
                                        ]
                                    )
                                    ->getMock();
@@ -87,9 +93,15 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                    ->setMethods(['getStoresConfigByPath'])
                                    ->getMock();
 
+        $this->labelGenerator = $this->getMockBuilder(AutoCreate\LabelGenerator::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+
         $this->autoCreate = $this->objectManager->create(
             AutoCreate::class,
             [
+                'labelGenerator' => $this->labelGenerator,
                 'config' => $this->moduleConfig,
                 'storesConfig' => $this->storesConfig
             ]
@@ -113,11 +125,14 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                )
                            );
 
-        $this->moduleConfig->expects($this->exactly(5))
+        $this->moduleConfig->expects($this->exactly(3))
                            ->method('canProcessRoute')
                            ->will($this->returnValue(true));
+        $this->moduleConfig->expects($this->exactly(3))
+                           ->method('isCrossBorderRoute')
+                           ->will($this->returnValue(false));
 
-        $this->moduleConfig->expects($this->exactly(5))
+        $this->moduleConfig->expects($this->exactly(3))
                            ->method('getDefaultProduct')
                            ->will($this->returnValue('foo'));
 
@@ -132,7 +147,6 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                    ]
                                )
                            );
-
 
         $result = $this->autoCreate->run();
 
@@ -149,6 +163,5 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
             count($result['shipments'])
         );
     }
-
 
 }
