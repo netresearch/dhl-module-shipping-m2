@@ -34,6 +34,15 @@ use Magento\Shipping\Model\Shipment\RequestFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Directory\Helper\Data;
 
+/**
+ * Class RequestBuilder
+ *
+ * Encapsulates building a ShipmentRequest object through injected config and a given order shipment
+ *
+ * @category Dhl
+ * @package  Dhl\Shipping
+ * @author   Paul Siedler <paul.siedler@netresearch.de>
+ */
 class RequestBuilder implements RequestBuilderInterface
 {
     const ORDER_SHIPMENT = 'order_shipment';
@@ -208,7 +217,7 @@ class RequestBuilder implements RequestBuilderInterface
             ScopeInterface::SCOPE_STORE,
             $request->getOrderShipment()->getStoreId()
         );
-        $weightUnit = ($weightUnit === 'lbs')
+        $weightUnit = (strtoupper($weightUnit) === \Zend_Measure_Weight::LBS)
             ? \Zend_Measure_Weight::POUND
             : \Zend_Measure_Weight::KILOGRAM;
 
