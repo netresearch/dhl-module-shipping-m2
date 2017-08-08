@@ -10,3 +10,45 @@
     background: rgba(255,0,0,.05) !important;
     border-color: #ed8380 !important;
 }
+
+.dhl_shipping_package_info label.checkbox-label {
+    display: block;
+    margin: 1em 0;
+}
+
+.dhl_shipping_package_info label.checkbox-label > input[type="checkbox"] {
+    visibility: hidden;
+}
+.dhl_shipping_package_info label.checkbox-label i.custom-checkbox {
+    -webkit-font-smoothing: antialiased;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(135, 135, 135);
+    border-radius: 1px;
+    box-sizing: border-box;
+    color: rgba(81, 73, 67,0);
+    display: block;
+    float: left;
+    font-family: 'Admin Icons';
+    font-size: 1.1rem;
+    line-height: 125%;
+    font-style: normal;
+    width: 16px;
+    height: 16px;
+    margin: 1px 0 0 0;
+    text-align: center;
+    transition-delay: 0s, 0s, 0s;
+    transition-duration: 0.1s, 0.1s, 0.1s;
+    transition-property: font-size, color, border-color;
+    transition-timing-function: ease-out, ease-out, linear;
+    vertical-align: top;
+}
+.dhl_shipping_package_info label.checkbox-label input:checked + i.custom-checkbox{
+    color: rgb(81, 73, 67);
+}
+
+.dhl_shipping_package_info .dd-select {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+
