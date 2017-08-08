@@ -18,6 +18,7 @@
  * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @author    Max Melzer <max.melzer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
@@ -316,6 +317,9 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                             var packItem = packItems.select('[type="checkbox"][value="' + itemId + '"]')[0].up('tr').select('[name="qty"]')[0];
                             packItem.value = this.packages[packageId]['items'][itemId]['qty'];
                         }
+                        item.select('[data-module^=dhl_shipping]').each(function (element) {
+                            element.disabled ='disabled';
+                        });
                     }.bind(this));
                     packagePrepareGrid.update();
                 }
