@@ -31,12 +31,16 @@ use Magento\Shipping\Model\Shipment\Request;
 interface RequestBuilderInterface extends SimpleBuilderInterface
 {
     /**
+     * Adds all relevant data from the orders shipment to the request
+     *
      * @param Order\Shipment $orderShipment
      * @return $this
      */
     public function setOrderShipment(Order\Shipment $orderShipment);
 
     /**
+     * Retrieve filled object
+     *
      * @return Request
      */
     public function create();

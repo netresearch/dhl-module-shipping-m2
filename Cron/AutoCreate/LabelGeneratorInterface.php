@@ -30,6 +30,9 @@ use \Magento\Sales\Api\Data\ShipmentInterface as Shipment;
 interface LabelGeneratorInterface
 {
     /**
+     * Creates Labels for the given Shipment through the corresponding carrier, saves corresponding tracks and labels
+     * @see \Magento\Shipping\Model\Shipping\LabelGenerator::create()
+     *
      * @param Shipment $order
      * @return void
      */
