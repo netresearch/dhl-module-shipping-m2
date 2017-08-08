@@ -31,6 +31,7 @@ use Dhl\Shipping\Model\Shipping\Carrier;
 use Dhl\Shipping\Cron\AutoCreate\LabelGeneratorInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Phrase;
 use Magento\Sales\Api\Data\OrderSearchResultInterfaceFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\Data\OrderInterface as Order;
@@ -80,6 +81,11 @@ class AutoCreate
     private $shipmentFactory;
 
     /**
+     * @var Phrase[]
+     */
+    private $errors = [];
+
+    /**
      * AutoCreate constructor.
      * @param LabelGeneratorInterface $labelGenerator
      * @param ShipmentFactory $shipmentFactory
@@ -108,7 +114,6 @@ class AutoCreate
      * Queries for orders that could be automatically shipped and processes them via the corresponding API
      *
      * @return mixed[]
-     * @throws LocalizedException
      */
     public function run()
     {
@@ -135,22 +140,28 @@ class AutoCreate
                 $shippedOrders[] = $order->getIncrementId();
             } catch (LocalizedException $exception) {
                 $message = $exception->getMessage();
-                throw new LocalizedException(
-                    __(
-                        'Could not create shipment for OrderId %1. Error: %2',
-                        [
-                            $order->getIncrementId(),
-                            $message
-                        ]
-                    )
+                $this->errors[] = __(
+                    'Could not create shipment for OrderId %1. Error: %2',
+                    [
+                        $order->getIncrementId(),
+                        $message
+                    ]
                 );
             }
         }
         return [
             'count' => $orders->getTotalCount(),
             'orderIds' => $shippedOrders,
-            'shipments' => $shipments
+            'shipments' => $shipments,
         ];
+    }
+
+    /**
+     * @return Phrase[]
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**

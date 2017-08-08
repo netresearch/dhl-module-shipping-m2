@@ -26,13 +26,12 @@
 
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Dhl\Shipping\Webservice\Client\HttpClientInterface;
-use \Dhl\Shipping\Webservice\WebserviceLoggerInterface;
-use \Magento\Framework\Logger\Monolog;
+use \Dhl\Shipping\Util\Logger as ModuleLogger;
+use Psr\Log\LoggerInterface;
 
 /**
- * Logger
+ * Webservice specific logger
  *
  * @category Dhl
  * @package  Dhl\Shipping\Webservice
@@ -40,48 +39,22 @@ use \Magento\Framework\Logger\Monolog;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Logger extends Monolog implements WebserviceLoggerInterface
+class Logger implements WebserviceLoggerInterface
 {
     /**
-     * @var ModuleConfigInterface
+     * @var LoggerInterface
      */
-    private $config;
+    private $logger;
 
     /**
      * Logger constructor.
      *
-     * @param ModuleConfigInterface               $config
-     * @param string                              $name
-     * @param \Monolog\Handler\HandlerInterface[] $handlers
-     * @param callable[]                          $processors
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        ModuleConfigInterface $config,
-        $name,
-        $handlers = [],
-        $processors = []
+        LoggerInterface $logger
     ) {
-        $this->config = $config;
-
-        parent::__construct($name, $handlers, $processors);
-    }
-
-    /**
-     * Log message if logging is enabled via module config.
-     *
-     * @param mixed  $level
-     * @param string $message
-     * @param array  $context
-     *
-     * @return bool
-     */
-    public function log($level, $message, array $context = [])
-    {
-        if ($this->config->isLoggingEnabled($level)) {
-            return parent::log($level, $message, $context);
-        }
-
-        return false;
+        $this->logger = $logger;
     }
 
     /**
@@ -90,7 +63,7 @@ class Logger extends Monolog implements WebserviceLoggerInterface
      */
     public function wsDebug(HttpClientInterface $httpClient, array $context = [])
     {
-        $this->wsLog(self::DEBUG, $httpClient, $context);
+        $this->wsLog(ModuleLogger::DEBUG, $httpClient, $context);
     }
 
     /**
@@ -99,7 +72,7 @@ class Logger extends Monolog implements WebserviceLoggerInterface
      */
     public function wsWarning(HttpClientInterface $httpClient, array $context = [])
     {
-        $this->wsLog(self::WARNING, $httpClient, $context);
+        $this->wsLog(ModuleLogger::WARNING, $httpClient, $context);
     }
 
     /**
@@ -108,7 +81,7 @@ class Logger extends Monolog implements WebserviceLoggerInterface
      */
     public function wsError(HttpClientInterface $httpClient, array $context = [])
     {
-        $this->wsLog(self::ERROR, $httpClient, $context);
+        $this->wsLog(ModuleLogger::ERROR, $httpClient, $context);
     }
 
     /**
@@ -118,8 +91,8 @@ class Logger extends Monolog implements WebserviceLoggerInterface
      */
     private function wsLog($level, HttpClientInterface $httpClient, array $context = [])
     {
-        $this->log($level, $httpClient->getLastRequest(), $context);
-        $this->log($level, $httpClient->getLastResponseHeaders(), $context);
-        $this->log($level, $httpClient->getLastResponse(), $context);
+        $this->logger->log($level, $httpClient->getLastRequest(), $context);
+        $this->logger->log($level, $httpClient->getLastResponseHeaders(), $context);
+        $this->logger->log($level, $httpClient->getLastResponse(), $context);
     }
 }
