@@ -30,7 +30,6 @@ use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use \Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
 use \Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;

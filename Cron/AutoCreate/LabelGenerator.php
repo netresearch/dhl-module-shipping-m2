@@ -31,6 +31,18 @@ use Magento\Shipping\Model\Order\TrackFactory;
 use Magento\Shipping\Model\CarrierFactory;
 use Magento\Shipping\Model\Shipping\LabelGenerator as CoreLabelGenerator;
 
+/**
+ * Class LabelGenerator
+ *
+ * Encapsulates sending creating and handling shipment requests for the carrier headless.
+ * Will automatically save the generated Labels trough the corresponding Magento hooks.
+ *
+ * @see \Magento\Shipping\Model\Shipping\LabelGenerator
+ *
+ * @category Dhl
+ * @package  Dhl\Shipping
+ * @author   Paul Siedler <paul.siedler@netresearch.de>
+ */
 class LabelGenerator implements LabelGeneratorInterface
 {
     /**
@@ -81,6 +93,7 @@ class LabelGenerator implements LabelGeneratorInterface
     }
 
     /**
+     * @inheritdoc
      * @param ShipmentInterface $orderShipment
      * @throws LocalizedException
      */
