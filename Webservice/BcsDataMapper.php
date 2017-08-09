@@ -110,8 +110,41 @@ class BcsDataMapper implements BcsDataMapperInterface
             );
             $serviceType->setCashOnDelivery($codConfig);
         };
-
+        $bulkyGoodsService = $services->getService( AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS);
+        if ($bulkyGoodsService) {
+            $bulkyGoodsConfig = new BcsApi\Serviceconfiguration(
+                true
+            );
+            $serviceType->setBulkyGoods($bulkyGoodsConfig);
+        }
+        /** @var Service\Insurance $insuranceService */
+        $insuranceService = $services->getService( AbstractServiceFactory::SERVICE_CODE_INSURANCE);
+        if ($insuranceService) {
+            $insuranceConfig = new BcsApi\ServiceconfigurationAdditionalInsurance(
+                true,
+                round($insuranceService->getInsuranceAmount()->getValue('EUR'), 2)
+            );
+            $serviceType->setAdditionalInsurance($insuranceConfig);
+        }
+        $visualCheckOfAgeService = $services->getService( AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE);
+        if ($visualCheckOfAgeService) {
+            $visualCheckOfAgeConfig = new BcsApi\ServiceconfigurationVisualAgeCheck(
+                true,
+            $visualCheckOfAgeService->getType()
+            );
+            $serviceType->setVisualCheckOfAge($visualCheckOfAgeConfig);
+        }
         return $serviceType;
+    }
+
+    /**
+     * @param Service\ParcelAnnouncement $service
+     * @return BcsApi\ShipmentNotificationType
+     */
+    private function getNotifications(Service\ParcelAnnouncement $service)
+    {
+        $notificationType = new BcsApi\ShipmentNotificationType($service->getEmailAddress());
+        return $notificationType;
     }
 
     /**
@@ -287,6 +320,13 @@ class BcsDataMapper implements BcsDataMapperInterface
         );
         $serviceType = $this->getServices($shipmentOrder->getServices());
         $shipmentDetailsType->setService($serviceType);
+
+        // add services that are not part of the service type
+        if ($notificationService = $shipmentOrder->getServices()->getService(
+            AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT)){
+            $notificationType = $this->getNotifications($notificationService);
+            $shipmentDetailsType->setNotification($notificationType);
+        }
 
         // shipper, receiver, return receiver
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
