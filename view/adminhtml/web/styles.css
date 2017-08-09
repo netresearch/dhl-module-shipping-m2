@@ -12,17 +12,19 @@
 }
 
 .dhl_shipping_package_info label.checkbox-label {
-    display: block;
-    margin: 1em 0;
+    display: inline-block;
+    margin: .6em 0;
+    cursor: pointer;
 }
 
 .dhl_shipping_package_info label.checkbox-label > input[type="checkbox"] {
     visibility: hidden;
 }
+
 .dhl_shipping_package_info label.checkbox-label i.custom-checkbox {
     -webkit-font-smoothing: antialiased;
     background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(135, 135, 135);
+    border: 1px solid #adadad;
     border-radius: 1px;
     box-sizing: border-box;
     color: rgba(81, 73, 67,0);
@@ -42,6 +44,11 @@
     transition-timing-function: ease-out, ease-out, linear;
     vertical-align: top;
 }
+
+.dhl_shipping_package_info label.checkbox-label:hover i.custom-checkbox {
+    border-color: rgb(135,135,135);
+}
+
 .dhl_shipping_package_info label.checkbox-label input:checked + i.custom-checkbox{
     color: rgb(81, 73, 67);
 }
