@@ -28,7 +28,10 @@ namespace Dhl\Shipping\Webservice;
 
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\CodFactory;
-
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ParcelAnnouncementFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\InsuranceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\VisualCheckOfAgeFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\BulkyGoodsFactory;
 /**
  * Generic service factory
  *
@@ -44,14 +47,28 @@ class RequestServiceFactory extends AbstractServiceFactory
      * @var CodFactory
      */
     private $codFactory;
+    private $parcelAnnouncementFactory;
+    private $insuranceFactory;
+    private $visualCheckOfAgeFactory;
+    private $bulkyGoodsFactory;
 
     /**
      * RequestServiceFactory constructor.
      * @param CodFactory $codFactory
      */
-    public function __construct(CodFactory $codFactory)
+    public function __construct(
+        CodFactory $codFactory,
+        ParcelAnnouncementFactory $parcelAnnouncementFactory,
+        InsuranceFactory $insuranceFactory,
+        VisualCheckOfAgeFactory $visualCheckOfAgeFactory,
+        BulkyGoodsFactory $bulkyGoodsFactory
+    )
     {
         $this->codFactory = $codFactory;
+        $this->parcelAnnouncementFactory = $parcelAnnouncementFactory;
+        $this->insuranceFactory = $insuranceFactory;
+        $this->visualCheckOfAgeFactory = $visualCheckOfAgeFactory;
+        $this->bulkyGoodsFactory = $bulkyGoodsFactory;
     }
 
     /**
@@ -66,6 +83,14 @@ class RequestServiceFactory extends AbstractServiceFactory
         switch ($instanceCode) {
             case AbstractServiceFactory::SERVICE_CODE_COD:
                 return $this->codFactory->create($data);
+            case AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT:
+                return $this->parcelAnnouncementFactory->create($data);
+            case AbstractServiceFactory::SERVICE_CODE_INSURANCE:
+                return $this->insuranceFactory->create($data);
+            case AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE:
+                return $this->visualCheckOfAgeFactory->create($data);
+            case AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS:
+                return $this->bulkyGoodsFactory->create($data);
             default:
                 return null;
         }
