@@ -60,6 +60,7 @@ use \Dhl\Shipping\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
 use Dhl\Shipping\Webservice\ShippingInfo\Info;
 use Magento\Framework\DataObject;
+use Magento\Sales\Model\Order\Shipment\Package;
 
 /**
  * AppDataMapper
@@ -498,6 +499,29 @@ class AppDataMapper implements AppDataMapperInterface
             $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_COD, [
                 'codAmount' => $this->getOrderValue($request),
                 'addFee' => true,
+            ]);
+        }
+
+        $packageParams = $request->getPackageParams();
+        $servicesData = $packageParams->getData('services') ?: [];
+
+        if (isset($servicesData["service_bulkyGoods"]) && $servicesData["service_bulkyGoods"] = "true" ) {
+            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS);
+        }
+        if (isset($servicesData["service_parcelAnnouncement"]) && $servicesData["service_parcelAnnouncement"] = "true" ) {
+            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT, [
+                'emailAddress' => $request->getData('recipient_email'),
+            ]);
+        }
+        if (isset($servicesData["service_insurance"]) && $servicesData["service_insurance"] = "true"
+        ) {
+            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_INSURANCE, [
+                'insuranceAmount' => $this->getOrderValue($request)
+            ]);
+        }
+        if (isset($servicesData["service_visualCheckOfAge"])) {
+            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE, [
+                'type' => $servicesData["service_visualCheckOfAge"]
             ]);
         }
 
