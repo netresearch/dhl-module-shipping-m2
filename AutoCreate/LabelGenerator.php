@@ -22,7 +22,7 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Cron\AutoCreate;
+namespace Dhl\Shipping\AutoCreate;
 
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
@@ -54,6 +54,7 @@ class LabelGenerator implements LabelGeneratorInterface
      * @var TrackFactory
      */
     private $trackFactory;
+
     /**
      * @var CoreLabelGenerator
      */
@@ -67,7 +68,7 @@ class LabelGenerator implements LabelGeneratorInterface
     /**
      * @var RequestBuilderInterface
      */
-    private $requestBuilder;
+    private $shipmentRequestBuilder;
 
     /**
      * @param CarrierFactory $carrierFactory
@@ -75,8 +76,6 @@ class LabelGenerator implements LabelGeneratorInterface
      * @param CoreLabelGenerator $labelGenerator
      * @param TransactionFactory $transactionFactory
      * @param RequestBuilderInterface $requestBuilder
-     * @internal param RequestFactory $requestFactory
-     * @internal param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         CarrierFactory $carrierFactory,
@@ -89,35 +88,40 @@ class LabelGenerator implements LabelGeneratorInterface
         $this->trackFactory = $trackFactory;
         $this->labelGenerator = $labelGenerator;
         $this->transactionFactory = $transactionFactory;
-        $this->requestBuilder = $requestBuilder;
+        $this->shipmentRequestBuilder = $requestBuilder;
     }
 
     /**
      * @inheritdoc
-     * @param ShipmentInterface $orderShipment
+     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $orderShipment
      * @throws LocalizedException
      */
     public function create(ShipmentInterface $orderShipment)
     {
-        $order = $orderShipment->getOrder();
+        $shippingMethod = $orderShipment->getOrder()->getShippingMethod(true);
         $carrier = $this->carrierFactory->create(
-            $order->getShippingMethod(true)->getCarrierCode()
+            $shippingMethod->getData('carrier_code'),
+            $orderShipment->getStoreId()
         );
-        $carrier->setStore($orderShipment->getStoreId());
+
         if (!$carrier->isShippingLabelsAvailable()) {
             throw new LocalizedException(__('Shipping labels is not available.'));
         }
-        $request = $this->requestBuilder->setOrderShipment($orderShipment)->create();
-        $response = $carrier->requestToShipment($request);
-        if ($response->hasErrors()) {
-            throw new LocalizedException(__($response->getErrors()));
+
+        $this->shipmentRequestBuilder->setOrderShipment($orderShipment);
+        $shipmentRequest = $this->shipmentRequestBuilder->create();
+
+        $response = $carrier->requestToShipment($shipmentRequest);
+        if ($response->hasData('errors')) {
+            throw new LocalizedException(__($response->getData('errors')));
         }
-        if (!$response->hasInfo()) {
+        if (!$response->hasData('info')) {
             throw new LocalizedException(__('Response info does not exist.'));
         }
+
         $labelsContent = [];
         $trackingNumbers = [];
-        $info = $response->getInfo();
+        $info = $response->getData('info');
         foreach ($info as $inf) {
             if (!empty($inf['tracking_number'])) {
                 $trackingNumbers[] = $inf['tracking_number'];
@@ -138,12 +142,16 @@ class LabelGenerator implements LabelGeneratorInterface
                 $carrierTitle
             );
         }
-        $this->saveShipment($orderShipment);
+
+        $transaction = $this->transactionFactory->create();
+        $transaction->addObject($orderShipment);
+        $transaction->addObject($orderShipment->getOrder());
+        $transaction->save();
     }
 
     /**
      * @see \Magento\Shipping\Model\Shipping\LabelGenerator::addTrackingNumbersToShipment()
-     * @param ShipmentInterface $shipment
+     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
      * @param array $trackingNumbers
      * @param string $carrierCode
      * @param string $carrierTitle
@@ -158,30 +166,14 @@ class LabelGenerator implements LabelGeneratorInterface
     ) {
         foreach ($trackingNumbers as $number) {
             if (is_array($number)) {
-                $this->addTrackingNumbersToShipment(
-                    $shipment,
-                    $number,
-                    $carrierCode,
-                    $carrierTitle
-                );
+                $this->addTrackingNumbersToShipment($shipment, $number, $carrierCode, $carrierTitle);
             } else {
-                $shipment->addTrack(
-                    $this->trackFactory->create()->setNumber($number)->setCarrierCode($carrierCode)->setTitle(
-                        $carrierTitle
-                    )
-                );
+                $track = $this->trackFactory->create();
+                $track->setNumber($number);
+                $track->setCarrierCode($carrierCode);
+                $track->setTitle($carrierTitle);
+                $shipment->addTrack($track);
             }
         }
-    }
-
-    /**
-     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $orderShipment
-     */
-    private function saveShipment(ShipmentInterface $orderShipment)
-    {
-        $transaction = $this->transactionFactory->create();
-        $transaction->addObject($orderShipment);
-        $transaction->addObject($orderShipment->getOrder());
-        $transaction->save();
     }
 }
