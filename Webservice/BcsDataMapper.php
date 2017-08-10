@@ -227,46 +227,48 @@ class BcsDataMapper implements BcsDataMapperInterface
 
     /**
      * @param PackageInterface[] $packages
-     * @return BcsApi\ExportDocumentType
+     * @return BcsApi\ExportDocumentType|null
      */
     private function getExportDocument(
         array $packages
     ) {
         $package = current($packages);
-        $exportDocumentType = new BcsApi\ExportDocumentType(
-            $package->getExportType(),
-            $package->getPlaceOfCommital(),
-            $package->getAdditionalFee()
-                    ->getValue('EUR')
-        );
-
-//        $exportDocumentType->setInvoiceNumber($package->getInvoiceNumber());
-        $exportDocumentType->setExportTypeDescription($package->getExportTypeDescription());
-        $exportDocumentType->setTermsOfTrade($package->getTermsOfTrade());
-        $exportDocumentType->setPermitNumber($package->getPermitNumber());
-        $exportDocumentType->setAttestationNumber($package->getAttestationNumber());
-        $exportDocumentType->setWithElectronicExportNtfctn(
-            new BcsApi\Serviceconfiguration($package->getExportNotification())
-        );
-
-        $exportDocPositions = [];
-        /** @var PackageItemInterface $position */
-        foreach ($package->getItems() as $position) {
-            $exportDocPosition = new BcsApi\ExportDocPosition(
-                $position->getCustomsItemDescription(),
-                $position->getItemOriginCountry(),
-                $position->getTariffNumber(),
-                $position->getQty(),
-                $position->getWeight()
-                         ->getValue(\Zend_Measure_Weight::KILOGRAM),
-                $position->getCustomsValue()
-                         ->getValue('EUR')
+        $exportDocumentType = null;
+        if ($package->getExportType()) {
+            $exportDocumentType = new BcsApi\ExportDocumentType(
+                $package->getExportType(),
+                $package->getPlaceOfCommital(),
+                $package->getAdditionalFee()
+                        ->getValue('EUR')
             );
-            $exportDocPositions[] = $exportDocPosition;
+
+    //        $exportDocumentType->setInvoiceNumber($package->getInvoiceNumber());
+            $exportDocumentType->setExportTypeDescription($package->getExportTypeDescription());
+            $exportDocumentType->setTermsOfTrade($package->getTermsOfTrade());
+            $exportDocumentType->setPermitNumber($package->getPermitNumber());
+            $exportDocumentType->setAttestationNumber($package->getAttestationNumber());
+            $exportDocumentType->setWithElectronicExportNtfctn(
+                new BcsApi\Serviceconfiguration($package->getExportNotification())
+            );
+
+            $exportDocPositions = [];
+            /** @var PackageItemInterface $position */
+            foreach ($package->getItems() as $position) {
+                $exportDocPosition = new BcsApi\ExportDocPosition(
+                    $position->getCustomsItemDescription(),
+                    $position->getItemOriginCountry(),
+                    $position->getTariffNumber(),
+                    $position->getQty(),
+                    $position->getWeight()
+                             ->getValue(\Zend_Measure_Weight::KILOGRAM),
+                    $position->getCustomsValue()
+                             ->getValue('EUR')
+                );
+                $exportDocPositions[] = $exportDocPosition;
+            }
+
+            $exportDocumentType->setExportDocPosition($exportDocPositions);
         }
-
-        $exportDocumentType->setExportDocPosition($exportDocPositions);
-
         return $exportDocumentType;
     }
 
