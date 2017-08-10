@@ -31,9 +31,10 @@
     <preference for="Dhl\Shipping\Config\BcsConfigInterface" type="Dhl\Shipping\Model\Config\BcsConfig" />
     <preference for="Dhl\Shipping\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig" />
     <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
-    <preference for="Dhl\Shipping\Cron\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\Cron\AutoCreate\LabelGenerator" />
-    <preference for="Dhl\Shipping\Cron\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\Cron\AutoCreate\RequestBuilder"/>
-    <preference for="Psr\LoggerInterface" type="Dhl\Util\Logger" />
+    <preference for="Dhl\Shipping\AutoCreate\OrderProviderInterface" type="Dhl\Shipping\AutoCreate\OrderProvider" />
+    <preference for="Dhl\Shipping\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\AutoCreate\LabelGenerator" />
+    <preference for="Dhl\Shipping\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\AutoCreate\RequestBuilder" />
+    <preference for="Psr\Log\LoggerInterface" type="Dhl\Shipping\Util\Logger" />
 
     <!-- library preferences -->
     <preference for="Dhl\Shipping\Model\ShippingInfo\Api\Data\QuoteShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo" />
@@ -129,6 +130,7 @@
     </type>
     <type name="\Magento\Sales\Model\Order\Shipment">
         <plugin name="preventTrackStorage" type="Dhl\Shipping\Plugin\Order\ShippingPlugin" />
+    </type>
     <type name="Dhl\Shipping\Cron\AutoCreate">
         <plugin name="logErros" type="Dhl\Shipping\Plugin\AutoCreatePlugin" />
     </type>

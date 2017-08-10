@@ -23,9 +23,9 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Cron\AutoCreate;
+namespace Dhl\Shipping\AutoCreate;
 
-use \Magento\Sales\Api\Data\ShipmentInterface as Shipment;
+use \Magento\Sales\Api\Data\ShipmentInterface;
 
 interface LabelGeneratorInterface
 {
@@ -33,8 +33,8 @@ interface LabelGeneratorInterface
      * Creates Labels for the given Shipment through the corresponding carrier, saves corresponding tracks and labels
      * @see \Magento\Shipping\Model\Shipping\LabelGenerator::create()
      *
-     * @param Shipment $order
+     * @param ShipmentInterface $shipment
      * @return void
      */
-    public function create(Shipment $order);
+    public function create(ShipmentInterface $shipment);
 }

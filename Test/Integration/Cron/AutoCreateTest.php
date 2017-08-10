@@ -22,10 +22,13 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Test\Integration\Cron;
+namespace Dhl\Shipping\Cron;
 
+use Dhl\Shipping\AutoCreate\LabelGenerator;
+use Dhl\Shipping\AutoCreate\LabelGeneratorInterface;
+use Dhl\Shipping\AutoCreate\OrderProvider;
+use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Cron\AutoCreate;
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Test\Fixture\OrderCollectionFixture;
 use Magento\Sales\Model\Order;
@@ -33,6 +36,9 @@ use Magento\Store\Model\StoresConfig;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
 
+/**
+ * AutoCreateTest
+ */
 class AutoCreateTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -56,7 +62,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
     private $storesConfig;
 
     /**
-     * @var AutoCreate\LabelGeneratorInterface| \PHPUnit_Framework_MockObject_MockObject
+     * @var LabelGeneratorInterface| \PHPUnit_Framework_MockObject_MockObject
      */
     private $labelGenerator;
 
@@ -93,17 +99,23 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                    ->setMethods(['getStoresConfigByPath'])
                                    ->getMock();
 
-        $this->labelGenerator = $this->getMockBuilder(AutoCreate\LabelGenerator::class)
+        $this->labelGenerator = $this->getMockBuilder(LabelGenerator::class)
             ->disableOriginalConstructor()
             ->setMethods(['create'])
             ->getMock();
 
+        $orderProvider = $this->objectManager->create(OrderProvider::class, [
+            'moduleConfig' => $this->moduleConfig,
+            'storesConfig' => $this->storesConfig,
+        ]);
+        $this->objectManager->addSharedInstance($orderProvider, OrderProviderInterface::class);
+
         $this->autoCreate = $this->objectManager->create(
             AutoCreate::class,
             [
+                'orderProvider' => $orderProvider,
                 'labelGenerator' => $this->labelGenerator,
-                'config' => $this->moduleConfig,
-                'storesConfig' => $this->storesConfig
+                // 'moduleConfig' => $this->moduleConfig,
             ]
         );
     }
@@ -111,6 +123,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @magentoDataFixture createOrdersFixtures
+     * @magentoConfigFixture default_store carriers/dhlshipping/default_shipping_product foo
      */
     public function testRun()
     {
@@ -132,10 +145,11 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                            ->method('isCrossBorderRoute')
                            ->will($this->returnValue(false));
 
+        /*
         $this->moduleConfig->expects($this->exactly(3))
                            ->method('getDefaultProduct')
                            ->will($this->returnValue('foo'));
-
+*/
         $this->storesConfig->expects($this->once())
                            ->method('getStoresConfigByPath')
                            ->with(ModuleConfigInterface::CONFIG_XML_PATH_CRON_ENABLED)
