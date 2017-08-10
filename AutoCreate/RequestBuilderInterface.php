@@ -22,10 +22,10 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Cron\AutoCreate;
+namespace Dhl\Shipping\AutoCreate;
 
 use Magento\Framework\Api\SimpleBuilderInterface;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Shipping\Model\Shipment\Request;
 
 interface RequestBuilderInterface extends SimpleBuilderInterface
@@ -33,10 +33,10 @@ interface RequestBuilderInterface extends SimpleBuilderInterface
     /**
      * Adds all relevant data from the orders shipment to the request
      *
-     * @param Order\Shipment $orderShipment
+     * @param ShipmentInterface $orderShipment
      * @return $this
      */
-    public function setOrderShipment(Order\Shipment $orderShipment);
+    public function setOrderShipment(ShipmentInterface $orderShipment);
 
     /**
      * Retrieve filled object
