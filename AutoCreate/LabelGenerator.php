@@ -143,6 +143,7 @@ class LabelGenerator implements LabelGeneratorInterface
             );
         }
 
+        $orderShipment->getOrder()->setIsInProcess(true);
         $transaction = $this->transactionFactory->create();
         $transaction->addObject($orderShipment);
         $transaction->addObject($orderShipment->getOrder());

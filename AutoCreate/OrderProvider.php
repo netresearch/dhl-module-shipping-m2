@@ -111,7 +111,7 @@ class OrderProvider implements OrderProviderInterface
         // autocreate is enabled for the order's store
         $activeStores = [];
         $activeSettings = $this->storesConfig
-            ->getStoresConfigByPath(ModuleConfigInterface::CONFIG_XML_PATH_CRON_ENABLED);
+            ->getStoresConfigByPath(ModuleConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED);
 
         foreach ($activeSettings as $storeId => $isActive) {
             if ($isActive) {
@@ -121,7 +121,7 @@ class OrderProvider implements OrderProviderInterface
         $this->searchCriteriaBuilder->addFilter('store_id', $activeStores, 'in');
 
         // order status is allowed for autocreate via module config
-        $allowedStatus = $this->moduleConfig->getCronOrderStatuses();
+        $allowedStatus = $this->moduleConfig->getAutoCreateOrderStatus();
         $this->searchCriteriaBuilder->addFilter('status', $allowedStatus, 'in');
 
         // exact order IDs
