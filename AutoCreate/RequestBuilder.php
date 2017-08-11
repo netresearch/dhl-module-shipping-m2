@@ -26,7 +26,7 @@ namespace Dhl\Shipping\AutoCreate;
 
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\DataObject;
+use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order\Shipment;
@@ -63,6 +63,9 @@ class RequestBuilder implements RequestBuilderInterface
      */
     private $regionFactory;
 
+    /** @var  DataObjectFactory */
+    private $dataObjectFactory;
+
     /**
      * @var mixed[]
      */
@@ -73,15 +76,18 @@ class RequestBuilder implements RequestBuilderInterface
      * @param RequestFactory $shipmentRequestFactory
      * @param ScopeConfigInterface $scopeConfig
      * @param RegionFactory $regionFactory
+     * @param DataObjectFactory $dataObjectFactory
      */
     public function __construct(
         RequestFactory $shipmentRequestFactory,
         ScopeConfigInterface $scopeConfig,
-        RegionFactory $regionFactory
+        RegionFactory $regionFactory,
+        DataObjectFactory $dataObjectFactory
     ) {
         $this->shipmentRequestFactory = $shipmentRequestFactory;
         $this->scopeConfig = $scopeConfig;
         $this->regionFactory = $regionFactory;
+        $this->dataObjectFactory = $dataObjectFactory;
     }
 
     /**
@@ -143,13 +149,12 @@ class RequestBuilder implements RequestBuilderInterface
             $storeId
         );
 
-        $storeInfo = new DataObject(
-            (array)$this->scopeConfig->getValue(
-                'general/store_information',
-                ScopeInterface::SCOPE_STORE,
-                $storeId
-            )
+        $storeInfo = (array)$this->scopeConfig->getValue(
+            'general/store_information',
+            ScopeInterface::SCOPE_STORE,
+            $storeId
         );
+        $storeInfo = $this->dataObjectFactory->create(['data' => $storeInfo]);
 
         $shipperRegionCode = $this->scopeConfig->getValue(
             Shipment::XML_PATH_STORE_REGION_ID,
@@ -160,11 +165,9 @@ class RequestBuilder implements RequestBuilderInterface
             $shipperRegionCode = $this->regionFactory->create()->load($shipperRegionCode)->getCode();
         }
 
-        $storeContact = new DataObject(
-            (array)$this->scopeConfig->getValue(
-                'trans_email/ident_sales'
-            )
-        );
+        $storeContact = (array)$this->scopeConfig->getValue('trans_email/ident_sales');
+        $storeContact = $this->dataObjectFactory->create(['data' => $storeContact]);
+
         $shipmentRequest->setShipperContactPersonName($storeContact->getName());
         $shipmentRequest->setShipperContactPersonFirstName('');
         $shipmentRequest->setShipperContactPersonLastName('');
@@ -256,6 +259,7 @@ class RequestBuilder implements RequestBuilderInterface
 
         //TODO(nr): DHLVM2-42: read service configuration from config and attach to package
         $shipmentRequest->setData('packages', $packages);
+        $shipmentRequest->getOrderShipment()->setPackages($packages);
     }
 
     /**

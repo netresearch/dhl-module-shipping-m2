@@ -27,6 +27,10 @@
 
 namespace Dhl\Shipping\Model\Config;
 
+use Dhl\Shipping\Service\BulkyGoods;
+use Dhl\Shipping\Service\Insurance;
+use Dhl\Shipping\Service\ReturnShipment;
+use Dhl\Shipping\Service\VisualCheckOfAge;
 use Dhl\Shipping\Util\ShippingRoutesInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 
@@ -256,9 +260,9 @@ class ModuleConfig implements ModuleConfigInterface
      * @param null $store
      * @return bool
      */
-    public function isCronEnabled($store = null)
+    public function isAutoCreateEnabled($store = null)
     {
-        return (bool)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ENABLED, $store);
+        return (bool)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_ENABLED, $store);
     }
 
     /**
@@ -267,7 +271,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param null $store
      * @return mixed
      */
-    public function getCronOrderStatuses($store = null)
+    public function getAutoCreateOrderStatus($store = null)
     {
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ORDER_STATUS, $store);
     }
@@ -278,8 +282,22 @@ class ModuleConfig implements ModuleConfigInterface
      * @param null $store
      * @return mixed
      */
-    public function getCronServices($store = null)
+    public function getAutoCreateServices($store = null)
     {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_SERVICES, $store);
+        $basePath = 'carriers/dhlshipping/shipment_autocreate_service_';
+        $supportedServices = [
+            VisualCheckOfAge::CODE,
+            ReturnShipment::CODE,
+            Insurance::CODE,
+            BulkyGoods::CODE,
+        ];
+
+        $isEnabledFilter = function ($serviceCode) use ($store, $basePath) {
+            $configPath = $basePath . strtolower($serviceCode);
+            return (bool)$this->configAccessor->getConfigValue($configPath, $store);
+        };
+
+        $autoCreateServices = array_filter($supportedServices, $isEnabledFilter);
+        return $autoCreateServices;
     }
 }

@@ -29,6 +29,7 @@ namespace Dhl\Shipping\Cron;
 use Dhl\Shipping\AutoCreate\LabelGeneratorInterface;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Magento\Cron\Model\Schedule;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 use Magento\Sales\Model\Order\ShipmentFactory;
@@ -93,7 +94,7 @@ class AutoCreate
      *
      * @return mixed[]
      */
-    public function run()
+    public function run(Schedule $schedule)
     {
         $createdShipments = [];
         $storeProducts = [];
@@ -129,6 +130,7 @@ class AutoCreate
             }
         }
 
+        $schedule->setMessages('foo');
         return [
             'count' => count($orders),
             'orderIds' => array_keys($createdShipments),
