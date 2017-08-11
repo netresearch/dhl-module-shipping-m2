@@ -29,6 +29,7 @@ namespace Dhl\Shipping\Model\Config;
 
 use Dhl\Shipping\Service\BulkyGoods;
 use Dhl\Shipping\Service\Insurance;
+use Dhl\Shipping\Service\ParcelAnnouncement;
 use Dhl\Shipping\Service\ReturnShipment;
 use Dhl\Shipping\Service\VisualCheckOfAge;
 use Dhl\Shipping\Util\ShippingRoutesInterface;
@@ -285,19 +286,25 @@ class ModuleConfig implements ModuleConfigInterface
     public function getAutoCreateServices($store = null)
     {
         $basePath = 'carriers/dhlshipping/shipment_autocreate_service_';
-        $supportedServices = [
-            VisualCheckOfAge::CODE,
-            ReturnShipment::CODE,
-            Insurance::CODE,
+
+        $autoCreateServices = [];
+        $availableServices = [
             BulkyGoods::CODE,
+            Insurance::CODE,
+            ParcelAnnouncement::CODE,
+            ReturnShipment::CODE,
+            VisualCheckOfAge::CODE,
         ];
 
-        $isEnabledFilter = function ($serviceCode) use ($store, $basePath) {
+        foreach ($availableServices as $serviceCode) {
             $configPath = $basePath . strtolower($serviceCode);
-            return (bool)$this->configAccessor->getConfigValue($configPath, $store);
-        };
+            /** @var bool|string $value */
+            $value = $this->configAccessor->getConfigValue($configPath, $store);
+            if ($value) {
+                $autoCreateServices["service_$serviceCode"] = $value;
+            }
+        }
 
-        $autoCreateServices = array_filter($supportedServices, $isEnabledFilter);
         return $autoCreateServices;
     }
 }

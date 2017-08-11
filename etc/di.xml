@@ -131,9 +131,6 @@
     <type name="\Magento\Sales\Model\Order\Shipment">
         <plugin name="preventTrackStorage" type="Dhl\Shipping\Plugin\Order\ShippingPlugin" />
     </type>
-    <type name="Dhl\Shipping\Cron\AutoCreate">
-        <plugin name="logErros" type="Dhl\Shipping\Plugin\AutoCreatePlugin" />
-    </type>
 
     <!-- passing arguments -->
     <type name="Dhl\Shipping\Plugin\Checkout\ShippingInformationManagementPlugin">

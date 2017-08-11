@@ -24,7 +24,6 @@
 
 namespace Dhl\Shipping\AutoCreate;
 
-use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Shipping\Model\Order\TrackFactory;
@@ -61,11 +60,6 @@ class LabelGenerator implements LabelGeneratorInterface
     private $labelGenerator;
 
     /**
-     * @var TransactionFactory
-     */
-    private $transactionFactory;
-
-    /**
      * @var RequestBuilderInterface
      */
     private $shipmentRequestBuilder;
@@ -74,20 +68,17 @@ class LabelGenerator implements LabelGeneratorInterface
      * @param CarrierFactory $carrierFactory
      * @param TrackFactory $trackFactory
      * @param CoreLabelGenerator $labelGenerator
-     * @param TransactionFactory $transactionFactory
      * @param RequestBuilderInterface $requestBuilder
      */
     public function __construct(
         CarrierFactory $carrierFactory,
         TrackFactory $trackFactory,
         CoreLabelGenerator $labelGenerator,
-        TransactionFactory $transactionFactory,
         RequestBuilderInterface $requestBuilder
     ) {
         $this->carrierFactory = $carrierFactory;
         $this->trackFactory = $trackFactory;
         $this->labelGenerator = $labelGenerator;
-        $this->transactionFactory = $transactionFactory;
         $this->shipmentRequestBuilder = $requestBuilder;
     }
 
@@ -142,12 +133,6 @@ class LabelGenerator implements LabelGeneratorInterface
                 $carrierTitle
             );
         }
-
-        $orderShipment->getOrder()->setIsInProcess(true);
-        $transaction = $this->transactionFactory->create();
-        $transaction->addObject($orderShipment);
-        $transaction->addObject($orderShipment->getOrder());
-        $transaction->save();
     }
 
     /**
