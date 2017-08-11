@@ -86,7 +86,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                    ->disableOriginalConstructor()
                                    ->setMethods(
                                        [
-                                           'getCronOrderStatuses',
+                                           'getAutoCreateOrderStatus',
                                            'canProcessRoute',
                                            'getDefaultProduct',
                                            'isCrossBorderRoute'
@@ -152,7 +152,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
 */
         $this->storesConfig->expects($this->once())
                            ->method('getStoresConfigByPath')
-                           ->with(ModuleConfigInterface::CONFIG_XML_PATH_CRON_ENABLED)
+                           ->with(ModuleConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED)
                            ->will(
                                $this->returnValue(
                                    [

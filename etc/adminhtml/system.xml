@@ -339,67 +339,6 @@
                 </field>
 
                 <!-- 670 Automatic Shipment Creation -->
-                <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="670" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Automatic Shipment Creation</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="671" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enabled</label>
-                    <tooltip>Create shipments and retrieve labels via cron job.</tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <field id="shipment_autocreate_order_status" translate="label" type="multiselect" sortOrder="672" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Order Status</label>
-                    <tooltip>Create shipments for orders with the given status.</tooltip>
-                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <field id="shipment_autocreate_service_visualcheckofage" translate="label" type="select" sortOrder="673" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Visual Check of Age</label>
-                    <tooltip>Book the service Visual Check Of Age with automated shipment orders.</tooltip>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <field id="shipment_autocreate_service_returnshipment" translate="label" type="select" sortOrder="674" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Return Shipment</label>
-                    <tooltip>Book the service Return Shipment with automated shipment orders.</tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <field id="shipment_autocreate_service_insurance" translate="label" type="select" sortOrder="675" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Additional Insurance</label>
-                    <tooltip>Book the service Additional Insurance with automated shipment orders.</tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <field id="shipment_autocreate_service_bulkygoods" translate="label" type="select" sortOrder="676" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Bulky Goods</label>
-                    <tooltip>Book the service Bulky Goods with automated shipment orders.</tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
 
 
                 <!-- 700 Additional Contact Information -->
@@ -484,33 +423,60 @@
                     </depends>
                 </field>
 
-                <!-- 900 Automatic shipment creation -->
-                <field id="cron_configuration" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Automatic Shipment creation</label>
+                <!-- 900 Automatic Shipment Creation -->
+                <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Automatic Shipment Creation</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
 
+
                 <!-- 910 Cron Job -->
-                <field id="cron_enabled" translate="label" type="select" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
+                    <tooltip>Create shipments and retrieve labels via cron job.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Enable automatic shipment creation.</comment>
                 </field>
 
                 <!-- 920 Cron Order Status -->
-                <field id="cron_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Allowed Order Statuses</label>
+                <field id="shipment_autocreate_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order Status</label>
+                    <tooltip>Create shipments for orders with the given status.</tooltip>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
-                    <comment>Select the order statuses that allow automatic shipment creation.</comment>
                 </field>
 
                 <!-- 930 Cron Services -->
-                <field id="cron_services" translate="label" type="multiselect" sortOrder="930" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Service Selection</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service</source_model>
-                    <comment>Select the services that should be enabled for automatic shipment creation.</comment>
+                <field id="shipment_autocreate_service_visualcheckofage" translate="label" type="select" sortOrder="930" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Visual Check of Age</label>
+                    <tooltip>Book the service Visual Check Of Age with automated shipment orders.</tooltip>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge</source_model>
                     <depends>
-                        <field id="cron_enabled">1</field>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+
+                <field id="shipment_autocreate_service_returnshipment" translate="label" type="select" sortOrder="931" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Return Shipment</label>
+                    <tooltip>Book the service Return Shipment with automated shipment orders.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+
+                <field id="shipment_autocreate_service_insurance" translate="label" type="select" sortOrder="932" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Additional Insurance</label>
+                    <tooltip>Book the service Additional Insurance with automated shipment orders.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+
+                <field id="shipment_autocreate_service_bulkygoods" translate="label" type="select" sortOrder="933" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Bulky Goods</label>
+                    <tooltip>Book the service Bulky Goods with automated shipment orders.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
