@@ -24,6 +24,7 @@
 
 namespace Dhl\Shipping\AutoCreate;
 
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObjectFactory;
@@ -49,6 +50,11 @@ class RequestBuilder implements RequestBuilderInterface
     const ORDER_SHIPMENT = 'order_shipment';
 
     /**
+     * @var ModuleConfigInterface
+     */
+    private $moduleConfig;
+
+    /**
      * @var RequestFactory
      */
     private $shipmentRequestFactory;
@@ -63,7 +69,9 @@ class RequestBuilder implements RequestBuilderInterface
      */
     private $regionFactory;
 
-    /** @var  DataObjectFactory */
+    /**
+     * @var DataObjectFactory
+     */
     private $dataObjectFactory;
 
     /**
@@ -73,17 +81,20 @@ class RequestBuilder implements RequestBuilderInterface
 
     /**
      * RequestBuilder constructor.
+     * @param ModuleConfigInterface $moduleConfig
      * @param RequestFactory $shipmentRequestFactory
      * @param ScopeConfigInterface $scopeConfig
      * @param RegionFactory $regionFactory
      * @param DataObjectFactory $dataObjectFactory
      */
     public function __construct(
+        ModuleConfigInterface $moduleConfig,
         RequestFactory $shipmentRequestFactory,
         ScopeConfigInterface $scopeConfig,
         RegionFactory $regionFactory,
         DataObjectFactory $dataObjectFactory
     ) {
+        $this->moduleConfig = $moduleConfig;
         $this->shipmentRequestFactory = $shipmentRequestFactory;
         $this->scopeConfig = $scopeConfig;
         $this->regionFactory = $regionFactory;
@@ -228,36 +239,52 @@ class RequestBuilder implements RequestBuilderInterface
      */
     private function preparePackageData(Request $shipmentRequest)
     {
-        /** @var Shipment\Package[] $packages */
-        $packages = $shipmentRequest->getOrderShipment()->getPackages();
+        $storeId = $shipmentRequest->getOrderShipment()->getStoreId();
+        $totalWeight = 0;
+        $package = [
+            'params' => [],
+            'items' => [],
+        ];
+
+        /** @var \Magento\Sales\Model\Order\Shipment\Item $item */
+        foreach ($shipmentRequest->getOrderShipment()->getAllItems() as $item) {
+            if ($item->getOrderItem()->isDummy(true)) {
+                continue;
+            }
+
+            $totalWeight += $item->getWeight();
+
+            $itemData = $item->toArray(['qty', 'price', 'name', 'weight', 'product_id', 'order_item_id']);
+            $package['items'][$item->getOrderItemId()] = $itemData;
+        }
+
+        $container = $this->moduleConfig->getDefaultProduct($storeId);
+        $services = $this->moduleConfig->getAutoCreateServices($storeId);
+
         $weightUnit = $this->scopeConfig->getValue(
             Data::XML_PATH_WEIGHT_UNIT,
             ScopeInterface::SCOPE_STORE,
-            $shipmentRequest->getOrderShipment()->getStoreId()
+            $storeId
         );
         $weightUnit = (strtoupper($weightUnit) === \Zend_Measure_Weight::LBS)
             ? \Zend_Measure_Weight::POUND
             : \Zend_Measure_Weight::KILOGRAM;
+        $dimensionUnit = (strtoupper($weightUnit) === \Zend_Measure_Weight::LBS)
+            ? \Zend_Measure_Length::INCH
+            : \Zend_Measure_Length::CENTIMETER;
 
-        $setPackageItems = function (&$package, $index) use ($weightUnit) {
-            $items = [];
-            $weight = 0;
+        $package['params']['container'] = $container;
+        $package['params']['weight'] = $totalWeight;
+        $package['params']['length'] = '';
+        $package['params']['width'] = '';
+        $package['params']['height'] = '';
+        $package['params']['weight_units'] = $weightUnit;
+        $package['params']['dimension_units'] = $dimensionUnit;
+        $package['params']['content_type'] = '';
+        $package['params']['content_type_other'] = '';
+        $package['params']['services'] = $services;
 
-            /** @var Shipment\Item $item */
-            foreach ($package['items'] as $item) {
-                $items[] = $item->toArray();
-                $item['weight_units'] = $weightUnit;
-                $weight += $item->getWeight();
-            }
-
-            $package['params']['weight'] = $weight;
-            $package['params']['weight_units'] = $weightUnit;
-            $package['items'] = $items;
-        };
-
-        array_walk($packages, $setPackageItems);
-
-        //TODO(nr): DHLVM2-42: read service configuration from config and attach to package
+        $packages = [1 => $package];
         $shipmentRequest->setData('packages', $packages);
         $shipmentRequest->getOrderShipment()->setPackages($packages);
     }

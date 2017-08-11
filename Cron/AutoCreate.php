@@ -28,10 +28,9 @@ namespace Dhl\Shipping\Cron;
 
 use Dhl\Shipping\AutoCreate\LabelGeneratorInterface;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
-use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Cron\Model\Schedule;
+use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
 use Magento\Sales\Model\Order\ShipmentFactory;
 
 /**
@@ -45,6 +44,8 @@ use Magento\Sales\Model\Order\ShipmentFactory;
  */
 class AutoCreate
 {
+    const MESSAGE_TEMPLATE = '%d shipments were created. %d shipments could not be created.';
+
     /**
      * @var OrderProviderInterface
      */
@@ -61,88 +62,65 @@ class AutoCreate
     private $shipmentFactory;
 
     /**
-     * @var ModuleConfigInterface
+     * @var TransactionFactory
      */
-    private $moduleConfig;
-
-    /**
-     * @var Phrase[]
-     */
-    private $errors = [];
+    private $transactionFactory;
 
     /**
      * AutoCreate constructor.
      * @param OrderProviderInterface $orderProvider
      * @param LabelGeneratorInterface $labelGenerator
      * @param ShipmentFactory $shipmentFactory
-     * @param ModuleConfigInterface $moduleConfig
+     * @param TransactionFactory $transactionFactory
      */
     public function __construct(
         OrderProviderInterface $orderProvider,
         LabelGeneratorInterface $labelGenerator,
         ShipmentFactory $shipmentFactory,
-        ModuleConfigInterface $moduleConfig
+        TransactionFactory $transactionFactory
     ) {
         $this->orderProvider = $orderProvider;
         $this->labelGenerator = $labelGenerator;
         $this->shipmentFactory = $shipmentFactory;
-        $this->moduleConfig = $moduleConfig;
+        $this->transactionFactory = $transactionFactory;
     }
 
     /**
      * Queries for orders that could be automatically shipped and processes them via the corresponding API
      *
-     * @return mixed[]
+     * @param Schedule $schedule
+     * @return void
      */
     public function run(Schedule $schedule)
     {
+        $failedShipments = [];
         $createdShipments = [];
-        $storeProducts = [];
+
         $orders = $this->orderProvider->getOrders();
 
         /** @var \Magento\Sales\Model\Order $order */
         foreach ($orders as $order) {
-            $storeId = $order->getStoreId();
-            if (!isset($storeProducts[$storeId])) {
-                $storeProducts[$storeId] = $this->moduleConfig->getDefaultProduct($storeId);
-            }
-
             try {
                 /** @var \Magento\Sales\Model\Order\Shipment $shipment */
                 $shipment = $this->shipmentFactory->create($order);
                 $shipment->addComment('Shipment automatically created by Dhl Shipping.');
                 $shipment->register();
 
-                $package = [
-                    'params' => [
-                        'container' => $storeProducts[$storeId],
-                        'weight' => $shipment->getTotalWeight(),
-                    ],
-                    'items' => $shipment->getAllItems()
-                ];
-                $shipment->setPackages([$package]);
-
                 $this->labelGenerator->create($shipment);
-                $createdShipments[$order->getIncrementId()] = $shipment;
+
+                $shipment->getOrder()->setIsInProcess(true);
+                $transaction = $this->transactionFactory->create();
+                $transaction->addObject($shipment);
+                $transaction->addObject($shipment->getOrder());
+                $transaction->save();
+
+                $createdShipments[$order->getIncrementId()] = $shipment->getIncrementId();
             } catch (LocalizedException $exception) {
-                $messageTemplate = 'Could not create shipment for OrderId %1. Error: %2';
-                $this->errors[] = __($messageTemplate, $order->getIncrementId(), $exception->getMessage());
+                $failedShipments[$order->getIncrementId()] = $exception->getMessage();
             }
         }
 
-        $schedule->setMessages('foo');
-        return [
-            'count' => count($orders),
-            'orderIds' => array_keys($createdShipments),
-            'shipments' => array_values($createdShipments),
-        ];
-    }
-
-    /**
-     * @return Phrase[]
-     */
-    public function getErrors()
-    {
-        return $this->errors;
+        $scheduleMessage = sprintf(self::MESSAGE_TEMPLATE, count($createdShipments), count($failedShipments));
+        $schedule->setMessages($scheduleMessage);
     }
 }
