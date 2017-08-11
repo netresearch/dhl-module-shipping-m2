@@ -524,9 +524,10 @@ class AppDataMapper implements AppDataMapperInterface
                 'insuranceAmount' => $this->getOrderValue($request)
             ]);
         }
-        if (isset($servicesData["service_visualCheckOfAge"])) {
+        if (isset($servicesData["service_visualCheckOfAge"])
+            && isset($servicesData["service_visualCheckOfAgeSetting"])) {
             $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE, [
-                'type' => $servicesData["service_visualCheckOfAge"]
+                'type' => $servicesData["service_visualCheckOfAgeSetting"]
             ]);
         }
 
