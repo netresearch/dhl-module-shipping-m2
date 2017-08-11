@@ -28,7 +28,7 @@ namespace Dhl\Shipping\Webservice;
 
 use \Dhl\Shipping\Webservice\Client\HttpClientInterface;
 use \Dhl\Shipping\Util\Logger as ModuleLogger;
-use Psr\Log\LoggerInterface;
+use \Dhl\Shipping\Util\LoggerInterface;
 
 /**
  * Webservice specific logger
