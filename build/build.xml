@@ -168,7 +168,8 @@
               command="docker-compose exec -T env
               /var/www/magetwo.nrdev.de/vendor/bin/phpcs -p
               --report-checkstyle=${docker.REPORT_PATH}checkstyle.xml
-              --standard=MEQP2 -v
+              --standard=MEQP2
+              --severity=10
               --runtime-set ignore_warnings_on_exit true
               --ignore=*/build/*
               ${docker.extensionPath}"
