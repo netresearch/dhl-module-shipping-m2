@@ -109,7 +109,7 @@ class BcsDataMapper implements BcsDataMapperInterface
             );
             $serviceType->setCashOnDelivery($codConfig);
         };
-        $bulkyGoodsService = $services->getService( AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS);
+        $bulkyGoodsService = $services->getService(AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS);
         if ($bulkyGoodsService) {
             $bulkyGoodsConfig = new BcsApi\Serviceconfiguration(
                 true
@@ -117,7 +117,7 @@ class BcsDataMapper implements BcsDataMapperInterface
             $serviceType->setBulkyGoods($bulkyGoodsConfig);
         }
         /** @var Service\Insurance $insuranceService */
-        $insuranceService = $services->getService( AbstractServiceFactory::SERVICE_CODE_INSURANCE);
+        $insuranceService = $services->getService(AbstractServiceFactory::SERVICE_CODE_INSURANCE);
         if ($insuranceService) {
             $insuranceConfig = new BcsApi\ServiceconfigurationAdditionalInsurance(
                 true,
@@ -125,11 +125,11 @@ class BcsDataMapper implements BcsDataMapperInterface
             );
             $serviceType->setAdditionalInsurance($insuranceConfig);
         }
-        $visualCheckOfAgeService = $services->getService( AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE);
+        $visualCheckOfAgeService = $services->getService(AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE);
         if ($visualCheckOfAgeService) {
             $visualCheckOfAgeConfig = new BcsApi\ServiceconfigurationVisualAgeCheck(
                 true,
-            $visualCheckOfAgeService->getType()
+                $visualCheckOfAgeService->getType()
             );
             $serviceType->setVisualCheckOfAge($visualCheckOfAgeConfig);
         }
@@ -322,7 +322,8 @@ class BcsDataMapper implements BcsDataMapperInterface
 
         // add services that are not part of the service type
         if ($notificationService = $shipmentOrder->getServices()->getService(
-            AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT)){
+            AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT
+        )) {
             $notificationType = $this->getNotifications($notificationService);
             $shipmentDetailsType->setNotification($notificationType);
         }

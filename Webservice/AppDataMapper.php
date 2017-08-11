@@ -423,7 +423,8 @@ class AppDataMapper implements AppDataMapperInterface
         }
 
         $address = $this->addressFactory->create([
-            'street'                 => [$request->getRecipientAddressStreet1(), $request->getRecipientAddressStreet2()],
+            'street'                 => [
+                $request->getRecipientAddressStreet1(), $request->getRecipientAddressStreet2()],
             'streetName'             => $addressParts['street_name'],
             'streetNumber'           => $addressParts['street_number'],
             'addressAddition'        => $addressParts['supplement'],
@@ -508,10 +509,11 @@ class AppDataMapper implements AppDataMapperInterface
         $packageParams = $request->getPackageParams();
         $servicesData = $packageParams->getData('services') ?: [];
 
-        if (isset($servicesData["service_bulkyGoods"]) && $servicesData["service_bulkyGoods"] = "true" ) {
+        if (isset($servicesData["service_bulkyGoods"]) && $servicesData["service_bulkyGoods"] = "true") {
             $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS);
         }
-        if (isset($servicesData["service_parcelAnnouncement"]) && $servicesData["service_parcelAnnouncement"] = "true" ) {
+        if (isset($servicesData["service_parcelAnnouncement"])
+            && $servicesData["service_parcelAnnouncement"] = "true") {
             $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT, [
                 'emailAddress' => $request->getData('recipient_email'),
             ]);
