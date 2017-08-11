@@ -32,6 +32,7 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Pa
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\InsuranceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\VisualCheckOfAgeFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\BulkyGoodsFactory;
+
 /**
  * Generic service factory
  *
@@ -54,7 +55,12 @@ class RequestServiceFactory extends AbstractServiceFactory
 
     /**
      * RequestServiceFactory constructor.
+     *
      * @param CodFactory $codFactory
+     * @param ParcelAnnouncementFactory $parcelAnnouncementFactory
+     * @param InsuranceFactory $insuranceFactory
+     * @param VisualCheckOfAgeFactory $visualCheckOfAgeFactory
+     * @param BulkyGoodsFactory $bulkyGoodsFactory
      */
     public function __construct(
         CodFactory $codFactory,
@@ -62,8 +68,7 @@ class RequestServiceFactory extends AbstractServiceFactory
         InsuranceFactory $insuranceFactory,
         VisualCheckOfAgeFactory $visualCheckOfAgeFactory,
         BulkyGoodsFactory $bulkyGoodsFactory
-    )
-    {
+    ) {
         $this->codFactory = $codFactory;
         $this->parcelAnnouncementFactory = $parcelAnnouncementFactory;
         $this->insuranceFactory = $insuranceFactory;
