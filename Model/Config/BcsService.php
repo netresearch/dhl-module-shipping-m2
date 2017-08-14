@@ -113,6 +113,7 @@ class BcsService
             Service\ReturnShipment::CODE => false,
             Service\Insurance::CODE => false,
             Service\BulkyGoods::CODE => false,
+            Service\PrintOnlyIfCodeable::CODE => false,
         ];
 
         foreach ($serviceCodes as $serviceCode => $isConfigurable) {

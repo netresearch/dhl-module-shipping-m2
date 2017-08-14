@@ -65,8 +65,8 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                             this.dhlShipping.params[packageId][fieldName] = element.checked;
                         }
 
-                        if (element.type.match('select')) {
-                            this.dhlShipping.params[packageId][fieldName+"Setting"] = element.options[element.selectedIndex].value
+                        if (element.type.match('select') && Object.keys(this.dhlShipping.params[packageId]).indexOf(fieldName) != -1) {
+                            this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
                         }
                     }.bind(this));
 
