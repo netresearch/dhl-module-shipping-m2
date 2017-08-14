@@ -90,13 +90,20 @@ class Services extends \Magento\Backend\Block\Template
     }
 
     /**
-     * Return Template bases on origin country and crossborder shipping.
      *
      * @return string
      */
     public function getTemplate()
     {
-        return self::BCS_SERVICES_TEMPLATE;
+        $bcsCountries = ['DE', 'AT'];
+        $usedTemplate = self::BCS_SERVICES_TEMPLATE;
+        $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
+
+        if (!in_array($originCountryId, $bcsCountries)) {
+            $usedTemplate = self::GL_SERVICES_TEMPLATE;
+        }
+
+        return $usedTemplate;
     }
 
     /**
