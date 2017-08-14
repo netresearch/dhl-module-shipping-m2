@@ -108,6 +108,26 @@
             </dt>
         <?php endif; ?>
 
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\ReturnShipment::CODE)) : ?>
+            <?php
+            $code = \Dhl\Shipping\Service\ReturnShipment::CODE;
+            $name = __('Return Shipment');
+            ?>
+            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+                <label class="checkbox-label">
+                    <input
+                        data-module="dhl_shipping"
+                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        type="checkbox"
+                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
+                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                    />
+                    <i class="custom-checkbox"></i>
+                    <?php echo $block->escapeHtml($name) ?>
+                </label>
+            </dt>
+        <?php endif; ?>
+
         <?php if ($services->offsetExists(\Dhl\Shipping\Service\VisualCheckOfAge::CODE)) : ?>
             <?php
             $code = \Dhl\Shipping\Service\VisualCheckOfAge::CODE;
