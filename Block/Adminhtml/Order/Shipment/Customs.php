@@ -110,6 +110,9 @@ class Customs extends \Magento\Backend\Block\Template
         return $usedTemplate;
     }
 
+    /**
+     * @return array
+     */
     public function getDangerousGoodsCategoryOptions()
     {
         return $this->dgCategoryAttribute->toOptionArray();

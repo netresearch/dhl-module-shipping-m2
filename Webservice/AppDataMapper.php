@@ -506,27 +506,42 @@ class AppDataMapper implements AppDataMapperInterface
             ]);
         }
 
-        $packageParams = $request->getPackageParams();
-        $servicesData = $packageParams->getData('services') ?: [];
+        $packageParams = $request->getData('package_params');
+        $servicesData  = $packageParams->getData('services') ?: [];
 
-        if (isset($servicesData["service_bulkyGoods"]) && $servicesData["service_bulkyGoods"] = "true") {
-            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS);
+        $serviceCode = AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS;
+        if (isset($servicesData["service_$serviceCode"])) {
+            $this->serviceCollection->addService($serviceCode);
         }
-        if (isset($servicesData["service_parcelAnnouncement"])
-            && $servicesData["service_parcelAnnouncement"] = "true") {
-            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT, [
+
+        $serviceCode = AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT;
+        if (isset($servicesData["service_$serviceCode"])) {
+            $this->serviceCollection->addService($serviceCode, [
                 'emailAddress' => $request->getData('recipient_email'),
             ]);
         }
-        if (isset($servicesData["service_insurance"]) && $servicesData["service_insurance"] = "true"
-        ) {
-            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_INSURANCE, [
+
+        $serviceCode = AbstractServiceFactory::SERVICE_CODE_INSURANCE;
+        if (isset($servicesData["service_$serviceCode"])) {
+            $this->serviceCollection->addService($serviceCode, [
                 'insuranceAmount' => $this->getOrderValue($request)
             ]);
         }
-        if (isset($servicesData["service_visualCheckOfAge"])) {
-            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE, [
-                'type' => $servicesData["service_visualCheckOfAge"]
+
+        $serviceCode = AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT;
+        if (isset($servicesData["service_$serviceCode"])) {
+            $this->serviceCollection->addService($serviceCode);
+        }
+
+        $serviceCode = AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE;
+        if (isset($servicesData["service_$serviceCode"])) {
+            $this->serviceCollection->addService($serviceCode);
+        }
+
+        $serviceCode = AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE;
+        if (isset($servicesData["service_$serviceCode"])) {
+            $this->serviceCollection->addService($serviceCode, [
+                'type' => $servicesData["service_$serviceCode"]
             ]);
         }
 
