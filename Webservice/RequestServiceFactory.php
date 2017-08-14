@@ -32,6 +32,8 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Pa
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\InsuranceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\VisualCheckOfAgeFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\BulkyGoodsFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ReturnShipmentFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\PrintOnlyIfCodeableFactory;
 
 /**
  * Generic service factory
@@ -48,32 +50,63 @@ class RequestServiceFactory extends AbstractServiceFactory
      * @var CodFactory
      */
     private $codFactory;
+
+    /**
+     * @var ParcelAnnouncementFactory
+     */
     private $parcelAnnouncementFactory;
+
+    /**
+     * @var InsuranceFactory
+     */
     private $insuranceFactory;
+
+    /**
+     * @var VisualCheckOfAgeFactory
+     */
     private $visualCheckOfAgeFactory;
+
+    /**
+     * @var BulkyGoodsFactory
+     */
     private $bulkyGoodsFactory;
 
     /**
+     * @var ReturnShipmentFactory
+     */
+    private $returnShipmentFactory;
+
+    /**
+     * @var PrintOnlyIfCodeableFactory
+     */
+    private $printOnlyIfCodeableFactory;
+
+    /**
      * RequestServiceFactory constructor.
-     *
      * @param CodFactory $codFactory
      * @param ParcelAnnouncementFactory $parcelAnnouncementFactory
      * @param InsuranceFactory $insuranceFactory
      * @param VisualCheckOfAgeFactory $visualCheckOfAgeFactory
      * @param BulkyGoodsFactory $bulkyGoodsFactory
+     * @param ReturnShipmentFactory $returnShipmentFactory
+     * @param PrintOnlyIfCodeableFactory $printOnlyIfCodeableFactory
      */
     public function __construct(
         CodFactory $codFactory,
         ParcelAnnouncementFactory $parcelAnnouncementFactory,
         InsuranceFactory $insuranceFactory,
         VisualCheckOfAgeFactory $visualCheckOfAgeFactory,
-        BulkyGoodsFactory $bulkyGoodsFactory
+        BulkyGoodsFactory $bulkyGoodsFactory,
+        ReturnShipmentFactory $returnShipmentFactory,
+        PrintOnlyIfCodeableFactory $printOnlyIfCodeableFactory
     ) {
         $this->codFactory = $codFactory;
         $this->parcelAnnouncementFactory = $parcelAnnouncementFactory;
         $this->insuranceFactory = $insuranceFactory;
         $this->visualCheckOfAgeFactory = $visualCheckOfAgeFactory;
         $this->bulkyGoodsFactory = $bulkyGoodsFactory;
+        $this->returnShipmentFactory = $returnShipmentFactory;
+        $this->printOnlyIfCodeableFactory = $printOnlyIfCodeableFactory;
     }
 
     /**
@@ -96,6 +129,10 @@ class RequestServiceFactory extends AbstractServiceFactory
                 return $this->visualCheckOfAgeFactory->create($data);
             case AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS:
                 return $this->bulkyGoodsFactory->create($data);
+            case AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT:
+                return $this->returnShipmentFactory->create($data);
+            case AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE:
+                return $this->printOnlyIfCodeableFactory->create($data);
             default:
                 return null;
         }
