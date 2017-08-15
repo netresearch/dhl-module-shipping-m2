@@ -88,6 +88,21 @@ class BcsDataMapper implements BcsDataMapperInterface
         $bankData->setAccountreference($shipmentDetails->getBankData()->getAccountReference());
         $shipmentDetailsType->setBankData($bankData);
 
+        // add services that are not part of the service type
+        if ($notificationService = $shipmentOrder->getServices()->getService(
+            AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT
+        )) {
+            $notificationType = $this->getNotifications($notificationService);
+            $shipmentDetailsType->setNotification($notificationType);
+        }
+
+        if ($returnShipmentService = $shipmentOrder->getServices()->getService(
+            AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT
+        )) {
+            $shipmentDetailsType->setReturnShipmentAccountNumber($shipmentOrder->getShipmentDetails()
+                ->getReturnShipmentAccountNumber());
+        }
+
         return $shipmentDetailsType;
     }
 
@@ -320,18 +335,16 @@ class BcsDataMapper implements BcsDataMapperInterface
         $serviceType = $this->getServices($shipmentOrder->getServices());
         $shipmentDetailsType->setService($serviceType);
 
-        // add services that are not part of the service type
-        if ($notificationService = $shipmentOrder->getServices()->getService(
-            AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT
-        )) {
-            $notificationType = $this->getNotifications($notificationService);
-            $shipmentDetailsType->setNotification($notificationType);
-        }
-
         // shipper, receiver, return receiver
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
         $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
-        $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
+        if ($returnShipmentService = $shipmentOrder->getServices()->getService(
+            AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT
+        )) {
+            $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
+        } else {
+            $returnReceiverType = null;
+        }
 
         // customs declaration
         $exportDocumentType = $this->getExportDocument($shipmentOrder->getPackages());

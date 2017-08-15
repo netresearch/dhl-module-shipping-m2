@@ -25,6 +25,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
+use Dhl\Shipping\Config\BcsConfigInterface;
 use Dhl\Shipping\Model\Config\BcsService;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
@@ -59,11 +60,18 @@ class Services extends \Magento\Backend\Block\Template
     private $bcsServices;
 
     /**
+     * @var BcsConfigInterface
+     */
+    private $bcsConfig;
+
+    /**
      * Services constructor.
+     *
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Backend\Block\Template\Context $context
      * @param ModuleConfigInterface $moduleConfig
      * @param BcsService $bcsService
+     * @param BcsConfigInterface $bcsConfig
      * @param array $data
      */
     public function __construct(
@@ -71,11 +79,13 @@ class Services extends \Magento\Backend\Block\Template
         \Magento\Backend\Block\Template\Context $context,
         ModuleConfigInterface $moduleConfig,
         BcsService $bcsService,
+        BcsConfigInterface $bcsConfig,
         array $data = []
     ) {
         $this->coreRegistry = $registry;
         $this->moduleConfig = $moduleConfig;
         $this->bcsServices = $bcsService;
+        $this->bcsConfig = $bcsConfig;
         parent::__construct($context, $data);
     }
 
@@ -112,5 +122,14 @@ class Services extends \Magento\Backend\Block\Template
     public function getServiceCollection()
     {
         return $this->bcsServices->getServices($this->getShipment()->getStoreId());
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsPrintOnlyIfCodeable()
+    {
+        $store_id = $this->getShipment()->getStoreId();
+        return $this->bcsConfig->isPrintOnlyIfCodeable($store_id);
     }
 }

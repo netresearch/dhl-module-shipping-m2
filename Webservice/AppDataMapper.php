@@ -326,6 +326,14 @@ class AppDataMapper implements AppDataMapperInterface
     {
         $storeId = $request->getOrderShipment()->getStoreId();
 
+        $printOnlyIfCodeable = false;
+        if ($this->serviceCollection
+            ->getService(AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE)) {
+            $printOnlyIfCodeable = $this->serviceCollection
+                ->getService(AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE)
+                ->isActive();
+        }
+
         $bankData = $this->bankDataFactory->create([
             'accountOwner'     => $this->bcsConfig->getBankDataAccountOwner($storeId),
             'bankName'         => $this->bcsConfig->getBankDataBankName($storeId),
@@ -347,7 +355,7 @@ class AppDataMapper implements AppDataMapperInterface
         $returnBillingNumber = $this->shippingProducts->getReturnBillingNumber($productCode, $ekp, $participations);
 
         $shipmentDetails = $this->shipmentDetailsFactory->create([
-            'isPrintOnlyIfCodeable'       => $this->bcsConfig->isPrintOnlyIfCodeable($storeId),
+            'isPrintOnlyIfCodeable'       => $printOnlyIfCodeable,
             'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
             'product'                     => $productCode,
             'accountNumber'               => $billingNumber,
