@@ -32,7 +32,7 @@ use Magento\Framework\Logger\Monolog;
  * Class Logger
  * @package Dhl\Shipping\Util
  */
-class Logger extends Monolog implements LoggerInterface
+class Logger extends Monolog
 {
     /**
      * @var ModuleConfigInterface
