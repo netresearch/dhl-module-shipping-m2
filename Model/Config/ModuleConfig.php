@@ -294,6 +294,7 @@ class ModuleConfig implements ModuleConfigInterface
             ParcelAnnouncement::CODE,
             ReturnShipment::CODE,
             VisualCheckOfAge::CODE,
+
         ];
 
         foreach ($availableServices as $serviceCode) {
