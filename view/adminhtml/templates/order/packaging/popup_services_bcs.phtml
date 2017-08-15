@@ -101,6 +101,7 @@
                         type="checkbox"
                         name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
                         value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
+                        <?php echo $block->getIsPrintOnlyIfCodeable() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
                     <?php echo $block->escapeHtml($name) ?>
