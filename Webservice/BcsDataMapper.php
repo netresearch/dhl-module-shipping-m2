@@ -55,8 +55,10 @@ class BcsDataMapper implements BcsDataMapperInterface
      * @param PackageInterface[] $packages
      * @return BcsApi\ShipmentDetailsTypeType
      */
-    private function getShipmentDetails(ShipmentDetails\ShipmentDetailsInterface $shipmentDetails, array $packages)
+    private function getShipmentDetails(ShipmentOrderInterface $shipmentOrder)
     {
+        $shipmentDetails = $shipmentOrder->getShipmentDetails();
+        $packages = $shipmentOrder->getPackages();
         // bcs cannot handle multiple packages
         $package = current($packages);
 
@@ -329,8 +331,7 @@ class BcsDataMapper implements BcsDataMapperInterface
     {
         // account data, package definition, carrier product, additional services
         $shipmentDetailsType = $this->getShipmentDetails(
-            $shipmentOrder->getShipmentDetails(),
-            $shipmentOrder->getPackages()
+            $shipmentOrder
         );
         $serviceType = $this->getServices($shipmentOrder->getServices());
         $shipmentDetailsType->setService($serviceType);
