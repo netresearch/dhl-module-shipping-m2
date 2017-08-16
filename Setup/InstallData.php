@@ -53,5 +53,6 @@ class InstallData implements InstallDataInterface
     ) {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
         ShippingSetup::addDangerousGoodsCategoryAttribute($eavSetup);
+        ShippingSetup::addTariffNumberAttribute($eavSetup);
     }
 }
