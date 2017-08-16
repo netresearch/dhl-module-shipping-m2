@@ -326,7 +326,7 @@ class AppDataMapper implements AppDataMapperInterface
     {
         $storeId = $request->getOrderShipment()->getStoreId();
 
-        $printOnlyIfCodeable = $this->bcsConfig->isPrintOnlyIfCodeable($storeId);
+        $printOnlyIfCodeable = false;
         if ($this->serviceCollection
             ->getService(AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE)) {
             $printOnlyIfCodeable = $this->serviceCollection
