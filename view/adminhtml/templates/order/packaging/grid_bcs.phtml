@@ -105,7 +105,10 @@
                                type="text"
                                class="input-text admin__control-text required-entry validate-length
                                maximum-length-10"
-                               title="<?php echo __('Tariff Number') ?>" maxlength="10" />
+                               title="<?php echo __('Tariff Number') ?>" maxlength="10"
+                               value="<?php /** @noEscape */
+                               echo $block->getTariffNumber($_orderItem->getProductId()); ?>"
+                        />
                     </td>
 
                     <td data-role="item-weight">
