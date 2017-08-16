@@ -696,11 +696,11 @@ class AppDataMapper implements AppDataMapperInterface
      */
     public function mapShipmentRequest($request, $sequenceNumber)
     {
+        $services        = $this->getServices($request);
         $shipmentDetails = $this->getShipmentDetails($request);
         $shipper         = $this->getShipper($request);
         $receiver        = $this->getReceiver($request);
         $returnReceiver  = $this->getReturnReceiver($request);
-        $services        = $this->getServices($request);
         $package         = $this->getPackage($request);
 
         $shipmentOrder = $this->shipmentOrderFactory->create([
