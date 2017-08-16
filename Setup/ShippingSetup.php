@@ -42,6 +42,7 @@ class ShippingSetup
 {
     const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
     const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
+    const TARIFF_NUMBER_CODE = 'dhlshipping_tariff_number';
 
     public static function addDangerousGoodsCategoryAttribute(EavSetup $eavSetup)
     {
@@ -55,6 +56,24 @@ class ShippingSetup
                 'input' => 'select',
                 'required' => false,
                 'source' => 'Dhl\Shipping\Model\Attribute\DGCategory',
+                'sort_order' => 50,
+                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
+                'visible' => true,
+            ]
+        );
+    }
+
+    public static function addTariffNumberAttribute(EavSetup $eavSetup)
+    {
+        $eavSetup->addAttribute(
+            \Magento\Catalog\Model\Product::ENTITY,
+            self::TARIFF_NUMBER_CODE,
+            [
+                'group' => '',
+                'type' => 'varchar',
+                'label' => 'Tariff Number',
+                'input' => 'text',
+                'required' => false,
                 'sort_order' => 50,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
                 'visible' => true,

@@ -51,8 +51,11 @@ class UpgradeData implements UpgradeDataInterface
         ModuleContextInterface $context
     ) {
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
-        if ($context->getVersion() === '0.1.0') {
+        if (version_compare($context->getVersion(), '0.1.1', '<')) {
             ShippingSetup::addDangerousGoodsCategoryAttribute($eavSetup);
+        }
+        if (version_compare($context->getVersion(), '0.2.1', '<')) {
+            ShippingSetup::addTariffNumberAttribute($eavSetup);
         }
     }
 }

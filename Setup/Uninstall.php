@@ -26,6 +26,7 @@
 
 namespace Dhl\Shipping\Setup;
 
+use Dhl\Shipping\Model\Attribute\DGCategory;
 use Magento\Config\Model\Config;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
@@ -101,7 +102,11 @@ class Uninstall implements UninstallInterface
         $eavSetup = $this->eavSetupFactory->create(['setup' => $uninstaller]);
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            ShippingSetup::ATTRIBUTE_CODE_DANGEROUS_GOODS
+            DGCategory::CODE
+        );
+        $eavSetup->removeAttribute(
+            \Magento\Catalog\Model\Product::ENTITY,
+            ShippingSetup::TARIFF_NUMBER_CODE
         );
     }
 }
