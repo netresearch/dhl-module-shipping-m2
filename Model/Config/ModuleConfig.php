@@ -30,6 +30,7 @@ namespace Dhl\Shipping\Model\Config;
 use Dhl\Shipping\Service\BulkyGoods;
 use Dhl\Shipping\Service\Insurance;
 use Dhl\Shipping\Service\ParcelAnnouncement;
+use Dhl\Shipping\Service\PrintOnlyIfCodeable;
 use Dhl\Shipping\Service\ReturnShipment;
 use Dhl\Shipping\Service\VisualCheckOfAge;
 use Dhl\Shipping\Util\ShippingRoutesInterface;
@@ -286,7 +287,7 @@ class ModuleConfig implements ModuleConfigInterface
     public function getAutoCreateServices($store = null)
     {
         $basePath = 'carriers/dhlshipping/shipment_autocreate_service_';
-
+        $basePathGlobal = 'carriers/dhlshipping/bcs_shipment_';
         $autoCreateServices = [];
         $availableServices = [
             BulkyGoods::CODE,
@@ -294,13 +295,19 @@ class ModuleConfig implements ModuleConfigInterface
             ParcelAnnouncement::CODE,
             ReturnShipment::CODE,
             VisualCheckOfAge::CODE,
-
+            PrintOnlyIfCodeable::CODE
         ];
 
         foreach ($availableServices as $serviceCode) {
             $configPath = $basePath . strtolower($serviceCode);
             /** @var bool|string $value */
             $value = $this->configAccessor->getConfigValue($configPath, $store);
+            if ($value === null){
+                // fall back to global path (e.g. for PrintOnlyIfCodeable configValue)
+                $configPath = $basePathGlobal . strtolower($serviceCode);
+                /** @var bool|string $value */
+                $value = $this->configAccessor->getConfigValue($configPath, $store);
+            }
             if ($value) {
                 $autoCreateServices["service_$serviceCode"] = $value;
             }
