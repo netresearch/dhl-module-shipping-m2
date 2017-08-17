@@ -324,16 +324,7 @@ class AppDataMapper implements AppDataMapperInterface
      */
     private function getShipmentDetails(ShipmentRequest $request)
     {
-        $storeId = $request->getOrderShipment()->getStoreId();
-
-        $printOnlyIfCodeable = false;
-        if ($this->serviceCollection
-            ->getService(AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE)) {
-            $printOnlyIfCodeable = $this->serviceCollection
-                ->getService(AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE)
-                ->isActive();
-        }
-
+        $storeId  = $request->getOrderShipment()->getStoreId();
         $bankData = $this->bankDataFactory->create([
             'accountOwner'     => $this->bcsConfig->getBankDataAccountOwner($storeId),
             'bankName'         => $this->bcsConfig->getBankDataBankName($storeId),
@@ -354,8 +345,12 @@ class AppDataMapper implements AppDataMapperInterface
         $billingNumber = $this->shippingProducts->getBillingNumber($productCode, $ekp, $participations);
         $returnBillingNumber = $this->shippingProducts->getReturnBillingNumber($productCode, $ekp, $participations);
 
+        //get printOnlyIfCodeAble
+        $printOnlyIfCodeAble = $this->serviceCollection
+            ->getService(AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE);
+
         $shipmentDetails = $this->shipmentDetailsFactory->create([
-            'isPrintOnlyIfCodeable'       => $printOnlyIfCodeable,
+            'isPrintOnlyIfCodeable'       => $printOnlyIfCodeAble ? $printOnlyIfCodeAble->isActive() : false,
             'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
             'product'                     => $productCode,
             'accountNumber'               => $billingNumber,

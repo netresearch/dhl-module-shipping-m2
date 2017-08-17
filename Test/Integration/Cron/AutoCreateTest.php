@@ -31,6 +31,7 @@ use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Test\Fixture\OrderCollectionFixture;
+use Magento\Cron\Model\Schedule;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoresConfig;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -128,7 +129,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
     public function testRun()
     {
         $this->moduleConfig->expects($this->once())
-                           ->method('getCronOrderStatuses')
+                           ->method('getAutoCreateOrderStatus')
                            ->will(
                                $this->returnValue(
                                    [
@@ -145,11 +146,6 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                            ->method('isCrossBorderRoute')
                            ->will($this->returnValue(false));
 
-        /*
-        $this->moduleConfig->expects($this->exactly(3))
-                           ->method('getDefaultProduct')
-                           ->will($this->returnValue('foo'));
-*/
         $this->storesConfig->expects($this->once())
                            ->method('getStoresConfigByPath')
                            ->with(ModuleConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED)
@@ -162,20 +158,12 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                )
                            );
 
-        $result = $this->autoCreate->run();
 
-        $this->assertEquals(
-            count(OrderCollectionFixture::getAutoCreateOrderIncrementIds()),
-            $result['count']
-        );
-        $this->assertEquals(
-            OrderCollectionFixture::getAutoCreateOrderIncrementIds(),
-            $result['orderIds']
-        );
-        $this->assertEquals(
-            count(OrderCollectionFixture::getAutoCreateOrderIncrementIds()),
-            count($result['shipments'])
-        );
+
+
+        $schedule = $this->objectManager->get(Schedule::class);
+        $this->autoCreate->run($schedule);
+
+        $this->assertEquals('3 shipments were created. 0 shipments could not be created.', $schedule->getData('messages'));
     }
-
 }
