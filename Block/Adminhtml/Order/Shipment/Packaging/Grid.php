@@ -26,12 +26,13 @@
 
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
-use Dhl\Shipping\Model\Attribute\DGCategory;
+use Dhl\Shipping\Model\Attribute\Source\DGCategory;
+use Dhl\Shipping\Model\Attribute\TariffNumber;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Setup\ShippingSetup;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
-use Magento\Catalog\Model\ProductFactory;
+use \Magento\Catalog\Model\ProductFactory;
 use \Magento\Directory\Model\ResourceModel\Country\Collection as CountryCollection;
 use \Magento\Framework\Registry;
 
@@ -222,14 +223,14 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
                 DGCategory::CODE,
                 true
             )->addAttributeToSelect(
-                ShippingSetup::TARIFF_NUMBER_CODE,
+                TariffNumber::CODE,
                 true
             );
 
         while ($product = $productCollection->fetchItem()) {
             $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');
             $this->dangerousGoodsCategories[$product->getId()] = $product->getData(DGCategory::CODE);
-            $this->tariffNumbers[$product->getId()] = $product->getData(ShippingSetup::TARIFF_NUMBER_CODE);
+            $this->tariffNumbers[$product->getId()] = $product->getData(TariffNumber::CODE);
         }
     }
 }

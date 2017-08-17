@@ -24,30 +24,11 @@
 
 namespace Dhl\Shipping\Model\Attribute;
 
-use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
-
-class DGCategory extends AbstractSource
+/**
+ * Class TariffNumber
+ * Just to have a convinient way to track the attribute code
+ */
+class TariffNumber
 {
-    const CODE = 'dhl_dangerous_goods_category';
-
-    public function getAllOptions()
-    {
-        if (!$this->_options) {
-            $this->_options = [
-                [
-                    'label' => 'none',
-                    'value' => ''
-                ],
-                [
-                    'label' => '01 - Lithium Metal Contained in Equipment',
-                    'value' => '01'
-                ],
-                [
-                    'label' => '04 - Lithium-Ion Contained in Equipment',
-                    'value' => '04'
-                ]
-            ];
-        }
-        return $this->_options;
-    }
+    const  CODE = 'dhlshipping_tariff_number';
 }
