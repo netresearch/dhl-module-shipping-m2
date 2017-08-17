@@ -25,7 +25,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
-use Dhl\Shipping\Model\Attribute\DGCategory;
+use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
 /**
@@ -50,6 +50,10 @@ class Customs extends \Magento\Backend\Block\Template
      * @var \Magento\Framework\Registry
      */
     private $coreRegistry;
+
+    /**
+     * @var DGCategory
+     */
     private $dgCategoryAttribute;
 
     public function __construct(
