@@ -27,7 +27,7 @@
 namespace Dhl\Shipping\Setup;
 
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
-use Dhl\Shipping\Model\Attribute\TariffNumber;
+use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UninstallInterface;

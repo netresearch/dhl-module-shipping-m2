@@ -27,9 +27,8 @@
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
-use Dhl\Shipping\Model\Attribute\TariffNumber;
+use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Setup\ShippingSetup;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Sales\Model\Order\Shipment\ItemFactory;
 use \Magento\Catalog\Model\ProductFactory;

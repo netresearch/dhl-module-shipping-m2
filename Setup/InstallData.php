@@ -1,6 +1,6 @@
 <?php
 /**
- * ${MODULE_LONG}
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -14,7 +14,7 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @category  ${MODULE}
+ * @category  Dhl
  * @package   Dhl\Shipping\Setup
  * @author    Paul Siedler <paul.siedler@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
