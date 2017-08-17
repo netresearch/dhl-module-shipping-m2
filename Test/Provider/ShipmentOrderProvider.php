@@ -108,9 +108,15 @@ class ShipmentOrderProvider
             false
         );
 
-        $requestServiceFactory = new \Dhl\Shipping\Webservice\RequestServiceFactory($codFactoryMock);
+        $requestServiceFactoryMock = $mockObjectGenerator->getMock(
+            \Dhl\Shipping\Webservice\RequestServiceFactory::class,
+            [],
+            [],
+            '',
+            false
+        );
         $services = new \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection(
-            $requestServiceFactory
+            $requestServiceFactoryMock
         );
 
         return $services;
