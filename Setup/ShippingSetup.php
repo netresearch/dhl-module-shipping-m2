@@ -27,7 +27,7 @@
 namespace Dhl\Shipping\Setup;
 
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
-use Dhl\Shipping\Model\Attribute\TariffNumber;
+use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Magento\Eav\Setup\EavSetup;
 
 /**
@@ -76,6 +76,7 @@ class ShippingSetup
                 'required' => false,
                 'sort_order' => 50,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
+                'backend' => TariffNumber::class,
                 'visible' => true,
             ]
         );
