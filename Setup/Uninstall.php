@@ -26,8 +26,8 @@
 
 namespace Dhl\Shipping\Setup;
 
-use Dhl\Shipping\Model\Attribute\DGCategory;
-use Magento\Config\Model\Config;
+use Dhl\Shipping\Model\Attribute\Source\DGCategory;
+use Dhl\Shipping\Model\Attribute\TariffNumber;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UninstallInterface;
@@ -106,7 +106,7 @@ class Uninstall implements UninstallInterface
         );
         $eavSetup->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
-            ShippingSetup::TARIFF_NUMBER_CODE
+            TariffNumber::CODE
         );
     }
 }
