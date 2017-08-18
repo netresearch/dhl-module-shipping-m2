@@ -24,22 +24,26 @@
 
 namespace Dhl\Shipping\Setup;
 
-use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
+/**
+ * @category Dhl
+ * @package  Dhl\Shipping\Setup
+ * @author   Paul Siedler <paul.siedler@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class InstallData implements InstallDataInterface
 {
     /**
-     * Eav setup factory
      * @var EavSetupFactory
      */
     private $eavSetupFactory;
 
     /**
-     * Init
      * @param EavSetupFactory $eavSetupFactory
      */
     public function __construct(EavSetupFactory $eavSetupFactory)
@@ -47,6 +51,10 @@ class InstallData implements InstallDataInterface
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface $context
+     */
     public function install(
         ModuleDataSetupInterface $setup,
         ModuleContextInterface $context
