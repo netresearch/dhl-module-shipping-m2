@@ -29,6 +29,13 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
 
+/**
+ * @category Dhl
+ * @package  Dhl\Shipping\Setup
+ * @author   Paul Siedler <paul.siedler@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class UpgradeData implements UpgradeDataInterface
 {
     /**
@@ -46,6 +53,10 @@ class UpgradeData implements UpgradeDataInterface
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface $context
+     */
     public function upgrade(
         ModuleDataSetupInterface $setup,
         ModuleContextInterface $context

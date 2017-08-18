@@ -235,15 +235,14 @@
                 </field>
 
                 <!-- Additional Services In Checkout -->
-                <field id="services_in_checkout" translate="label" type="select" sortOrder="650" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="services_in_checkout" translate="label" type="select" sortOrder="650" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Additional Services In Checkout</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="651" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="651" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred location</label>
                     <tooltip>Allow customers to declare a preferred parcel location during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -251,8 +250,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="652" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="652" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred neighbor</label>
                     <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -260,8 +258,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="653" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="653" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Parcel announcement</label>
                     <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -269,8 +266,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="654" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="654" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred day</label>
                     <tooltip>Allow customers to select a preferred day of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -278,8 +274,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredday_handling_fee" translate="label" type="text" sortOrder="655" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredday_handling_fee" translate="label" type="text" sortOrder="655" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Additional charge for your preferred day</label>
                     <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                     <comment>Use . as decimal separator.</comment>
@@ -289,8 +284,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredday_handling_fee_text" translate="label" type="textarea" sortOrder="656" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredday_handling_fee_text" translate="label" type="textarea" sortOrder="656" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Preferred day handling fee text</label>
                     <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
                     <depends>
@@ -298,8 +292,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_cutoff_time" translate="label" type="time" sortOrder="657" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_cutoff_time" translate="label" type="time" sortOrder="657" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Cut off time</label>
                     <tooltip>Orders placed after the cut-off time will not be shipped the same day.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
@@ -308,8 +301,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="658" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="658" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred time</label>
                     <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -317,8 +309,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredtime_handling_fee" translate="label" type="text" sortOrder="659" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredtime_handling_fee" translate="label" type="text" sortOrder="659" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Additional charge for your preferred time</label>
                     <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                     <comment>Use . as decimal separator.</comment>
@@ -328,8 +319,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <field id="service_preferredtime_handling_fee_text" translate="label" type="textarea" sortOrder="660" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredtime_handling_fee_text" translate="label" type="textarea" sortOrder="660" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Preferred time handling fee text</label>
                     <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
                     <depends>
@@ -337,9 +327,6 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-                <!-- 670 Automatic Shipment Creation -->
-
 
                 <!-- 700 Additional Contact Information -->
                 <field id="fields_contact" translate="label" sortOrder="700" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -428,23 +415,19 @@
                     <label>Automatic Shipment Creation</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
-
-
                 <!-- 910 Cron Job -->
                 <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <tooltip>Create shipments and retrieve labels via cron job.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-
                 <!-- 920 Cron Order Status -->
                 <field id="shipment_autocreate_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order Status</label>
                     <tooltip>Create shipments for orders with the given status.</tooltip>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
                 </field>
-
-                <!-- 930 Cron Services -->
+                <!-- 930 Cron Services: Visual Check of Age -->
                 <field id="shipment_autocreate_service_visualcheckofage" translate="label" type="select" sortOrder="930" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Visual Check of Age</label>
                     <tooltip>Book the service Visual Check Of Age with automated shipment orders.</tooltip>
@@ -453,7 +436,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
+                <!-- 931 Cron Services: Return Shipment -->
                 <field id="shipment_autocreate_service_returnshipment" translate="label" type="select" sortOrder="931" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Return Shipment</label>
                     <tooltip>Book the service Return Shipment with automated shipment orders.</tooltip>
@@ -462,7 +445,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
+                <!-- 932 Cron Services: Additional Insurance -->
                 <field id="shipment_autocreate_service_insurance" translate="label" type="select" sortOrder="932" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Additional Insurance</label>
                     <tooltip>Book the service Additional Insurance with automated shipment orders.</tooltip>
@@ -471,7 +454,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
+                <!-- 933 Cron Services: Bulky Goods -->
                 <field id="shipment_autocreate_service_bulkygoods" translate="label" type="select" sortOrder="933" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Bulky Goods</label>
                     <tooltip>Book the service Bulky Goods with automated shipment orders.</tooltip>

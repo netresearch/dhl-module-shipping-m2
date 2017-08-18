@@ -259,6 +259,10 @@ class ModuleConfig implements ModuleConfigInterface
     /**
      * Check if automatic shipment creation is enabled for store
      *
+     * @deprecated Not used anywhere
+     * @see \Dhl\Shipping\AutoCreate\OrderProvider::load
+     * @see \Magento\Store\Model\StoresConfig::getStoresConfigByPath
+     *
      * @param null $store
      * @return bool
      */

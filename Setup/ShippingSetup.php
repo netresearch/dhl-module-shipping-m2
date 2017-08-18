@@ -44,6 +44,9 @@ class ShippingSetup
     const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
     const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
 
+    /**
+     * @param EavSetup $eavSetup
+     */
     public static function addDangerousGoodsCategoryAttribute(EavSetup $eavSetup)
     {
         $eavSetup->addAttribute(
@@ -63,6 +66,9 @@ class ShippingSetup
         );
     }
 
+    /**
+     * @param EavSetup $eavSetup
+     */
     public static function addTariffNumberAttribute(EavSetup $eavSetup)
     {
         $eavSetup->addAttribute(
