@@ -42,9 +42,7 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
     const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
     const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
-    const CONFIG_XML_PATH_CRON_ORDER_STATUS = 'carriers/dhlshipping/shipment_autocreate_order_status';
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
-    const CONFIG_XML_PATH_AUTOCREATE_ENABLED = 'carriers/dhlshipping/shipment_autocreate_enabled';
 
     /**
      * Check if logging is enabled
@@ -149,31 +147,4 @@ interface ModuleConfigInterface
      */
     public function isCrossBorderRoute($destinationCountryId, $storeId = null);
 
-    /**
-     * Check if automatic shipment creation is enabled for store
-     *
-     * @deprecated Not used anywhere
-     * @see \Dhl\Shipping\AutoCreate\OrderProvider::load
-     * @see \Magento\Store\Model\StoresConfig::getStoresConfigByPath
-     *
-     * @param null $store
-     * @return bool
-     */
-    public function isAutoCreateEnabled($store = null);
-
-    /**
-     * Get allowed order statuses for automatic shipment creation
-     *
-     * @param null $store
-     * @return string[]
-     */
-    public function getAutoCreateOrderStatus($store = null);
-
-    /**
-     * Get preselected services for automatic shipping creation
-     *
-     * @param null $store
-     * @return string[]
-     */
-    public function getAutoCreateServices($store = null);
 }

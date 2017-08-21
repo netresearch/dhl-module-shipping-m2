@@ -235,24 +235,6 @@ class BcsConfigTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/bcs_shipment_printonlyifcodeable 0
-     */
-    public function isPrintOnlyIfCodeableFalse()
-    {
-        $this->assertFalse((bool)$this->config->isPrintOnlyIfCodeable());
-    }
-
-    /**
-     * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/bcs_shipment_printonlyifcodeable 1
-     */
-    public function isPrintOnlyIfCodeableTrue()
-    {
-        $this->assertTrue((bool)$this->config->isPrintOnlyIfCodeable());
-    }
-
-    /**
-     * @test
      * @magentoConfigFixture default/carriers/dhlshipping/bcs_bankdata_account_owner owner
      */
     public function getBankDataAccountOwner()

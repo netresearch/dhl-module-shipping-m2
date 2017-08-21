@@ -217,16 +217,6 @@ class BcsConfig implements BcsConfigInterface
     /**
      * @param mixed $store
      *
-     * @return bool
-     */
-    public function isPrintOnlyIfCodeable($store = null)
-    {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPMENT_PRINTONLYIFCODEABLE, $store);
-    }
-
-    /**
-     * @param mixed $store
-     *
      * @return string
      */
     public function getBankDataAccountOwner($store = null)

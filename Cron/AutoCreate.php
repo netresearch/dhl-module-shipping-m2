@@ -97,7 +97,6 @@ class AutoCreate
         $createdShipments = [];
 
         $orders = $this->orderProvider->getOrders();
-
         /** @var \Magento\Sales\Model\Order $order */
         foreach ($orders as $order) {
             try {
