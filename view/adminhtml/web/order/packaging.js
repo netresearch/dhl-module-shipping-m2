@@ -115,9 +115,10 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
 
                         _.forEach(this.dhlShipping.params[packageId], function (value, key) {
                             if (key.match('service')) {
-                                this.paramsCreateLabelRequest['packages[' + packageId + '][params][services][' + key + ']'] = value;
+                                index = key.replace("service_", "");
+                                this.paramsCreateLabelRequest['packages[' + packageId + '][params][services][' + index + ']'] = value;
                             } else {
-                                this.paramsCreateLabelRequest['packages[' + packageId + '][params][customs][' + key + ']'] = value;
+                                this.paramsCreateLabelRequest['packages[' + packageId + '][params][customs][' + index + ']'] = value;
                             }
                         }.bind(this));
 

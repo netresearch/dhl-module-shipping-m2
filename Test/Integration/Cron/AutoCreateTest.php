@@ -30,6 +30,8 @@ use Dhl\Shipping\AutoCreate\OrderProvider;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Config\ModuleConfig;
+use Dhl\Shipping\Model\Config\ServiceConfig;
+use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Test\Fixture\OrderCollectionFixture;
 use Magento\Cron\Model\Schedule;
 use Magento\Sales\Model\Order;
@@ -56,6 +58,11 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
      * @var ModuleConfigInterface | \PHPUnit_Framework_MockObject_MockObject
      */
     private $moduleConfig;
+
+    /**
+     * @var ServiceConfigInterface | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $serviceConfig;
 
     /**
      * @var StoresConfig | \PHPUnit_Framework_MockObject_MockObject
@@ -87,7 +94,6 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                    ->disableOriginalConstructor()
                                    ->setMethods(
                                        [
-                                           'getAutoCreateOrderStatus',
                                            'canProcessRoute',
                                            'getDefaultProduct',
                                            'isCrossBorderRoute'
@@ -95,10 +101,17 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                    )
                                    ->getMock();
 
+        $this->serviceConfig = $this->getMockBuilder(ServiceConfig::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAutoCreateOrderStatus'])
+            ->getMock();
+
         $this->storesConfig = $this->getMockBuilder(StoresConfig::class)
                                    ->disableOriginalConstructor()
                                    ->setMethods(['getStoresConfigByPath'])
                                    ->getMock();
+
+
 
         $this->labelGenerator = $this->getMockBuilder(LabelGenerator::class)
             ->disableOriginalConstructor()
@@ -106,6 +119,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $orderProvider = $this->objectManager->create(OrderProvider::class, [
+            'serviceConfig' => $this->serviceConfig,
             'moduleConfig' => $this->moduleConfig,
             'storesConfig' => $this->storesConfig,
         ]);
@@ -128,7 +142,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun()
     {
-        $this->moduleConfig->expects($this->once())
+        $this->serviceConfig->expects($this->once())
                            ->method('getAutoCreateOrderStatus')
                            ->will(
                                $this->returnValue(
@@ -148,7 +162,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
 
         $this->storesConfig->expects($this->once())
                            ->method('getStoresConfigByPath')
-                           ->with(ModuleConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED)
+                           ->with(ServiceConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED)
                            ->will(
                                $this->returnValue(
                                    [

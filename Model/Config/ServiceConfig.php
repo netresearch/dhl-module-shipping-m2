@@ -30,7 +30,7 @@ use Dhl\Shipping\Service\ServiceCollectionFactory;
 use Dhl\Shipping\Service;
 
 /**
- * BcsService
+ * ServiceConfig
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -38,22 +38,8 @@ use Dhl\Shipping\Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class BcsService
+class ServiceConfig implements ServiceConfigInterface
 {
-    const CONFIG_XML_FIELD_PREFERREDDAY = 'carriers/dhlshipping/service_preferredday_enabled';
-    const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE = 'carriers/dhlshipping/service_preferredday_handling_fee';
-    const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT = 'carriers/dhlshipping/service_preferredday_handling_fee_text';
-    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE = 'carriers/dhlshipping/service_preferredtime_handling_fee';
-    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT = 'carriers/dhlshipping/service_preferredtime_handling_fee_text';
-    const CONFIG_XML_FIELD_CUTOFFTIME = 'carriers/dhlshipping/service_cutoff_time';
-    const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'carriers/dhlshipping/service_preferredlocation_placeholder';
-    const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER = 'carriers/dhlshipping/service_preferredneighbour_placeholder';
-
-    const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'carriers/dhlshipping/shipment_autocreate_service_visualcheckofage';
-    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT   = 'carriers/dhlshipping/shipment_autocreate_service_returnshipment';
-    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE        = 'carriers/dhlshipping/shipment_autocreate_service_insurance';
-    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS       = 'carriers/dhlshipping/shipment_autocreate_service_bulkygoods';
-
     /**
      * @var ConfigAccessorInterface
      */
@@ -85,12 +71,6 @@ class BcsService
         $this->serviceFactory = $serviceFactory;
     }
 
-    private function isServiceEnabled($code, $store = null)
-    {
-        $path = strtolower("carriers/dhlshipping/service_{$code}_enabled");
-        return (bool)$this->configAccessor->getConfigValue($path, $store);
-    }
-
     /**
      * Load all DHL additional service models.
      *
@@ -103,23 +83,26 @@ class BcsService
         $services = [];
         $serviceCodes = [
             // customer/checkout services
-            Service\PreferredDay::CODE => true,
-            Service\PreferredTime::CODE => true,
-            Service\PreferredLocation::CODE => true,
-            Service\PreferredNeighbour::CODE => true,
-            Service\ParcelAnnouncement::CODE => true,
+            Service\ParcelAnnouncement::CODE,
+            Service\PreferredDay::CODE,
+            Service\PreferredTime::CODE,
+            Service\PreferredLocation::CODE,
+            Service\PreferredNeighbour::CODE,
             // merchant/admin services
-            Service\VisualCheckOfAge::CODE => false,
-            Service\ReturnShipment::CODE => false,
-            Service\Insurance::CODE => false,
-            Service\BulkyGoods::CODE => false,
-            Service\PrintOnlyIfCodeable::CODE => false,
+            Service\BulkyGoods::CODE,
+            Service\Insurance::CODE,
+            Service\PrintOnlyIfCodeable::CODE,
+            Service\ReturnShipment::CODE,
+            Service\VisualCheckOfAge::CODE,
         ];
 
-        foreach ($serviceCodes as $serviceCode => $isConfigurable) {
-            if (!$isConfigurable || $this->isServiceEnabled($serviceCode, $store)) {
-                $services[$serviceCode] = Service\ServiceFactory::get($serviceCode);
-            }
+        foreach ($serviceCodes as $serviceCode) {
+            // read config
+            $path = strtolower("carriers/dhlshipping/shipment_service_{$serviceCode}");
+            $serviceValue = $this->configAccessor->getConfigValue($path, $store);
+
+            $service = Service\ServiceFactory::get($serviceCode, $serviceValue);
+            $services[$serviceCode] = $service;
         }
 
         return Service\ServiceCollection::fromArray($services);
@@ -190,4 +173,31 @@ class BcsService
 
         return $text;
     }
+
+    /**
+     * Check if automatic shipment creation is enabled for store
+     *
+     * @deprecated Not used anywhere
+     * @see \Dhl\Shipping\AutoCreate\OrderProvider::load
+     * @see \Magento\Store\Model\StoresConfig::getStoresConfigByPath
+     *
+     * @param null $store
+     * @return bool
+     */
+    public function isAutoCreateEnabled($store = null)
+    {
+        return (bool)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_ENABLED, $store);
+    }
+
+    /**
+     * Get allowed order statuses for automatic shipment creation
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getAutoCreateOrderStatus($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ORDER_STATUS, $store);
+    }
+
 }
