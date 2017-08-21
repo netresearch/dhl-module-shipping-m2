@@ -513,38 +513,38 @@ class AppDataMapper implements AppDataMapperInterface
         $servicesData  = $packageParams->getData('services') ?: [];
 
         $serviceCode = AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS;
-        if (isset($servicesData["service_$serviceCode"])) {
+        if (isset($servicesData[$serviceCode])) {
             $this->serviceCollection->addService($serviceCode);
         }
 
         $serviceCode = AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT;
-        if (isset($servicesData["service_$serviceCode"])) {
+        if (isset($servicesData[$serviceCode])) {
             $this->serviceCollection->addService($serviceCode, [
                 'emailAddress' => $request->getData('recipient_email'),
             ]);
         }
 
         $serviceCode = AbstractServiceFactory::SERVICE_CODE_INSURANCE;
-        if (isset($servicesData["service_$serviceCode"])) {
+        if (isset($servicesData[$serviceCode])) {
             $this->serviceCollection->addService($serviceCode, [
                 'insuranceAmount' => $this->getOrderValue($request)
             ]);
         }
 
         $serviceCode = AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT;
-        if (isset($servicesData["service_$serviceCode"])) {
+        if (isset($servicesData[$serviceCode])) {
             $this->serviceCollection->addService($serviceCode);
         }
 
         $serviceCode = AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE;
-        if (isset($servicesData["service_$serviceCode"])) {
+        if (isset($servicesData[$serviceCode])) {
             $this->serviceCollection->addService($serviceCode);
         }
 
         $serviceCode = AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE;
-        if (isset($servicesData["service_$serviceCode"])) {
+        if (isset($servicesData[$serviceCode])) {
             $this->serviceCollection->addService($serviceCode, [
-                'type' => $servicesData["service_$serviceCode"]
+                'type' => $servicesData[$serviceCode]
             ]);
         }
 

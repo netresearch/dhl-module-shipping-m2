@@ -25,6 +25,10 @@
 namespace Dhl\Shipping\AutoCreate;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ServiceConfig;
+use Dhl\Shipping\Model\Config\ServiceConfigInterface;
+use Dhl\Shipping\Service\Filter\EnabledFilter;
+use Dhl\Shipping\Service\ServiceInterface;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObjectFactory;
@@ -55,6 +59,11 @@ class RequestBuilder implements RequestBuilderInterface
     private $moduleConfig;
 
     /**
+     * @var ServiceConfigInterface
+     */
+    private $serviceConfig;
+
+    /**
      * @var RequestFactory
      */
     private $shipmentRequestFactory;
@@ -82,6 +91,7 @@ class RequestBuilder implements RequestBuilderInterface
     /**
      * RequestBuilder constructor.
      * @param ModuleConfigInterface $moduleConfig
+     * @param ServiceConfigInterface $serviceConfig
      * @param RequestFactory $shipmentRequestFactory
      * @param ScopeConfigInterface $scopeConfig
      * @param RegionFactory $regionFactory
@@ -89,12 +99,14 @@ class RequestBuilder implements RequestBuilderInterface
      */
     public function __construct(
         ModuleConfigInterface $moduleConfig,
+        ServiceConfigInterface $serviceConfig,
         RequestFactory $shipmentRequestFactory,
         ScopeConfigInterface $scopeConfig,
         RegionFactory $regionFactory,
         DataObjectFactory $dataObjectFactory
     ) {
         $this->moduleConfig = $moduleConfig;
+        $this->serviceConfig = $serviceConfig;
         $this->shipmentRequestFactory = $shipmentRequestFactory;
         $this->scopeConfig = $scopeConfig;
         $this->regionFactory = $regionFactory;
@@ -259,7 +271,11 @@ class RequestBuilder implements RequestBuilderInterface
         }
 
         $container = $this->moduleConfig->getDefaultProduct($storeId);
-        $services = $this->moduleConfig->getAutoCreateServices($storeId);
+
+        $enabledFilter = EnabledFilter::create();
+        $serviceCollection = $this->serviceConfig
+            ->getServices($storeId)
+            ->filter($enabledFilter);
 
         $weightUnit = $this->scopeConfig->getValue(
             Data::XML_PATH_WEIGHT_UNIT,
@@ -282,7 +298,7 @@ class RequestBuilder implements RequestBuilderInterface
         $package['params']['dimension_units'] = $dimensionUnit;
         $package['params']['content_type'] = '';
         $package['params']['content_type_other'] = '';
-        $package['params']['services'] = $services;
+        $package['params']['services'] = $serviceCollection->getConfiguration();
 
         $packages = [1 => $package];
         $shipmentRequest->setData('packages', $packages);

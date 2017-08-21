@@ -31,6 +31,7 @@
     <preference for="Dhl\Shipping\Config\BcsConfigInterface" type="Dhl\Shipping\Model\Config\BcsConfig" />
     <preference for="Dhl\Shipping\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig" />
     <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
+    <preference for="Dhl\Shipping\Model\Config\ServiceConfigInterface" type="Dhl\Shipping\Model\Config\ServiceConfig" />
     <preference for="Dhl\Shipping\AutoCreate\OrderProviderInterface" type="Dhl\Shipping\AutoCreate\OrderProvider" />
     <preference for="Dhl\Shipping\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\AutoCreate\LabelGenerator" />
     <preference for="Dhl\Shipping\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\AutoCreate\RequestBuilder" />
