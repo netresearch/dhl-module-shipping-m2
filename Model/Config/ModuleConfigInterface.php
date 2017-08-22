@@ -44,6 +44,10 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
 
+    const CONFIG_XML_PATH_AUTOCREATE_ENABLED = 'carriers/dhlshipping/shipment_autocreate_enabled';
+    const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'carriers/dhlshipping/shipment_autocreate_order_status';
+    const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'carriers/dhlshipping/shipment_autocreate_send_shippinginfo';
+
     /**
      * Check if logging is enabled
      *
@@ -147,4 +151,19 @@ interface ModuleConfigInterface
      */
     public function isCrossBorderRoute($destinationCountryId, $storeId = null);
 
+    /**
+     * Get allowed order statuses for automatic shipment creation
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getAutoCreateOrderStatus($store = null);
+
+    /**
+     * Get Notify Customer config.
+     *
+     * @param null $store
+     * @return bool
+     */
+    public function getAutoCreateNotifyCustomer($store = null);
 }

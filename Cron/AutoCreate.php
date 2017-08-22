@@ -28,9 +28,11 @@ namespace Dhl\Shipping\Cron;
 
 use Dhl\Shipping\AutoCreate\LabelGeneratorInterface;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Cron\Model\Schedule;
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Model\Order\Email\Sender\ShipmentSender;
 use Magento\Sales\Model\Order\ShipmentFactory;
 
 /**
@@ -67,22 +69,38 @@ class AutoCreate
     private $transactionFactory;
 
     /**
+     * @var ShipmentSender
+     */
+    private $shipmentSender;
+
+    /**
+     * @var ModuleConfigInterface
+     */
+    private $moduleConfig;
+
+    /**
      * AutoCreate constructor.
      * @param OrderProviderInterface $orderProvider
      * @param LabelGeneratorInterface $labelGenerator
      * @param ShipmentFactory $shipmentFactory
      * @param TransactionFactory $transactionFactory
+     * @param ShipmentSender $shipmentSender
+     * @param ModuleConfigInterface $moduleConfig
      */
     public function __construct(
         OrderProviderInterface $orderProvider,
         LabelGeneratorInterface $labelGenerator,
         ShipmentFactory $shipmentFactory,
-        TransactionFactory $transactionFactory
+        TransactionFactory $transactionFactory,
+        ShipmentSender $shipmentSender,
+        ModuleConfigInterface $moduleConfig
     ) {
         $this->orderProvider = $orderProvider;
         $this->labelGenerator = $labelGenerator;
         $this->shipmentFactory = $shipmentFactory;
         $this->transactionFactory = $transactionFactory;
+        $this->shipmentSender = $shipmentSender;
+        $this->moduleConfig = $moduleConfig;
     }
 
     /**
@@ -106,7 +124,6 @@ class AutoCreate
                 $shipment->register();
 
                 $this->labelGenerator->create($shipment);
-
                 $shipment->getOrder()->setIsInProcess(true);
                 $transaction = $this->transactionFactory->create();
                 $transaction->addObject($shipment);
@@ -114,6 +131,10 @@ class AutoCreate
                 $transaction->save();
 
                 $createdShipments[$order->getIncrementId()] = $shipment->getIncrementId();
+
+                if ($this->moduleConfig->getAutoCreateNotifyCustomer($order->getStoreId())) {
+                    $this->shipmentSender->send($shipment);
+                }
             } catch (LocalizedException $exception) {
                 $failedShipments[$order->getIncrementId()] = $exception->getMessage();
             }

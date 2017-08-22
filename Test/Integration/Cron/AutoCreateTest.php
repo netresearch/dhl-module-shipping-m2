@@ -96,16 +96,11 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                        [
                                            'canProcessRoute',
                                            'getDefaultProduct',
-                                           'isCrossBorderRoute'
+                                           'isCrossBorderRoute',
+                                           'getAutoCreateOrderStatus'
                                        ]
                                    )
                                    ->getMock();
-
-        $this->serviceConfig = $this->getMockBuilder(ServiceConfig::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getAutoCreateOrderStatus'])
-            ->getMock();
-
         $this->storesConfig = $this->getMockBuilder(StoresConfig::class)
                                    ->disableOriginalConstructor()
                                    ->setMethods(['getStoresConfigByPath'])
@@ -119,7 +114,6 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $orderProvider = $this->objectManager->create(OrderProvider::class, [
-            'serviceConfig' => $this->serviceConfig,
             'moduleConfig' => $this->moduleConfig,
             'storesConfig' => $this->storesConfig,
         ]);
@@ -142,7 +136,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun()
     {
-        $this->serviceConfig->expects($this->once())
+        $this->moduleConfig->expects($this->once())
                            ->method('getAutoCreateOrderStatus')
                            ->will(
                                $this->returnValue(
@@ -162,7 +156,7 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
 
         $this->storesConfig->expects($this->once())
                            ->method('getStoresConfigByPath')
-                           ->with(ServiceConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED)
+                           ->with(ModuleConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED)
                            ->will(
                                $this->returnValue(
                                    [
@@ -171,9 +165,6 @@ class AutoCreateTest extends \PHPUnit_Framework_TestCase
                                    ]
                                )
                            );
-
-
-
 
         $schedule = $this->objectManager->get(Schedule::class);
         $this->autoCreate->run($schedule);
