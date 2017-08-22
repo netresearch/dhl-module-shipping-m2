@@ -479,7 +479,12 @@
                     <tooltip>Create shipments for orders with the given status.</tooltip>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
                 </field>
-
+                <!-- 930 Notify Customer -->
+                <field id="shipment_autocreate_send_shippinginfo" translate="label" type="select" sortOrder="930" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Send Shipping Info</label>
+                    <tooltip>Notify Customer about Shipping.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
         </section>
     </system>

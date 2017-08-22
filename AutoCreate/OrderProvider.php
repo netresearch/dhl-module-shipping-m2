@@ -26,7 +26,6 @@
 namespace Dhl\Shipping\AutoCreate;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Model\Shipping\Carrier;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Api\Data\OrderInterface;
@@ -62,11 +61,6 @@ class OrderProvider implements OrderProviderInterface
     private $moduleConfig;
 
     /**
-     * @var ServiceConfigInterface
-     */
-    private $serviceConfig;
-
-    /**
      * @var StoresConfig
      */
     private $storesConfig;
@@ -87,13 +81,11 @@ class OrderProvider implements OrderProviderInterface
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ModuleConfigInterface $moduleConfig,
-        ServiceConfigInterface $serviceConfig,
         StoresConfig $storesConfig
     ) {
         $this->orderRepository = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->moduleConfig = $moduleConfig;
-        $this->serviceConfig = $serviceConfig;
         $this->storesConfig = $storesConfig;
     }
 
@@ -119,7 +111,7 @@ class OrderProvider implements OrderProviderInterface
         // autocreate is enabled for the order's store
         $activeStores = [];
         $activeSettings = $this->storesConfig
-            ->getStoresConfigByPath(ServiceConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED);
+            ->getStoresConfigByPath(ModuleConfigInterface::CONFIG_XML_PATH_AUTOCREATE_ENABLED);
 
         foreach ($activeSettings as $storeId => $isActive) {
             if ($isActive) {
@@ -129,7 +121,7 @@ class OrderProvider implements OrderProviderInterface
         $this->searchCriteriaBuilder->addFilter('store_id', $activeStores, 'in');
 
         // order status is allowed for autocreate via module config
-        $allowedStatus = $this->serviceConfig->getAutoCreateOrderStatus();
+        $allowedStatus = $this->moduleConfig->getAutoCreateOrderStatus();
         $this->searchCriteriaBuilder->addFilter('status', $allowedStatus, 'in');
 
         // exact order IDs

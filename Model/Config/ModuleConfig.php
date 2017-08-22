@@ -249,4 +249,26 @@ class ModuleConfig implements ModuleConfigInterface
             $this->getEuCountries($storeId)
         );
     }
+
+    /**
+     * Get allowed order statuses for automatic shipment creation
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getAutoCreateOrderStatus($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS, $store);
+    }
+
+    /**
+     * Get Notify Customer config.
+     *
+     * @param null $store
+     * @return bool
+     */
+    public function getAutoCreateNotifyCustomer($store = null)
+    {
+        return (bool) $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER, $store);
+    }
 }
