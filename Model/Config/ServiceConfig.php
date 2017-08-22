@@ -173,31 +173,4 @@ class ServiceConfig implements ServiceConfigInterface
 
         return $text;
     }
-
-    /**
-     * Check if automatic shipment creation is enabled for store
-     *
-     * @deprecated Not used anywhere
-     * @see \Dhl\Shipping\AutoCreate\OrderProvider::load
-     * @see \Magento\Store\Model\StoresConfig::getStoresConfigByPath
-     *
-     * @param null $store
-     * @return bool
-     */
-    public function isAutoCreateEnabled($store = null)
-    {
-        return (bool)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_ENABLED, $store);
-    }
-
-    /**
-     * Get allowed order statuses for automatic shipment creation
-     *
-     * @param null $store
-     * @return mixed
-     */
-    public function getAutoCreateOrderStatus($store = null)
-    {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CRON_ORDER_STATUS, $store);
-    }
-
 }

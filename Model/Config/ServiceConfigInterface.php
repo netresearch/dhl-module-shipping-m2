@@ -49,14 +49,6 @@ interface ServiceConfigInterface
     const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'carriers/dhlshipping/service_preferredlocation_placeholder';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER = 'carriers/dhlshipping/service_preferredneighbour_placeholder';
 
-    const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'carriers/dhlshipping/shipment_autocreate_service_visualcheckofage';
-    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT   = 'carriers/dhlshipping/shipment_autocreate_service_returnshipment';
-    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE        = 'carriers/dhlshipping/shipment_autocreate_service_insurance';
-    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS       = 'carriers/dhlshipping/shipment_autocreate_service_bulkygoods';
-
-    const CONFIG_XML_PATH_AUTOCREATE_ENABLED = 'carriers/dhlshipping/shipment_autocreate_enabled';
-    const CONFIG_XML_PATH_CRON_ORDER_STATUS = 'carriers/dhlshipping/shipment_autocreate_order_status';
-
     /**
      * Load all DHL additional service models.
      *
@@ -97,25 +89,4 @@ interface ServiceConfigInterface
      * @return string
      */
     public function getPrefTimeHandlingFeeText($store = null);
-
-    /**
-     * Check if automatic shipment creation is enabled for store
-     *
-     * @deprecated Not used anywhere
-     * @see \Dhl\Shipping\AutoCreate\OrderProvider::load
-     * @see \Magento\Store\Model\StoresConfig::getStoresConfigByPath
-     *
-     * @param null $store
-     * @return bool
-     */
-    public function isAutoCreateEnabled($store = null);
-
-    /**
-     * Get allowed order statuses for automatic shipment creation
-     *
-     * @param null $store
-     * @return mixed
-     */
-    public function getAutoCreateOrderStatus($store = null);
-
 }

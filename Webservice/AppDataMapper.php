@@ -62,6 +62,7 @@ use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
 use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Magento\Framework\DataObject;
 use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection;
 
 /**
  * AppDataMapper
@@ -170,9 +171,9 @@ class AppDataMapper implements AppDataMapperInterface
     private $packageItemFactory;
 
     /**
-     * @var Service\ServiceCollectionInterface
+     * @var Service\ServiceCollectionInterfaceFactory
      */
-    private $serviceCollection;
+    private $serviceCollectionFactory;
 
     /**
      * @var CustomsDetails\ExportTypeInterfaceFactory
@@ -191,6 +192,11 @@ class AppDataMapper implements AppDataMapperInterface
 
     /** @var  ExportPositionFactory */
     private $exportPositionFactory;
+
+    /**
+     * @var ServiceCollection
+     */
+    private $serviceCollection;
 
     /**
      * AppDataMapper constructor.
@@ -239,7 +245,7 @@ class AppDataMapper implements AppDataMapperInterface
         DimensionsInterfaceFactory $packageDimensionsFactory,
         MonetaryValueInterfaceFactory $packageValueFactory,
         PackageInterfaceFactory $packageFactory,
-        Service\ServiceCollectionInterface $serviceCollection,
+        Service\ServiceCollectionInterfaceFactory $serviceCollectionFactory,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
         RequestValidatorInterface $requestValidator,
         ExportPositionFactory $exportPositionFactory,
@@ -264,7 +270,7 @@ class AppDataMapper implements AppDataMapperInterface
         $this->packageDimensionsFactory     = $packageDimensionsFactory;
         $this->monetaryValueFactory         = $packageValueFactory;
         $this->packageFactory               = $packageFactory;
-        $this->serviceCollection            = $serviceCollection;
+        $this->serviceCollectionFactory     = $serviceCollectionFactory;
         $this->shipmentOrderFactory         = $shipmentOrderFactory;
         $this->requestValidator             = $requestValidator;
         $this->exportPositionFactory        = $exportPositionFactory;
@@ -691,6 +697,8 @@ class AppDataMapper implements AppDataMapperInterface
      */
     public function mapShipmentRequest($request, $sequenceNumber)
     {
+        $this->serviceCollection = $this->serviceCollectionFactory->create();
+
         $services        = $this->getServices($request);
         $shipmentDetails = $this->getShipmentDetails($request);
         $shipper         = $this->getShipper($request);
