@@ -108,7 +108,12 @@ class UnitConverter implements UnitConverterInterface
      */
     public function convertWeight($value, $unitIn, $unitOut)
     {
-        $value = $this->localeFormat->getNumber($value);
+        $value = (float) $this->localeFormat->getNumber($value);
+
+        if ($value === 0.0) {
+            return $value;
+        }
+
         $converted = $this->unitConverter->convertMeasureWeight($value, $unitIn, $unitOut);
         if (!$converted) {
             return null;

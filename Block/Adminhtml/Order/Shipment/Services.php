@@ -28,6 +28,10 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 use Dhl\Shipping\Config\BcsConfigInterface;
 use Dhl\Shipping\Model\Config\ServiceConfig;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Shipping\Carrier;
+use Dhl\Shipping\Service\Filter\ProductFilter;
+use Magento\Framework\DataObject;
+use Magento\Framework\DataObjectFactory;
 
 /**
  * Services
@@ -65,6 +69,16 @@ class Services extends \Magento\Backend\Block\Template
     private $bcsConfig;
 
     /**
+     * @var \Magento\Shipping\Model\CarrierFactory
+     */
+    private $carrierFactory;
+
+    /**
+     * @var DataObjectFactory
+     */
+    private $dataObjectFactory;
+
+    /**
      * Services constructor.
      *
      * @param \Magento\Framework\Registry $registry
@@ -80,12 +94,17 @@ class Services extends \Magento\Backend\Block\Template
         ModuleConfigInterface $moduleConfig,
         ServiceConfig $serviceConfig,
         BcsConfigInterface $bcsConfig,
+        \Magento\Shipping\Model\CarrierFactory $carrierFactory,
+        DataObjectFactory $dataObjectFactory,
         array $data = []
-    ) {
+    )
+    {
         $this->coreRegistry = $registry;
         $this->moduleConfig = $moduleConfig;
         $this->serviceConfig = $serviceConfig;
         $this->bcsConfig = $bcsConfig;
+        $this->carrierFactory = $carrierFactory;
+        $this->dataObjectFactory = $dataObjectFactory;
         parent::__construct($context, $data);
     }
 
@@ -121,6 +140,25 @@ class Services extends \Magento\Backend\Block\Template
      */
     public function getServiceCollection()
     {
-        return $this->serviceConfig->getServices($this->getShipment()->getStoreId());
+        $shipment = $this->getShipment();
+        $carrierCode = $shipment->getOrder()->getShippingMethod(true)->getData('carrier_code');
+        $carrier = $this->carrierFactory->create($carrierCode, $shipment->getStoreId());
+        $shipperCountry = $this->moduleConfig->getShipperCountry($shipment->getStoreId());
+        $destCountryId = $this->getShipment()->getShippingAddress()->getCountryId();
+
+        $params = $this->dataObjectFactory->create([
+            'data' => [
+                'country_shipper' => $shipperCountry,
+                'country_recipient' => $destCountryId
+            ]
+        ]);
+
+        $containerType = current(array_keys($carrier->getContainerTypes($params)));
+        $productFilter = ProductFilter::create($containerType);
+        $serviceCollection = $this->serviceConfig
+            ->getServices($this->getShipment()->getStoreId())
+            ->filter($productFilter);
+
+        return $serviceCollection;
     }
 }
