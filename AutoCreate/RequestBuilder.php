@@ -264,7 +264,7 @@ class RequestBuilder implements RequestBuilderInterface
                 continue;
             }
 
-            $totalWeight += 2;//$item->getWeight();
+            $totalWeight += $item->getWeight();
 
             $itemData = $item->toArray(['qty', 'price', 'name', 'weight', 'product_id', 'order_item_id']);
             $package['items'][$item->getOrderItemId()] = $itemData;
