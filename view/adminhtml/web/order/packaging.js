@@ -61,13 +61,31 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                     this.dhlShipping.params[packageId] = {};
                     pack.select('div[data-name="dhl_shipping_package_info"] [data-module^=dhl_shipping]').each(function (element) {
                         var fieldName = element.dataset.name;
-                        if (element.type == 'checkbox' && element.checked) {
-                            this.dhlShipping.params[packageId][fieldName] = element.checked;
+                        // add service information to our shipping params
+                        if (fieldName.match('service')) {
+                            if (element.type.match('checkbox') && element.checked) {
+                                this.dhlShipping.params[packageId][fieldName] = element.checked;
+                            }
+
+                            if (element.type.match('select') && Object.keys(this.dhlShipping.params[packageId]).indexOf(fieldName) != -1) {
+                                this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
+                            }
                         }
 
-                        if (element.type.match('select') && Object.keys(this.dhlShipping.params[packageId]).indexOf(fieldName) != -1) {
-                            this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
+                        if (fieldName.match('dhl_customs')) {
+                            if (element.type.match('checkbox') && element.checked) {
+                                this.dhlShipping.params[packageId][fieldName] = element.checked;
+                            }
+
+                            if (element.type.match('select')) {
+                                this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
+                            }
+
+                            if (element.type.match('text')) {
+                                this.dhlShipping.params[packageId][fieldName] = element.value
+                            }
                         }
+
                     }.bind(this));
 
                     // ***** add package params end
@@ -117,7 +135,11 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                             if (key.match('service')) {
                                 index = key.replace("service_", "");
                                 this.paramsCreateLabelRequest['packages[' + packageId + '][params][services][' + index + ']'] = value;
-                            } else {
+                            }
+
+
+                            if (key.match('dhl_customs')) {
+                                index = key.replace("dhl_customs_", "");
                                 this.paramsCreateLabelRequest['packages[' + packageId + '][params][customs][' + index + ']'] = value;
                             }
                         }.bind(this));

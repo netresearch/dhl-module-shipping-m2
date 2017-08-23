@@ -39,7 +39,7 @@
     <tbody>
     <tr>
         <td>
-            <select data-module="dhl_shipping" data-name="terms_of_trade" title="<?php echo __('Terms of Trade')
+            <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade" title="<?php echo __('Terms of Trade')
             ?>" class="input-select admin__control-select">
                 <option value="DDP">DDP</option>
                 <option value="DXV">DXV</option>
@@ -49,7 +49,7 @@
         </td>
         <td>
             <div class="admin__control-addon">
-                <input data-module="dhl_shipping" data-name="additional_fee" type="text"
+                <input data-module="dhl_shipping" data-name="dhl_customs_additional_fee" type="text"
                        title="" value="0"
                        class="input-text admin__control-text required-entry validate-number"/>
                 <span class="admin__addon-suffix">
@@ -58,20 +58,20 @@
             </div>
         </td>
         <td>
-            <input data-module="dhl_shipping" data-name="place_of_commital" type="text"
+            <input data-module="dhl_shipping" data-name="dhl_customs_place_of_commital" type="text"
                    class="input-text admin__control-text required-entry validate-length maximum-length-35" maxlength="35" />
         </td>
         <td>
-            <input data-module="dhl_shipping" data-name="permit_number" type="text"
+            <input data-module="dhl_shipping" data-name="dhl_customs_permit_number" type="text"
                    class="input-text admin__control-text  validate-length maximum-length-10" maxlength="10" />
         </td>
         <td>
-            <input data-module="dhl_shipping" data-name="attestation_number" type="text"
+            <input data-module="dhl_shipping" data-name="dhl_customs_attestation_number" type="text"
                    class="input-text admin__control-text validate-length maximum-length-35" maxlength="35" />
         </td>
         <td>
             <div class="field choice admin__field admin__field-option field-notification text-center">
-                <input data-module="dhl_shipping" data-name="export_notification" id="export_notification" type="checkbox"
+                <input data-module="dhl_shipping" data-name="dhl_customs_export_notification" id="export_notification" type="checkbox"
                    class="admin__control-checkbox"/>
                 <label class="admin__field-label" for="export_notification"></label>
             </div>
