@@ -246,9 +246,11 @@ In the section *Bank Data* you configure the bank account to be used for Cash On
 Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer 
 will be transferred to this bank account.
 
-This section is not visible when using the *eCommerce Global Label API* because it
-does not allow Cash On Delivery shipments.
+Please note that you might also have to store the bank data in your DHL account.
+Usually, this can be done through the DHL Business Customer Portal (Geschäftskundenportal).
 
+This section is not visible when using the *eCommerce Global Label API* because it does
+not allow Cash On Delivery shipments. 
 
 Workflow and features
 =====================
