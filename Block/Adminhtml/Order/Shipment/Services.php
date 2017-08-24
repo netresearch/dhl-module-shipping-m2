@@ -97,8 +97,7 @@ class Services extends \Magento\Backend\Block\Template
         \Magento\Shipping\Model\CarrierFactory $carrierFactory,
         DataObjectFactory $dataObjectFactory,
         array $data = []
-    )
-    {
+    ) {
         $this->coreRegistry = $registry;
         $this->moduleConfig = $moduleConfig;
         $this->serviceConfig = $serviceConfig;

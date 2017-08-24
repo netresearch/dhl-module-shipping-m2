@@ -84,6 +84,11 @@ class RequestBuilder implements RequestBuilderInterface
     private $dataObjectFactory;
 
     /**
+     * @var \Magento\Shipping\Model\CarrierFactory
+     */
+    private $carrierFactory;
+
+    /**
      * @var mixed[]
      */
     private $data = [];
@@ -103,7 +108,8 @@ class RequestBuilder implements RequestBuilderInterface
         RequestFactory $shipmentRequestFactory,
         ScopeConfigInterface $scopeConfig,
         RegionFactory $regionFactory,
-        DataObjectFactory $dataObjectFactory
+        DataObjectFactory $dataObjectFactory,
+        \Magento\Shipping\Model\CarrierFactory $carrierFactory
     ) {
         $this->moduleConfig = $moduleConfig;
         $this->serviceConfig = $serviceConfig;
@@ -111,6 +117,7 @@ class RequestBuilder implements RequestBuilderInterface
         $this->scopeConfig = $scopeConfig;
         $this->regionFactory = $regionFactory;
         $this->dataObjectFactory = $dataObjectFactory;
+        $this->carrierFactory = $carrierFactory;
     }
 
     /**
@@ -270,7 +277,24 @@ class RequestBuilder implements RequestBuilderInterface
             $package['items'][$item->getOrderItemId()] = $itemData;
         }
 
-        $container = $this->moduleConfig->getDefaultProduct($storeId);
+        $carrierCode = $shipmentRequest
+            ->getOrderShipment()
+            ->getOrder()
+            ->getShippingMethod(true)
+            ->getData('carrier_code');
+
+        $carrier = $this->carrierFactory->create($carrierCode, $storeId);
+        $shipperCountry = $this->moduleConfig->getShipperCountry($storeId);
+        $destCountryId =  $shipmentRequest->getOrderShipment()->getShippingAddress()->getCountryId();
+
+        $params = $this->dataObjectFactory->create([
+            'data' => [
+                'country_shipper' => $shipperCountry,
+                'country_recipient' => $destCountryId
+            ]
+        ]);
+
+        $container = current(array_keys($carrier->getContainerTypes($params)));
 
         $enabledFilter = EnabledFilter::create();
         $serviceCollection = $this->serviceConfig
