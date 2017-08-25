@@ -246,6 +246,9 @@ Im Konfigurationsbereich *Bankverbindung* legen Sie fest, welche Bankdaten für
 Nachnahme-Versandaufträge an DHL übermittelt werden. Der vom Empfänger erhobene
 Nachnahmebetrag wird auf dieses Konto transferiert.
 
+Beachten Sie, dass die Bankverbindung ggf. auch in Ihrem DHL-Konto hinterlegt werden
+muss. I.d.R. kann dies über das DHL Geschäftskundenportal erledigt werden.
+
 Dieser Abschnitt wird bei Nutzung der *eCommerce Global Label API* nicht angezeigt,
 da hier kein Nachnahmeversand möglich ist.
 
