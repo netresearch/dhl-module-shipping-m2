@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Temando Shipping
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -25,7 +25,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="admin">
-        <route id="dhl" frontName="temando">
+        <route id="dhl" frontName="dhl">
             <module name="Dhl_Shipping" before="Magento_Backend" />
         </route>
     </router>
