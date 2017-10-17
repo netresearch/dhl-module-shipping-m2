@@ -86,6 +86,7 @@
                 <field id="bcs_account_ekp" translate="label tooltip" type="text" sortOrder="230" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>EKP</label>
                     <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                    <validate>validate-length maximum-length-10 minimum-length-10 validate-digits</validate>
                     <depends>
                         <field id="sandbox_mode">0</field>
                         <field id="api_type">bcs</field>
