@@ -26,56 +26,56 @@
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
 <table cellspacing="0" class="data-table admin__control-table">
     <thead>
-    <tr class="headings">
-        <th class="no-link"><span class="nobr"><?php echo __('Terms of Trade') ?></span></th>
-        <th class="no-link"><span class="nobr"><?php echo __('Additional Fee') ?></span></th>
-        <th class="no-link"><span class="nobr"><?php echo __('Place of Commital') ?></span></th>
-        <th class="no-link"><span class="nobr"><?php echo __('Permit Number') ?></span></th>
-        <th class="no-link"><span class="nobr"><?php echo __('Attestation Number') ?></span></th>
-        <th class="no-link last"><span class="nobr"><?php echo __('Electronic Export Notification') ?></span></th>
-    </tr>
+        <tr class="headings">
+            <th class="no-link"><span class="nobr"><?php echo __('Terms of Trade') ?></span></th>
+            <th class="no-link"><span class="nobr"><?php echo __('Additional Fee') ?></span></th>
+            <th class="no-link"><span class="nobr"><?php echo __('Place of Commital') ?></span></th>
+            <th class="no-link"><span class="nobr"><?php echo __('Permit Number') ?></span></th>
+            <th class="no-link"><span class="nobr"><?php echo __('Attestation Number') ?></span></th>
+            <th class="no-link last"><span class="nobr"><?php echo __('Electronic Export Notification') ?></span></th>
+        </tr>
     </thead>
 
     <tbody>
-    <tr>
-        <td>
-            <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade" title="<?php echo __('Terms of Trade')
-            ?>" class="input-select admin__control-select">
-                <option value="DDP">DDP</option>
-                <option value="DXV">DXV</option>
-                <option value="DDU">DDU</option>
-                <option value="DDP">DDX</option>
-            </select>
-        </td>
-        <td>
-            <div class="admin__control-addon">
-                <input data-module="dhl_shipping" data-name="dhl_customs_additional_fee" type="text"
-                       title="" value="0"
-                       class="input-text admin__control-text required-entry validate-number"/>
-                <span class="admin__addon-suffix">
-                    <span class="customs-value-currency"><?php echo $block->getCustomValueCurrencyCode(); ?></span>
-                </span>
-            </div>
-        </td>
-        <td>
-            <input data-module="dhl_shipping" data-name="dhl_customs_place_of_commital" type="text"
-                   class="input-text admin__control-text required-entry validate-length maximum-length-35" maxlength="35" />
-        </td>
-        <td>
-            <input data-module="dhl_shipping" data-name="dhl_customs_permit_number" type="text"
-                   class="input-text admin__control-text  validate-length maximum-length-10" maxlength="10" />
-        </td>
-        <td>
-            <input data-module="dhl_shipping" data-name="dhl_customs_attestation_number" type="text"
-                   class="input-text admin__control-text validate-length maximum-length-35" maxlength="35" />
-        </td>
-        <td>
-            <div class="field choice admin__field admin__field-option field-notification text-center">
-                <input data-module="dhl_shipping" data-name="dhl_customs_export_notification" id="export_notification" type="checkbox"
-                   class="admin__control-checkbox"/>
-                <label class="admin__field-label" for="export_notification"></label>
-            </div>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade"
+                        title="<?php echo __('Terms of Trade') ?>" class="input-select admin__control-select">
+                    <option value="DDP">DDP</option>
+                    <option value="DXV">DXV</option>
+                    <option value="DDU">DDU</option>
+                    <option value="DDP">DDX</option>
+                </select>
+            </td>
+            <td>
+                <div class="admin__control-addon">
+                    <input data-module="dhl_shipping" data-name="dhl_customs_additional_fee" type="text"
+                           title="" value="0"
+                           class="input-text admin__control-text required-entry validate-number"/>
+                    <span class="admin__addon-suffix">
+                        <span class="customs-value-currency"><?php echo $block->getCustomValueCurrencyCode(); ?></span>
+                    </span>
+                </div>
+            </td>
+            <td>
+                <input data-module="dhl_shipping" data-name="dhl_customs_place_of_commital" type="text"
+                       class="input-text admin__control-text required-entry validate-length maximum-length-35" maxlength="35" />
+            </td>
+            <td>
+                <input data-module="dhl_shipping" data-name="dhl_customs_permit_number" type="text"
+                       class="input-text admin__control-text  validate-length maximum-length-10" maxlength="10" />
+            </td>
+            <td>
+                <input data-module="dhl_shipping" data-name="dhl_customs_attestation_number" type="text"
+                       class="input-text admin__control-text validate-length maximum-length-35" maxlength="35" />
+            </td>
+            <td>
+                <div class="field choice admin__field admin__field-option field-notification text-center">
+                    <input data-module="dhl_shipping" data-name="dhl_customs_export_notification" id="export_notification" type="checkbox"
+                       class="admin__control-checkbox"/>
+                    <label class="admin__field-label" for="export_notification"></label>
+                </div>
+            </td>
+        </tr>
     </tbody>
 </table>
