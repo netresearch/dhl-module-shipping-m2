@@ -84,6 +84,7 @@ class JsonSerializerTest extends \PHPUnit_Framework_TestCase
     {
         $pickupAccount = '4cc0un7';
         $distributionCenter = 'f00123';
+        $consignmentNumber = '80000000000';
         $consigneeAddress1 = '123 Foo Street';
         $consigneeCity = 'Foo Valley';
         $consigneeCountry = 'US';
@@ -116,7 +117,8 @@ class JsonSerializerTest extends \PHPUnit_Framework_TestCase
             "weightUom": "$packageDetailsWeightUom"
           }
         }
-      ]
+      ],
+      "consignmentNumber": "$consignmentNumber"
     }
   ]
 }
@@ -146,6 +148,7 @@ JSON;
             'pickupAccount' => $shipmentData['shipments'][0]['pickupAccount'],
             'distributionCenter' => $shipmentData['shipments'][0]['distributionCenter'],
             'packages' => [$package],
+            'consignmentNumber' => $shipmentData['shipments'][0]['consignmentNumber'],
         ]);
         $labelRequest = $this->objectManager->create(LabelRequest::class, [
             'shipments' => [$shipment],

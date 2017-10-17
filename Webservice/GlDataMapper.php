@@ -82,7 +82,6 @@ class GlDataMapper implements GlDataMapperInterface
         PackageInterface $package,
         $sequenceNumber
     ) {
-    
         // no weight conversions for GLAPI but unit mapping
         $currencyCode = $package->getDeclaredValue()->getCurrencyCode();
         $weightUom = $package->getWeight()->getUnitOfMeasurement();
@@ -110,7 +109,7 @@ class GlDataMapper implements GlDataMapperInterface
             $package->getDimensions()->getHeight($package->getDimensions()->getUnitOfMeasurement()),
             $package->getDimensions()->getLength($package->getDimensions()->getUnitOfMeasurement()),
             $package->getDimensions()->getWidth($package->getDimensions()->getUnitOfMeasurement()),
-            null,
+            $package->getTermsOfTrade(),
             null,
             null,
             $shipmentDetails->getShipmentComment(),
@@ -235,7 +234,8 @@ class GlDataMapper implements GlDataMapperInterface
         $shipmentType = new ShipmentRequestType(
             $shipmentOrder->getShipmentDetails()->getPickupAccountNumber(),
             $shipmentOrder->getShipmentDetails()->getDistributionCenter(),
-            $packageTypes
+            $packageTypes,
+            $shipmentOrder->getShipmentDetails()->getConsignmentNumber()
         );
 
         return $shipmentType;
@@ -245,21 +245,17 @@ class GlDataMapper implements GlDataMapperInterface
      * Generate unique packageId
      *
      * @param ShipmentDetails\ShipmentDetailsInterface $shipmentDetails
-     * @param $sequenceNumber
+     * @param string $sequenceNumber
      * @return string
      */
     private function getPackageId(ShipmentDetails\ShipmentDetailsInterface $shipmentDetails, $sequenceNumber)
     {
-        $reducedTimeStamp = time() - 946684800; // time since 2001
-        $uniquePackageId = implode(
-            [
-            $shipmentDetails->getCustomerPrefix(),
-            $sequenceNumber,
-            $reducedTimeStamp
-            ]
-        );
+        $time = time() - 946684800; // time since 2001
+        $uniquePackageId = $shipmentDetails->getCustomerPrefix() . $sequenceNumber . $time;
+
         // remove non-alphanum chars from package id
         $uniquePackageId = preg_replace('[^a-zA-Z\d]', '', $uniquePackageId);
+
         return $uniquePackageId;
     }
 }

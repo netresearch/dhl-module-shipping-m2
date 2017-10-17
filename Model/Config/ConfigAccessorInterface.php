@@ -41,16 +41,17 @@ interface ConfigAccessorInterface
      *
      * @param string $path
      * @param string $value
-     * @param mixed $scopeId
+     * @param mixed $store
+     * @return void
      */
-    public function saveConfigValue($path, $value, $scopeId = 0);
+    public function saveConfigValue($path, $value, $store = 0);
 
     /**
      * Read config value from storage.
      *
-     * @param $path
-     * @param int $scopeId
+     * @param string $path
+     * @param mixed $store
      * @return mixed
      */
-    public function getConfigValue($path, $scopeId = null);
+    public function getConfigValue($path, $store = null);
 }
