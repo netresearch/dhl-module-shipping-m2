@@ -96,6 +96,7 @@ class Participation extends AbstractFieldArray
         $this->addColumn('participation', [
                 'label' => __('Participation'),
                 'style' => 'width:80px',
+                'class' => 'validate-length maximum-length-2 minimum-length-2 validate-digits'
             ]);
         // hide "Add after" button
         $this->_addAfter = false;
