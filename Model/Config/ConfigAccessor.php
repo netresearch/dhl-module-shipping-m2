@@ -87,34 +87,35 @@ class ConfigAccessor implements ConfigAccessorInterface
      *
      * @param string $path
      * @param string $value
-     * @param mixed $scopeId
+     * @param mixed $store
      */
-    public function saveConfigValue($path, $value, $scopeId = 0)
+    public function saveConfigValue($path, $value, $store = 0)
     {
         $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
-        if ($scopeId) {
+        if ($store) {
             $scope = ScopeInterface::SCOPE_STORES;
-            $scopeId = $this->storeManager->getStore($scopeId)->getId();
+            $store = $this->storeManager->getStore($store)->getId();
         }
 
-        $this->configWriter->save($path, $value, $scope, $scopeId);
+        $this->configWriter->save($path, $value, $scope, $store);
         $this->systemConfigType->clean();
     }
 
     /**
      * Read config value from storage.
      *
-     * @param $path
-     * @param int $scopeId
+     * @param string $path
+     * @param mixed $store
      * @return mixed
      */
-    public function getConfigValue($path, $scopeId = null)
+    public function getConfigValue($path, $store = null)
     {
         $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
-        if ($scopeId) {
+        if ($store) {
             $scope = ScopeInterface::SCOPE_STORE;
+            $store = $this->storeManager->getStore($store)->getCode();
         }
 
-        return $this->scopeConfig->getValue($path, $scope, $scopeId);
+        return $this->scopeConfig->getValue($path, $scope, $store);
     }
 }

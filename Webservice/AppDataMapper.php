@@ -29,7 +29,7 @@ namespace Dhl\Shipping\Webservice;
 use \Dhl\Shipping\Config\BcsConfigInterface;
 use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Dhl\Shipping\Config\GlConfigInterface;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use \Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
@@ -70,6 +70,7 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Se
  * @category Dhl
  * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -200,6 +201,7 @@ class AppDataMapper implements AppDataMapperInterface
 
     /**
      * AppDataMapper constructor.
+     *
      * @param BcsConfigInterface $bcsConfig
      * @param GlConfigInterface $glConfig
      * @param ModuleConfigInterface $moduleConfig
@@ -219,7 +221,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param DimensionsInterfaceFactory $packageDimensionsFactory
      * @param MonetaryValueInterfaceFactory $packageValueFactory
      * @param PackageInterfaceFactory $packageFactory
-     * @param Service\ServiceCollectionInterface $serviceCollection
+     * @param Service\ServiceCollectionInterfaceFactory $serviceCollectionFactory
      * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
      * @param RequestValidatorInterface $requestValidator
      * @param ExportPositionFactory $exportPositionFactory
@@ -364,6 +366,7 @@ class AppDataMapper implements AppDataMapperInterface
             'pickupAccountNumber'         => $this->glConfig->getPickupAccountNumber($storeId),
             'distributionCenter'          => $this->glConfig->getDistributionCenter($storeId),
             'customerPrefix'              => $this->glConfig->getCustomerPrefix($storeId),
+            'consignmentNumber'           => $this->glConfig->getConsignmentNumber($storeId),
             'reference'                   => $request->getOrderShipment()->getOrder()->getIncrementId(),
             'returnShipmentReference'     => $request->getOrderShipment()->getOrder()->getIncrementId(),
             'shipmentDate'                => date("Y-m-d"),
@@ -632,7 +635,7 @@ class AppDataMapper implements AppDataMapperInterface
         );
 
         $packageValue = array_reduce(
-            $request->getPackageItems(),
+            $request->getData('package_items'),
             function (
                 $carry,
                 $item
@@ -670,15 +673,15 @@ class AppDataMapper implements AppDataMapperInterface
                 'weight' => $weight,
                 'dimensions' => $dimensions,
                 'declaredValue' => $declaredValue,
-                'exportType' => $packageParams->getData('content_type'),
-                'termsOfTrade' => $packageCustoms->getData('terms_of_trade'),
                 'additionalFee' => $additionalFee,
-                'placeOfCommital' => $packageCustoms->getData('place_of_commital'),
+                'exportType' => $packageParams->getData('content_type'),
+                'exportTypeDescription' => $packageParams->getData('content_type_other'),
+                'termsOfTrade' => $packageCustoms->getData('terms_of_trade'),
+                'placeOfCommittal' => $packageCustoms->getData('place_of_commital'),
                 'permitNumber' => $packageCustoms->getData('permit_number'),
                 'attestationNumber' => $packageCustoms->getData('attestation_number'),
                 'exportNotification' => (bool)$packageCustoms->getData('export_notification'),
-                'dangerousGoodsCategory' => $packageCustoms->getData('dangerous_goods_category'),
-                'exportTypeDescription' => $packageParams->getData('content_type_other'),
+                'dgCategory' => $packageCustoms->getData('dangerous_goods_category'),
                 'items' => $packageItems,
             ]
         );

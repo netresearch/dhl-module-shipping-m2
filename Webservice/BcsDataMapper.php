@@ -286,7 +286,7 @@ class BcsDataMapper implements BcsDataMapperInterface
         if ($package->getExportType()) {
             $exportDocumentType = new BcsApi\ExportDocumentType(
                 $package->getExportType(),
-                $package->getPlaceOfCommital(),
+                $package->getPlaceOfCommittal(),
                 $package->getAdditionalFee()
                         ->getValue('EUR')
             );
@@ -297,7 +297,7 @@ class BcsDataMapper implements BcsDataMapperInterface
             $exportDocumentType->setPermitNumber($package->getPermitNumber());
             $exportDocumentType->setAttestationNumber($package->getAttestationNumber());
             $exportDocumentType->setWithElectronicExportNtfctn(
-                new BcsApi\Serviceconfiguration($package->getExportNotification())
+                new BcsApi\Serviceconfiguration($package->isWithExportNotification())
             );
 
             $exportDocPositions = [];

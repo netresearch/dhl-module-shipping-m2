@@ -184,4 +184,39 @@ class GlConfig implements GlConfigInterface
     {
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CUSTOMER_PREFIX, $store);
     }
+
+    /**
+     * Get consignment number
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getConsignmentNumber($store = null)
+    {
+        $prefix = 8;
+        $suffix = (int)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CONSIGNMENT_SUFFIX, $store);
+
+        $consignmentNumber = sprintf('%s%s', $prefix, str_pad($suffix, 10, '0', STR_PAD_LEFT));
+
+        return $consignmentNumber;
+    }
+
+    /**
+     * Increment consignment number
+     *
+     * @param mixed $store
+     * @return void
+     */
+    public function incrementConsignmentNumber($store = null)
+    {
+        $suffix = (int)$this->configAccessor->getConfigValue(
+            self::CONFIG_XML_PATH_CONSIGNMENT_SUFFIX,
+            $store
+        );
+        $this->configAccessor->saveConfigValue(
+            self::CONFIG_XML_PATH_CONSIGNMENT_SUFFIX,
+            $suffix + 1,
+            $store
+        );
+    }
 }

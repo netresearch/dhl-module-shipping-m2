@@ -26,22 +26,31 @@
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
 <table cellspacing="0" class="data-table admin__control-table">
     <thead>
-    <tr>
-        <th class="no-link"><span class="nobr"><?php echo __('Dangerous Goods Category') ?></span></th>
-    </tr>
+        <tr>
+            <th class="no-link"><span class="nobr"><?php echo $block->escapeHtml(__('Terms of Trade')) ?></span></th>
+            <th class="no-link"><span class="nobr"><?php echo $block->escapeHtml(__('Dangerous Goods Category')) ?></span></th>
+        </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>
-            <select data-name="dhl_customs_dangerous_goods_category" data-module="dhl_shipping"
-                    class="admin__control-select" style="max-width:25%;">
-                <?php foreach ($block->getDangerousGoodsCategoryOptions() as $option) : ?>
-                    <option value="<?php echo $block->escapeHtml($option['value']); ?>">
-                        <?php echo $block->escapeHtml($option['label']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade"
+                        title="<?php echo $block->escapeHtml(__('Terms of Trade')) ?>"
+                        class="input-select admin__control-select">
+                    <option value="DDP">DDP</option>
+                    <option value="DDU">DDU</option>
+                </select>
+            </td>
+            <td>
+                <select data-module="dhl_shipping" data-name="dhl_customs_dangerous_goods_category"
+                        title="<?php echo $block->escapeHtml(__('Dangerous Goods Category')) ?>" class="admin__control-select" style="max-width:25%;">
+                    <?php foreach ($block->getDangerousGoodsCategoryOptions() as $option) : ?>
+                        <option value="<?php echo $block->escapeHtml($option['value']); ?>">
+                            <?php echo $block->escapeHtml($option['label']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+        </tr>
     </tbody>
 </table>

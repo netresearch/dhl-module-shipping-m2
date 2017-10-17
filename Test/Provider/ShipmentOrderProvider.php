@@ -237,8 +237,9 @@ class ShipmentOrderProvider
             '345',
             'USXXX1',
             'PREFX',
+            'consignment',
             'ref',
-            'shipRef',
+            'returnRef',
             'shipmentDate',
             $bankData,
             ''
