@@ -32,7 +32,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Shipment;
 use Magento\TestFramework\ObjectManager;
 
-class ShippingPluginTest extends \PHPUnit_Framework_TestCase
+class ShippingPluginTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

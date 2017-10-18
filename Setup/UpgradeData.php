@@ -25,6 +25,8 @@
 namespace Dhl\Shipping\Setup;
 
 use Magento\Eav\Setup\EavSetupFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
@@ -33,6 +35,7 @@ use Magento\Framework\Setup\UpgradeDataInterface;
  * @category Dhl
  * @package  Dhl\Shipping\Setup
  * @author   Paul Siedler <paul.siedler@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -45,12 +48,30 @@ class UpgradeData implements UpgradeDataInterface
     private $eavSetupFactory;
 
     /**
-     * Init
-     * @param EavSetupFactory $eavSetupFactory
+     * @var ScopeConfigInterface
      */
-    public function __construct(EavSetupFactory $eavSetupFactory)
-    {
+    private $scopeConfig;
+
+    /**
+     * @var WriterInterface
+     */
+    private $configWriter;
+
+    /**
+     * UpgradeData constructor.
+     *
+     * @param EavSetupFactory $eavSetupFactory
+     * @param ScopeConfigInterface $config
+     * @param WriterInterface $configWriter
+     */
+    public function __construct(
+        EavSetupFactory $eavSetupFactory,
+        ScopeConfigInterface $config,
+        WriterInterface $configWriter
+    ) {
         $this->eavSetupFactory = $eavSetupFactory;
+        $this->scopeConfig = $config;
+        $this->configWriter = $configWriter;
     }
 
     /**
@@ -67,6 +88,9 @@ class UpgradeData implements UpgradeDataInterface
         }
         if (version_compare($context->getVersion(), '0.2.1', '<')) {
             ShippingSetup::addTariffNumberAttribute($eavSetup);
+        }
+        if (version_compare($context->getVersion(), '0.6.0', '<')) {
+            ShippingSetup::convertSerializedToJson($this->scopeConfig, $this->configWriter);
         }
     }
 }

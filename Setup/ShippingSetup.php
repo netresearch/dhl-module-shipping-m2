@@ -26,9 +26,12 @@
 
 namespace Dhl\Shipping\Setup;
 
+use Dhl\Shipping\Config\BcsConfigInterface;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Magento\Eav\Setup\EavSetup;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Storage\WriterInterface;
 
 /**
  * ShippingSetup
@@ -86,5 +89,29 @@ class ShippingSetup
                 'visible' => true,
             ]
         );
+    }
+
+    /**
+     * Transcode `core_config_data` entries from legacy serialized into json format.
+     * Conversion is also supposed to happen in M2.1 environments where the core
+     * converter and serializer classes do not yet exist.
+     *
+     * @link http://devdocs.magento.com/guides/v2.2/ext-best-practices/tutorials/serialized-to-json-data-upgrade.html
+     * @param ScopeConfigInterface $scopeConfig
+     * @param WriterInterface $configWriter
+     */
+    public static function convertSerializedToJson($scopeConfig, $configWriter)
+    {
+        // read value from the legacy config path
+        $legacyValue = $scopeConfig->getValue(BcsConfigInterface::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION);
+
+        // if participation numbers are available, save them json encoded to new config path
+        if (!empty($legacyValue)) {
+            $configWriter->save(
+                BcsConfigInterface::CONFIG_XML_PATH_ACCOUNT_PARTICIPATIONS,
+                json_encode(unserialize($legacyValue))
+            );
+            $configWriter->delete(BcsConfigInterface::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION);
+        }
     }
 }
