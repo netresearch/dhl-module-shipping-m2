@@ -204,19 +204,14 @@ class GlConfig implements GlConfigInterface
     /**
      * Increment consignment number
      *
-     * @param mixed $store
      * @return void
      */
-    public function incrementConsignmentNumber($store = null)
+    public function incrementConsignmentNumber()
     {
-        $suffix = (int)$this->configAccessor->getConfigValue(
-            self::CONFIG_XML_PATH_CONSIGNMENT_SUFFIX,
-            $store
-        );
+        $suffix = (int)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CONSIGNMENT_SUFFIX);
         $this->configAccessor->saveConfigValue(
             self::CONFIG_XML_PATH_CONSIGNMENT_SUFFIX,
-            $suffix + 1,
-            $store
+            $suffix + 1
         );
     }
 }
