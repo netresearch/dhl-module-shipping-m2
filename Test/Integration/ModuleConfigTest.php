@@ -4,7 +4,7 @@ namespace Dhl\Shipping;
 use \Magento\Framework\Component\ComponentRegistrar;
 use \Magento\TestFramework\ObjectManager;
 
-class ModuleConfigTest extends \PHPUnit_Framework_TestCase
+class ModuleConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var $objectManager ObjectManager

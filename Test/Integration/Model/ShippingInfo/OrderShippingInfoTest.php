@@ -37,7 +37,7 @@ use \Magento\TestFramework\ObjectManager;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class OrderShippingInfoTest extends \PHPUnit_Framework_TestCase
+class OrderShippingInfoTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectManager

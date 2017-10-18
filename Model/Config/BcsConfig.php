@@ -176,12 +176,12 @@ class BcsConfig implements BcsConfigInterface
     {
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
             $participations = $this->configAccessor->getConfigValue(
-                self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION,
+                self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATIONS,
                 $store
             );
         } else {
             $participations = $this->configAccessor->getConfigValue(
-                self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION,
+                self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATIONS,
                 $store
             );
         }
@@ -201,12 +201,12 @@ class BcsConfig implements BcsConfigInterface
     {
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
             $participations = $this->configAccessor->getConfigValue(
-                self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATION,
+                self::CONFIG_XML_PATH_SANDBOX_ACCOUNT_PARTICIPATIONS,
                 $store
             );
         } else {
             $participations = $this->configAccessor->getConfigValue(
-                self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATION,
+                self::CONFIG_XML_PATH_ACCOUNT_PARTICIPATIONS,
                 $store
             );
         }
