@@ -77,6 +77,7 @@
                 <field id="bcs_account_signature" translate="label tooltip" type="obscure" sortOrder="220" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Signature</label>
                     <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <depends>
                         <field id="sandbox_mode">0</field>
                         <field id="api_type">bcs</field>
@@ -93,7 +94,7 @@
                     </depends>
                 </field>
                 <!-- 240 Participation Numbers -->
-                <field id="bcs_account_participation" type="select" translate="label" sortOrder="240" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="bcs_account_participations" type="select" translate="label" sortOrder="240" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Participation Numbers</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Participation</frontend_model>
                     <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\ArraySerialized</backend_model>
@@ -482,8 +483,8 @@
                 </field>
                 <!-- 930 Notify Customer -->
                 <field id="shipment_autocreate_send_shippinginfo" translate="label" type="select" sortOrder="930" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Send Shipping Info</label>
-                    <tooltip>Notify Customer about Shipping.</tooltip>
+                    <label>Send Shipment Confirmation</label>
+                    <tooltip><![CDATA[If set to <em>Yes</em>, a shipment confirmation email will be sent to the customer when shipment and label were created.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>

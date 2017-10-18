@@ -23,15 +23,17 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Serialized;
 
-use \Magento\Config\Model\Config\Backend\Serialized\ArraySerialized as BaseArraySerialized;
 use \Magento\Framework\App\Config\Data\ProcessorInterface;
 use \Magento\Framework\App\Config\ScopeConfigInterface;
+use \Magento\Framework\App\Config\Value;
 
 /**
- * ArraySerialized Class
+ * Save and load config data array in JSON format.
+ *
+ * Conversion is also supposed to happen in M2.1 environments where the core
+ * converter and serializer classes do not yet exist.
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -39,8 +41,38 @@ use \Magento\Framework\App\Config\ScopeConfigInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ArraySerialized extends BaseArraySerialized implements ProcessorInterface
+class ArraySerialized extends Value implements ProcessorInterface
 {
+    /**
+     * @return void
+     */
+    protected function _afterLoad()
+    {
+        $value = $this->getValue();
+        if (!is_array($value)) {
+            $this->setValue(empty($value) ? false : $this->processValue($value));
+        }
+    }
+
+    /**
+     * Unset array element with '__empty' key
+     *
+     * @return $this
+     */
+    public function beforeSave()
+    {
+        $value = $this->getValue();
+        if (is_array($value)) {
+            unset($value['__empty']);
+            $value = json_encode($value);
+        }
+        $this->setValue($value);
+
+        parent::beforeSave();
+
+        return $this;
+    }
+
     /**
      * Process config value
      *
@@ -50,15 +82,15 @@ class ArraySerialized extends BaseArraySerialized implements ProcessorInterface
      */
     public function processValue($value)
     {
-        $result = json_decode($value);
-        if ($result === null) {
-            $result = unserialize($value);
-        }
+        $result = json_decode($value, true);
         return $result;
     }
 
     /**
-     * Get old value from existing config
+     * Get old value from config, encode for comparison with new value.
+     *
+     * @see \Magento\Framework\App\Config\Value::afterSave
+     * @see \Magento\Framework\App\Config\Value::isValueChanged
      *
      * @return string
      */
@@ -69,10 +101,11 @@ class ArraySerialized extends BaseArraySerialized implements ProcessorInterface
             $this->getScope() ?: ScopeConfigInterface::SCOPE_TYPE_DEFAULT,
             $this->getScopeCode()
         );
+
         if (is_array($oldValue)) {
-            $oldValue = serialize($oldValue);
+            $oldValue = json_encode($oldValue);
         }
 
-        return (string)$oldValue;
+        return $oldValue;
     }
 }

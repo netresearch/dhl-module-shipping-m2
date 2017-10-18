@@ -42,7 +42,7 @@ use Magento\TestFramework\ObjectManager;
 /**
  * AutoCreateTest
  */
-class AutoCreateTest extends \PHPUnit_Framework_TestCase
+class AutoCreateTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectManager
