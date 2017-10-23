@@ -46,7 +46,6 @@ use Magento\Shipping\Model\Shipping\LabelGenerator;
 class Carrier extends AbstractCarrierOnline implements CarrierInterface
 {
     const CODE = 'dhlshipping';
-    const NO_TRACK = 'dhlshipping_notrack';
 
     /**
      * @var \Magento\Framework\DataObjectFactory
@@ -268,10 +267,9 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
                 $createdItem->getAllLabels()
             )->render();
 
-            $trackingNumber = $createdItem->getTrackingNumber() ? : self::NO_TRACK;
             $result->setData(
                 [
-                    'tracking_number' => $trackingNumber,
+                    'tracking_number' => $createdItem->getTrackingNumber(),
                     'shipping_label_content' => $combinedLabel,
                 ]
             );
