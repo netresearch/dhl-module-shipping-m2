@@ -271,4 +271,15 @@ class ModuleConfig implements ModuleConfigInterface
     {
         return (bool) $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER, $store);
     }
+
+    /**
+     * Get canonical module version number string
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getModuleVersion($store = null)
+    {
+        return $this->configAccessor->getConfigValue(ModuleConfigInterface::CONFIG_XML_PATH_MODULE_VERSION, $store);
+    }
 }

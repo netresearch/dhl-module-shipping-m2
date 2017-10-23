@@ -43,6 +43,7 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
     const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
+    const CONFIG_XML_PATH_MODULE_VERSION = 'carriers/dhlshipping/module_version';
 
     const CONFIG_XML_PATH_AUTOCREATE_ENABLED = 'carriers/dhlshipping/shipment_autocreate_enabled';
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'carriers/dhlshipping/shipment_autocreate_order_status';
@@ -154,7 +155,7 @@ interface ModuleConfigInterface
     /**
      * Get allowed order statuses for automatic shipment creation
      *
-     * @param null $store
+     * @param mixed $store
      * @return mixed
      */
     public function getAutoCreateOrderStatus($store = null);
@@ -162,8 +163,16 @@ interface ModuleConfigInterface
     /**
      * Get Notify Customer config.
      *
-     * @param null $store
+     * @param mixed $store
      * @return bool
      */
     public function getAutoCreateNotifyCustomer($store = null);
+
+    /**
+     * Get canonical module version number string
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getModuleVersion($store = null);
 }
