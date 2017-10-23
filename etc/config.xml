@@ -30,6 +30,7 @@
                 <active>0</active>
                 <title>DHL</title>
                 <name>Shipping</name>
+                <module_version>0.1.0</module_version>
                 <sandbox_mode>1</sandbox_mode>
                 <logging_enabled>0</logging_enabled>
                 <log_level>2</log_level>

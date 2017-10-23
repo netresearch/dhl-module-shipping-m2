@@ -26,8 +26,8 @@
 
 namespace Dhl\Shipping\Util;
 
-use \Magento\Framework\App\ProductMetadataInterface;
-use \Magento\Framework\Module\ModuleListInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Magento\Framework\App\ProductMetadataInterface;
 
 /**
  * Detect application and module versions.
@@ -35,15 +35,16 @@ use \Magento\Framework\Module\ModuleListInterface;
  * @category Dhl
  * @package  Dhl\Shipping\Util
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class Version
 {
     /**
-     * @var ModuleListInterface
+     * @var ModuleConfigInterface
      */
-    private $moduleMetadata;
+    private $moduleConfig;
 
     /**
      * @var ProductMetadataInterface
@@ -52,26 +53,26 @@ class Version
 
     /**
      * Version constructor.
-     * @param ModuleListInterface $moduleMetadata
+     * @param ModuleConfigInterface $moduleConfig
      * @param ProductMetadataInterface $productMetadata
      */
     public function __construct(
-        ModuleListInterface $moduleMetadata,
+        ModuleConfigInterface $moduleConfig,
         ProductMetadataInterface $productMetadata
     ) {
-        $this->moduleMetadata = $moduleMetadata;
+        $this->moduleConfig = $moduleConfig;
         $this->productMetadata = $productMetadata;
     }
 
     /**
      * Detect module version.
-     * Use setup version instead of querying the module.xml file.
+     * Uses version string stored in config.
      *
      * @return string
      */
     public function getModuleVersion()
     {
-        return $this->moduleMetadata->getOne('Dhl_Shipping')['setup_version'];
+        return $this->moduleConfig->getModuleVersion();
     }
 
     /**
