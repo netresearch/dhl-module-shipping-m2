@@ -195,14 +195,14 @@
 
                 <!--515 Additional Services -->
                 <field id="additional_services" translate="label" type="select" sortOrder="515" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Additional Services</label>
+                    <label>Additional Service Default Values</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
 
                 <!-- 520 Print Only If Codeable -->
                 <field id="shipment_service_printonlyifcodeable" translate="label" type="select" sortOrder="520" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Print Only If Codeable</label>
-                    <tooltip><![CDATA[If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
+                    <tooltip><![CDATA[If set to <em>Yes</em>, shipment orders will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -210,8 +210,8 @@
                 </field>
                 <!-- 530 Parcel Announcement -->
                 <field id="shipment_service_parcelannouncement" translate="label" type="select" sortOrder="530" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Enable Parcel announcement</label>
-                    <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
+                    <label>Parcel Announcement</label>
+                    <tooltip><![CDATA[If set to <em>Yes</em>, DHL will send shipment status updates to the customer.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -220,7 +220,7 @@
                 <!-- 540 Visal Check of Age -->
                 <field id="shipment_service_visualcheckofage" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Visual Check of Age</label>
-                    <tooltip>Book the service Visual Check Of Age with automated shipment orders.</tooltip>
+                    <tooltip>If enabled, the visual age check service will be booked during shipment orders.</tooltip>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -229,7 +229,7 @@
                 <!-- 550 Return Shipment -->
                 <field id="shipment_service_returnshipment" translate="label" type="select" sortOrder="550" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Return Shipment</label>
-                    <tooltip>Book the service Return Shipment with automated shipment orders.</tooltip>
+                    <tooltip><![CDATA[If set to <em>Yes</em>, a return shipment label will be requested from the webservice.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -238,7 +238,7 @@
                 <!-- 560 Additional Insurance -->
                 <field id="shipment_service_additionalinsurance" translate="label" type="select" sortOrder="560" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Additional Insurance</label>
-                    <tooltip>Book the service Additional Insurance with automated shipment orders.</tooltip>
+                    <tooltip><![CDATA[If set to <em>Yes</em>, shipments will be insured with higher than standard amount.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -247,7 +247,7 @@
                 <!-- 570 Bulky Goods -->
                 <field id="shipment_service_bulkygoods" translate="label" type="select" sortOrder="570" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Bulky Goods</label>
-                    <tooltip>Book the service Bulky Goods with automated shipment orders.</tooltip>
+                    <tooltip><![CDATA[If set to <em>Yes</em>, shipments will be marked as bulk freight.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
