@@ -26,10 +26,11 @@
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
-use \Magento\Framework\View\Element\Html\Select;
 
 /**
- * Dhl Shipping Form Field Block
+ * Array configuration field with procedures and the merchant's participation number.
+ * The procedures dropdown is rendered per row using a separate form field.
+ * @see Procedures
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -40,20 +41,20 @@ use \Magento\Framework\View\Element\Html\Select;
 class Participation extends AbstractFieldArray
 {
     /**
-     * @var Select
+     * @var Procedures
      */
-    protected $templateRenderer;
+    private $templateRenderer;
 
     /**
      * Create renderer used for displaying the country select element
      *
-     * @return Select
+     * @return Procedures
      */
-    protected function _getTemplateRenderer()
+    private function getTemplateRenderer()
     {
         if (!$this->templateRenderer) {
             $this->templateRenderer = $this->getLayout()->createBlock(
-                'Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Procedure\Select',
+                Procedures::class,
                 '',
                 ['data' => ['is_render_to_js_template' => true]]
             );
@@ -69,12 +70,11 @@ class Participation extends AbstractFieldArray
      * @param \Magento\Framework\DataObject $row
      *
      * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function _prepareArrayRow(\Magento\Framework\DataObject $row)
     {
         $optionExtraAttr = [];
-        $optionExtraAttr['option_' . $this->_getTemplateRenderer()->calcOptionHash($row->getData('procedure'))] =
+        $optionExtraAttr['option_' . $this->getTemplateRenderer()->calcOptionHash($row->getData('procedure'))] =
             'selected="selected"';
         $row->setData(
             'option_extra_attrs',
@@ -90,14 +90,16 @@ class Participation extends AbstractFieldArray
     protected function _prepareToRender()
     {
         $this->addColumn('procedure', [
-                'label'    => __('Procedure'),
-                'renderer' => $this->_getTemplateRenderer()
-            ]);
+            'label'    => __('Procedure'),
+            'renderer' => $this->getTemplateRenderer()
+        ]);
+
         $this->addColumn('participation', [
-                'label' => __('Participation'),
-                'style' => 'width:80px',
-                'class' => 'validate-length maximum-length-2 minimum-length-2 validate-digits'
-            ]);
+            'label' => __('Participation'),
+            'style' => 'width:80px',
+            'class' => 'validate-length maximum-length-2 minimum-length-2 validate-digits'
+        ]);
+
         // hide "Add after" button
         $this->_addAfter = false;
     }

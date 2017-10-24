@@ -63,9 +63,10 @@ class Procedure implements \Magento\Framework\Option\ArrayInterface
     public function toArray()
     {
         return [
-            ShippingProducts::PROCEDURE_PAKET_NATIONAL          => __('DHL Paket: V01PAK'),
-            ShippingProducts::PROCEDURE_WELTPAKET               => __('DHL Paket International: V53WPAK'),
-            ShippingProducts::PROCEDURE_PAKET_AUSTRIA           => __('DHL Paket Austria: V86PARCEL'),
+            ShippingProducts::PROCEDURE_NATIONAL                => __('DHL Paket: V01PAK'),
+            ShippingProducts::PROCEDURE_CONNECT                 => __('DHL Paket Connect: V55PAK'),
+            ShippingProducts::PROCEDURE_INTERNATIONAL           => __('DHL Paket International: V53WPAK'),
+            ShippingProducts::PROCEDURE_PAKET_AUSTRIA           => __('DHL PAKET Austria: V86PARCEL'),
             ShippingProducts::PROCEDURE_PAKET_CONNECT           => __('DHL PAKET Connect: V87PARCEL'),
             ShippingProducts::PROCEDURE_PAKET_INTERNATIONAL     => __('DHL PAKET International: V82PARCEL'),
             ShippingProducts::PROCEDURE_RETURNSHIPMENT_NATIONAL => __('Retoure DHL Paket: V07PAK'),

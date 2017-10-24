@@ -28,10 +28,12 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 use Dhl\Shipping\Config\BcsConfigInterface;
 use Dhl\Shipping\Model\Config\ServiceConfig;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Shipping\Carrier;
 use Dhl\Shipping\Service\Filter\ProductFilter;
-use Magento\Framework\DataObject;
+use Magento\Backend\Block\Template;
+use Magento\Backend\Block\Template\Context;
 use Magento\Framework\DataObjectFactory;
+use Magento\Framework\Registry;
+use Magento\Shipping\Model\CarrierFactory;
 
 /**
  * Services
@@ -42,7 +44,7 @@ use Magento\Framework\DataObjectFactory;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Services extends \Magento\Backend\Block\Template
+class Services extends Template
 {
     const BCS_SERVICES_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_services_bcs.phtml';
 
@@ -64,11 +66,6 @@ class Services extends \Magento\Backend\Block\Template
     private $serviceConfig;
 
     /**
-     * @var BcsConfigInterface
-     */
-    private $bcsConfig;
-
-    /**
      * @var \Magento\Shipping\Model\CarrierFactory
      */
     private $carrierFactory;
@@ -81,29 +78,29 @@ class Services extends \Magento\Backend\Block\Template
     /**
      * Services constructor.
      *
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Backend\Block\Template\Context $context
+     * @param Context $context
+     * @param Registry $registry
      * @param ModuleConfigInterface $moduleConfig
      * @param ServiceConfig $serviceConfig
-     * @param BcsConfigInterface $bcsConfig
-     * @param array $data
+     * @param CarrierFactory $carrierFactory
+     * @param DataObjectFactory $dataObjectFactory
+     * @param mixed[] $data
      */
     public function __construct(
-        \Magento\Framework\Registry $registry,
-        \Magento\Backend\Block\Template\Context $context,
+        Context $context,
+        Registry $registry,
         ModuleConfigInterface $moduleConfig,
         ServiceConfig $serviceConfig,
-        BcsConfigInterface $bcsConfig,
-        \Magento\Shipping\Model\CarrierFactory $carrierFactory,
+        CarrierFactory $carrierFactory,
         DataObjectFactory $dataObjectFactory,
         array $data = []
     ) {
         $this->coreRegistry = $registry;
         $this->moduleConfig = $moduleConfig;
         $this->serviceConfig = $serviceConfig;
-        $this->bcsConfig = $bcsConfig;
         $this->carrierFactory = $carrierFactory;
         $this->dataObjectFactory = $dataObjectFactory;
+
         parent::__construct($context, $data);
     }
 

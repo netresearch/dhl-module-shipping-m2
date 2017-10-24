@@ -67,6 +67,10 @@ class UpdateCarrierObserver implements ObserverInterface
     {
         /** @var \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order $order */
         $order = $observer->getEvent()->getData('order');
+        if ($order->getIsVirtual()) {
+            return;
+        }
+
         $shippingMethod = $order->getShippingMethod();
         $recipientCountry = $order->getShippingAddress()->getCountryId();
 
