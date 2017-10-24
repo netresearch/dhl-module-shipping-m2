@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Procedure;
+namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use \Dhl\Shipping\Model\Adminhtml\System\Config\Source\Procedure;
 use \Magento\Framework\View\Element\Context;
-use \Magento\Framework\View\Element\Html\Select as BaseSelect;
+use \Magento\Framework\View\Element\Html\Select;
 
 /**
  * Dhl Shipping Form Field Html Select Block
@@ -38,28 +38,25 @@ use \Magento\Framework\View\Element\Html\Select as BaseSelect;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Select extends BaseSelect
+class Procedures extends Select
 {
     /**
      * @var Procedure
      */
-    protected $procedureModel;
+    private $source;
 
     /**
      * Constructor
      *
      * @param Context   $context
-     * @param Procedure $procedureModel
+     * @param Procedure $source
      * @param array     $data
      */
-    public function __construct(
-        Context $context,
-        Procedure $procedureModel,
-        array $data = []
-    ) {
-    
+    public function __construct(Context $context, Procedure $source, array $data = [])
+    {
+        $this->source = $source;
+
         parent::__construct($context, $data);
-        $this->procedureModel = $procedureModel;
     }
 
     /**
@@ -81,8 +78,8 @@ class Select extends BaseSelect
     {
         if (!$this->getOptions()) {
             $this->addOption('0', __('Select Procedure'));
-            foreach ($this->procedureModel->toOptionArray() as $procedureData) {
-                $this->addOption($procedureData['value'], addslashes($procedureData['label']));
+            foreach ($this->source->toOptionArray() as $procedureData) {
+                $this->addOption($procedureData['value'], $this->escapeHtml($procedureData['label']));
             }
         }
 

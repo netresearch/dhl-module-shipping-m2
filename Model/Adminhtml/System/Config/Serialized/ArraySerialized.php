@@ -64,8 +64,14 @@ class ArraySerialized extends Value implements ProcessorInterface
         $value = $this->getValue();
         if (is_array($value)) {
             unset($value['__empty']);
-            $value = json_encode($value);
         }
+
+        if (!empty($value)) {
+            $value = json_encode($value);
+        } else {
+            $value = $this->getOldValue();
+        }
+
         $this->setValue($value);
 
         parent::beforeSave();

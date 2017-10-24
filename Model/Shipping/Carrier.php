@@ -235,6 +235,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         }
 
         $products = $this->getShippingProducts($countryShipper, $countryRecipient);
+
         return $products;
     }
 
@@ -325,6 +326,10 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         return $tracking;
     }
 
+    /**
+     * @param \Magento\Framework\DataObject $params
+     * @return \string[]
+     */
     public function getContentTypes(\Magento\Framework\DataObject $params)
     {
         if ($params == null) {
