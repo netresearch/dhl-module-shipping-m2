@@ -25,6 +25,7 @@
  */
 namespace Dhl\Shipping\Observer;
 
+use Dhl\Shipping\Model\Shipping\Carrier;
 use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
 use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory;
 use \Magento\Framework\Event\Observer;
@@ -90,6 +91,15 @@ class ShiftShippingInfoObserver implements ObserverInterface
         $quote = $observer->getEvent()->getData('quote');
         /** @var \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order $order */
         $order = $observer->getEvent()->getData('order');
+
+        if ($order->getIsVirtual()) {
+            return;
+        }
+
+        $shippingMethod = $order->getShippingMethod(true);
+        if ($shippingMethod->getData('carrier_code') != Carrier::CODE) {
+            return;
+        }
 
         $shippingAddressId = $quote->getShippingAddress()->getId();
 
