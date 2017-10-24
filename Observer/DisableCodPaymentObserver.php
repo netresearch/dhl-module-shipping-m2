@@ -129,7 +129,7 @@ class DisableCodPaymentObserver implements ObserverInterface
         );
         // check if there are product codes that support COD for the current route
         $codProductCodes = array_intersect($routeProductCodes, [
-            ShippingProducts::CODE_PAKET_NATIONAL,
+            ShippingProducts::CODE_NATIONAL,
             ShippingProducts::CODE_PAKET_AUSTRIA,
             ShippingProducts::CODE_PAKET_CONNECT,
         ]);
