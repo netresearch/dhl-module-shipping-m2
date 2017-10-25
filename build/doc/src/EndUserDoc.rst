@@ -359,6 +359,24 @@ of the Admin Panel:
 
    PageBreak
 
+Printing a retoure slip
+-----------------------
+
+When shipping from Austria, it is possible to request a retoure slip with a shipping label.
+
+This service is only availiable with the products *DHL Paket Austria* and *DHL Paket Connect*, but not with product *DHL Paket International*.
+
+Please use the option *Retoure slip* when requesting a label in the packaging popup (see section `National shipments`_).
+
+.. admonition:: Note
+
+
+   Retoure via slip is only availiable for the countries Austria and Germany.
+
+.. raw:: pdf
+
+   PageBreak
+
 Canceling a shipment
 --------------------
 

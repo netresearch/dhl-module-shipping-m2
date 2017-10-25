@@ -372,6 +372,23 @@ eingesehen werden:
 
    PageBreak
 
+Erstellen eines Retouren-Beilegers
+----------------------------------
+
+Für den Versand aus Österreich ist es möglich, zusätzlich zum Paketaufkleber einen Retouren-Beileger anzufordern.
+
+Dies ist für die Produkte *DHL Paket Austria* und *DHL Paket Connect* möglich, nicht aber für *DHL Paket International*.
+
+Nutzen Sie dafür beim Erstellen des Labels (siehe `Nationale Sendungen`_) im Paket-Popup das Auswahlfeld *Retouren-Beileger*.
+
+.. admonition:: Note
+
+   Beileger-Retoure ist nur für die Länder Österreich und Deutschland möglich.
+
+.. raw:: pdf
+
+   PageBreak
+
 Stornieren eines Versandauftrags
 --------------------------------
 
