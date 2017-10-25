@@ -254,7 +254,7 @@ class GlDataMapper implements GlDataMapperInterface
         $uniquePackageId = $shipmentDetails->getCustomerPrefix() . $sequenceNumber . $time;
 
         // remove non-alphanum chars from package id
-        $uniquePackageId = preg_replace('[^a-zA-Z\d]', '', $uniquePackageId);
+        $uniquePackageId = preg_replace('/[^a-zA-Z\d]/', '', $uniquePackageId);
 
         return $uniquePackageId;
     }
