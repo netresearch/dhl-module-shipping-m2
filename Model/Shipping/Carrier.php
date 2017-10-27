@@ -29,9 +29,9 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Util\ExportTypeInterface;
 use Dhl\Shipping\Util\ShippingProductsInterface;
 use Dhl\Shipping\Webservice\GatewayInterface;
-use \Magento\Quote\Model\Quote\Address\RateRequest;
-use \Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
-use \Magento\Shipping\Model\Carrier\CarrierInterface;
+use Magento\Quote\Model\Quote\Address\RateRequest;
+use Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
+use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
 
 /**
@@ -314,11 +314,20 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     {
         /** @var \Magento\Shipping\Model\Tracking\Result\Status $tracking */
         $tracking = $this->_trackStatusFactory->create();
+
+        $shippingOrigin = $this->config->getShipperCountry($this->getStore()->getId());
+
+        if (in_array($shippingOrigin, ['DE', 'AT'])) {
+            $url = 'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=' . $trackingNumber;
+        } else {
+            $url = 'https://webtrack.dhlglobalmail.com/?trackingnumber=' . $trackingNumber;
+        }
+
         $tracking->setData([
             'carrier' => $this->_code,
             'carrier_title' => $this->getConfigData('title'),
             'tracking' => $trackingNumber,
-            'url' => 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=' . $trackingNumber
+            'url' => $url,
         ]);
 
         return $tracking;
