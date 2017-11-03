@@ -1,5 +1,7 @@
 .. |date| date:: %d/%m/%Y
 .. |year| date:: %Y
+.. |mage| unicode:: Magento U+00AE
+.. |mage2| replace:: |mage| 2
 
 .. footer::
    .. class:: footertable
@@ -18,17 +20,17 @@
 
 .. sectnum::
 
-=================================================================
-DHL Versenden (Shipping) M2: Paketversand für DHL Geschäftskunden
-=================================================================
+========================
+DHL Shipping für |mage2|
+========================
 
-Das Modul *DHL Versenden (Shipping)* für Magento® 2 ermöglicht es Händlern mit einem
-DHL-Konto Sendungsaufträge anzulegen und DHL-Versandscheine (Paketaufkleber) abzurufen.
+Das Modul *DHL Shipping* für |mage2| ermöglicht es Händlern mit einem DHL-Konto
+Sendungsaufträge anzulegen und DHL-Versandscheine (Paketaufkleber) abzurufen.
 
-Das Modul unterstützt diese Schnittstellen:
+Das Modul unterstützt die folgenden Schnittstellen:
 
-* DHL Geschäftskundenversand API (Business Customer Shipping)
-* eCommerce Global Label API
+* DHL Paket Geschäftskundenversand API (Business Customer Shipping)
+* DHL eCommerce Global Shipping API
 
 Die tatsächlich nutzbaren Schnittstellen hängen vom Absenderstandort ab.
 
@@ -38,16 +40,16 @@ Die tatsächlich nutzbaren Schnittstellen hängen vom Absenderstandort ab.
 
 .. contents:: Endbenutzer-Dokumentation
 
-   
+
 Voraussetzungen
 ===============
 
 Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Moduls erfüllt sein.
 
-Magento® 2
-----------
+|mage2|
+-------
 
-Folgende Magento® 2-Versionen werden vom Modul unterstützt:
+Folgende |mage2|-Versionen werden vom Modul unterstützt:
 
 - Community Edition 2.1.4 oder höher
 
@@ -82,21 +84,23 @@ Bei Nutzung der *DHL Geschäftskundenversand API (Business Customer Shipping)* i
 Versand aus Deutschland und Österreich möglich. Die Absenderadresse des Shops muss in
 einem dieser Länder liegen.
 
-Wenn die *eCommerce Global Label API* genutzt wird, ist der Versand von bzw. in folgende
-Länder möglich: USA, China (einschl. Hongkong), Singapur, Thailand, Malaysia. Beachten Sie
-auch die Informationen in Abschnitt `Internationale Sendungen`_ weiter unten.
+Wenn die *eCommerce Global Label API* genutzt wird, ist der Versand aus folgenden
+Ländern möglich: Australien, Chile, China, Hongkong, Indien, Japan, Kanada,
+Malaysia, Neuseeland, Singapur, Thailand, USA, Vietnam.
+
+Beachten Sie auch die Informationen in Abschnitt `Internationale Sendungen`_.
 
 Stellen Sie in jedem Fall sicher, dass die Absenderadressen in den drei im Abschnitt
 Modulkonfiguration_ genannten Bereichen korrekt ist.
 
 Als Basiswährung wird die für das jeweilige Absenderland offiziell gültige Standardwährung
-angenommen, die in der Magento®-Konfiguration eingestellt sein muss. Es findet keine
+angenommen, die in der |mage|-Konfiguration eingestellt sein muss. Es findet keine
 automatische Konvertierung der Währungen statt.
 
 .. raw:: pdf
 
    PageBreak
-   
+
 Installation und Konfiguration
 ==============================
 
@@ -122,7 +126,7 @@ Für die Abwicklung von Versandaufträgen sind drei Konfigurationsbereiche relev
 
     Stores → Konfiguration → Allgemein → Allgemein → Store-Information
     Stores → Konfiguration → Verkäufe → Versandeinstellungen → Herkunft
-    Stores → Konfiguration → Verkäufe → Versandarten → DHL Versenden
+    Stores → Konfiguration → Verkäufe → Versandarten → DHL Shipping
 
 Stellen Sie sicher, dass die erforderlichen Felder aus den Bereichen
 *Store-Information* und *Herkunft* vollständig ausgefüllt sind:
@@ -139,14 +143,14 @@ Stellen Sie sicher, dass die erforderlichen Felder aus den Bereichen
   * Stadt
   * Straße
 
-Wenn Sie aus mehreren Ländern versenden, können Sie auf Store- bzw. StoreView-Ebene
+Wenn Sie aus mehreren Ländern versenden, können Sie auf Webseiten- bzw. Store-Ebene
 abweichende Absenderadressen eintragen.
 
 .. admonition:: Hinweis
 
-   Der Abschnitt *Versandarten → DHL* ist Kernbestandteil von Magento® 2 und bindet
+   Der Abschnitt *Versandarten → DHL* ist Kernbestandteil von |mage2| und bindet
    die Schnittstelle von DHL USA an. Diese Einstellungen beziehen sich nicht auf die
-   *DHL Versenden (Shipping)*-Extension.
+   *DHL Shipping*-Extension.
 
 .. raw:: pdf
 
@@ -155,32 +159,35 @@ abweichende Absenderadressen eintragen.
 Allgemeine Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Im Konfigurationsbereich *Allgemeine Einstellungen* wird festgelegt, welche API-Anbindung
-konfiguriert werden soll. Die Einstellung hängt von Ihrem DHL-Konto bzw. Vertrag ab. Wählen Sie
-zwischen:
+Im Konfigurationsbereich *Allgemeine Einstellungen* wird angezeigt, welche der
+zur Verfügung stehenden API-Anbindungen konfiguriert wird.
 
 * DHL Business Customer Shipping (DE, AT), oder
 * DHL eCommerce Global Label API
 
+Dieses Feld ist bereits gemäß dem eingestellten Versandursprung vorbelegt und
+ist nicht manuell anzupassen.
+
 .. admonition:: Hinweis
 
-   Die tatsächlich verwendete API-Verbindung hängt von der Zieladresse der Sendung ab und
-   wird bei der Übertragund an DHL automatisch gewählt. Das Dropdown macht lediglich die
+   Die tatsächlich verwendete API-Anbindung hängt vom Versandursprung
+   (Absenderadresse der Sendung) ab und wird zur Beauftragung von
+   Paketaufklebern automatisch gewählt. Das Dropdown macht lediglich die
    passenden Konfigurationsfelder sichtbar.
 
 Außerdem kann in diesem Abschnitt gewählt werden, ob der *Sandbox-Modus* zum Testen
 der Integration verwendet oder die Extension produktiv betrieben werden soll.
 
-Wenn die Protokollierung aktiviert ist, werden Webservice-Nachrichten in die Magento® 2
+Wenn die Protokollierung aktiviert ist, werden Webservice-Nachrichten in die |mage2|
 Log-Dateien in ``var/log`` geschrieben. Es wird *keine gesonderte* Log-Datei für
 die DHL-Extension erstellt.
 
 Sie haben die Auswahl zwischen drei Protokollstufen:
 
-* *Error:* Zeichnet Kommunikationsfehler zwischen Shop und DHL Webservice auf.
-* *Warning:* Zeichnet Kommunikationsfehler sowie Fehler aufgrund falscher Sendungsdaten
-   (z.B. Adressvalidierung, ungültige Service-Auswahl), auf.
-* *Debug:* Zeichnet sämtliche Nachrichten einschl. Paketaufkleber-Rohdaten im Log auf.
+- *Error*: Zeichnet Kommunikationsfehler zwischen Shop und DHL Webservice auf.
+- *Warning*: Zeichnet Kommunikationsfehler sowie Fehler aufgrund falscher Sendungsdaten
+  (z.B. Adressvalidierung, ungültige Service-Auswahl), auf.
+- *Debug*: Zeichnet sämtliche Nachrichten einschl. Paketaufkleber-Rohdaten im Log auf.
 
 .. admonition:: Hinweis
 
@@ -198,21 +205,20 @@ Stammdaten
 ~~~~~~~~~~
 
 In diesem Konfigurationsbereich werden Ihre Zugangsdaten für den DHL Webservice
-hinterlegt, die für den Produktivmodus erforderlich sind. Die Zugangsdaten erhalten Sie
-direkt von DHL.
+hinterlegt. Die Zugangsdaten erhalten Sie direkt von DHL.
 
-Manche Eingabefelder erscheinen nur, wenn der Sandbox-Modus abgeschaltet wird.
+Für die Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)*
+im Sandbox-Modus sind keine Stammdaten erforderlich.
 
-Für die Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)* tragen Sie
-folgende Daten ein:
+Für die Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)*
+im Produktivbetrieb tragen Sie folgende Daten ein:
 
 * Benutzername (User)
 * Passwort (Signature)
 * EKP (DHL-Kundennummer, 10 stellig)
 * Teilnahmenummern (Participation, jeweils zweistellig)
 
-Zur Nutzung der *eCommerce Global Label API* sind die o.g. Angaben nicht notwendig. Tragen
-Sie stattdessen die folgenden Daten ein, die Sie von DHL erhalten:
+Zur Nutzung der *eCommerce Global Label API* tragen Sie stattdessen folgende Daten ein:
 
 * Pickup Account Number (5-10 stellig)
 * Customer Prefix (bis zu 5 Stellen)
@@ -226,10 +232,10 @@ Allgemeine Versandeinstellungen
 In diesem Konfigurationsbereich werden Basis-Einstellungen vorgenommen, die
 für die Erstellung von Versandaufträgen über den DHL Webservice erforderlich sind.
 
-* *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten für die
+- *Versandarten für DHL Shipping*: Legen Sie fest, welche Versandarten für die
   Versandkostenberechnung im Checkout verwendet werden sollen. Nur die hier ausgewählten
   Versandarten werden bei der Lieferscheinerstellung über die DHL-Extension abgewickelt.
-* *Standardprodukt*: Stellen Sie hier das DHL Produkt ein, das standardmäßig zur
+- *Standardprodukt*: Stellen Sie hier das DHL Produkt ein, das standardmäßig zur
   Erstellung von Versandaufträgen verwendet werden soll. Beachten Sie die Hinweise im
   Abschnitt Modulkonfiguration_ zur Absenderadresse.
 
@@ -239,47 +245,45 @@ DHL Geschäftskundenversand Einstellungen
 Die Einstellungen in diesem Bereich sind speziell bei Nutzung des
 *DHL Geschäftskundenversands (Business Customer Shipping)* relevant.
 
-* *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten
+- *Nachnahme-Zahlarten für DHL Shipping*: Legen Sie fest, bei welchen Zahlarten
   es sich um Nachnahme-Zahlarten handelt. Diese Information wird benötigt, um
-  bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende 
+  bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende
   Nachnahme-Label zu erzeugen.
-  
-Bei Nutzung der *eCommerce Global Label API* ist kein Nachnahmeversand verfügbar.
+
+Bei Nutzung der *eCommerce Global Label API* ist derzeit kein Nachnahmeversand verfügbar.
 
 DHL Zusatzleistungen Standardwerte
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In diesem Konfigurationsbereich können die Standardwerte für DHL Zusatzleisteungen
+In diesem Konfigurationsbereich können die Standardwerte für DHL Zusatzleistungen
 (Services) eingestellt werden.
 
-* *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
-  wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten 
-  lehnt DHL die Sendung mit einer Fehlermeldung ab. Wenn diese Einstellung abgeschaltet 
-  ist, wird DHL versuchen, fehlerhafte Lieferadressen automatisch korrekt zuzuordnen, 
-  wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht 
+- *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
+  wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten
+  lehnt DHL die Sendung mit einer Fehlermeldung ab. Wenn diese Einstellung abgeschaltet
+  ist, wird DHL versuchen, fehlerhafte Lieferadressen automatisch korrekt zuzuordnen,
+  wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht
   zugeordnet werden kann, wird die Sendung dennoch abgelehnt.
-* *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner 
+- *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
   Sendung informiert.
-* *Alterssichtprüfung:* Wählen Sie, ob die Versandlabel das Vermerk zur Alterssichtprüfung
+- *Alterssichtprüfung:* Wählen Sie, ob die Versandlabel das Vermerk zur Alterssichtprüfung
   tragen sollen, sowie welches Alter gelten soll. Auswahl:
-  
+
   * *Nein*: Der Service wird nicht hinzugebucht.
   * *A16*: Mindestalter 16 Jahre.
   * *A18*: Mindestalter 18 Jahre.
 
-* *Retourenbeileger*: Wählen Sie, ob zum Versandauftrag auch ein Retourenbeileger
+- *Retourenbeileger*: Wählen Sie, ob zum Versandauftrag auch ein Retourenbeileger
   erstellt werden soll. Siehe auch `Erstellen eines Retouren-Beilegers`_.
-* *Zusatzversicherung:* Wählen Sie, ob für den Versandauftrag eine Zusatzversicherung
+- *Zusatzversicherung:* Wählen Sie, ob für den Versandauftrag eine Zusatzversicherung
   hinzugebucht werden soll.
-* *Sperrgut:* Wählen Sie, ob der Service *Sperrgut* hinzugebucht werden soll.
+- *Sperrgut:* Wählen Sie, ob der Service *Sperrgut* hinzugebucht werden soll.
 
 Kontaktinformationen
 ~~~~~~~~~~~~~~~~~~~~
 
-In diesem Konfigurationsbereich legen Sie fest, welche zusätzlichen
-Absenderdaten zur Erstellung von Versandaufträgen an DHL übermittelt werden sollen.
-
-Es werden außerdem die Absenderdaten aus der allgemeinen Magento®-Konfiguration verwendet.
+In diesem Konfigurationsbereich legen Sie fest, welche Absenderdaten ergänzend
+zur allgemeinen |mage|-Konfiguration an DHL übermittelt werden sollen.
 
 Bei Nutzung der *eCommerce Global Label API* können hier keine zusätzlichen Angaben
 eingetragen werden.
@@ -311,13 +315,13 @@ Im diesem Konfigurationsbereich legen Sie fest, ob automatisch Lieferscheine erz
 und Paketaufkleber abgerufen werden sollen.
 
 Darüber hinaus können Sie bestimmen, welchen Bestell-Status eine Bestellung haben
-muss, um während der automatischen Sendungserstellung berücksichtigt zu werden. Hierüber 
-können Sie steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen 
+muss, um während der automatischen Sendungserstellung berücksichtigt zu werden. Hierüber
+können Sie steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen
 werden sollen.
 
-Außerdem legen Sie hier fest, ob eine Bestätigungsmail an den Käufer gesendet werden soll,
-wenn der Versandauftrag angelegt wurde. Hierbei handelt es sich um die E-Mail von Magento®,
-nicht um die Paketankündigung von DHL.
+Außerdem legen Sie hier fest, ob eine E-Mail an den Käufer gesendet werden soll,
+wenn der Lieferschein angelegt wurde. Hierbei handelt es sich um die
+Versandbestätigung von |mage|, nicht um die Paketankündigung von DHL.
 
 .. raw:: pdf
 
@@ -341,7 +345,7 @@ abgewickelt werden.
 
 Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlungen automatisch
 deaktiviert, falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur
-Verfügung steht (siehe *Nachnahme-Zahlarten für DHL Versenden*).
+Verfügung steht (siehe *Nachnahme-Zahlarten für DHL Shipping*).
 
 Bestellung über Admin Panel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -363,7 +367,7 @@ Nationale Sendungen
 ~~~~~~~~~~~~~~~~~~~
 
 Öffnen Sie im Admin Panel eine Bestellung, deren Versandart mit dem DHL-Versand
-verknüpft ist (siehe `Modulkonfiguration`_, Abschnitt *Versandarten für DHL Versenden*).
+verknüpft ist (siehe `Modulkonfiguration`_, Abschnitt *Versandarten für DHL Shipping*).
 
 Betätigen Sie dann den Button *Versand* im oberen Bereich der Seite.
 
@@ -387,16 +391,6 @@ bestätigen Sie Ihre Auswahl durch Klick auf *Gewählte Artikel zum Paket hinzuf
 
 Die Angabe der Paketmaße ist optional. Achten Sie auf das korrekte Paketgewicht.
 
-.. admonition:: Hinweis
-
-   Die Aufteilung der Produkte in mehrere Packstücke wird vom DHL Webservice
-   derzeit nicht unterstützt. Erstellen Sie alternativ mehrere Magento®-Lieferscheine
-   (Partial Shipments) zu einer Bestellung. Pro Lieferschein kann dann ein separates
-   DHL-Label erzeugt werden.
-   
-   Weitere Details dazu finden Sie in der Wissensdatenbank:
-   http://dhl.support.netresearch.de/support/solutions/articles/12000029043
-
 Der Button *OK* im Popup ist nun aktiviert. Bei Betätigung wird ein Versandauftrag
 an DHL übermittelt und im Erfolgsfall der resultierende Paketaufkleber abgerufen.
 
@@ -409,13 +403,12 @@ Internationale Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Bei Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)* werden für Ziele
-*außerhalb* der EU zusätzliche Felder im Popup eingeblendet. Geben Sie für die Erstellung der
+außerhalb der EU zusätzliche Felder im Popup eingeblendet. Geben Sie für die Erstellung der
 Exportdokumente mindestens die Zolltarifnummern sowie den Inhaltstyp der Sendung an.
 
-Wenn die *eCommerce Global Label API* genutzt wird, ist der Versand nur innerhalb
-des Landes möglich, aus dem versendet wird (also z.B. von China nach China, aber nicht
-von China in die USA). Beachten Sie auch die Informationen zu den erlaubten Ländern im
-Abschnitt `Versandursprung und Währung`_ weiter oben.
+Bei Nutzung der *eCommerce Global Label API* werden für Ziele außerhalb des
+Ursprungslandes zusätzliche Felder im Popup eingeblendet. Geben Sie mindestens
+die Zolltarifnummern sowie die Handelsklauseln an.
 
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 
@@ -462,13 +455,19 @@ eingesehen werden:
 Erstellen eines Retouren-Beilegers
 ----------------------------------
 
-Bei Versand aus Deutschland oder Österreich ist es möglich, gemeinsam mit dem
-Paketaufkleber einen Retouren-Beileger zu erstellen.
+Bei Versand innerhalb Deutschlands, innerhalb Österreichs oder von Österreich
+nach Deutschland ist es möglich, gemeinsam mit dem Paketaufkleber einen
+Retouren-Beileger zu beauftragen.
 
 Nutzen Sie dafür beim Erstellen des Labels im Popup das Auswahlfeld *Retouren-Beileger*.
 
-Bei Versand aus Österreich ist die Beilege-Retoure für die Produkte *DHL Paket Austria* und
-*DHL Paket Connect* möglich, nicht aber für *DHL Paket International*.
+Stellen Sie sicher, dass die `Teilnahmenummern`__ für Retouren korrekt konfiguriert sind:
+
+- Retoure DHL Paket (DE → DE)
+- Retoure DHL Paket Austria (AT → AT)
+- Retoure DHL Paket Connect (AT → DE)
+
+__ `Stammdaten`_
 
 .. raw:: pdf
 
@@ -481,7 +480,7 @@ Solange ein Versandauftrag nicht manifestiert ist, kann dieser bei DHL storniert
 
 Beachten Sie aber, dass derzeit noch keine Stornierung bei DHL ausgelöst wird, wenn
 Sie den Link *Löschen* in der Box *Versand- und Trackinginformationen* neben der
-Sendungsnummer anklicken. Hierdurch wird lediglich die Trackingnummer aus Magento®
+Sendungsnummer anklicken. Hierdurch wird lediglich die Trackingnummer aus |mage|
 entfernt.
 
 .. image:: images/de/shipping_and_tracking.png
@@ -493,7 +492,7 @@ entsprechendes Feature für den Geschäftskundenversand wird zukünftig im Modul
 
 .. admonition:: Hinweis
 
-   Wenn lediglich die Trackingnummer in Magento® entfernt wurde, ohne den Auftrag bei
+   Wenn lediglich die Trackingnummer in |mage| entfernt wurde, ohne den Auftrag bei
    DHL zu stornieren, werden hierfür von DHL Versandkosten in Rechnung gestellt.
 
 .. raw:: pdf
@@ -514,13 +513,12 @@ hinzugebucht werden sollen.
 
 .. admonition:: Hinweis
 
-   Die automatische Sendungserstellung erfordert funktionierende Magento®
-   Cron Jobs.
+   Die automatische Sendungserstellung erfordert funktionierende |mage| Cron Jobs.
 
 Im Abstand von 15 Minuten werden alle versandbereiten Bestellungen (gemäß den
 getroffenen Einstellungen) gesammelt und an DHL übermittelt.
 
-Bei erfolgreicher Übertragung werden die DHL-Label in Magento® gespeichert und die
+Bei erfolgreicher Übertragung werden die DHL-Label in |mage| gespeichert und die
 Lieferscheine erstellt.
 
 Im Fehlerfall sehen Sie die entsprechende Meldung in den Bestellkommentaren.

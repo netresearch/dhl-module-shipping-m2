@@ -1,5 +1,7 @@
 .. |date| date:: %d/%m/%Y
 .. |year| date:: %Y
+.. |mage| unicode:: Magento U+00AE
+.. |mage2| replace:: |mage| 2
 
 .. footer::
    .. class:: footertable
@@ -18,17 +20,17 @@
 
 .. sectnum::
 
-======================================================
-DHL Shipping (Versenden) M2 for DHL Business Customers
-======================================================
+========================
+DHL Shipping for |mage2|
+========================
 
-The module *DHL Shipping (Versenden)* for Magento® 2 enables merchants with a
-DHL account to create shipments and retrieve shipping labels.
+The module *DHL Shipping* for |mage2| enables merchants with a DHL account to
+create shipments and retrieve shipping labels.
 
-The module supports these webservices:
+The module supports the following webservices:
 
-* DHL Business Customer Shipping (Geschäftskundenversand) API
-* eCommerce Global Label API
+* DHL Paket Business Customer Shipping (Geschäftskundenversand) API
+* DHL eCommerce Global Shipping API
 
 Which of these webservices can actually be used depends on the shipping origin.
 
@@ -46,19 +48,19 @@ Which of these webservices can actually be used depends on the shipping origin.
 Requirements
 ============
 
-The following requirements must be met for a smooth operation of the module:
+The following requirements must be met for a smooth operation of the module.
 
-Magento® 2
-----------
+|mage2|
+-------
 
-The following Magento® 2 versions are supported:
+The following |mage2| versions are supported:
 
 - Community Edition 2.1.4 or higher
 
 PHP
 ---
 
-To connect to the API (webservice), the PHP SOAP extension must be installed 
+To connect to the API (webservice), the PHP SOAP extension must be installed
 and enabled on the web server.
 
 These PHP versions are supported:
@@ -87,15 +89,17 @@ When using the *DHL Business Customer Shipping (Geschäftskundenversand) API* sh
 must originate from Germany or Austria. The sender address of the shop must be located
 in one of those countries.
 
-When using the *eCommerce Global Label API* shipments can be sent from / to the following
-countries: USA, China (incl. Hong Kong), Singapore, Thailand, Malaysia. Please also note
-the information in section `International shipments`_ further down.
+When using the *eCommerce Global Label API* shipments can be sent from the following
+countries: Australia, Canada, Chile, China, Hongkong, India, Japan, Malaysia,
+New Zealand, Singapore, Thailand, USA, Vietnam.
+
+Please also note the information in section `International shipments`_.
 
 In any case, make sure that the sender address information in the configuration sections
 mentioned in `Module configuration`_ is correct.
 
 The base currency is assumed to be the official currency of the sender country which is
-set in the Magento® configuration. There is no automated conversion between currencies.
+set in the |mage| configuration. There is no automated conversion between currencies.
 
 .. raw:: pdf
 
@@ -124,9 +128,9 @@ There are three configuration sections which are relevant for creating shipments
 
     Stores → Configuration → General → General → Store-Information
     Stores → Configuration → Sales → Shipping Settings → Origin
-    Stores → Configuration → Sales → Shipping Methods → DHL Versenden (Shipping)
+    Stores → Configuration → Sales → Shipping Methods → DHL Shipping
 
-Make sure that the following required fields in the sections *Store Information* 
+Make sure that the following required fields in the sections *Store Information*
 and *Origin* are filled in completely:
 
 * Store Information
@@ -141,14 +145,13 @@ and *Origin* are filled in completely:
   * City
   * Street Address
 
-If you are shipping from multiple countries, you can configure different sender addresses
-on the Store or StoreView level.
+If you are shipping from multiple countries, you can configure different sender
+addresses on *Website* or *Store* level.
 
 .. admonition:: Note
 
-   The section *Shipping Methods → DHL* is a core part of Magento® 2 which connects
-   to the webservice of DHL USA only. These settings are not relevant for the *DHL Shipping
-   (Versenden)* module.
+   The section *Shipping Methods → DHL* is a core part of |mage2| which connects
+   to the webservice of DHL USA only. These settings are not relevant for the *DHL Shipping* module.
 
 .. raw:: pdf
 
@@ -157,15 +160,18 @@ on the Store or StoreView level.
 General Settings
 ~~~~~~~~~~~~~~~~
 
-In the configuration section *General Settings* you select which API connection you want
-to configure. This setting depends on your DHL account / contract. Choose between:
+The first dropdown in the configuration section *General Settings* shows which
+API connection is about to be configured.
 
 * DHL Business Customer Shipping (DE, AT), or
 * DHL eCommerce Global Label API
 
+This field is pre-selected according to the current shipping origin and does not
+need to be changed manually.
+
 .. admonition:: Note
 
-   The actual API connection to be used depends on the destination address of the shipment
+   The actual API connection to be used depends on the origin address of the shipment
    and is selected automatically during transmission to DHL. The dropdown only makes the
    configuration fields visible.
 
@@ -177,10 +183,10 @@ in the log files in ``var/log``. There will be *no separate* log file for the DH
 
 You can choose between three log levels:
 
-* *Error:* Records communication errors between the shop and the DHL webservice.
-* *Warning:* Records communication errors and also errors due to invalid shipment 
+- *Error:* Records communication errors between the shop and the DHL webservice.
+- *Warning:* Records communication errors and also errors due to invalid shipment
   data (e.g. address validation failed, invalid services selected).
-* *Debug:* Record all messages, including downloaded label raw data in the log.
+- *Debug:* Record all messages, including downloaded label raw data in the log.
 
 .. admonition:: Note
 
@@ -197,22 +203,22 @@ Configuration options that are not described here are not relevant.
 Account Data
 ~~~~~~~~~~~~
 
-This configuration section holds your access credentials for the DHL webservice 
+This configuration section holds your access credentials for the DHL webservice
 which are required for production mode. You will get this information directly from
 DHL.
 
-Some input fields are only visible if the Sandbox Mode is disabled.
+When using *DHL Business Customer Shipping (Geschäftskundenversand)* in sandbox
+mode, no additional input is necessary.
 
-When using *DHL Business Customer Shipping (Geschäftskundenversand)* enter the
-following data:
+When using *DHL Business Customer Shipping (Geschäftskundenversand)* in production,
+enter the following data:
 
 * Username (German: Benutzername)
 * Signature (German: Passwort)
 * EKP (DHL account number, 10 digits)
 * Participation numbers (German: Teilnahmenummern, two digits per field)
 
-When using the *eCommerce Global Label API* you don't need the above data. Enter the
-following data instead which you received from DHL:
+When using the *eCommerce Global Label API*, enter the following data:
 
 * Pickup Account Number (5 to 10 digits)
 * Customer Prefix (up to 5 digits)
@@ -223,10 +229,10 @@ following data instead which you received from DHL:
 General Shipping Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In this section, the basic configuration for creating shipments via 
+In this section, the basic configuration for creating shipments via
 the DHL webservice is made.
 
-* *Shipping Methods for DHL Versenden*: Select which shipping methods should be
+* *Shipping Methods for DHL Shipping*: Select which shipping methods should be
   used for calculating shipping costs in the checkout. Only shipping methods that are
   selected here will be handled by the DHL extension when creating shipments.
 * *Default product*: Set the DHL product which should be used by default for creating
@@ -240,47 +246,45 @@ DHL Business Customer Shipping Settings
 This section contains settings which are relevant if the
 *DHL Business Customer Shipping (Geschäftskundenversand)* is used.
 
-* *Cash On Delivery payment methods for DHL Versenden*: Select which payment methods
-  should be treated as Cash On Delivery (COD) payment methods. This is necessary 
-  to transmit the additional charge for Cash On Delivery to the DHL webservice 
+- *Cash On Delivery payment methods for DHL Shipping*: Select which payment methods
+  should be treated as Cash On Delivery (COD) payment methods. This is necessary
+  to transmit the additional charge for Cash On Delivery to the DHL webservice
   and create Cash On Delivery labels.
 
-When using the *eCommerce Global Label API*, the service Cash On Delivery is not
-available.
+When using the *eCommerce Global Label API*, the service Cash On Delivery is
+currently not available.
 
 Additional Service Default Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This configuration sections defines the default values for addition DHL services.
+This configuration sections defines the default values for additional DHL services.
 
-* *Print only if codeable*: If this is enabled, only shipments with perfectly 
-  valid addresses will be accepted by DHL. Otherwise, DHL will reject the shipment 
-  and issue an error message. If this option is disabled, DHL will attempt to 
-  correct an invalid address automatically, which results in an additional charge 
-  (Nachcodierungsentgelt). If the address cannot be corrected, DHL will still 
+- *Print only if codeable*: If this is enabled, only shipments with perfectly
+  valid addresses will be accepted by DHL. Otherwise, DHL will reject the shipment
+  and issue an error message. If this option is disabled, DHL will attempt to
+  correct an invalid address automatically, which results in an additional charge
+  (Nachkodierungsentgelt). If the address cannot be corrected, DHL will still
   reject the shipment.
-* *Parcel announcement*: The customer gets notified by email about the status 
+- *Parcel announcement*: The customer gets notified via email about the status
   of the shipment.
-* *Visual Check of Age:* Select if the service for age verification should be
+- *Visual Check of Age:* Select if the service for age verification should be
   booked, and what the minimum age is. Options:
-  
+
   * *No*: The service will not be booked.
   * *A16:* Minimum age 16 years.
   * *A18:* Minimum age 18 years.
 
-* *Return Shipment:* Select if a return label should be created together with the
+- *Return Shipment:* Select if a return label should be created together with the
   shipping label. See also `Printing a return slip`_.
-* *Additional Insurance:* Select if an additional insurance should be booked for
+- *Additional Insurance:* Select if an additional insurance should be booked for
   the shipment.
-* *Bulky Goods:* Select if the service for bulky goods (bulk freight) should be booked.
+- *Bulky Goods:* Select if the service for bulky goods (bulk freight) should be booked.
 
 Contact Data
 ~~~~~~~~~~~~
 
-In this section, you configure which additional sender (shipper) information
-should be transmitted to DHL.
-
-The sender information from the general Magento® configuration will also be used.
+In this section, you configure which sender (shipper) information should be
+transmitted to DHL in addition to the general |mage| configuration settings.
 
 When using the *eCommerce Global Label API* no additional information can be entered
 here.
@@ -288,15 +292,15 @@ here.
 Bank Data
 ~~~~~~~~~
 
-In the section *Bank Data* you configure the bank account to be used for Cash On 
-Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer 
+In the section *Bank Data* you configure the bank account to be used for Cash On
+Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer
 will be transferred to this bank account.
 
 Please note that you might also have to store the bank data in your DHL account.
 Usually, this can be done through the DHL Business Customer Portal (Geschäftskundenportal).
 
 This section is not visible when using the *eCommerce Global Label API* because it does
-not allow Cash On Delivery shipments. 
+not allow Cash On Delivery shipments.
 
 eCommerce Global API Shipping Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -306,16 +310,16 @@ In this section you can configure the label size, page size, and layout.
 Automatic Shipment Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The section *Automatic Shipment Creation* lets you choose if shipments should be 
+The section *Automatic Shipment Creation* lets you choose if shipments should be
 created and package labels retrieved automatically.
 
-You can also configure which order status an order must have to be processed 
-automatically. You can use this to exclude specific orders from being processed 
+You can also configure which order status an order must have to be processed
+automatically. You can use this to exclude specific orders from being processed
 automatically.
 
-Also, you can choose if a confirmation email should be sent to the customer when the
-shipment has been created. This refers to the email from Magento®, not the parcel
-announcement from DHL.
+Also, you can choose whether or not an email will be be sent to the customer when the
+shipment has been created. This refers to the |mage| shipment confirmation email,
+not the parcel announcement from DHL.
 
 
 Workflow and features
@@ -324,25 +328,25 @@ Workflow and features
 Creating an order
 -----------------
 
-The following section describes how the DHL extension integrates itself into the order 
+The following section describes how the DHL extension integrates itself into the order
 process.
 
 Checkout
 ~~~~~~~~
 
-In the `Module configuration`_ the shipping methods have been selected for which DHL 
-shipments and labels should be created. If the customer now selects one of those 
+In the `Module configuration`_ the shipping methods have been selected for which DHL
+shipments and labels should be created. If the customer now selects one of those
 shipping methods in the checkout, the shipment can later be processed by DHL.
 
-In the checkout step *Payment information* the Cash On Delivery payment methods 
-will be disabled if Cash On Delivery is not available for the selected delivery 
-address (see *Cash On Delivery payment methods for DHL Versenden*).
+In the checkout step *Payment information* the Cash On Delivery payment methods
+will be disabled if Cash On Delivery is not available for the selected delivery
+address (see *Cash On Delivery payment methods for DHL Shipping*).
 
 Admin Order
 ~~~~~~~~~~~
 
 When creating orders via the Admin Panel, the Cash On Delivery payment methods
-will be disabled if Cash On Delivery is not  available for the delivery address
+will be disabled if Cash On Delivery is not available for the delivery address
 (same behaviour as in the checkout).
 
 .. raw:: pdf
@@ -352,14 +356,14 @@ will be disabled if Cash On Delivery is not  available for the delivery address
 Creating a shipment
 -------------------
 
-The following section explains how to create a shipment for an order and how 
+The following section explains how to create a shipment for an order and how
 to retrieve the shipping label.
 
 National shipments
 ~~~~~~~~~~~~~~~~~~
 
-In the Admin Panel, select an order whose shipping method is linked to DHL (see 
-`Module configuration`_, section *Shipping Methods for DHL Versenden*).
+In the Admin Panel, select an order with a shipping method linked to DHL (see
+`Module configuration`_, section *Shipping Methods for DHL Shipping*).
 
 Then click the button *Ship* on the top of the page.
 
@@ -368,57 +372,47 @@ Then click the button *Ship* on the top of the page.
 
 You will get to the page *New shipment for order*.
 
-Activate the checkbox *Create shipping label* and click the button *Submit shipment...*.
+Activate the checkbox *Create shipping label* and click the button *Submit Shipment...*.
 
 .. image:: images/en/button_submit_shipment.png
    :scale: 75 %
 
-Now a popup window for selecting the articles in the package will be opened. The
+Now a popup window for selecting the shipping items in the package will be opened. The
 default product from the section `General Shipping Settings`_ will be pre-selected.
 
-Click the button *Add products*, select *all* products, and confirm by clicking 
+Click the button *Add products*, select *all* products, and confirm by clicking
 *Add selected product(s) to package*.
 
 The package dimensions are optional. Make sure the weight is correct.
 
-.. admonition:: Note
-
-   Splitting the products / items into multiple packages is currently not supported 
-   by the DHL webservice. As an alternative, you can create several Magento® shipments
-   for one order (partial shipment) For each shipment you can then create a separate
-   DHL label.
-   
-   For more details on this, please check the Knowledge Base:
-   http://dhl.support.netresearch.de/support/solutions/articles/12000029044
-
-The button *OK* in the popup window is now enabled. When clicking it, the shipment 
-will be transmitted to DHL and (if the transmission was successful) a shipping 
+The button *OK* in the popup window is now enabled. When clicking it, the shipment
+will be transmitted to DHL and (if the transmission was successful) a shipping
 label will be retrieved.
 
 If there was an error, the message from the DHL webservice will be displayed at the top
 of the popup. You might have to scroll up inside the popup to see the error message.
 
-The incorrect data can now be corrected, see also `Troubleshooting`_. 
+The incorrect data can now be corrected, see also `Troubleshooting`_.
 
 International shipments
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 When using *DHL Business Customer Shipping (Geschäftskundenversand)* for destinations
-*outside* of the EU, additional fields will be displayed in the popup window. To create
+outside of the EU, additional fields will be displayed in the popup window. To create
 the customs declaration, enter at least the customs tariff number and the content type of
 the shipment.
 
-When using the *eCommerce Global Label API* you can only ship within the origin country
-(e.g. from China to China, but not from China to the USA). Also note the information
-regarding the allowed countries in the section `Shipping origin and currency`_ further up.
+When using the *eCommerce Global Label API* for destinations other than the
+origin country, additional fields will be displayed in the popup window. Enter
+at least the terms of trade (Incoterms) as well as the customs tariff number
+(HS Code) for each item.
 
 Everything else is the same as described in the section `National shipments`_.
 
 Service selection
 ~~~~~~~~~~~~~~~~~
 
-The available services for the current delivery address are shown in the popup window for
-selecting the shipment articles.
+The available services for the current delivery address are shown in the packaging popup window.
 
 The preselection of the services depends on the default values from the general
 `Module configuration`_.
@@ -437,7 +431,7 @@ The preselection of the services depends on the default values from the general
 Printing a shipping label
 -------------------------
 
-The successfully retrieved shipping labels can be opened in several locations 
+The successfully retrieved shipping labels can be opened in several locations
 of the Admin Panel:
 
 * Sales → Orders → Mass action *Print shipping labels*
@@ -458,13 +452,18 @@ of the Admin Panel:
 Printing a return slip
 ----------------------
 
-When shipping from Germany or Austria, it is possible to create a return slip together with
-the shipping label.
+When shipping within Germany, within Austria, or from Austria to Germany,
+it is possible to create a return slip together with the shipping label.
 
 Use the option *Retoure slip* when requesting a label in the packaging popup.
 
-For Austria, this service is only availiable with the products *DHL Paket Austria* and
-*DHL Paket Connect*, but not with *DHL Paket International*.
+To book this service, make sure the `participation numbers`__ for returns are properly configured:
+
+- Retoure DHL Paket (DE → DE)
+- Retoure DHL Paket Austria (AT → AT)
+- Retoure DHL Paket Connect (AT → DE)
+
+__ `Account Data`_
 
 .. raw:: pdf
 
@@ -477,7 +476,7 @@ As long as a shipment has not been manifested, it can be canceled at DHL.
 
 However, currently the shipment cannot be canceled at DHL by clicking the link *Delete*
 in the box *Shipping and tracking information* next to the tracking number. This only
-deletes the tracking number in Magento®.
+deletes the tracking number in |mage|.
 
 .. image:: images/en/shipping_and_tracking.png
    :scale: 75 %
@@ -488,7 +487,7 @@ be implemented for Business Customer Shipping into the DHL module at a later tim
 
 .. admonition:: Note
 
-   If you only delete the tracking number in Magento® without cancelling the shipment
+   If you only delete the tracking number in |mage| without cancelling the shipment
    at DHL, you will be charged by DHL for the shipping cost.
 
 .. raw:: pdf
@@ -498,28 +497,28 @@ be implemented for Business Customer Shipping into the DHL module at a later tim
 Automatic shipment creation
 ---------------------------
 
-The process for creating shipments manually can be too time-consuming or 
-cumbersome for merchants with a high shipment volume. To make this easier, 
-you can automate the process for creating shipments and transmitting them to 
+The process for creating shipments manually can be too time-consuming or
+cumbersome for merchants with a high shipment volume. To make this easier,
+you can automate the process of creating shipments and transmitting them to
 DHL.
 
-Enable the automatic shipment creation in the `Module configuration`_ and 
+Enable the automatic shipment creation in the `Module configuration`_ and
 select which services should be booked by default.
 
 .. admonition:: Note
 
-   The automatic shipment creation requires working Magento Cron Jobs.
+   The automatic shipment creation requires working |mage| cron jobs.
 
 Every 15 minutes all orders which are ready for shipping (based on the configuration)
 will be collected and transmitted to DHL.
 
-If the transmission was successful, the label will be stored in Magento® and the
-Magento® shipments will be created.
+If the transmission was successful, the label will be stored in |mage| and the
+|mage| shipments will be created.
 
 Error messages will be shown in the order comments.
 
-The automatic mode will not include shipments that require customs declarations, see
-also `International shipments`_.
+The automatic mode will not include shipments that require customs declarations,
+see also `International shipments`_.
 
 .. raw:: pdf
 
@@ -528,7 +527,7 @@ also `International shipments`_.
 Troubleshooting
 ---------------
 
-During the transmission of shipments to DHL, errors can occur. These are often 
+During the transmission of shipments to DHL, errors can occur. These are often
 caused by an invalid address or an invalid combination of additional services.
 
 When creating shipments manually, the error message will be directly visible in
@@ -539,15 +538,15 @@ shipments in the log files.
 
 Erroneous shipment requests can be corrected as follows:
 
-* In the popup window for selecting the package articles, you can correct invalid
+- In the popup window for selecting the package articles, you can correct invalid
   information.
-* On the detail page of the order or shipment, you can edit the receiver address 
+- On the detail page of the order or shipment, you can edit the receiver address
   and correct any errors. Use the link *Edit* in the box *Shipping address*.
 
   .. image:: images/en/edit_address_link.png
      :scale: 75 %
 
-  On this page, you can edit the address fields in the upper part, and the special 
+  On this page, you can edit the address fields in the upper part, and the special
   fields for DHL shipping in the lower part:
 
   * Street name (without house number)
@@ -557,13 +556,13 @@ Erroneous shipment requests can be corrected as follows:
 .. image:: images/en/edit_address_form.png
    :scale: 75 %
 
-Afterwards, save the address. If the error has been corrected, you can retry 
+Afterwards, save the address. If the error has been corrected, you can retry
 `Creating a shipment`_.
 
-If a shipment has already been transmitted successfully via the webservice, but 
-you want to make changes afterwards, please cancel the shipment first as described 
-in the section `Canceling a shipment`_. Then click *Create shipping label...* 
-inside the same box *Shipping and tracking information*. From here on, the 
+If a shipment has already been transmitted successfully via the webservice, but
+you want to make changes afterwards, please cancel the shipment first as described
+in the section `Canceling a shipment`_. Then click *Create shipping label...*
+inside the same box *Shipping and tracking information*. From here on, the
 process is the same as described in `Creating a shipment`_.
 
 .. raw:: pdf
@@ -582,8 +581,8 @@ The *README.md* is linked in the section `Requirements`_.
 Technical support
 =================
 
-In case of questions or problems, please have a look at the Support Portal 
+In case of questions or problems, please have a look at the Support Portal
 (FAQ) first: http://dhl.support.netresearch.de/
 
-If the problem cannot be resolved, you can contact the support team via the 
+If the problem cannot be resolved, you can contact the support team via the
 Support Portal or by sending an email to dhl.support@netresearch.de
