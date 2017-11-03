@@ -43,7 +43,7 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
     const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
-    const CONFIG_XML_PATH_MODULE_VERSION = 'carriers/dhlshipping/module_version';
+    const CONFIG_XML_PATH_MODULE_VERSION = 'modules/Dhl_Shipping/version';
 
     const CONFIG_XML_PATH_AUTOCREATE_ENABLED = 'carriers/dhlshipping/shipment_autocreate_enabled';
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'carriers/dhlshipping/shipment_autocreate_order_status';

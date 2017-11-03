@@ -25,12 +25,16 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
+        <modules>
+            <Dhl_Shipping>
+                <version>0.1.0</version>
+            </Dhl_Shipping>
+        </modules>
         <carriers>
             <dhlshipping>
                 <active>0</active>
                 <title>DHL</title>
                 <name>Shipping</name>
-                <module_version>0.1.0</module_version>
                 <sandbox_mode>1</sandbox_mode>
                 <logging_enabled>0</logging_enabled>
                 <log_level>2</log_level>
