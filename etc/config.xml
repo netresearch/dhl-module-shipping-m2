@@ -32,7 +32,6 @@
         </modules>
         <carriers>
             <dhlshipping>
-                <active>0</active>
                 <title>DHL</title>
                 <name>Shipping</name>
                 <sandbox_mode>1</sandbox_mode>

@@ -20,19 +20,6 @@
                     <label>General Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                 </field>
-                <!-- 110 Enabled -->
-                <field id="active" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Enabled</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <!-- 120 Title -->
-                <field id="title" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Title</label>
-                </field>
-                <!-- 130 Method Name -->
-                <field id="name" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Method Name</label>
-                </field>
                 <!-- 140 Sandbox Mode -->
                 <field id="sandbox_mode" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Sandbox Mode</label>
