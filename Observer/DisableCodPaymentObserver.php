@@ -60,6 +60,18 @@ class DisableCodPaymentObserver implements ObserverInterface
      */
     private $shippingProducts;
 
+    private $bcsProducts = [
+        ShippingProducts::CODE_NATIONAL,
+        ShippingProducts::CODE_INTERNATIONAL,
+        ShippingProducts::CODE_EUROPAKET,
+        ShippingProducts::CODE_CONNECT,
+        ShippingProducts::CODE_KURIER_TAGGLEICH,
+        ShippingProducts::CODE_KURIER_WUNSCHZEIT,
+        ShippingProducts::CODE_PAKET_AUSTRIA,
+        ShippingProducts::CODE_PAKET_CONNECT,
+        ShippingProducts::CODE_PAKET_INTERNATIONAL,
+    ];
+
     /**
      * DisableCodPaymentObserver constructor.
      *
@@ -127,14 +139,18 @@ class DisableCodPaymentObserver implements ObserverInterface
             $recipientCountry,
             $euCountries
         );
-        // check if there are product codes that support COD for the current route
-        $codProductCodes = array_intersect($routeProductCodes, [
-            ShippingProducts::CODE_NATIONAL,
-            ShippingProducts::CODE_PAKET_AUSTRIA,
-            ShippingProducts::CODE_PAKET_CONNECT,
-        ]);
 
-        $canShipWithCod = !empty($codProductCodes);
-        $checkResult->setData('is_available', $canShipWithCod);
+        $bcsCodes = array_intersect($routeProductCodes, $this->bcsProducts);
+
+        if (!empty($bcsCodes)) {
+            // check if there are product codes that support COD for the current route
+            $codProductCodes = array_intersect($routeProductCodes, [
+                ShippingProducts::CODE_NATIONAL,
+                ShippingProducts::CODE_PAKET_AUSTRIA,
+                ShippingProducts::CODE_PAKET_CONNECT,
+            ]);
+            $canShipWithCod = !empty($codProductCodes);
+            $checkResult->setData('is_available', $canShipWithCod);
+        }
     }
 }
