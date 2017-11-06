@@ -44,7 +44,12 @@ $girthEnabled = $block->isDisplayGirthValue() && $block->isGirthAllowed() ? 1 : 
             <?php /* @escapeNotVerified */ echo $girthEnabled; ?>
         );
         packaging.setConfirmPackagingCallback(function(){
-            packaging.setParamsCreateLabelRequest($('edit_form').serialize(true));
+            if($('edit_form') == null) {
+                packaging.setParamsCreateLabelRequest(jQuery('#edit_form').serialize(true));
+            } else {
+                packaging.setParamsCreateLabelRequest($('edit_form').serialize(true));
+            }
+
             packaging.sendCreateLabelRequest();
         });
         packaging.setLabelCreatedCallback(function(response){
