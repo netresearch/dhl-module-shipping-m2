@@ -25,9 +25,10 @@
  */
 namespace Dhl\Shipping\Model\Shipping;
 
-use Dhl\Shipping\Test\Provider\ShipmentResponseProvider;
-use Dhl\Shipping\Webservice\Gateway;
-use Magento\Framework\DataObject;
+use \Dhl\Shipping\Test\Provider\ShipmentResponseProvider;
+use \Dhl\Shipping\Webservice\Gateway;
+use \Magento\Framework\DataObject;
+use \Magento\Store\Model\StoreManager;
 use \Magento\TestFramework\ObjectManager;
 use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 
@@ -62,7 +63,12 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         $this->objectManager = ObjectManager::getInstance();
-        $this->carrier = $this->objectManager->create(Carrier::class);
+
+        /** @var StoreManager $storeManager */
+        $storeManager = $this->objectManager->get(StoreManager::class);
+        $this->carrier = $this->objectManager->create(Carrier::class, ['data' => [
+            'store' => $storeManager->getDefaultStoreView()
+        ]]);
 
         $this->webserviceGateway = $this->getMockBuilder(Gateway::class)
             ->setMethods(['createLabels', 'cancelLabels'])
@@ -95,14 +101,15 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default_store carriers/dhlshipping/title CarrierFoo
+     * @magentoConfigFixture default_store carriers/dhlshipping/title Business Customer Shipping
+     * @magentoConfigFixture default_store shipping/origin/country_id DE
      */
-    public function getTrackingInfo()
+    public function getBcsTrackingInfo()
     {
         $trackingNumber = '1234';
         $trackingUrl = sprintf(
             '%s%s',
-            'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=',
+            'https://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=',
             $trackingNumber
         );
 
@@ -110,7 +117,30 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
         $result = $this->carrier->getTrackingInfo($trackingNumber);
         $this->assertInstanceOf(\Magento\Shipping\Model\Tracking\Result\Status::class, $result);
         $this->assertEquals(Carrier::CODE, $result->getData('carrier'));
-        $this->assertEquals('CarrierFoo', $result->getData('carrier_title'));
+        $this->assertEquals('Business Customer Shipping', $result->getData('carrier_title'));
+        $this->assertEquals($trackingNumber, $result->getData('tracking'));
+        $this->assertEquals($trackingUrl, $result->getData('url'));
+    }
+
+    /**
+     * @test
+     * @magentoConfigFixture default_store carriers/dhlshipping/title Global Shipping
+     * @magentoConfigFixture default_store shipping/origin/country_id MY
+     */
+    public function getGlTrackingInfo()
+    {
+        $trackingNumber = '1234';
+        $trackingUrl = sprintf(
+            '%s%s',
+            'https://webtrack.dhlglobalmail.com/?trackingnumber=',
+            $trackingNumber
+        );
+
+        /** @var \Magento\Shipping\Model\Tracking\Result\Status $result */
+        $result = $this->carrier->getTrackingInfo($trackingNumber);
+        $this->assertInstanceOf(\Magento\Shipping\Model\Tracking\Result\Status::class, $result);
+        $this->assertEquals(Carrier::CODE, $result->getData('carrier'));
+        $this->assertEquals('Global Shipping', $result->getData('carrier_title'));
         $this->assertEquals($trackingNumber, $result->getData('tracking'));
         $this->assertEquals($trackingUrl, $result->getData('url'));
     }
