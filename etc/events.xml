@@ -40,4 +40,7 @@
     <event name="admin_sales_order_address_update">
         <observer name="shipping_update_shipping_info" instance="Dhl\Shipping\Observer\UpdateShippingInfoObserver" />
     </event>
+    <event name="sales_order_shipment_track_delete_before">
+        <observer name="shipping_delete_track" instance="Dhl\Shipping\Observer\DeleteTrackObserver" />
+    </event>
 </config>

@@ -23,21 +23,21 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
 namespace Dhl\Shipping\Plugin;
 
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Shipping\Webservice\ResponseType\CreateShipment\LabelInterface;
-use \Dhl\Shipping\Webservice\Client\HttpClientInterface;
 use \Dhl\Shipping\Webservice\Adapter\AdapterChain;
+use \Dhl\Shipping\Webservice\Client\HttpClientInterface;
 use \Dhl\Shipping\Webservice\Exception\ApiCommunicationException;
 use \Dhl\Shipping\Webservice\Exception\ApiOperationException;
 use \Dhl\Shipping\Webservice\Logger;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use \Dhl\Shipping\Webservice\ResponseType\CreateShipment\LabelInterface;
+use \Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatusInterface;
 
 /**
  *
  * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Plugin
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -105,7 +105,7 @@ class AdapterChainPlugin
     }
 
     /**
-     * Will be called, the moment, the Gl adapter calls the HTTP Client
+     * Will be called the moment the Gl adapter calls the HTTP Client to create a shipment and label
      *
      * @param AdapterChain             $subject
      * @param callable                 $proceed
@@ -129,5 +129,32 @@ class AdapterChainPlugin
         }
 
         return $labels;
+    }
+
+    /**
+     * Will be called the moment the Gl adapter calls the HTTP Client to remove a shipment
+     *
+     * @param AdapterChain $subject
+     * @param callable $proceed
+     * @param string[] $shipmentNumbers
+     *
+     * @return ItemStatusInterface[]
+     * @throws ApiOperationException
+     * @throws ApiCommunicationException
+     */
+    public function aroundCancelLabels(AdapterChain $subject, callable $proceed, array $shipmentNumbers)
+    {
+        try {
+            $status = $proceed($shipmentNumbers);
+            $this->logDebug();
+        } catch (ApiOperationException $e) {
+            $this->logWarning($e);
+            throw $e;
+        } catch (ApiCommunicationException $e) {
+            $this->logError($e);
+            throw $e;
+        }
+
+        return $status;
     }
 }
