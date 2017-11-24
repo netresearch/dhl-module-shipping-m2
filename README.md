@@ -25,8 +25,7 @@ Compatibility
 
 Installation Instructions
 -------------------------
-The DHL Shipping module for Magento® 2 is distributed in three formats:
-* Drop-In
+The DHL Shipping module for Magento® 2 is distributed in two formats:
 * [Composer Artifact](https://getcomposer.org/doc/05-repositories.md#artifact)
 * [Composer VCS](https://getcomposer.org/doc/05-repositories.md#using-private-repositories)
 
@@ -34,16 +33,6 @@ The DHL Shipping module for Magento® 2 is distributed in three formats:
 
 The following sections describe how to install the module source files,
 depending on the distribution format, to your Magento® 2 instance. 
-
-#### Drop-In ####
-If you received a single ZIP file with no `composer.json` file included, extract
-its contents to the project root directory. The module sources should then be
-available in the following sub-directory:
-
-    app
-    └── code
-        └── Dhl
-            └── Shipping
 
 #### Artifact ####
 If you received multiple ZIP files with `composer.json` files included, move
@@ -86,29 +75,33 @@ Last but not least, flush cache and compile.
 Uninstallation
 --------------
 
-The following sections describe how to uninstall the module, depending on the
-distribution format, from your Magento® 2 instance. 
+The following sections describe how to uninstall the module from your Magento® 2 instance. 
 
 #### Composer VCS and Composer Artifact ####
 
 To unregister the shipping module from the application, run the following command:
 
     ./bin/magento module:uninstall --remove-data Dhl_Shipping
+    composer update
     
-This will automatically remove source files and clean up the database.
+This will automatically remove source files, clean up the database, update package dependencies.
 
-#### Drop-In ####
+*Please note that automatic uninstallation is only available on Magento version 2.2 or newer. On Magento 2.1 and below, please use the following manual uninstallation method.*
+
+#### Manual Steps ####
 
 To uninstall the module manually, run the following commands in your project
 root directory:
 
     ./bin/magento module:disable Dhl_Shipping
-    rm -r app/code/Dhl/Shipping
+    composer remove dhl/module-shipping-m2
 
 To clean up the database, run the following commands:
 
     DROP TABLE `dhlshipping_quote_address`;
     DROP TABLE `dhlshipping_order_address`;
+    DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_dangerous_goods_category';
+    DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_tariff_number';
     DELETE FROM `core_config_data` WHERE `path` LIKE 'carriers/dhlshipping/%';
     DELETE FROM `setup_module` WHERE `module` = 'Dhl_Shipping';
 
