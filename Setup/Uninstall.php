@@ -28,6 +28,7 @@ namespace Dhl\Shipping\Setup;
 
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
+use Magento\Eav\Setup\EavSetup;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UninstallInterface;
@@ -43,68 +44,67 @@ use Magento\Framework\Setup\UninstallInterface;
  */
 class Uninstall implements UninstallInterface
 {
+    /**
+     * @var EavSetup
+     */
+    private $eavSetup;
 
     /**
-     * Eav setup factory
-     * @var EavSetupFactory
+     * Uninstall
+     * @param EavSetup $eavSetup
      */
-    private $eavSetupFactory;
-
-    /**
-     * Init
-     * @param CategorySetupFactory $categorySetupFactory
-     */
-    public function __construct(\Magento\Eav\Setup\EavSetupFactory $eavSetupFactory)
+    public function __construct(EavSetup $eavSetup)
     {
-        $this->eavSetupFactory = $eavSetupFactory;
+        $this->eavSetup = $eavSetup;
     }
 
     /**
-     * Remove data that was created during module installation.
+     * Remove schema and data as created during module installation.
      *
-     * @param SchemaSetupInterface $setup
+     * @param SchemaSetupInterface $schemaSetup
      * @param ModuleContextInterface $context
      */
     public function uninstall(
-        SchemaSetupInterface $setup,
+        SchemaSetupInterface $schemaSetup,
         ModuleContextInterface $context
     ) {
-        $uninstaller = $setup;
+        $this->deleteShippingAddressTable($schemaSetup);
+        $this->removeConfigurations($schemaSetup);
 
-        $this->deleteShippingAddressTable($uninstaller);
-        $this->removeConfigurations($uninstaller);
-        $this->deleteAttributes($uninstaller);
+        $this->deleteAttributes($this->eavSetup);
     }
 
     /**
-     * @param $uninstaller
+     * @param SchemaSetupInterface $uninstaller
+     * @return void
      */
-    private function deleteShippingAddressTable($uninstaller)
+    private function deleteShippingAddressTable(SchemaSetupInterface $uninstaller)
     {
-        $uninstaller->getConnection()
-                    ->dropTable(ShippingSetup::TABLE_QUOTE_ADDRESS);
-        $uninstaller->getConnection()
-                    ->dropTable(ShippingSetup::TABLE_ORDER_ADDRESS);
+        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_QUOTE_ADDRESS);
+        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_ORDER_ADDRESS);
     }
 
-    private function removeConfigurations($uninstaller)
+    /**
+     * @param SchemaSetupInterface $uninstaller
+     * @return void
+     */
+    private function removeConfigurations(SchemaSetupInterface $uninstaller)
     {
         $configTable = $uninstaller->getTable('core_config_data');
-        $uninstaller->getConnection()
-                    ->delete(
-                        $configTable,
-                        "`path` LIKE 'carriers/dhlshipping/%'"
-                    );
+        $uninstaller->getConnection()->delete($configTable, "`path` LIKE 'carriers/dhlshipping/%'");
     }
 
-    private function deleteAttributes($uninstaller)
+    /**
+     * @param EavSetup $uninstaller
+     * @return void
+     */
+    private function deleteAttributes(EavSetup $uninstaller)
     {
-        $eavSetup = $this->eavSetupFactory->create(['setup' => $uninstaller]);
-        $eavSetup->removeAttribute(
+        $uninstaller->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
             DGCategory::CODE
         );
-        $eavSetup->removeAttribute(
+        $uninstaller->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
             TariffNumber::CODE
         );
