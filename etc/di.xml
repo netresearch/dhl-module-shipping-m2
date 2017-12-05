@@ -25,20 +25,32 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- module preferences -->
-    <preference for="Dhl\Shipping\Model\ShippingInfo\CheckoutInfoInterface" type="Dhl\Shipping\Model\Checkout\CheckoutInfo" />
-    <preference for="Dhl\Shipping\Webservice\GatewayInterface" type="Dhl\Shipping\Webservice\Gateway" />
-    <preference for="Dhl\Shipping\Model\Config\ModuleConfigInterface" type="Dhl\Shipping\Model\Config\ModuleConfig" />
+    <preference for="Dhl\Shipping\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\AutoCreate\LabelGenerator" />
+    <preference for="Dhl\Shipping\AutoCreate\OrderProviderInterface" type="Dhl\Shipping\AutoCreate\OrderProvider" />
+    <preference for="Dhl\Shipping\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\AutoCreate\RequestBuilder" />
     <preference for="Dhl\Shipping\Config\BcsConfigInterface" type="Dhl\Shipping\Model\Config\BcsConfig" />
     <preference for="Dhl\Shipping\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig" />
     <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
+    <preference for="Dhl\Shipping\Model\Config\ModuleConfigInterface" type="Dhl\Shipping\Model\Config\ModuleConfig" />
     <preference for="Dhl\Shipping\Model\Config\ServiceConfigInterface" type="Dhl\Shipping\Model\Config\ServiceConfig" />
-    <preference for="Dhl\Shipping\AutoCreate\OrderProviderInterface" type="Dhl\Shipping\AutoCreate\OrderProvider" />
-    <preference for="Dhl\Shipping\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\AutoCreate\LabelGenerator" />
-    <preference for="Dhl\Shipping\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\AutoCreate\RequestBuilder" />
+    <preference for="Dhl\Shipping\Webservice\GatewayInterface" type="Dhl\Shipping\Webservice\Gateway" />
+
+    <preference for="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderAddressExtension" />
+    <preference for="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteAddressExtension" />
+    <preference for="Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderAddressExtensionRepository" />
+    <preference for="Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteAddressExtensionRepository" />
 
     <!-- library preferences -->
-    <preference for="Dhl\Shipping\Model\ShippingInfo\Api\Data\QuoteShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfo" />
-    <preference for="Dhl\Shipping\Model\ShippingInfo\Api\Data\OrderShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderShippingInfo" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ReceiverInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\AddressInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Address" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\ContactInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Contact" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\PackstationInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Packstation" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\ParcelShopInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\ParcelShop" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\PostfilialeInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Postfiliale" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface" type="Dhl\Shipping\Model\ShippingInfo\Service" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Service\ServicePropertyInterface" type="Dhl\Shipping\Model\ShippingInfo\Service\ServiceProperty" />
+
     <preference for="Dhl\Shipping\Webservice\ShippingInfo\InfoInterface" type="Dhl\Shipping\Webservice\ShippingInfo\Info"/>
 
     <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Dimensions" />
@@ -130,32 +142,6 @@
     </type>
 
     <!-- passing arguments -->
-    <type name="Dhl\Shipping\Plugin\Checkout\ShippingInformationManagementPlugin">
-        <arguments>
-            <argument name="quoteInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoRepository</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Observer\ShiftShippingInfoObserver">
-        <arguments>
-            <argument name="quoteInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoRepository</argument>
-            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Observer\ExtendAddressFormObserver">
-        <arguments>
-            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Observer\UpdateShippingInfoObserver">
-        <arguments>
-            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Webservice\AppDataMapper">
-        <arguments>
-            <argument name="orderInfoRepository" xsi:type="object">\Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository</argument>
-        </arguments>
-    </type>
     <type name="Dhl\Shipping\Webservice\Client\BcsSoapClient">
         <arguments>
             <argument name="wsdl" xsi:type="string">https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.2/geschaeftskundenversand-api-2.2.wsdl</argument>
@@ -165,20 +151,23 @@
     <type name="Magento\Framework\EntityManager\MetadataPool">
         <arguments>
             <argument name="metadata" xsi:type="array">
-                <item name="Dhl\Shipping\Model\ShippingInfo\Api\Data\QuoteShippingInfoInterface" xsi:type="array">
+                <item name="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">dhlshipping_order_address</item>
+                    <item name="identifierField" xsi:type="string">address_id</item>
+                </item>
+                <item name="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" xsi:type="array">
                     <item name="entityTableName" xsi:type="string">dhlshipping_quote_address</item>
                     <item name="identifierField" xsi:type="string">address_id</item>
                 </item>
             </argument>
         </arguments>
     </type>
-    <type name="Magento\Framework\EntityManager\MetadataPool">
+
+    <type name="Magento\Framework\EntityManager\HydratorPool">
         <arguments>
-            <argument name="metadata" xsi:type="array">
-                <item name="Dhl\Shipping\Model\ShippingInfo\Api\Data\OrderShippingInfoInterface" xsi:type="array">
-                    <item name="entityTableName" xsi:type="string">dhlshipping_order_address</item>
-                    <item name="identifierField" xsi:type="string">address_id</item>
-                </item>
+            <argument name="hydrators" xsi:type="array">
+                <item name="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+                <item name="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
             </argument>
         </arguments>
     </type>

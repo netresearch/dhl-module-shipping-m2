@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\ShippingInfo;
+namespace Dhl\Shipping\Api\Data;
 
 /**
- * CheckoutInfoInterface
+ * Additional quote address attributes, primarily shipping info data structure.
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -34,30 +34,29 @@ namespace Dhl\Shipping\Model\ShippingInfo;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface CheckoutInfoInterface
+interface QuoteAddressExtensionInterface
 {
-    const SERVICES = 'services';
-    const POSTAL_FACILITY = 'postal_facility';
+    /**
+     * @return int
+     */
+    public function getAddressId();
 
     /**
-     * @return string[]
+     * @param int $addressId
+     *
+     * @return void
      */
-    public function getServices();
-
-    /**
-     * @param string[] $services
-     * @return self
-     */
-    public function setServices(array $services);
+    public function setAddressId($addressId);
 
     /**
      * @return string
      */
-    public function getPostalFacility();
+    public function getInfo();
 
     /**
-     * @param string $postalFacility
-     * @return self
+     * @param string $info
+     *
+     * @return void
      */
-    public function setPostalFacility($postalFacility);
+    public function setInfo($info);
 }

@@ -41,7 +41,6 @@ use \Magento\Framework\Event\ObserverInterface;
  */
 class ChangePackagingTemplateObserver implements ObserverInterface
 {
-
     /**
      * @var \Magento\Framework\Registry
      */
@@ -52,6 +51,11 @@ class ChangePackagingTemplateObserver implements ObserverInterface
      */
     private $moduleConfig;
 
+    /**
+     * ChangePackagingTemplateObserver constructor.
+     * @param \Magento\Framework\Registry $registry
+     * @param ModuleConfigInterface $moduleConfig
+     */
     public function __construct(
         \Magento\Framework\Registry $registry,
         ModuleConfigInterface $moduleConfig

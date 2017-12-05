@@ -26,6 +26,8 @@
 
 namespace Dhl\Shipping\Webservice;
 
+use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use \Dhl\Shipping\Config\BcsConfigInterface;
 use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Dhl\Shipping\Config\GlConfigInterface;
@@ -49,7 +51,6 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDe
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
-use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
 use \Dhl\Shipping\Util\BcsShippingProductsInterface;
 use \Dhl\Shipping\Util\GlShippingProductsInterface;
 use \Dhl\Shipping\Util\ShippingProductsInterface;
@@ -59,7 +60,6 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\Pa
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use \Dhl\Shipping\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
-use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Magento\Framework\DataObject;
 use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection;
@@ -102,9 +102,9 @@ class AppDataMapper implements AppDataMapperInterface
     private $streetSplitter;
 
     /**
-     * @var ShippingInfoRepositoryInterface
+     * @var OrderAddressExtensionRepositoryInterface
      */
-    private $orderInfoRepository;
+    private $addressExtensionRepository;
 
     /**
      * @var BankDataInterfaceFactory
@@ -207,7 +207,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ModuleConfigInterface $moduleConfig
      * @param ShippingProductsInterface $shippingProducts
      * @param StreetSplitterInterface $streetSplitter
-     * @param ShippingInfoRepositoryInterface $orderInfoRepository
+     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
      * @param BankDataInterfaceFactory $bankDataFactory
      * @param ShipmentDetailsInterfaceFactory $shipmentDetailsFactory
      * @param AddressInterfaceFactory $addressFactory
@@ -233,7 +233,7 @@ class AppDataMapper implements AppDataMapperInterface
         ModuleConfigInterface $moduleConfig,
         ShippingProductsInterface $shippingProducts,
         StreetSplitterInterface $streetSplitter,
-        ShippingInfoRepositoryInterface $orderInfoRepository,
+        OrderAddressExtensionRepositoryInterface $addressExtensionRepository,
         BankDataInterfaceFactory $bankDataFactory,
         ShipmentDetailsInterfaceFactory $shipmentDetailsFactory,
         AddressInterfaceFactory $addressFactory,
@@ -258,7 +258,7 @@ class AppDataMapper implements AppDataMapperInterface
         $this->moduleConfig                 = $moduleConfig;
         $this->shippingProducts             = $shippingProducts;
         $this->streetSplitter               = $streetSplitter;
-        $this->orderInfoRepository          = $orderInfoRepository;
+        $this->addressExtensionRepository   = $addressExtensionRepository;
         $this->bankDataFactory              = $bankDataFactory;
         $this->shipmentDetailsFactory       = $shipmentDetailsFactory;
         $this->identityFactory              = $identityFactory;
@@ -422,15 +422,15 @@ class AppDataMapper implements AppDataMapperInterface
         $storeId = $request->getOrderShipment()->getStoreId();
 
         $addressId = $request->getOrderShipment()->getOrder()->getShippingAddress()->getEntityId();
-        /** @var Info $shippingInfo */
-        $shippingInfo = $this->orderInfoRepository->getInfoData($addressId);
+        /** @var ShippingInfoInterface $shippingInfo */
+        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($addressId);
         if (!$shippingInfo) {
             $addressParts = $this->streetSplitter->splitStreet($request->getRecipientAddressStreet());
         } else {
             $addressParts = [
-                'street_name' => $shippingInfo->getReceiver()->streetName,
-                'street_number' => $shippingInfo->getReceiver()->streetNumber,
-                'supplement' => $shippingInfo->getReceiver()->addressAddition,
+                'street_name' => $shippingInfo->getReceiver()->getAddress()->getStreetName(),
+                'street_number' => $shippingInfo->getReceiver()->getAddress()->getStreetNumber(),
+                'supplement' => $shippingInfo->getReceiver()->getAddress()->getAddressAddition(),
             ];
         }
 

@@ -25,8 +25,12 @@
  */
 namespace Dhl\Shipping\Model\ShippingInfo;
 
+use Dhl\Shipping\Api\Data\OrderAddressExtensionInterface;
+use Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use Magento\Framework\Model\AbstractModel;
+
 /**
- * Entity for address extension attribute
+ * DHL Shipping Order Address Extension
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -34,32 +38,63 @@ namespace Dhl\Shipping\Model\ShippingInfo;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface ShippingInfoInterface
+abstract class AbstractAddressExtension extends AbstractModel
 {
     const ADDRESS_ID = 'address_id';
     const INFO = 'info';
+    const SHIPPING_INFO = 'shipping_info';
 
     /**
      * @return int
      */
-    public function getAddressId();
+    public function getAddressId()
+    {
+        return (int)$this->getData(self::ADDRESS_ID);
+    }
 
     /**
      * @param int $addressId
      *
-     * @return self
+     * @return void
      */
-    public function setAddressId($addressId);
+    public function setAddressId($addressId)
+    {
+        $this->setData(self::ADDRESS_ID, $addressId);
+    }
 
     /**
      * @return string
      */
-    public function getInfo();
+    public function getInfo()
+    {
+        return $this->getData(self::INFO);
+    }
 
     /**
      * @param string $info
      *
-     * @return self
+     * @return void
      */
-    public function setInfo($info);
+    public function setInfo($info)
+    {
+        $this->setData(self::INFO, $info);
+    }
+
+    /**
+     * @return ShippingInfoInterface
+     */
+    public function getShippingInfo()
+    {
+        return $this->getData(self::SHIPPING_INFO);
+    }
+
+    /**
+     * @param ShippingInfoInterface $info
+     *
+     * @return void
+     */
+    public function setShippingInfo(ShippingInfoInterface $info)
+    {
+        $this->setData(self::SHIPPING_INFO, $info);
+    }
 }

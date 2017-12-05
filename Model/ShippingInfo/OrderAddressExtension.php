@@ -23,12 +23,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\ShippingInfo\Api\Data;
+namespace Dhl\Shipping\Model\ShippingInfo;
 
-use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoInterface;
+use Dhl\Shipping\Api\Data\OrderAddressExtensionInterface;
 
 /**
- * DHL Shipping Info, solely for metadata pool…
+ * DHL Shipping Order Address Extension
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -36,6 +36,17 @@ use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface QuoteShippingInfoInterface extends ShippingInfoInterface
+class OrderAddressExtension extends AbstractAddressExtension implements OrderAddressExtensionInterface
 {
+    protected $_cacheTag = 'dhlshipping_order_info';
+    protected $_eventPrefix = 'dhlshipping_order_info';
+
+    /**
+     * Init resource model.
+     */
+    protected function _construct()
+    {
+        parent::_construct();
+        $this->_init(\Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderAddressExtension::class);
+    }
 }

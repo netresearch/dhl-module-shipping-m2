@@ -23,13 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\ResourceModel\ShippingInfo;
-
-use Dhl\Shipping\Model\ShippingInfo\ShippingInfoInterface;
-use \Dhl\Shipping\Setup\ShippingSetup;
+namespace Dhl\Shipping\Api\Data;
 
 /**
- * DHL Shipping Order Info Resource Model
+ * Additional order address attributes, primarily shipping info data structure.
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -37,13 +34,29 @@ use \Dhl\Shipping\Setup\ShippingSetup;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class OrderShippingInfo extends AbstractShippingInfo
+interface OrderAddressExtensionInterface
 {
     /**
-     * Resource initialization.
+     * @return int
      */
-    protected function _construct()
-    {
-        $this->_init(ShippingSetup::TABLE_ORDER_ADDRESS, ShippingInfoInterface::ADDRESS_ID);
-    }
+    public function getAddressId();
+
+    /**
+     * @param int $addressId
+     *
+     * @return void
+     */
+    public function setAddressId($addressId);
+
+    /**
+     * @return string
+     */
+    public function getInfo();
+
+    /**
+     * @param string $info
+     *
+     * @return void
+     */
+    public function setInfo($info);
 }
