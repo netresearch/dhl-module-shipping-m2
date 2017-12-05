@@ -25,9 +25,12 @@
  */
 namespace Dhl\Shipping\Observer;
 
+//use \Dhl\Shipping\Api\Data\OrderAddressExtensionInterfaceFactory;
+use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use \Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface;
 use \Dhl\Shipping\Model\Shipping\Carrier;
-use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
-use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoFactory;
+use \Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
+use \Dhl\Shipping\Model\ShippingInfo\OrderAddressExtensionFactory;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
 use \Magento\Framework\Exception\NoSuchEntityException;
@@ -44,35 +47,35 @@ use \Magento\Framework\Exception\NoSuchEntityException;
 class ShiftShippingInfoObserver implements ObserverInterface
 {
     /**
-     * @var ShippingInfoRepositoryInterface
+     * @var QuoteAddressExtensionRepositoryInterface
      */
-    private $quoteInfoRepository;
+    private $quoteAddressExtensionRepository;
 
     /**
-     * @var ShippingInfoRepositoryInterface
+     * @var OrderAddressExtensionRepositoryInterface
      */
-    private $orderInfoRepository;
+    private $orderAddressExtensionRepository;
 
     /**
-     * @var OrderShippingInfoFactory
+     * @var OrderAddressExtensionFactory
      */
-    private $orderInfoFactory;
+    private $addressExtensionFactory;
 
     /**
      * ShiftShippingInfoObserver constructor.
      *
-     * @param ShippingInfoRepositoryInterface $quoteInfoRepository
-     * @param ShippingInfoRepositoryInterface $orderInfoRepository
-     * @param OrderShippingInfoFactory $orderInfoFactory
+     * @param QuoteAddressExtensionRepositoryInterface $quoteAddressExtensionRepository
+     * @param OrderAddressExtensionRepositoryInterface $orderAddressExtensionRepository
+     * @param OrderAddressExtensionFactory $addressExtensionFactory
      */
     public function __construct(
-        ShippingInfoRepositoryInterface $quoteInfoRepository,
-        ShippingInfoRepositoryInterface $orderInfoRepository,
-        OrderShippingInfoFactory $orderInfoFactory
+        QuoteAddressExtensionRepositoryInterface $quoteAddressExtensionRepository,
+        OrderAddressExtensionRepositoryInterface $orderAddressExtensionRepository,
+        OrderAddressExtensionFactory $addressExtensionFactory
     ) {
-        $this->quoteInfoRepository = $quoteInfoRepository;
-        $this->orderInfoRepository = $orderInfoRepository;
-        $this->orderInfoFactory    = $orderInfoFactory;
+        $this->quoteAddressExtensionRepository = $quoteAddressExtensionRepository;
+        $this->orderAddressExtensionRepository = $orderAddressExtensionRepository;
+        $this->addressExtensionFactory = $addressExtensionFactory;
     }
 
     /**
@@ -104,17 +107,16 @@ class ShiftShippingInfoObserver implements ObserverInterface
         $shippingAddressId = $quote->getShippingAddress()->getId();
 
         try {
-            $infoModel = $this->quoteInfoRepository->getById($shippingAddressId);
-            $info = $infoModel->getInfo();
+            $shippingInfo = $this->quoteAddressExtensionRepository->getShippingInfo($shippingAddressId);
         } catch (NoSuchEntityException $e) {
-            $info = '';
+            $shippingInfo = null;
         }
 
-        $orderInfo = $this->orderInfoFactory->create(['data' => [
-            'address_id' => $order->getShippingAddress()->getId(),
-            'info' => $info
+        $addressExtension = $this->addressExtensionFactory->create(['data' => [
+            AbstractAddressExtension::ADDRESS_ID => $order->getShippingAddress()->getId(),
+            AbstractAddressExtension::SHIPPING_INFO => $shippingInfo
         ]]);
 
-        $this->orderInfoRepository->save($orderInfo);
+        $this->orderAddressExtensionRepository->save($addressExtension);
     }
 }

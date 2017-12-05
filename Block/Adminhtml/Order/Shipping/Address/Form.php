@@ -25,11 +25,9 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address;
 
-use \Dhl\Shipping\Model\ShippingInfo\OrderShippingInfoRepository;
-use \Dhl\Shipping\Webservice\ShippingInfo\Info;
+use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Backend\Model\Session\Quote;
-use \Magento\Framework\Data\Form\Element\Fieldset;
 use \Magento\Framework\Exception\NoSuchEntityException;
 use \Magento\Sales\Model\AdminOrder\Create;
 use \Magento\Framework\Pricing\PriceCurrencyInterface;
@@ -65,29 +63,29 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
     protected $_template = 'Magento_Sales::order/address/form.phtml';
 
     /**
-     * @var OrderShippingInfoRepository
+     * @var OrderAddressExtensionRepositoryInterface
      */
-    private $orderInfoRepository;
+    private $addressExtensionRepository;
 
     /**
-     * @param Context                      $context
-     * @param Quote                        $sessionQuote
-     * @param Create                       $orderCreate
-     * @param PriceCurrencyInterface       $priceCurrency
-     * @param FrameworkFormFactory         $formFactory
-     * @param DataObjectProcessor          $dataObjectProcessor
-     * @param Data                         $directoryHelper
-     * @param EncoderInterface             $jsonEncoder
-     * @param CustomerFormFactory          $customerFormFactory
-     * @param Options                      $options
-     * @param Address                      $addressHelper
-     * @param AddressRepositoryInterface   $addressService
-     * @param SearchCriteriaBuilder        $criteriaBuilder
-     * @param FilterBuilder                $filterBuilder
-     * @param Mapper                       $addressMapper
-     * @param Registry                     $registry
-     * @param OrderShippingInfoRepository  $orderInfoRepository
-     * @param array                        $data
+     * @param Context $context
+     * @param Quote $sessionQuote
+     * @param Create $orderCreate
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param FrameworkFormFactory $formFactory
+     * @param DataObjectProcessor $dataObjectProcessor
+     * @param Data $directoryHelper
+     * @param EncoderInterface $jsonEncoder
+     * @param CustomerFormFactory $customerFormFactory
+     * @param Options $options
+     * @param Address $addressHelper
+     * @param AddressRepositoryInterface $addressService
+     * @param SearchCriteriaBuilder $criteriaBuilder
+     * @param FilterBuilder $filterBuilder
+     * @param Mapper $addressMapper
+     * @param Registry $registry
+     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+     * @param array $data
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -107,10 +105,10 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         FilterBuilder $filterBuilder,
         Mapper $addressMapper,
         Registry $registry,
-        OrderShippingInfoRepository $orderInfoRepository,
+        OrderAddressExtensionRepositoryInterface $addressExtensionRepository,
         array $data = []
     ) {
-        $this->orderInfoRepository = $orderInfoRepository;
+        $this->addressExtensionRepository = $addressExtensionRepository;
 
         parent::__construct(
             $context,
@@ -149,24 +147,18 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         $address = $this->_getAddress();
 
         // load previous info data
-        $dhlOrderInfo = $this->orderInfoRepository->getById($address->getEntityId());
-        $serializedInfo = $dhlOrderInfo->getInfo();
-        /** @var Info $shippingInfo */
-        $shippingInfo = Info::fromJson($serializedInfo);
+        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($address->getEntityId());
+        if (!$shippingInfo || !$shippingInfo->getReceiver()) {
+            $streetName = implode(' ', $address->getStreet());
+            $streetNumber = '';
+            $addressAddition = '';
+        } else {
+            $shippingAddress = $shippingInfo->getReceiver()->getAddress();
+            $streetName = $shippingAddress->getStreetName();
+            $streetNumber = $shippingAddress->getStreetNumber();
+            $addressAddition = $shippingAddress->getAddressAddition();
+        }
 
-        // add info deserialized data to fieldset
-        $receiverData = $shippingInfo->getReceiver()->toArray();
-        $this->_prepareAddressFields($fieldset, $receiverData);
-
-        return $this;
-    }
-
-    /**
-     * @param Fieldset $fieldset
-     * @param array    $receiverData
-     */
-    protected function _prepareAddressFields(Fieldset $fieldset, array $receiverData = null)
-    {
         $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png');
         $fieldset->addField(
             'shipping_info_street',
@@ -177,19 +169,21 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         $fieldset->addField('shipping_info_street_name', 'text', [
             'name'  => "shipping_info[street_name]",
             'label' => __('Street Name'),
-            'value' => isset($receiverData['street_name']) ? $receiverData['street_name'] : '',
+            'value' => $streetName,
         ]);
 
         $fieldset->addField('shipping_info_street_number', 'text', [
             'name'  => "shipping_info[street_number]",
             'label' => __('House number'),
-            'value' => isset($receiverData['street_number']) ? $receiverData['street_number'] : '',
+            'value' => $streetNumber,
         ]);
 
         $fieldset->addField('shipping_info_address_addition', 'text', [
             'name'  => "shipping_info[address_addition]",
             'label' => __('Address Addition'),
-            'value' => isset($receiverData['address_addition']) ? $receiverData['address_addition'] : '',
+            'value' => $addressAddition,
         ]);
+
+        return $this;
     }
 }

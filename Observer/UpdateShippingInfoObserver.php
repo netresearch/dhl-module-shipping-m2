@@ -25,9 +25,13 @@
  */
 namespace Dhl\Shipping\Observer;
 
-use \Dhl\Shipping\Webservice\ShippingInfo\Info;
-use \Dhl\Shipping\Webservice\ShippingInfo\Serializer;
-use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Api\Data\OrderAddressExtensionInterface;
+//use \Dhl\Shipping\Api\Data\OrderAddressExtensionInterfaceFactory;
+use Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
+use \Dhl\Shipping\Model\ShippingInfoBuilder;
+use \Dhl\Shipping\Model\ShippingInfo\OrderAddressExtensionFactory;
 use \Magento\Directory\Model\CountryFactory;
 use \Magento\Framework\App\RequestInterface;
 use \Magento\Framework\Event\Observer;
@@ -57,9 +61,19 @@ class UpdateShippingInfoObserver implements ObserverInterface
     private $addressRepository;
 
     /**
-     * @var ShippingInfoRepositoryInterface
+     * @var OrderAddressExtensionRepositoryInterface
      */
-    private $orderInfoRepository;
+    private $addressExtensionRepository;
+
+    /**
+     * @var OrderAddressExtensionFactory
+     */
+    private $addressExtensionFactory;
+
+    /**
+     * @var ShippingInfoBuilder
+     */
+    private $shippingInfoBuilder;
 
     /**
      * @var CountryFactory
@@ -71,18 +85,25 @@ class UpdateShippingInfoObserver implements ObserverInterface
      *
      * @param RequestInterface $request
      * @param OrderAddressRepositoryInterface $addressRepository
-     * @param ShippingInfoRepositoryInterface $orderInfoRepository
+     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+     * @param OrderAddressExtensionFactory $addressExtensionFactory
+     * @param ShippingInfoBuilder $shippingInfoBuilder
      * @param CountryFactory $countryFactory
      */
     public function __construct(
         RequestInterface $request,
         OrderAddressRepositoryInterface $addressRepository,
-        ShippingInfoRepositoryInterface $orderInfoRepository,
+        OrderAddressExtensionRepositoryInterface $addressExtensionRepository,
+        OrderAddressExtensionFactory $addressExtensionFactory,
+        ShippingInfoBuilder $shippingInfoBuilder,
         CountryFactory $countryFactory
     ) {
         $this->request = $request;
         $this->addressRepository = $addressRepository;
-        $this->orderInfoRepository = $orderInfoRepository;
+        $this->addressExtensionRepository = $addressExtensionRepository;
+        $this->addressExtensionFactory = $addressExtensionFactory;
+        $this->shippingInfoBuilder = $shippingInfoBuilder;
+
         $this->countryFactory = $countryFactory;
     }
 
@@ -107,49 +128,27 @@ class UpdateShippingInfoObserver implements ObserverInterface
         /** @var $shippingAddress \Magento\Sales\Api\Data\OrderAddressInterface|\Magento\Sales\Model\Order\Address */
         $shippingAddress = $this->addressRepository->get($addressId);
 
-        // load previous info data
-        $dhlOrderInfo = $this->orderInfoRepository->getById($addressId);
-        $serializedInfo = $dhlOrderInfo->getInfo();
-        /** @var Info $shippingInfo */
-        $shippingInfo = Info::fromJson($serializedInfo);
+        // load previous info data if available
+        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($addressId);
+        if ($shippingInfo instanceof ShippingInfoInterface) {
+            $this->shippingInfoBuilder->setInfo(json_encode($shippingInfo));
+        }
 
         // update with current address data
-        $streetParts = [
-            'street_name' => $dhlAddressFields['street_name'],
-            'street_number' => $dhlAddressFields['street_number'],
-            'supplement' => $dhlAddressFields['address_addition'],
-        ];
+        $this->shippingInfoBuilder->setShippingAddress($shippingAddress);
+        $this->shippingInfoBuilder->setStreet(
+            $dhlAddressFields['street_name'],
+            $dhlAddressFields['street_number'],
+            $dhlAddressFields['address_addition']
+        );
 
-        $countryDirectory = $this->countryFactory->create();
-        $countryDirectory->loadByCode($shippingAddress->getCountryId());
-        $regionData = $countryDirectory->getLoadedRegionCollection()->walk('getName');
+        $shippingInfo = $this->shippingInfoBuilder->create();
 
-        $receiverInfo = [
-            'name1'           => $shippingAddress->getName(),
-            'name2'           => $shippingAddress->getCompany(),
-            'streetName'      => $streetParts['street_name'],
-            'streetNumber'    => $streetParts['street_number'],
-            'addressAddition' => $streetParts['supplement'],
-            'zip'             => $shippingAddress->getPostcode(),
-            'city'            => $shippingAddress->getCity(),
-            'country'         => $countryDirectory->getName(),
-            'countryISOCode'  => $countryDirectory->getData('iso2_code'),
-            'state'           => isset($regionData[$shippingAddress->getRegionId()])
-                ? $regionData[$shippingAddress->getRegionId()] : '',
-            'phone'           => $shippingAddress->getTelephone(),
-            'email'           => $shippingAddress->getEmail(),
-            'packstation'     => null,
-            'postfiliale'     => null,
-            'parcelShop'      => null,
-        ];
+        $addressExtension = $this->addressExtensionFactory->create(['data' => [
+            AbstractAddressExtension::ADDRESS_ID => $addressId,
+            AbstractAddressExtension::SHIPPING_INFO => $shippingInfo,
+        ]]);
 
-        // load receiver data from array into shipping info (somehow awkward, needs refactoring)
-        $shippingInfo->getReceiver()->fromArray($receiverInfo, false);
-        $serializedInfo = Serializer::serialize($shippingInfo);
-
-        if ($serializedInfo) {
-            $dhlOrderInfo->setInfo($serializedInfo);
-            $this->orderInfoRepository->save($dhlOrderInfo);
-        }
+        $this->addressExtensionRepository->save($addressExtension);
     }
 }

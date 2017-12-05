@@ -265,7 +265,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
      * not support it.
      *
      * @test
-     * @magentoConfigFixture default/shipping/origin/country_id CL
+     * @magentoConfigFixture default/shipping/origin/country_id DE
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlcodmethods cashondelivery,nachnahme
      */

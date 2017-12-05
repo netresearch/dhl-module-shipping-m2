@@ -25,15 +25,14 @@
  */
 namespace Dhl\Shipping\Plugin\Checkout;
 
-use Dhl\Shipping\Webservice\ShippingInfo\InfoInterface;
-use \Dhl\Shipping\Webservice\ShippingInfo\Serializer;
-use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
-use \Dhl\Shipping\Util\StreetSplitterInterface;
-use \Dhl\Shipping\Model\ShippingInfo\QuoteShippingInfoFactory;
-use \Magento\Checkout\Api\Data\ShippingInformationInterface;
-use \Magento\Checkout\Model\ShippingInformationManagement;
-use \Magento\Directory\Model\CountryFactory;
-use \Magento\Quote\Api\CartRepositoryInterface;
+//use Dhl\Shipping\Api\Data\QuoteAddressExtensionInterfaceFactory;
+use Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
+use Dhl\Shipping\Model\ShippingInfoBuilder;
+use Dhl\Shipping\Model\ShippingInfo\QuoteAddressExtensionFactory;
+use Magento\Checkout\Api\Data\ShippingInformationInterface;
+use Magento\Checkout\Model\ShippingInformationManagement;
+use Magento\Quote\Api\CartRepositoryInterface;
 
 /**
  * ShippingInformationManagementPlugin
@@ -52,56 +51,37 @@ class ShippingInformationManagementPlugin
     private $quoteRepository;
 
     /**
-     * @var QuoteShippingInfoFactory
+     * @var QuoteAddressExtensionRepositoryInterface
      */
-    private $quoteInfoFactory;
+    private $addressExtensionRepository;
 
     /**
-     * @var ShippingInfoRepositoryInterface
+     * @var QuoteAddressExtensionFactory
      */
-    private $quoteInfoRepository;
+    private $addressExtensionFactory;
 
     /**
-     * @var InfoInterface
+     * @var ShippingInfoBuilder
      */
-    private $shippingInfo;
+    private $shippingInfoBuilder;
 
     /**
-     * Address Split Helper
-     *
-     * @var StreetSplitterInterface
-     */
-    private $streetSplitter;
-
-    /**
-     * Country Model Factory
-     *
-     * @var CountryFactory
-     */
-    private $countryFactory;
-
-    /**
+     * ShippingInformationManagementPlugin constructor.
      * @param CartRepositoryInterface $quoteRepository
-     * @param QuoteShippingInfoFactory $quoteInfoFactory
-     * @param ShippingInfoRepositoryInterface $quoteInfoRepository
-     * @param InfoInterface $shippingInfo
-     * @param CountryFactory $countryFactory
-     * @param StreetSplitterInterface $streetSplitter
+     * @param QuoteAddressExtensionRepositoryInterface $addressExtensionRepository
+     * @param QuoteAddressExtensionFactory $addressExtensionFactory
+     * @param ShippingInfoBuilder $shippingInfoBuilder
      */
     public function __construct(
         CartRepositoryInterface $quoteRepository,
-        QuoteShippingInfoFactory $quoteInfoFactory,
-        ShippingInfoRepositoryInterface $quoteInfoRepository,
-        InfoInterface $shippingInfo,
-        CountryFactory $countryFactory,
-        StreetSplitterInterface $streetSplitter
+        QuoteAddressExtensionRepositoryInterface $addressExtensionRepository,
+        QuoteAddressExtensionFactory $addressExtensionFactory,
+        ShippingInfoBuilder $shippingInfoBuilder
     ) {
         $this->quoteRepository = $quoteRepository;
-        $this->quoteInfoFactory = $quoteInfoFactory;
-        $this->quoteInfoRepository = $quoteInfoRepository;
-        $this->shippingInfo = $shippingInfo;
-        $this->countryFactory = $countryFactory;
-        $this->streetSplitter = $streetSplitter;
+        $this->addressExtensionRepository = $addressExtensionRepository;
+        $this->addressExtensionFactory = $addressExtensionFactory;
+        $this->shippingInfoBuilder = $shippingInfoBuilder;
     }
 
     /**
@@ -120,50 +100,19 @@ class ShippingInformationManagementPlugin
     ) {
         /** @var \Magento\Quote\Model\Quote\Address $shippingAddress */
         $shippingAddress = $addressInformation->getShippingAddress();
-        $street = $shippingAddress->getStreetFull();
-        $streetParts = $this->streetSplitter->splitStreet($street);
 
-        //TODO(nr): persist additional data from checkout in shipping info json, @see modify-shipping-information.js
-//        $postalFacility = $shippingAddress->getExtensionAttributes()->getDhlshipping()->getPostalFacility();
-//        $services = $shippingAddress->getExtensionAttributes()->getDhlshipping()->getServices();
+        /** @var \Magento\Quote\Model\Quote $quote */
+        $quote = $this->quoteRepository->getActive($cartId);
 
-        $countryDirectory = $this->countryFactory->create();
-        $countryDirectory->loadByCode($shippingAddress->getCountryId());
+        $this->shippingInfoBuilder->setShippingAddress($shippingAddress);
+        $shippingInfo = $this->shippingInfoBuilder->create();
 
-        $receiverInfo = [
-            'name1'           => $shippingAddress->getName(),
-            'name2'           => $shippingAddress->getCompany(),
-            'streetName'      => $streetParts['street_name'],
-            'streetNumber'    => $streetParts['street_number'],
-            'addressAddition' => $streetParts['supplement'],
-            'zip'             => $shippingAddress->getPostcode(),
-            'city'            => $shippingAddress->getCity(),
-            'country'         => $countryDirectory->getName(),
-            'countryISOCode'  => $countryDirectory->getData('iso2_code'),
-            'state'           => $shippingAddress->getRegion(),
-            'phone'           => $shippingAddress->getTelephone(),
-            //FIXME(nr): email address is not included
-            'email'           => $shippingAddress->getEmail(),
-            'packstation'     => null,
-            'postfiliale'     => null,
-            'parcelShop'      => null,
-        ];
+        $addressExtension = $this->addressExtensionFactory->create(['data' => [
+            AbstractAddressExtension::ADDRESS_ID => $quote->getShippingAddress()->getId(),
+            AbstractAddressExtension::SHIPPING_INFO => $shippingInfo,
+        ]]);
 
-        // load receiver data from array into shipping info (somehow awkward, needs refactoring)
-        $this->shippingInfo->getReceiver()->fromArray($receiverInfo, false);
-        $serializedInfo = Serializer::serialize($this->shippingInfo);
-
-        if ($serializedInfo) {
-            /** @var \Magento\Quote\Model\Quote $quote */
-            $quote = $this->quoteRepository->getActive($cartId);
-
-            // save/override shipping info into extension table
-            $quoteInfo = $this->quoteInfoFactory->create(['data' => [
-                'address_id' => $quote->getShippingAddress()->getId(),
-                'info' => $serializedInfo,
-            ]]);
-            $this->quoteInfoRepository->save($quoteInfo);
-        }
+        $this->addressExtensionRepository->save($addressExtension);
 
         return null;
     }

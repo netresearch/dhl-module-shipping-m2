@@ -27,12 +27,11 @@
 namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Util\ShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts;
-use \Magento\Checkout\Model\Session as CheckoutSession;
-use \Magento\Framework\Event\Observer;
-use \Magento\Framework\Event\ObserverInterface;
-use \Magento\Framework\Session\SessionManagerInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Session\SessionManagerInterface;
 
 /**
  * DisableCodPaymentObserver
@@ -56,33 +55,21 @@ class DisableCodPaymentObserver implements ObserverInterface
     private $checkoutSession;
 
     /**
-     * @var ShippingProductsInterface
+     * @var ShippingProducts
      */
     private $shippingProducts;
-
-    private $bcsProducts = [
-        ShippingProducts::CODE_NATIONAL,
-        ShippingProducts::CODE_INTERNATIONAL,
-        ShippingProducts::CODE_EUROPAKET,
-        ShippingProducts::CODE_CONNECT,
-        ShippingProducts::CODE_KURIER_TAGGLEICH,
-        ShippingProducts::CODE_KURIER_WUNSCHZEIT,
-        ShippingProducts::CODE_PAKET_AUSTRIA,
-        ShippingProducts::CODE_PAKET_CONNECT,
-        ShippingProducts::CODE_PAKET_INTERNATIONAL,
-    ];
 
     /**
      * DisableCodPaymentObserver constructor.
      *
      * @param ModuleConfigInterface $config
      * @param SessionManagerInterface $checkoutSession
-     * @param ShippingProductsInterface $shippingProducts
+     * @param ShippingProducts $shippingProducts
      */
     public function __construct(
         ModuleConfigInterface $config,
         SessionManagerInterface $checkoutSession,
-        ShippingProductsInterface $shippingProducts
+        ShippingProducts $shippingProducts
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
@@ -129,7 +116,6 @@ class DisableCodPaymentObserver implements ObserverInterface
             return;
         }
 
-        // obtain possible dhl products (national, weltpaket, …) and check if COD is allowed
         $shipperCountry = $this->config->getShipperCountry($quote->getStoreId());
         $euCountries = $this->config->getEuCountryList();
 
@@ -140,17 +126,17 @@ class DisableCodPaymentObserver implements ObserverInterface
             $euCountries
         );
 
-        $bcsCodes = array_intersect($routeProductCodes, $this->bcsProducts);
+        // define all product codes that do not allow COD
+        $nonCodCodes = [
+            ShippingProducts::CODE_CONNECT,
+            ShippingProducts::CODE_INTERNATIONAL,
+            ShippingProducts::CODE_PAKET_INTERNATIONAL,
+        ];
 
-        if (!empty($bcsCodes)) {
-            // check if there are product codes that support COD for the current route
-            $codProductCodes = array_intersect($routeProductCodes, [
-                ShippingProducts::CODE_NATIONAL,
-                ShippingProducts::CODE_PAKET_AUSTRIA,
-                ShippingProducts::CODE_PAKET_CONNECT,
-            ]);
-            $canShipWithCod = !empty($codProductCodes);
-            $checkResult->setData('is_available', $canShipWithCod);
-        }
+        // check if there are product codes left that support COD for the current route
+        $routeCodCodes = array_diff($routeProductCodes, $nonCodCodes);
+        $canShipWithCod = !empty($routeCodCodes);
+
+        $checkResult->setData('is_available', $canShipWithCod);
     }
 }

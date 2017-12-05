@@ -23,12 +23,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\ShippingInfo;
+namespace Dhl\Shipping\Api;
 
-use \Magento\Framework\Model\AbstractModel;
+use Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * Dhl Shipping Info Model
+ * Additional address attributes, primarily shipping info data structure.
  *
  * @category Dhl
  * @package  Dhl\Shipping
@@ -36,43 +37,12 @@ use \Magento\Framework\Model\AbstractModel;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class AbstractShippingInfo extends AbstractModel implements ShippingInfoInterface
+interface AddressExtensionRepositoryInterface
 {
     /**
-     * @return int
+     * @param int $addressId Shipping Address ID
+     * @return ShippingInfoInterface|null
+     * @throws NoSuchEntityException
      */
-    public function getAddressId()
-    {
-        return (int)$this->getData(self::ADDRESS_ID);
-    }
-
-    /**
-     * @param int $addressId
-     *
-     * @return $this
-     */
-    public function setAddressId($addressId)
-    {
-        $this->setData(self::ADDRESS_ID, $addressId);
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInfo()
-    {
-        return $this->getData(self::INFO);
-    }
-
-    /**
-     * @param string $info
-     *
-     * @return $this
-     */
-    public function setInfo($info)
-    {
-        $this->setData(self::INFO, $info);
-        return $this;
-    }
+    public function getShippingInfo($addressId);
 }

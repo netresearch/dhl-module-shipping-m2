@@ -25,9 +25,8 @@
  */
 namespace Dhl\Shipping\Observer;
 
-use \Dhl\Shipping\Model\ShippingInfo\ShippingInfoRepositoryInterface;
+use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use \Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address\Form;
-use \Dhl\Shipping\Webservice\ShippingInfo\Info;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\Event\ObserverInterface;
 use \Magento\Framework\Exception\NoSuchEntityException;
@@ -51,20 +50,20 @@ class ExtendAddressFormObserver implements ObserverInterface
     private $coreRegistry;
 
     /**
-     * @var ShippingInfoRepositoryInterface
+     * @var OrderAddressExtensionRepositoryInterface
      */
-    private $orderInfoRepository;
+    private $addressExtensionRepository;
 
     /**
      * ExtendAddressFormObserver constructor.
      *
      * @param Registry $coreRegistry
-     * @param ShippingInfoRepositoryInterface $orderInfoRepository
+     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
      */
-    public function __construct(Registry $coreRegistry, ShippingInfoRepositoryInterface $orderInfoRepository)
+    public function __construct(Registry $coreRegistry, OrderAddressExtensionRepositoryInterface $addressExtensionRepository)
     {
         $this->coreRegistry = $coreRegistry;
-        $this->orderInfoRepository = $orderInfoRepository;
+        $this->addressExtensionRepository = $addressExtensionRepository;
     }
 
     /**
@@ -98,15 +97,8 @@ class ExtendAddressFormObserver implements ObserverInterface
 
         try {
             // load previous info data
-            $dhlOrderInfo = $this->orderInfoRepository->getById($address->getEntityId());
+            $this->addressExtensionRepository->getShippingInfo($address->getEntityId());
         } catch (NoSuchEntityException $e) {
-            return;
-        }
-
-        $serializedInfo = $dhlOrderInfo->getInfo();
-        /** @var Info $shippingInfo */
-        $shippingInfo = $serializedInfo ? Info::fromJson($serializedInfo) : null;
-        if (!$shippingInfo instanceof Info) {
             return;
         }
 
