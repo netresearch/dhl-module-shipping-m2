@@ -478,19 +478,19 @@ Stornieren eines Versandauftrags
 
 Solange ein Versandauftrag nicht manifestiert ist, kann dieser bei DHL storniert werden.
 
-Beachten Sie aber, dass derzeit noch keine Stornierung bei DHL ausgelöst wird, wenn
-Sie den Link *Löschen* in der Box *Versand- und Trackinginformationen* neben der
-Sendungsnummer anklicken. Hierdurch wird lediglich die Trackingnummer aus |mage|
-entfernt.
+Klicken Sie den Link *Löschen* in der Box *Versand- und Trackinginformationen* neben der
+Sendungsnummer an.
+
+Beachten Sie aber, wenn es sich nicht um Geschäftskundenversand handelt, keine Stornierung bei DHL ausgelöst wird.
+Hierdurch wird lediglich die Trackingnummer aus |mage| entfernt.
 
 .. image:: images/de/shipping_and_tracking.png
    :scale: 75 %
 
-Zur Stornierung des Versandauftrags nutzen Sie bitte den bekannten Zugang über die DHL
-Website (abhängig von der genutzten Anbindung, z.B. das Geschäftskundenportal). Ein
-entsprechendes Feature für den Geschäftskundenversand wird zukünftig im Modul nachgerüstet.
+Zur Stornierung eines eCommerce Global Label API - Versandauftrags nutzen Sie bitte den bekannten Zugang über die DHL
+Website (abhängig von der genutzten Anbindung, z.B. das Geschäftskundenportal).
 
-.. admonition:: Hinweis
+.. admonition:: Hinweis (eCommerce Global Label API)
 
    Wenn lediglich die Trackingnummer in |mage| entfernt wurde, ohne den Auftrag bei
    DHL zu stornieren, werden hierfür von DHL Versandkosten in Rechnung gestellt.
