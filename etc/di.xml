@@ -51,17 +51,18 @@
     <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface" type="Dhl\Shipping\Model\ShippingInfo\Service" />
     <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Service\ServicePropertyInterface" type="Dhl\Shipping\Model\ShippingInfo\Service\ServiceProperty" />
 
-    <preference for="Dhl\Shipping\Webservice\ShippingInfo\InfoInterface" type="Dhl\Shipping\Webservice\ShippingInfo\Info"/>
-
     <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Dimensions" />
     <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValue" />
     <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Weight" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCard" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Address" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Shipper" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCard" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Packstation" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShopInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShop" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PostfilialeInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Postfiliale" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Receiver" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiver" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Shipper" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetails" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankData" />
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package" />

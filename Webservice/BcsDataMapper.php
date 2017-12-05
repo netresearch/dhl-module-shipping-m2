@@ -204,22 +204,80 @@ class BcsDataMapper implements BcsDataMapperInterface
      */
     private function getReceiver(Contact\ReceiverInterface $receiver)
     {
+        if ($receiver->getPackstation()) {
+            $countryType = new BcsApi\CountryType($receiver->getPackstation()->getCountryCode());
+            $countryType->setCountry($receiver->getPackstation()->getCountry());
+            $countryType->setState($receiver->getPackstation()->getState());
 
-        // receiver address
-        $countryType = new BcsApi\CountryType($receiver->getAddress()->getCountryCode());
-        $countryType->setCountry($receiver->getAddress()->getCountryCode());
-        $countryType->setState($receiver->getAddress()->getState());
+            $packstationType = new BcsApi\PackStationType(
+                $receiver->getPackstation()->getPackstationNumber(),
+                $receiver->getPackstation()->getZip(),
+                $receiver->getPackstation()->getCity(),
+                $countryType
+            );
+            $packstationType->setPostNumber($receiver->getPackstation()->getPostNumber());
 
-        $addressType = new BcsApi\ReceiverNativeAddressType(
-            $receiver->getCompanyName(),
-            $receiver->getNameAddition(),
-            $receiver->getAddress()->getStreetName(),
-            $receiver->getAddress()->getStreetNumber(),
-            $receiver->getAddress()->getPostalCode(),
-            $receiver->getAddress()->getCity(),
-            $countryType
-        );
-        $addressType->setAddressAddition([$receiver->getAddress()->getAddressAddition()]);
+            // void other address types
+            $addressType = null;
+            $postfilialeType = null;
+            $parcelShopType = null;
+        } elseif ($receiver->getPostfiliale()) {
+            $countryType = new BcsApi\CountryType($receiver->getPostfiliale()->getCountryCode());
+            $countryType->setCountry($receiver->getPostfiliale()->getCountry());
+            $countryType->setState($receiver->getPostfiliale()->getState());
+
+            $postfilialeType = new BcsApi\PostfilialeType(
+                $receiver->getPostfiliale()->getPostfilialNumber(),
+                $receiver->getPostfiliale()->getPostNumber(),
+                $receiver->getPostfiliale()->getZip(),
+                $receiver->getPostfiliale()->getCity(),
+                $countryType
+            );
+
+            // void other address types
+            $addressType = null;
+            $packstationType = null;
+            $parcelShopType = null;
+        } elseif ($receiver->getParcelShop()) {
+            $countryType = new BcsApi\CountryType($receiver->getParcelShop()->getCountryCode());
+            $countryType->setCountry($receiver->getParcelShop()->getCountry());
+            $countryType->setState($receiver->getParcelShop()->getState());
+
+            $parcelShopType = new BcsApi\ParcelShopType(
+                $receiver->getParcelShop()->getParcelShopNumber(),
+                $receiver->getParcelShop()->getZip(),
+                $receiver->getParcelShop()->getCity(),
+                $countryType
+            );
+            $parcelShopType->setStreetName($receiver->getParcelShop()->getStreetName());
+            $parcelShopType->setStreetNumber($receiver->getParcelShop()->getStreetNumber());
+
+            // void other address types
+            $addressType = null;
+            $packstationType = null;
+            $postfilialeType = null;
+        } else {
+            // receiver address
+            $countryType = new BcsApi\CountryType($receiver->getAddress()->getCountryCode());
+            $countryType->setCountry($receiver->getAddress()->getCountryCode());
+            $countryType->setState($receiver->getAddress()->getState());
+
+            $addressType = new BcsApi\ReceiverNativeAddressType(
+                $receiver->getCompanyName(),
+                $receiver->getNameAddition(),
+                $receiver->getAddress()->getStreetName(),
+                $receiver->getAddress()->getStreetNumber(),
+                $receiver->getAddress()->getPostalCode(),
+                $receiver->getAddress()->getCity(),
+                $countryType
+            );
+            $addressType->setAddressAddition([$receiver->getAddress()->getAddressAddition()]);
+
+            // void other address types
+            $packstationType = null;
+            $postfilialeType = null;
+            $parcelShopType = null;
+        }
 
         // receiver communication
         $communicationType = new BcsApi\CommunicationType();
@@ -230,9 +288,9 @@ class BcsDataMapper implements BcsDataMapperInterface
         $receiverType = new BcsApi\ReceiverType(
             $receiver->getName(),
             $addressType,
-            null, //TODO(nr): handle postal facilities
-            null,
-            null,
+            $packstationType,
+            $postfilialeType,
+            $parcelShopType,
             $communicationType
         );
         return $receiverType;

@@ -224,6 +224,36 @@ class ShippingInfoBuilder
         ];
 
         $this->info[ShippingInfoInterface::RECEIVER] = $receiver;
+
+        // check if address includes postal facility data
+        $station = $shippingAddress->getStreetFull();
+        if (stripos($station, 'Packstation') === 0) {
+            $packstationNumber = preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station);
+            $postNumber = is_numeric($shippingAddress->getCompany()) ? $shippingAddress->getCompany() : '';
+
+            $this->setPackstation(
+                $packstationNumber,
+                $shippingAddress->getPostcode(),
+                $shippingAddress->getCity(),
+                $countryDirectory->getData('iso2_code'),
+                $postNumber,
+                $countryDirectory->getName(),
+                $region
+            );
+        } elseif (stripos($station, 'Postfiliale') === 0) {
+            $postfilialNumber = preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station);
+            $postNumber = is_numeric($shippingAddress->getCompany()) ? $shippingAddress->getCompany() : '';
+
+            $this->setPostfiliale(
+                $postfilialNumber,
+                $postNumber,
+                $shippingAddress->getPostcode(),
+                $shippingAddress->getCity(),
+                $countryDirectory->getData('iso2_code'),
+                $countryDirectory->getName(),
+                $region
+            );
+        }
     }
 
     /**

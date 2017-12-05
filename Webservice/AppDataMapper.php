@@ -29,8 +29,8 @@ namespace Dhl\Shipping\Webservice;
 use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
 use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use \Dhl\Shipping\Config\BcsConfigInterface;
-use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Dhl\Shipping\Config\GlConfigInterface;
+use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use \Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
@@ -39,6 +39,9 @@ use \Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceF
 use \Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShopInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PostfilialeInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
@@ -51,6 +54,7 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDe
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
+use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection;
 use \Dhl\Shipping\Util\BcsShippingProductsInterface;
 use \Dhl\Shipping\Util\GlShippingProductsInterface;
 use \Dhl\Shipping\Util\ShippingProductsInterface;
@@ -62,7 +66,6 @@ use \Dhl\Shipping\Util\StreetSplitterInterface;
 use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
 use \Magento\Framework\DataObject;
 use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection;
 
 /**
  * AppDataMapper
@@ -120,6 +123,21 @@ class AppDataMapper implements AppDataMapperInterface
      * @var AddressInterfaceFactory
      */
     private $addressFactory;
+
+    /**
+     * @var PackstationInterfaceFactory
+     */
+    private $packstationFactory;
+
+    /**
+     * @var PostfilialeInterfaceFactory
+     */
+    private $postfilialeFactory;
+
+    /**
+     * @var ParcelShopInterfaceFactory
+     */
+    private $parcelShopFactory;
 
     /**
      * @var IdCardInterfaceFactory
@@ -211,6 +229,9 @@ class AppDataMapper implements AppDataMapperInterface
      * @param BankDataInterfaceFactory $bankDataFactory
      * @param ShipmentDetailsInterfaceFactory $shipmentDetailsFactory
      * @param AddressInterfaceFactory $addressFactory
+     * @param PackstationInterfaceFactory $packstationFactory
+     * @param PostfilialeInterfaceFactory $postfilialeFactory
+     * @param ParcelShopInterfaceFactory $parcelShopFactory
      * @param IdCardInterfaceFactory $identityFactory
      * @param ShipperInterfaceFactory $shipperFactory
      * @param ReceiverInterfaceFactory $receiverFactory
@@ -237,6 +258,9 @@ class AppDataMapper implements AppDataMapperInterface
         BankDataInterfaceFactory $bankDataFactory,
         ShipmentDetailsInterfaceFactory $shipmentDetailsFactory,
         AddressInterfaceFactory $addressFactory,
+        PackstationInterfaceFactory $packstationFactory,
+        PostfilialeInterfaceFactory $postfilialeFactory,
+        ParcelShopInterfaceFactory $parcelShopFactory,
         IdCardInterfaceFactory $identityFactory,
         ShipperInterfaceFactory $shipperFactory,
         ReceiverInterfaceFactory $receiverFactory,
@@ -263,6 +287,9 @@ class AppDataMapper implements AppDataMapperInterface
         $this->shipmentDetailsFactory       = $shipmentDetailsFactory;
         $this->identityFactory              = $identityFactory;
         $this->addressFactory               = $addressFactory;
+        $this->packstationFactory           = $packstationFactory;
+        $this->postfilialeFactory           = $postfilialeFactory;
+        $this->parcelShopFactory            = $parcelShopFactory;
         $this->shipperFactory               = $shipperFactory;
         $this->receiverFactory              = $receiverFactory;
         $this->returnReceiverFactory        = $returnReceiverFactory;
@@ -434,9 +461,55 @@ class AppDataMapper implements AppDataMapperInterface
             ];
         }
 
+        if ($shippingInfo && $shippingInfo->getReceiver()->getPackstation()) {
+            $packstation = $shippingInfo->getReceiver()->getPackstation();
+            $packstation = $this->packstationFactory->create([
+                'packstationNumber' => $packstation->getPackstationNumber(),
+                'zip' => $packstation->getZip(),
+                'city' => $packstation->getCity(),
+                'countryCode' => $packstation->getCountryISOCode(),
+                'postNumber' => $packstation->getPostNumber(),
+                'country' => $packstation->getCountry(),
+                'state' => $packstation->getState(),
+            ]);
+        } else {
+            $packstation = null;
+        }
+
+        if ($shippingInfo && $shippingInfo->getReceiver()->getPostfiliale()) {
+            $postfiliale = $shippingInfo->getReceiver()->getPostfiliale();
+            $postfiliale = $this->postfilialeFactory->create([
+                'postfilialNumber' => $postfiliale->getPostfilialNumber(),
+                'postNumber' => $postfiliale->getPostNumber(),
+                'zip' => $postfiliale->getZip(),
+                'city' => $postfiliale->getCity(),
+                'countryCode' => $postfiliale->getCountryISOCode(),
+                'country' => $postfiliale->getCountry(),
+                'state' => $postfiliale->getState(),
+            ]);
+        } else {
+            $postfiliale = null;
+        }
+
+        if ($shippingInfo && $shippingInfo->getReceiver()->getParcelShop()) {
+            $parcelShop = $shippingInfo->getReceiver()->getParcelShop();
+            $parcelShop = $this->parcelShopFactory->create([
+                'parcelShopNumber' => $parcelShop,
+                'zip' => $parcelShop->getZip(),
+                'city' => $parcelShop->getCity(),
+                'countryCode' => $parcelShop->getCountryISOCode(),
+                'streetName' => $parcelShop->getStreetName(),
+                'streetNumber' => $parcelShop->getStreetNumber(),
+                'country' => $parcelShop->getCountry(),
+                'state' => $parcelShop->getState()
+            ]);
+        } else {
+            $parcelShop = null;
+        }
+
+        $addressStreet = [$request->getRecipientAddressStreet1(), $request->getRecipientAddressStreet2()];
         $address = $this->addressFactory->create([
-            'street'                 => [
-                $request->getRecipientAddressStreet1(), $request->getRecipientAddressStreet2()],
+            'street'                 => $addressStreet,
             'streetName'             => $addressParts['street_name'],
             'streetNumber'           => $addressParts['street_number'],
             'addressAddition'        => $addressParts['supplement'],
@@ -461,6 +534,9 @@ class AppDataMapper implements AppDataMapperInterface
             'email'         => $request->getData('recipient_email'),
             'address'       => $address,
             'identity'      => $idCard,
+            'packstation'   => $packstation,
+            'postfiliale'   => $postfiliale,
+            'parcelShop'   =>  $parcelShop,
         ]);
 
         return $receiver;
