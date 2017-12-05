@@ -488,7 +488,7 @@ Hierdurch wird lediglich die Trackingnummer aus |mage| entfernt.
    :scale: 75 %
 
 Zur Stornierung eines eCommerce Global Label API - Versandauftrags nutzen Sie bitte den bekannten Zugang über die DHL
-Website (abhängig von der genutzten Anbindung, z.B. das Geschäftskundenportal).
+Website (abhängig von der genutzten Anbindung, z.B. das Geschäftskundenportal).
 
 .. admonition:: Hinweis (eCommerce Global Label API)
 
