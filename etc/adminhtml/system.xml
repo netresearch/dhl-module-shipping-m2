@@ -14,16 +14,32 @@
                     <comment>Select an API connection to configure.</comment>
                     <tooltip>If you are shipping from Germany or Austria, select Business Customer Shipping. If you are shipping from other countries, select eCommerce Global API.</tooltip>
                 </field>
+                <!-- 020 Availability Message -->
+                <field id="availability_note" translate="label tooltip" type="note" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Foo</label>
+                    <hint>Bar</hint>
+                    <comment>Fox</comment>
+                    <tooltip>Baz</tooltip>
+                    <depends>
+                        <field id="api_type" separator="," negative="1">bcs,gla</field>
+                    </depends>
+                </field>
 
                 <!-- 100 General Settings -->
                 <field id="fields_general" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>General Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 140 Sandbox Mode -->
                 <field id="sandbox_mode" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Sandbox Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 150 Enable Logging -->
                 <field id="logging_enabled" translate="label comment" type="select" sortOrder="150" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -31,6 +47,9 @@
                     <comment/>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <tooltip>Please ensure that the global Magento logging is also activated. Data will be written to the existing Magento logs.</tooltip>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 160 Log Level -->
                 <field id="log_level" translate="label comment" type="select" sortOrder="160" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -39,6 +58,7 @@
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Loglevel</source_model>
                     <depends>
                         <field id="logging_enabled">1</field>
+                        <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
 
@@ -147,6 +167,9 @@
                 <field id="fields_shipping_general" translate="label" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>General Shipping Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 410 Shipping Methods for DHL Shipping -->
                 <field id="shipment_dhlmethods" translate="label tooltip comment" type="multiselect" sortOrder="410" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -154,6 +177,9 @@
                     <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
                     <comment>These shipping methods will be processed with DHL Shipping.</comment>
                     <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 420 Default Product -->
                 <field id="default_shipping_product" translate="label" type="select" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -161,6 +187,9 @@
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DefaultProduct</source_model>
                     <comment>This product will be pre-selected for shipping label creation. You can still select another product when creating shipping labels manually.</comment>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
 
                 <!-- 500 BCS Shipping Settings -->
@@ -185,6 +214,9 @@
                 <field id="additional_services" translate="label" type="select" sortOrder="515" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Additional Service Default Values</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
 
                 <!-- 520 Print Only If Codeable -->
@@ -456,24 +488,36 @@
                 <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Automatic Shipment Creation</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 910 Cron Job -->
                 <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
                     <tooltip>Create shipments and retrieve labels via cron job.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 920 Cron Order Status -->
                 <field id="shipment_autocreate_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order Status</label>
                     <tooltip>Create shipments for orders with the given status.</tooltip>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
                 <!-- 930 Notify Customer -->
                 <field id="shipment_autocreate_send_shippinginfo" translate="label" type="select" sortOrder="930" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Send Shipment Confirmation</label>
                     <tooltip><![CDATA[If set to <em>Yes</em>, a shipment confirmation email will be sent to the customer when shipment and label were created.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
                 </field>
             </group>
         </section>
