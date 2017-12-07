@@ -40,6 +40,7 @@ class ApiType implements ArrayInterface
 {
     const API_TYPE_BCS = 'bcs';
     const API_TYPE_GLA = 'gla';
+    const API_TYPE_NA = 'not-available';
 
     /**
      * Options getter
@@ -68,6 +69,7 @@ class ApiType implements ArrayInterface
         return [
             self::API_TYPE_BCS => __('DHL Business Customer Shipping (DE, AT)'),
             self::API_TYPE_GLA => __('DHL eCommerce Global API'),
+            self::API_TYPE_NA => __('DHL Shipping Not Available'),
         ];
     }
 }
