@@ -494,7 +494,7 @@ class AppDataMapper implements AppDataMapperInterface
         if ($shippingInfo && $shippingInfo->getReceiver()->getParcelShop()) {
             $parcelShop = $shippingInfo->getReceiver()->getParcelShop();
             $parcelShop = $this->parcelShopFactory->create([
-                'parcelShopNumber' => $parcelShop,
+                'parcelShopNumber' => $parcelShop->getParcelShopNumber(),
                 'zip' => $parcelShop->getZip(),
                 'city' => $parcelShop->getCity(),
                 'countryCode' => $parcelShop->getCountryISOCode(),

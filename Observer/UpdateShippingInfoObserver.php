@@ -142,6 +142,46 @@ class UpdateShippingInfoObserver implements ObserverInterface
             $dhlAddressFields['address_addition']
         );
 
+        $packstation = isset($dhlAddressFields['packstation']) ? $dhlAddressFields['packstation'] : [];
+        if (!empty($packstation['packstation_number'])) {
+            $this->shippingInfoBuilder->setPackstation(
+                $packstation['packstation_number'],
+                $shippingAddress->getPostcode(),
+                $shippingAddress->getCity(),
+                $shippingAddress->getCountryId(),
+                isset($packstation['post_number']) ? $packstation['post_number'] : ''
+            );
+        } else {
+            $this->shippingInfoBuilder->unsetPackstation();
+        }
+
+        $postfiliale = isset($dhlAddressFields['postfiliale']) ? $dhlAddressFields['postfiliale'] : [];
+        if (!empty($postfiliale['postfilial_number']) && !empty($postfiliale['post_number'])) {
+            $this->shippingInfoBuilder->setPostfiliale(
+                $postfiliale['postfilial_number'],
+                $postfiliale['post_number'],
+                $shippingAddress->getPostcode(),
+                $shippingAddress->getCity(),
+                $shippingAddress->getCountryId()
+            );
+        } else {
+            $this->shippingInfoBuilder->unsetPostfiliale();
+        }
+
+        $parcelShop = isset($dhlAddressFields['parcel_shop']) ? $dhlAddressFields['parcel_shop'] : [];
+        if (!empty($parcelShop['parcel_shop_number'])) {
+            $this->shippingInfoBuilder->setParcelShop(
+                $parcelShop['parcel_shop_number'],
+                $shippingAddress->getPostcode(),
+                $shippingAddress->getCity(),
+                $shippingAddress->getCountryId(),
+                isset($parcelShop['street_name']) ? $parcelShop['street_name'] : '',
+                isset($parcelShop['street_number']) ? $parcelShop['street_number'] : ''
+            );
+        } else {
+            $this->shippingInfoBuilder->unsetParcelShop();
+        }
+
         $shippingInfo = $this->shippingInfoBuilder->create();
 
         $addressExtension = $this->addressExtensionFactory->create(['data' => [

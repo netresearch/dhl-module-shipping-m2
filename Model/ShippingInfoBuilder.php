@@ -400,6 +400,48 @@ class ShippingInfoBuilder
     }
 
     /**
+     * @return void
+     */
+    public function unsetPackstation()
+    {
+        if (!isset($this->info[ShippingInfoInterface::RECEIVER])) {
+            return;
+        }
+
+        if (isset($this->info[ShippingInfoInterface::RECEIVER][ReceiverInterface::PACKSTATION])) {
+            unset($this->info[ShippingInfoInterface::RECEIVER][ReceiverInterface::PACKSTATION]);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function unsetPostfiliale()
+    {
+        if (!isset($this->info[ShippingInfoInterface::RECEIVER])) {
+            return;
+        }
+
+        if (isset($this->info[ShippingInfoInterface::RECEIVER][ReceiverInterface::POSTFILIALE])) {
+            unset($this->info[ShippingInfoInterface::RECEIVER][ReceiverInterface::POSTFILIALE]);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function unsetParcelShop()
+    {
+        if (!isset($this->info[ShippingInfoInterface::RECEIVER])) {
+            return;
+        }
+
+        if (isset($this->info[ShippingInfoInterface::RECEIVER][ReceiverInterface::PARCEL_SHOP])) {
+            unset($this->info[ShippingInfoInterface::RECEIVER][ReceiverInterface::PARCEL_SHOP]);
+        }
+    }
+
+    /**
      * @return ShippingInfoInterface
      */
     public function create()

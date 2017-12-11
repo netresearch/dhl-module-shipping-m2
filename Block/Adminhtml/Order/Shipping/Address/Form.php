@@ -148,17 +148,8 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
 
         // load previous info data
         $shippingInfo = $this->addressExtensionRepository->getShippingInfo($address->getEntityId());
-        if (!$shippingInfo || !$shippingInfo->getReceiver()) {
-            $streetName = implode(' ', $address->getStreet());
-            $streetNumber = '';
-            $addressAddition = '';
-        } else {
-            $shippingAddress = $shippingInfo->getReceiver()->getAddress();
-            $streetName = $shippingAddress->getStreetName();
-            $streetNumber = $shippingAddress->getStreetNumber();
-            $addressAddition = $shippingAddress->getAddressAddition();
-        }
 
+        // SPLIT STREET
         $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png');
         $fieldset->addField(
             'shipping_info_street',
@@ -166,22 +157,120 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
             ['value' => '<img src="' . $src . '" alt="DHL Shipping"/>']
         );
 
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getAddress())
+            ? implode(' ', $address->getStreet())
+            : $shippingInfo->getReceiver()->getAddress()->getStreetName();
         $fieldset->addField('shipping_info_street_name', 'text', [
             'name'  => "shipping_info[street_name]",
             'label' => __('Street Name'),
-            'value' => $streetName,
+            'value' => $value,
         ]);
 
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getAddress())
+            ? ''
+            : $shippingInfo->getReceiver()->getAddress()->getStreetNumber();
         $fieldset->addField('shipping_info_street_number', 'text', [
             'name'  => "shipping_info[street_number]",
             'label' => __('House number'),
-            'value' => $streetNumber,
+            'value' => $value,
         ]);
 
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getAddress())
+            ? ''
+            : $shippingInfo->getReceiver()->getAddress()->getAddressAddition();
         $fieldset->addField('shipping_info_address_addition', 'text', [
             'name'  => "shipping_info[address_addition]",
             'label' => __('Address Addition'),
-            'value' => $addressAddition,
+            'value' => $value,
+        ]);
+
+        // PACKSTATION
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/icon-packStation.png');
+        $fieldset->addField(
+            'shipping_info_packstation',
+            'separator',
+            ['value' => '<img src="' . $src . '" alt="DHL Packstation"/>']
+        );
+
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getPackstation())
+            ? ''
+            : $shippingInfo->getReceiver()->getPackstation()->getPackstationNumber();
+        $fieldset->addField("shipping_info_packstation_number", 'text', [
+            'name'  => "shipping_info[packstation][packstation_number]",
+            'label' => __('Packstation Number'),
+            'value' => $value,
+            'class' => 'validate-number-range number-range-101-999',
+        ]);
+
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getPackstation())
+            ? ''
+            : $shippingInfo->getReceiver()->getPackstation()->getPostNumber();
+        $fieldset->addField("shipping_info_packstation_post_number", 'text', [
+            'name'  => "shipping_info[packstation][post_number]",
+            'label' => __('Post Number'),
+            'value' => $value,
+        ]);
+
+        // POST OFFICE
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/icon-postOffice.png');
+        $fieldset->addField(
+            'shipping_info_postfiliale',
+            'separator',
+            ['value' => '<img src="' . $src . '" alt="DHL Postfiliale"/>']
+        );
+
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getPostfiliale())
+            ? ''
+            : $shippingInfo->getReceiver()->getPostfiliale()->getPostfilialNumber();
+        $fieldset->addField("shipping_info_postfilial_number", 'text', [
+            'name'  => "shipping_info[postfiliale][postfilial_number]",
+            'label' => __('Post Office Number'),
+            'value' => $value,
+            'class' => 'validate-number-range number-range-101-999',
+        ]);
+
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getPostfiliale())
+            ? ''
+            : $shippingInfo->getReceiver()->getPostfiliale()->getPostNumber();
+        $fieldset->addField("shipping_info_postfiliale_post_number", 'text', [
+            'name'  => "shipping_info[postfiliale][post_number]",
+            'label' => __('Post Number'),
+            'value' => $value,
+        ]);
+
+        // PARCEL SHOP
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/icon-parcelShop.png');
+        $fieldset->addField(
+            'shipping_info_parcel_shop',
+            'separator',
+            ['value' => '<img src="' . $src . '" alt="DHL Parcel Shop"/>']
+        );
+
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getParcelShop())
+            ? ''
+            : $shippingInfo->getReceiver()->getParcelShop()->getParcelShopNumber();
+        $fieldset->addField("shipping_info_parcel_shop_number", 'text', [
+            'name'  => "shipping_info[parcel_shop][parcel_shop_number]",
+            'label' => __('Parcel Shop Number'),
+            'value' => $value,
+        ]);
+
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getParcelShop())
+            ? ''
+            : $shippingInfo->getReceiver()->getParcelShop()->getStreetName();
+        $fieldset->addField("shipping_info_parcel_shop_street_name", 'text', [
+            'name'  => "shipping_info[parcel_shop][street_name]",
+            'label' => __('Street Name'),
+            'value' => $value,
+        ]);
+
+        $value = (!$shippingInfo || !$shippingInfo->getReceiver() || !$shippingInfo->getReceiver()->getParcelShop())
+            ? ''
+            : $shippingInfo->getReceiver()->getParcelShop()->getStreetNumber();
+        $fieldset->addField("shipping_info_parcel_shop_street_number", 'text', [
+            'name'  => "shipping_info[parcel_shop][street_number]",
+            'label' => __('Street Number'),
+            'value' => $value,
         ]);
 
         return $this;
