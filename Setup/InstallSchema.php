@@ -25,8 +25,7 @@
  */
 namespace Dhl\Shipping\Setup;
 
-use Dhl\Shipping\Api\Data\OrderAddressExtensionInterface;
-use Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface;
+use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
@@ -61,21 +60,21 @@ class InstallSchema implements InstallSchemaInterface
         );
 
         $table->addColumn(
-            QuoteAddressExtensionInterface::ADDRESS_ID,
+            AbstractAddressExtension::ADDRESS_ID,
             Table::TYPE_INTEGER,
             null,
             ['identity' => false, 'unsigned' => true, 'nullable' => false, 'primary' => true],
             'Quote Address Id'
         );
-        $table->addColumn(QuoteAddressExtensionInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
+        $table->addColumn(AbstractAddressExtension::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
         $table->addForeignKey(
             $installer->getFkName(
                 ShippingSetup::TABLE_QUOTE_ADDRESS,
-                QuoteAddressExtensionInterface::ADDRESS_ID,
+                AbstractAddressExtension::ADDRESS_ID,
                 'quote_address',
                 'address_id'
             ),
-            QuoteAddressExtensionInterface::ADDRESS_ID,
+            AbstractAddressExtension::ADDRESS_ID,
             $installer->getTable('quote_address'),
             'address_id',
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
@@ -89,21 +88,21 @@ class InstallSchema implements InstallSchemaInterface
             $installer->getTable(ShippingSetup::TABLE_ORDER_ADDRESS)
         );
         $table->addColumn(
-            OrderAddressExtensionInterface::ADDRESS_ID,
+            AbstractAddressExtension::ADDRESS_ID,
             Table::TYPE_INTEGER,
             null,
             ['identity' => false, 'unsigned' => true, 'nullable' => false, 'primary' => true],
             'Order Address Id'
         );
-        $table->addColumn(OrderAddressExtensionInterface::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
+        $table->addColumn(AbstractAddressExtension::INFO, Table::TYPE_TEXT, null, [], 'DHL Shipping Info');
         $table->addForeignKey(
             $installer->getFkName(
                 ShippingSetup::TABLE_ORDER_ADDRESS,
-                OrderAddressExtensionInterface::ADDRESS_ID,
+                AbstractAddressExtension::ADDRESS_ID,
                 'sales_order_address',
                 'entity_id'
             ),
-            OrderAddressExtensionInterface::ADDRESS_ID,
+            AbstractAddressExtension::ADDRESS_ID,
             $installer->getTable('sales_order_address'),
             'entity_id',
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
