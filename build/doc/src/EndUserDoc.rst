@@ -349,6 +349,15 @@ When creating orders via the Admin Panel, the Cash On Delivery payment methods
 will be disabled if Cash On Delivery is not available for the delivery address
 (same behaviour as in the checkout).
 
+DHL Locationfinder (Packing Stations, Post Offices)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The extension *DHL Versenden* offers limited support for DHL delivery
+addresses in the checkout:
+
+* The format *Packstation 123* in the field *Street* will be recognized.
+* The format *Postfiliale 123* in the field *Street* will be recognized.
+* A numerical value in the field *Company* will be recognized as Post Number.
+
 .. raw:: pdf
 
    PageBreak

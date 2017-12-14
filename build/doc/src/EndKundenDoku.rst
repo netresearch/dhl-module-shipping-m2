@@ -353,6 +353,15 @@ Bestellung über Admin Panel
 Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls der
 Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
 
+DHL Lieferadressen (Packstationen, Postfilialen)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Die DHL-Extension bietet eine eingeschränkte Unterstüzung von DHL Lieferadressen im Checkout:
+
+* Das Format *Packstation 123* im Feld *Straße* wird erkannt.
+* Das Format *Postfiliale 123* im Feld *Straße* wird erkannt.
+* Ein numerischer Wert im Feld *Firma* wird als Postnummer erkannt.
+
 .. raw:: pdf
 
    PageBreak
@@ -491,10 +500,10 @@ auch der Auftrag bei DHL storniert.
 
    Bei Nutzung der *eCommerce Global Label API* wird über den oben beschriebenen Weg der
    Auftrag bei DHL *nicht* storniert! Es wird lediglich die Trackingnummer aus |mage| entfernt.
-   
+
    Zur Stornierung eines *eCommerce Global Label API* Versandauftrags nutzen Sie bitte den
    Ihnen bekannten Zugang über die DHL Website (z.B. das Geschäftskundenportal).
-   
+
    Wenn lediglich die Trackingnummer aus |mage| entfernt wird, ohne den Auftrag bei
    DHL zu stornieren, wird DHL diesen in Rechnung stellen.
 
