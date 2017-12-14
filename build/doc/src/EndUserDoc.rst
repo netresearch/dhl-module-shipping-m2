@@ -477,20 +477,20 @@ As long as a shipment has not been manifested, it can be canceled at DHL.
 You can click the link *Delete* in the box *Shipping and tracking information* next
 to the tracking number.
 
-When using *DHL Business Customer Shipping (Geschäftskundenversand)*, this will also
+When using *DHL Business Customer Shipping*, this will also
 cancel the shipment at DHL.
 
 .. image:: images/en/shipping_and_tracking.png
    :scale: 75 %
 
 .. admonition:: Note for eCommerce Global Label API
-   
+
    If you are using the *eCommerce Global Label API* the above workflow will *not*
    cancel the shipment at DHL! It only deletes the tracking number in |mage|.
-   
+
    To cancel an *eCommerce Global Label API* shipment, please use the usual way via
    the DHL website (e.g. the DHL Business Customer Portal).
-   
+
    If you only delete the tracking number in |mage| without cancelling the shipment
    at DHL, you will be charged by DHL for the shipping cost.
 
