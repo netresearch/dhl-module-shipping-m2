@@ -356,11 +356,18 @@ Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
 DHL Lieferadressen (Packstationen, Postfilialen)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Die DHL-Extension bietet eine eingeschränkte Unterstüzung von DHL Lieferadressen im Checkout:
+Das Modul bietet eine eingeschränkte Unterstüzung von DHL Lieferadressen im Checkout:
 
 * Das Format *Packstation 123* im Feld *Straße* wird erkannt.
 * Das Format *Postfiliale 123* im Feld *Straße* wird erkannt.
 * Ein numerischer Wert im Feld *Firma* wird als Postnummer erkannt.
+
+.. admonition:: Hinweis
+
+   Für die Übertragung an DHL ist die korrekte Schreibweise der o.g. Angaben entscheidend.
+   
+   Siehe auch `Versand an Filialen <https://www.dhl.de/de/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/filiale-empfang.html>`_
+   und `Versand an Packstationen <https://www.dhl.de/de/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/packstation-empfang.html>`_.
 
 .. raw:: pdf
 

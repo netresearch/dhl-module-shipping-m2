@@ -351,12 +351,19 @@ will be disabled if Cash On Delivery is not available for the delivery address
 
 DHL Delivery Addresses (Packing Stations, Post Offices)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The extension *DHL Versenden* offers limited support for DHL delivery
-addresses in the checkout:
+The module offers limited support for DHL delivery addresses in the checkout:
 
 * The format *Packstation 123* in the field *Street* will be recognized.
 * The format *Postfiliale 123* in the field *Street* will be recognized.
 * A numerical value in the field *Company* will be recognized as Post Number.
+
+.. admonition:: Note
+
+   For successful transmission to DHL, the above information must be entered in
+   the correct format.
+   
+   See also `Shipping to post offices <https://www.dhl.de/en/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/filiale-empfang.html>`_
+   and `Shipping to Packstations <https://www.dhl.de/en/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/packstation-empfang.html>`_.
 
 .. raw:: pdf
 
