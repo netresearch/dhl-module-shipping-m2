@@ -26,16 +26,18 @@
 
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Webservice\RequestType;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
-use \Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface;
+use Dhl\Shipping\Webservice\RequestType;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollectionInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
+use Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface;
 use Dhl\Shipping\Gla\Request\Type\ConsigneeAddressRequestType;
 use Dhl\Shipping\Gla\Request\Type\CustomsDetailsRequestType;
-use \Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
+use Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
 use Dhl\Shipping\Gla\Request\Type\PackageRequestType;
 use Dhl\Shipping\Gla\Request\Type\ReturnAddressRequestType;
 use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
@@ -72,13 +74,15 @@ class GlDataMapper implements GlDataMapperInterface
     ];
 
     /**
-     * @param ShipmentDetails\ShipmentDetailsInterface $shipmentDetails
+     * @param ShipmentDetailsInterface $shipmentDetails
+     * @param ServiceCollectionInterface $services
      * @param PackageInterface $package
      * @param string $sequenceNumber
      * @return PackageDetailsRequestType
      */
     private function getPackageDetails(
-        ShipmentDetails\ShipmentDetailsInterface $shipmentDetails,
+        ShipmentDetailsInterface $shipmentDetails,
+        ServiceCollectionInterface $services,
         PackageInterface $package,
         $sequenceNumber
     ) {
@@ -93,6 +97,14 @@ class GlDataMapper implements GlDataMapperInterface
             $dimensionUom = $this->dimensionUomMap[$dimensionUom];
         }
 
+        /** @var \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Cod $codService */
+        $codService = $services->getService(AbstractServiceFactory::SERVICE_CODE_COD);
+        if ($codService) {
+            $codAmount = $codService->getCodAmount()->getValue($currencyCode);
+        } else {
+            $codAmount = null;
+        }
+
         $packageDetailsType = new PackageDetailsRequestType(
             $package->getDeclaredValue()->getCurrencyCode(),
             $shipmentDetails->getProduct(),
@@ -101,7 +113,7 @@ class GlDataMapper implements GlDataMapperInterface
             $weightUom,
             null,
             null,
-            null,
+            $codAmount,
             $package->getDeclaredValue()->getValue($currencyCode),
             null,
             $package->getDangerousGoodsCategory(),
@@ -183,7 +195,7 @@ class GlDataMapper implements GlDataMapperInterface
                                 ->getCurrencyCode();
         /** @var RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface $packageItem */
         foreach ($package->getItems() as $packageItem) {
-            // @TODO(nr) should we check shipping routes for crossborder instead?
+            // TODO(nr) should we check shipping routes for crossborder instead?
             if ($packageItem->getCustomsItemDescription()) {
                 $itemDetails = new CustomsDetailsRequestType(
                     $packageItem->getCustomsItemDescription(),
@@ -219,6 +231,7 @@ class GlDataMapper implements GlDataMapperInterface
             $customsDetailsType = $this->getExportDocument($package);
             $packageDetailsType = $this->getPackageDetails(
                 $shipmentOrder->getShipmentDetails(),
+                $shipmentOrder->getServices(),
                 $package,
                 $shipmentOrder->getSequenceNumber()
             );
