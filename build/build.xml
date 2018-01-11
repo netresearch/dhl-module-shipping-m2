@@ -126,7 +126,6 @@
     <!-- Target: prepare                               -->
     <!-- ============================================  -->
     <target name="prepare" depends="define">
-        <extprops/>
         <echo msg="Module Name: ${extension.name}"/>
         <echo msg="Module Version: ${extension.version}"/>
         <echo msg="create directory ./package"/>
