@@ -16,24 +16,22 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Util
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Util\Serializer;
 
-use \Magento\Framework\ObjectManagerInterface;
-use \Dhl\Shipping\Util\Serializer\Reflection\ReflectionInterface;
-use \Dhl\Shipping\Util\Serializer\Reflection\AbstractTypeHandler;
+use Magento\Framework\ObjectManagerInterface;
+use Dhl\Shipping\Util\Serializer\Reflection\ReflectionInterface;
+use Dhl\Shipping\Util\Serializer\Reflection\AbstractTypeHandler;
 
 /**
  * API Type Instantiator Utility using M2 object manager
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Util
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

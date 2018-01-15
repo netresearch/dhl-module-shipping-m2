@@ -16,30 +16,27 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Observer
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Observer;
 
-//use \Dhl\Shipping\Api\Data\OrderAddressExtensionInterfaceFactory;
-use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
-use \Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface;
-use \Dhl\Shipping\Model\Shipping\Carrier;
-use \Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
-use \Dhl\Shipping\Model\ShippingInfo\OrderAddressExtensionFactory;
-use \Magento\Framework\Event\Observer;
-use \Magento\Framework\Event\ObserverInterface;
-use \Magento\Framework\Exception\NoSuchEntityException;
+use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Model\Shipping\Carrier;
+use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
+use Dhl\Shipping\Model\ShippingInfo\OrderAddressExtensionFactory;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Shift shipping info from quote address to order address
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Observer
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

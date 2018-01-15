@@ -16,32 +16,30 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Test\Unit
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Observer;
 
-use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use \Dhl\Shipping\Util\ShippingProductsInterface;
-use \Dhl\Shipping\Model\Config\ModuleConfig;
-use \Dhl\Shipping\Util\ShippingProducts;
-use \Magento\Checkout\Model\Session as CheckoutSession;
-use \Magento\Framework\DataObject;
-use \Magento\Framework\Event;
-use \Magento\Framework\Event\Observer;
-use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use \Magento\OfflinePayments\Model\Cashondelivery;
-use \Magento\OfflinePayments\Model\Checkmo;
-use \PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Dhl\Shipping\Model\Config\ModuleConfig;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\DataObject;
+use Magento\Framework\Event;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magento\OfflinePayments\Model\Cashondelivery;
+use Magento\OfflinePayments\Model\Checkmo;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * DisableCodPaymentObserverTest
  *
- * @category Dhl
  * @package  Dhl\Shipping\Test\Unit
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
@@ -86,7 +84,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->shippingProducts = $this->getMockBuilder(ShippingProducts::class)
+        $this->shippingProducts = $this->getMockBuilder(ShippingProductsInterface::class)
             ->setMethods(['getApplicableCodes'])
             ->getMock();
     }
@@ -450,7 +448,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
         $this->shippingProducts
             ->expects($this->once())
             ->method('getApplicableCodes')
-            ->willReturn([ShippingProducts::CODE_PAKET_CONNECT]);
+            ->willReturn([BcsShippingProductsInterface::CODE_PAKET_CONNECT]);
 
         $resultMock->expects($this->once())->method('setData')->with('is_available', true);
         $codObserver->execute($observerMock);

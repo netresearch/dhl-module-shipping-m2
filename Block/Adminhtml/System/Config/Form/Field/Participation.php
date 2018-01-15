@@ -16,16 +16,14 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Block
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
-use Dhl\Shipping\Util\ShippingProductsInterface;
-use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
 
 /**
@@ -33,11 +31,11 @@ use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
  * The procedures dropdown is rendered per row using a separate form field.
  * @see Procedures
  *
- * @package  Dhl\Shipping
- * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @author   Max Melzer <max.melzer@netresearch.de>
- * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link     http://www.netresearch.de/
+ * @package Dhl\Shipping\Block
+ * @author  Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author  Max Melzer <max.melzer@netresearch.de>
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link    http://www.netresearch.de/
  */
 class Participation extends AbstractFieldArray
 {
@@ -45,28 +43,6 @@ class Participation extends AbstractFieldArray
      * @var Procedures
      */
     private $templateRenderer;
-
-    /**
-     * @var ShippingProductsInterface
-     */
-    private $shippingProducts;
-
-    /**
-     * Participation constructor.
-     *
-     * @param Context $context
-     * @param ShippingProductsInterface $shippingProducts
-     * @param array $data
-     */
-    public function __construct(
-        Context $context,
-        ShippingProductsInterface $shippingProducts,
-        array $data = []
-    ) {
-        $this->shippingProducts = $shippingProducts;
-
-        parent::__construct($context, $data);
-    }
 
     /**
      * Create renderer used for displaying the country select element

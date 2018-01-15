@@ -16,10 +16,9 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
@@ -34,17 +33,16 @@ use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Ser
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
 use Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface;
-use Dhl\Shipping\Gla\Request\Type\ConsigneeAddressRequestType;
-use Dhl\Shipping\Gla\Request\Type\CustomsDetailsRequestType;
-use Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
-use Dhl\Shipping\Gla\Request\Type\PackageRequestType;
-use Dhl\Shipping\Gla\Request\Type\ReturnAddressRequestType;
-use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\ConsigneeAddressRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\CustomsDetailsRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\PackageDetailsRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\PackageRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\ReturnAddressRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\ShipmentRequestType;
 
 /**
  * GlDataMapper
  *
- * @category Dhl
  * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @author   Paul Siedler <paul.siedler@netresearch.de>

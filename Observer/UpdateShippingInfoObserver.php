@@ -16,30 +16,30 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Observer
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Api\Data\ShippingInfoInterface;
-use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
-use \Dhl\Shipping\Model\ShippingInfoBuilder;
-use \Dhl\Shipping\Model\ShippingInfo\OrderAddressExtensionFactory;
-use \Magento\Directory\Model\CountryFactory;
-use \Magento\Framework\App\RequestInterface;
-use \Magento\Framework\Event\Observer;
-use \Magento\Framework\Event\ObserverInterface;
-use \Magento\Framework\Exception\NoSuchEntityException;
-use \Magento\Sales\Api\OrderAddressRepositoryInterface;
+use Dhl\Shipping\Model\ShippingInfo\OrderAddressExtensionFactory;
+use Dhl\Shipping\Model\ShippingInfoBuilder;
+use Magento\Directory\Model\CountryFactory;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Api\OrderAddressRepositoryInterface;
 
 /**
  * Update shipping info when order address was updated in admin panel.
  *
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Observer
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

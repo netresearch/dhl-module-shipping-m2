@@ -16,18 +16,15 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Webservice\ResponseType;
-use \Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
-use \Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
+use Dhl\Shipping\Webservice\ResponseType;
 
 /**
  * GatewayInterface
@@ -35,8 +32,6 @@ use \Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
  * The webservice gateway is the central entry point for all API operations. It
  * can be used from within the carrier model, grid mass actions, or cron tasks.
  *
- * @api
- * @category Dhl
  * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

@@ -16,23 +16,21 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 
 namespace Dhl\Shipping\Webservice\Client;
 
-use \Dhl\Shipping\Config\BcsConfigInterface;
+use Dhl\Shipping\Config\BcsConfigInterface;
 
 /**
  * Business Customer Shipping API SOAP client
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -125,11 +123,11 @@ class BcsSoapClient extends \SoapClient implements BcsSoapClientInterface
      * Returns the actual version of the implementation of the whole ISService
      *         webservice.
      *
-     * @param \Dhl\Shipping\Bcs\Version $request
+     * @param \Dhl\Shipping\Webservice\Schema\Bcs\Version $request
      *
-     * @return \Dhl\Shipping\Bcs\GetVersionResponse
+     * @return \Dhl\Shipping\Webservice\Schema\Bcs\GetVersionResponse
      */
-    public function getVersion(\Dhl\Shipping\Bcs\Version $request)
+    public function getVersion(\Dhl\Shipping\Webservice\Schema\Bcs\Version $request)
     {
         return $this->__soapCall('getVersion', [$request]);
     }
@@ -137,11 +135,11 @@ class BcsSoapClient extends \SoapClient implements BcsSoapClientInterface
     /**
      * Creates shipments.
      *
-     * @param \Dhl\Shipping\Bcs\CreateShipmentOrderRequest $request
+     * @param \Dhl\Shipping\Webservice\Schema\Bcs\CreateShipmentOrderRequest $request
      *
-     * @return \Dhl\Shipping\Bcs\CreateShipmentOrderResponse
+     * @return \Dhl\Shipping\Webservice\Schema\Bcs\CreateShipmentOrderResponse
      */
-    public function createShipmentOrder(\Dhl\Shipping\Bcs\CreateShipmentOrderRequest $request)
+    public function createShipmentOrder(\Dhl\Shipping\Webservice\Schema\Bcs\CreateShipmentOrderRequest $request)
     {
         return $this->__soapCall('createShipmentOrder', [$request]);
     }
@@ -149,11 +147,11 @@ class BcsSoapClient extends \SoapClient implements BcsSoapClientInterface
     /**
      * Deletes the requested shipments.
      *
-     * @param \Dhl\Shipping\Bcs\DeleteShipmentOrderRequest $request
+     * @param \Dhl\Shipping\Webservice\Schema\Bcs\DeleteShipmentOrderRequest $request
      *
-     * @return \Dhl\Shipping\Bcs\DeleteShipmentOrderResponse
+     * @return \Dhl\Shipping\Webservice\Schema\Bcs\DeleteShipmentOrderResponse
      */
-    public function deleteShipmentOrder(\Dhl\Shipping\Bcs\DeleteShipmentOrderRequest $request)
+    public function deleteShipmentOrder(\Dhl\Shipping\Webservice\Schema\Bcs\DeleteShipmentOrderRequest $request)
     {
         return $this->__soapCall('deleteShipmentOrder', [$request]);
     }

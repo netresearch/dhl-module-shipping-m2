@@ -16,18 +16,17 @@
  *
  * @package   Dhl\Shipping\AutoCreate
  * @author    Paul Siedler <paul.siedler@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
 namespace Dhl\Shipping\AutoCreate;
 
 use Dhl\Shipping\Helper\ProductData as Helper;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
-use Dhl\Shipping\Service\Filter\EnabledFilter;
+use Dhl\Shipping\Service\Filter\SelectedFilter;
 use Dhl\Shipping\Util\ExportType;
 use Magento\Directory\Helper\Data;
 use Magento\Directory\Model\RegionFactory;
@@ -36,6 +35,7 @@ use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Sales\Model\Order\Shipment;
+use Magento\Shipping\Model\CarrierFactory;
 use Magento\Shipping\Model\Shipment\Request;
 use Magento\Shipping\Model\Shipment\RequestFactory;
 use Magento\Store\Model\ScopeInterface;
@@ -45,8 +45,10 @@ use Magento\Store\Model\ScopeInterface;
  *
  * Encapsulates building a ShipmentRequest object through injected config and a given order shipment
  *
- * @package  Dhl\Shipping\AutoCreate
- * @author   Paul Siedler <paul.siedler@netresearch.de>
+ * @package Dhl\Shipping\AutoCreate
+ * @author  Paul Siedler <paul.siedler@netresearch.de>
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link    http://www.netresearch.de/
  */
 class RequestBuilder implements RequestBuilderInterface
 {
@@ -83,7 +85,7 @@ class RequestBuilder implements RequestBuilderInterface
     private $dataObjectFactory;
 
     /**
-     * @var \Magento\Shipping\Model\CarrierFactory
+     * @var CarrierFactory
      */
     private $carrierFactory;
 
@@ -105,8 +107,8 @@ class RequestBuilder implements RequestBuilderInterface
      * @param ScopeConfigInterface $scopeConfig
      * @param RegionFactory $regionFactory
      * @param DataObjectFactory $dataObjectFactory
-     * @param \Magento\Shipping\Model\CarrierFactory $carrierFactory
      * @param Helper $helper
+     * @param CarrierFactory $carrierFactory
      */
     public function __construct(
         ModuleConfigInterface $moduleConfig,
@@ -115,8 +117,8 @@ class RequestBuilder implements RequestBuilderInterface
         ScopeConfigInterface $scopeConfig,
         RegionFactory $regionFactory,
         DataObjectFactory $dataObjectFactory,
-        \Magento\Shipping\Model\CarrierFactory $carrierFactory,
-        Helper $helper
+        Helper $helper,
+        CarrierFactory $carrierFactory
     ) {
         $this->moduleConfig = $moduleConfig;
         $this->serviceConfig = $serviceConfig;
@@ -349,7 +351,8 @@ class RequestBuilder implements RequestBuilderInterface
 
         $container = current(array_keys($carrier->getContainerTypes($params)));
 
-        $enabledFilter = EnabledFilter::create();
+        //fixme(nr): load services via \Dhl\Shipping\Model\Service\ServicePool
+        $enabledFilter = SelectedFilter::create();
         $serviceCollection = $this->serviceConfig
             ->getServices($storeId)
             ->filter($enabledFilter);

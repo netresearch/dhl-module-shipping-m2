@@ -16,32 +16,30 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Test\Integration
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Util;
 
 use Dhl\Shipping\Util\Serializer\SerializerInterface;
-use Dhl\Shipping\Gla\Request\LabelRequest;
-use Dhl\Shipping\Gla\Request\Type\ConsigneeAddressRequestType;
-use Dhl\Shipping\Gla\Request\Type\PackageDetailsRequestType;
-use Dhl\Shipping\Gla\Request\Type\PackageRequestType;
-use Dhl\Shipping\Gla\Request\Type\ShipmentRequestType;
-use Dhl\Shipping\Gla\Response\LabelResponse;
-use Dhl\Shipping\Gla\Response\Type\LabelDetailsResponseType;
-use Dhl\Shipping\Gla\Response\Type\PackageResponseType;
-use Dhl\Shipping\Gla\Response\Type\ShipmentResponseType;
-use \Magento\Framework\Filesystem\Driver\File as Filesystem;
-use \Magento\TestFramework\ObjectManager;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\LabelRequest;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\ConsigneeAddressRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\PackageDetailsRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\PackageRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\ShipmentRequestType;
+use Dhl\Shipping\Webservice\Schema\Gla\Response\LabelResponse;
+use Dhl\Shipping\Webservice\Schema\Gla\Response\Type\LabelDetailsResponseType;
+use Dhl\Shipping\Webservice\Schema\Gla\Response\Type\PackageResponseType;
+use Dhl\Shipping\Webservice\Schema\Gla\Response\Type\ShipmentResponseType;
+use Magento\Framework\Filesystem\Driver\File as Filesystem;
+use Magento\TestFramework\ObjectManager;
 
 /**
  * JsonSerializerTest
  *
- * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

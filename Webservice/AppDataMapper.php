@@ -16,62 +16,59 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 
 namespace Dhl\Shipping\Webservice;
 
-use \Dhl\Shipping\Api\Data\ShippingInfoInterface;
-use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
-use \Dhl\Shipping\Config\BcsConfigInterface;
-use \Dhl\Shipping\Config\GlConfigInterface;
-use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Util\OrderShipmentDetails;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
-use \Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShopInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PostfilialeInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection;
-use \Dhl\Shipping\Util\BcsShippingProductsInterface;
-use \Dhl\Shipping\Util\GlShippingProductsInterface;
-use \Dhl\Shipping\Util\ShippingProductsInterface;
-use \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionFactory;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
-use \Dhl\Shipping\Util\StreetSplitterInterface;
-use \Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
-use \Magento\Framework\DataObject;
-use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
+use Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Config\BcsConfigInterface;
+use Dhl\Shipping\Config\GlConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProducts\GlShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
+use Dhl\Shipping\Util\StreetSplitterInterface;
+use Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
+use Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShopInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PostfilialeInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
+use Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
+use Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
+use Magento\Framework\DataObject;
+use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 
 /**
  * AppDataMapper
  *
- * @category Dhl
  * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @author   Max Melzer <max.melzer@netresearch.de>
@@ -342,7 +339,8 @@ class AppDataMapper implements AppDataMapperInterface
             'accountReference' => $this->bcsConfig->getBankDataAccountReference($storeId),
         ]);
 
-        $isPartial = OrderShipmentDetails::isPartial($request->getOrderShipment());
+        $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
+        $qtyShipped = $request->getOrderShipment()->getTotalQty();
         $productCode = $request->getData('packaging_type');
 
         $ekp = $this->bcsConfig->getAccountEkp($storeId);
@@ -357,7 +355,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $shipmentDetails = $this->shipmentDetailsFactory->create([
             'isPrintOnlyIfCodeable'       => $printOnlyIfCodeAble ? $printOnlyIfCodeAble->isActive() : false,
-            'isPartialShipment'           => $isPartial || (count($request->getData('packages')) > 1),
+            'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
             'product'                     => $productCode,
             'accountNumber'               => $billingNumber,
             'returnShipmentAccountNumber' => $returnBillingNumber,

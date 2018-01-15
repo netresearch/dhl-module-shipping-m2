@@ -16,8 +16,7 @@
  *
  * PHP version 5
  *
- * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Shipping\Model
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -26,13 +25,12 @@
 
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 
 /**
  * VisualCheckOfAge
  *
- * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

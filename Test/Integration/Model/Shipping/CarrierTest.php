@@ -16,26 +16,24 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Test\Integration
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Model\Shipping;
 
-use \Dhl\Shipping\Test\Provider\ShipmentResponseProvider;
-use \Dhl\Shipping\Webservice\Gateway;
-use \Magento\Framework\DataObject;
-use \Magento\Store\Model\StoreManager;
-use \Magento\TestFramework\ObjectManager;
-use \Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
+use Dhl\Shipping\Test\Provider\ShipmentResponseProvider;
+use Dhl\Shipping\Webservice\Gateway;
+use Magento\Framework\DataObject;
+use Magento\Store\Model\StoreManager;
+use Magento\TestFramework\ObjectManager;
+use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 
 /**
  * CarrierTest
  *
- * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

@@ -16,22 +16,19 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Test\Integration
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Model\Config;
 
-use \Dhl\Shipping\Model\Config\ModuleConfig;
-use \Magento\TestFramework\ObjectManager;
+use Magento\TestFramework\ObjectManager;
 
 /**
  * ModuleConfigTest
  *
- * @category Dhl
  * @package  Dhl\Shipping\Test\Integration
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

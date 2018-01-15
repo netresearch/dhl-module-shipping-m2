@@ -16,10 +16,9 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Block
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
@@ -36,8 +35,7 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
  * origin country in the same scope, it is not meant to be configured manually.
  * The field is used as reference for config field dependencies.
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Block
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

@@ -16,29 +16,27 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Webservice;
 
+use Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
-use \Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
-use \Dhl\Shipping\Bcs as BcsApi;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
+use Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
+use Dhl\Shipping\Webservice\Schema\Bcs as BcsApi;
 
 /**
  * BcsDataMapper
  *
- * @category Dhl
  * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -99,8 +97,9 @@ class BcsDataMapper implements BcsDataMapperInterface
         if ($returnShipmentService = $shipmentOrder->getServices()->getService(
             AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT
         )) {
-            $shipmentDetailsType->setReturnShipmentAccountNumber($shipmentOrder->getShipmentDetails()
-                ->getReturnShipmentAccountNumber());
+            $shipmentDetailsType->setReturnShipmentAccountNumber(
+                $shipmentOrder->getShipmentDetails()->getReturnShipmentAccountNumber()
+            );
         }
 
         return $shipmentDetailsType;
@@ -140,6 +139,8 @@ class BcsDataMapper implements BcsDataMapperInterface
             );
             $serviceType->setAdditionalInsurance($insuranceConfig);
         }
+
+        /** @var Service\VisualCheckOfAge $visualCheckOfAgeService */
         $visualCheckOfAgeService = $services->getService(AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE);
         if ($visualCheckOfAgeService) {
             $visualCheckOfAgeConfig = new BcsApi\ServiceconfigurationVisualAgeCheck(
@@ -148,6 +149,7 @@ class BcsDataMapper implements BcsDataMapperInterface
             );
             $serviceType->setVisualCheckOfAge($visualCheckOfAgeConfig);
         }
+
         return $serviceType;
     }
 
@@ -433,7 +435,7 @@ class BcsDataMapper implements BcsDataMapperInterface
      * Create api specific request object from framework standardized object.
      *
      * @param GetVersionRequestInterface $request
-     * @return \Dhl\Shipping\Bcs\Version
+     * @return \Dhl\Shipping\Webservice\Schema\Bcs\Version
      */
     public function mapVersion(GetVersionRequestInterface $request)
     {

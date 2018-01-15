@@ -16,9 +16,9 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Block
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
@@ -30,11 +30,13 @@ use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Backend\Block\Template;
+use Magento\Framework\Registry;
+use Magento\Backend\Block\Template\Context;
 
 /**
  * Customs
  *
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Block
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -45,13 +47,13 @@ class Customs extends Template
 
     const GL_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_gl.phtml';
 
-    /*
+    /**
      * @var ModuleConfigInterface
      */
     private $moduleConfig;
 
     /**
-     * @var \Magento\Framework\Registry
+     * @var Registry
      */
     private $coreRegistry;
 
@@ -79,11 +81,11 @@ class Customs extends Template
      * @param DGCategory $category
      * @param TermsOfTradeBcs $termsOfTradeBcs
      * @param TermsOfTradeGla $termsOfTradeGla
-     * @param array $data
+     * @param mixed[] $data
      */
     public function __construct(
-        \Magento\Framework\Registry $registry,
-        \Magento\Backend\Block\Template\Context $context,
+        Registry $registry,
+        Context $context,
         ModuleConfigInterface $moduleConfig,
         DGCategory $category,
         TermsOfTradeBcs $termsOfTradeBcs,

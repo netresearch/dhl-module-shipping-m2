@@ -16,39 +16,37 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Block
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address;
 
-use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
-use \Magento\Backend\Block\Template\Context;
-use \Magento\Backend\Model\Session\Quote;
-use \Magento\Framework\Exception\NoSuchEntityException;
-use \Magento\Sales\Model\AdminOrder\Create;
-use \Magento\Framework\Pricing\PriceCurrencyInterface;
-use \Magento\Framework\Data\FormFactory as FrameworkFormFactory;
-use \Magento\Framework\Reflection\DataObjectProcessor;
-use \Magento\Directory\Helper\Data;
-use \Magento\Framework\Json\EncoderInterface;
-use \Magento\Customer\Model\Metadata\FormFactory as CustomerFormFactory;
-use \Magento\Customer\Model\Options;
-use \Magento\Customer\Helper\Address;
-use \Magento\Customer\Api\AddressRepositoryInterface;
-use \Magento\Framework\Api\SearchCriteriaBuilder;
-use \Magento\Framework\Api\FilterBuilder;
-use \Magento\Customer\Model\Address\Mapper;
-use \Magento\Framework\Registry;
+use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Model\Session\Quote;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Model\AdminOrder\Create;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Framework\Data\FormFactory as FrameworkFormFactory;
+use Magento\Framework\Reflection\DataObjectProcessor;
+use Magento\Directory\Helper\Data;
+use Magento\Framework\Json\EncoderInterface;
+use Magento\Customer\Model\Metadata\FormFactory as CustomerFormFactory;
+use Magento\Customer\Model\Options;
+use Magento\Customer\Helper\Address;
+use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\FilterBuilder;
+use Magento\Customer\Model\Address\Mapper;
+use Magento\Framework\Registry;
 
 /**
  * Extended Shipping Address Form
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Block
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

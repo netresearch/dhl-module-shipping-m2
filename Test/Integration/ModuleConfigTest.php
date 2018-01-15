@@ -1,8 +1,8 @@
 <?php
 namespace Dhl\Shipping;
 
-use \Magento\Framework\Component\ComponentRegistrar;
-use \Magento\TestFramework\ObjectManager;
+use Magento\Framework\Component\ComponentRegistrar;
+use Magento\TestFramework\ObjectManager;
 
 class ModuleConfigTest extends \PHPUnit\Framework\TestCase
 {
@@ -33,9 +33,9 @@ class ModuleConfigTest extends \PHPUnit\Framework\TestCase
     public function bcsLibLoaded()
     {
         // generated classes
-        $className = \Dhl\Shipping\Bcs\Version::class;
+        $className = \Dhl\Shipping\Webservice\Schema\Bcs\Version::class;
         try {
-            /** @var \Dhl\Shipping\Bcs\Version $libObject */
+            /** @var \Dhl\Shipping\Webservice\Schema\Bcs\Version $libObject */
             $libObject = $this->objectManager->create($className, [
                 'majorRelease' => '2',
                 'minorRelease' => '2',

@@ -16,16 +16,14 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Plugin
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Plugin\Checkout;
 
-//use Dhl\Shipping\Api\Data\QuoteAddressExtensionInterfaceFactory;
 use Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
 use Dhl\Shipping\Model\ShippingInfoBuilder;
@@ -37,8 +35,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 /**
  * ShippingInformationManagementPlugin
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Plugin
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -87,9 +84,9 @@ class ShippingInformationManagementPlugin
     /**
      * Will be called, the moment, the shipping address is saved
      *
-     * @param \Magento\Checkout\Model\ShippingInformationManagement   $subject
-     * @param int                                                     $cartId
-     * @param \Magento\Checkout\Api\Data\ShippingInformationInterface $addressInformation
+     * @param ShippingInformationManagement $subject
+     * @param int $cartId
+     * @param ShippingInformationInterface $addressInformation
      *
      * @return array|null
      */

@@ -16,28 +16,26 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 
 namespace Dhl\Shipping\Webservice\Client;
 
-use \Dhl\Shipping\Config\GlConfigInterface;
-use \Dhl\Shipping\Webservice\Client\GlRestClientInterface;
-use \Dhl\Shipping\Util\Version;
-use \Dhl\Shipping\Webservice\Exception\GlOperationException;
-use \Dhl\Shipping\Webservice\Exception\GlAuthorizationException;
-use \Dhl\Shipping\Webservice\Exception\GlCommunicationException;
+use Dhl\Shipping\Config\GlConfigInterface;
+use Dhl\Shipping\Util\Version;
+use Dhl\Shipping\Webservice\Exception\GlOperationException;
+use Dhl\Shipping\Webservice\Exception\GlAuthorizationException;
+use Dhl\Shipping\Webservice\Exception\GlCommunicationException;
+use Zend\Http\Client;
 
 /**
  * Global Label API REST client
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -55,7 +53,7 @@ class GlRestClient implements GlRestClientInterface
     private $version;
 
     /**
-     * @var \Zend\Http\Client
+     * @var Client
      */
     private $zendClient;
 
@@ -64,12 +62,12 @@ class GlRestClient implements GlRestClientInterface
      *
      * @param GlConfigInterface $config
      * @param Version           $version
-     * @param \Zend\Http\Client $zendClient
+     * @param Client            $zendClient
      */
     public function __construct(
         GlConfigInterface $config,
         Version $version,
-        \Zend\Http\Client $zendClient
+        Client $zendClient
     ) {
         $this->config     = $config;
         $this->version    = $version;

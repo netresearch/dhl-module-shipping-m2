@@ -16,24 +16,22 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Test\Integration
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Test\Provider;
 
-use \Dhl\Shipping\Webservice\ResponseType\CreateShipment;
+use Dhl\Shipping\Webservice\ResponseType\CreateShipment;
 use Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection;
-use \Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatus;
+use Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatus;
 use Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatus;
 
 /**
  * ConfigTest
  *
- * @category Dhl
  * @package  Dhl\Shipping\Test\Provider
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -153,7 +151,7 @@ PDF;
         );
 
         $labels = [];
-        if($withTracking){
+        if ($withTracking) {
             $labels[$sequenceNumber] = self::getSuccessItem($sequenceNumber);
         } else {
             $labels[$sequenceNumber] = self::getSuccessItemWithoutTrackingId($sequenceNumber);
@@ -163,8 +161,6 @@ PDF;
         $response->setStatus($responseStatus);
         return $response;
     }
-
-
 
     /**
      * @param string[] $sequenceNumbers

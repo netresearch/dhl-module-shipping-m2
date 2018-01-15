@@ -16,7 +16,8 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Model
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author    Andreas Müller <andreas.mueller@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -28,14 +29,14 @@ namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 /**
  * TermsOfTradeGla
  *
- * @package  Dhl\Shipping
- * @author   Andreas Müller <andreas.mueller@netresearch.de>
- * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link     http://www.netresearch.de/
+ * @package Dhl\Shipping\Model
+ * @author  Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @author  Andreas Müller <andreas.mueller@netresearch.de>
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link    http://www.netresearch.de/
  */
 class TermsOfTradeGla
 {
-
     const TOD_DDP = 'DDP';
     const TOD_DDU = 'DDU';
 

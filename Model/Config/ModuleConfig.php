@@ -16,10 +16,10 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Model
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
@@ -31,12 +31,12 @@ use Dhl\Shipping\Util\ShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingRoutes;
 use Dhl\Shipping\Util\ShippingRoutesInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
+use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;
 
 /**
  * ModuleConfig
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Model
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -50,7 +50,7 @@ class ModuleConfig implements ModuleConfigInterface
     private $configAccessor;
 
     /**
-     * @var ShippingRoutesInterface
+     * @var RoutesInterface
      */
     private $routeConfig;
 
@@ -181,11 +181,11 @@ class ModuleConfig implements ModuleConfigInterface
         if (isset($defaultProducts[$recipientCountry])) {
             $defaultProduct = $defaultProducts[$recipientCountry];
         } elseif (in_array($recipientCountry, $this->getEuCountryList())
-                && isset($defaultProducts[ShippingRoutes::REGION_EU])
+                && isset($defaultProducts[RoutesInterface::REGION_EU])
         ) {
-            $defaultProduct = $defaultProducts[ShippingRoutes::REGION_EU];
+            $defaultProduct = $defaultProducts[RoutesInterface::REGION_EU];
         } else {
-            $defaultProduct = $defaultProducts[ShippingRoutes::REGION_INTERNATIONAL];
+            $defaultProduct = $defaultProducts[RoutesInterface::REGION_INTERNATIONAL];
         }
         return $defaultProduct;
     }

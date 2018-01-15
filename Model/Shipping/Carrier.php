@@ -16,9 +16,9 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Model
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
@@ -26,14 +26,14 @@ namespace Dhl\Shipping\Model\Shipping;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Util\ExportTypeInterface;
-use Dhl\Shipping\Util\ShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Dhl\Shipping\Webservice\GatewayInterface;
 use Magento\Framework\EntityManager\EventManager;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
-use Magento\Framework\Event\ManagerInterface;
 
 /**
  * Carrier
@@ -212,6 +212,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     /**
      * The DHL Shipping shipping carrier does not calculate rates.
      *
+     * @api
      * @param RateRequest $request
      * @return null
      */
@@ -223,6 +224,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     /**
      * The DHL Shipping shipping carrier does not introduce own methods.
      *
+     * @api
      * @return mixed[]
      */
     public function getAllowedMethods()
@@ -326,6 +328,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     /**
      * Get tracking information. Original return value annotation is misleading.
      *
+     * @api
      * @see \Magento\Shipping\Model\Carrier\AbstractCarrier::isTrackingAvailable()
      * @see \Magento\Shipping\Model\Carrier\AbstractCarrierOnline::getTrackingInfo()
      * @see \Magento\Dhl\Model\Carrier::getTracking()

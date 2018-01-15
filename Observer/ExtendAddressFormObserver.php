@@ -16,28 +16,26 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Observer
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Observer;
 
-use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
-use \Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address\Form;
-use \Magento\Framework\Event\Observer;
-use \Magento\Framework\Event\ObserverInterface;
-use \Magento\Framework\Exception\NoSuchEntityException;
-use \Magento\Framework\Registry;
-use \Magento\Sales\Block\Adminhtml\Order\Address;
+use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Block\Adminhtml\Order\Shipping\Address\Form;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Registry;
+use Magento\Sales\Block\Adminhtml\Order\Address;
 
 /**
  * ExtendAddressFormObserver
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Observer
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

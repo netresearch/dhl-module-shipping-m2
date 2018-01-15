@@ -14,22 +14,22 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Observer
  * @author    Max Melzer <max.melzer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Observer;
 
+use Dhl\Shipping\Api\Data\LabelStatusInterfaceFactory;
+use Dhl\Shipping\Api\LabelStatusRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Label\LabelStatus;
+use Dhl\Shipping\Model\SalesOrderGrid\OrderGridUpdater;
 use Dhl\Shipping\Model\Shipping\Carrier;
 use Dhl\Shipping\Webservice\GatewayInterface;
 use Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatusInterface;
-use Dhl\Shipping\Api\LabelStatusRepositoryInterface;
-use Dhl\Shipping\Api\Data\LabelStatusInterfaceFactory;
-use Dhl\Shipping\Model\SalesOrderGrid\OrderGridUpdater;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -37,9 +37,9 @@ use Magento\Framework\Exception\LocalizedException;
 /**
  * Class DeleteTrackObserver
  *
- * @package Dhl\Shipping
+ * @package Dhl\Shipping\Observer
  * @author    Max Melzer <max.melzer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */

@@ -16,11 +16,10 @@
  *
  * @package   Dhl\Shipping\AutoCreate
  * @author    Paul Siedler <paul.siedler@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
 namespace Dhl\Shipping\AutoCreate;
 
 use Magento\Framework\Exception\LocalizedException;
@@ -37,8 +36,10 @@ use Magento\Shipping\Model\Shipping\LabelGenerator as CoreLabelGenerator;
  *
  * @see \Magento\Shipping\Model\Shipping\LabelGenerator
  *
- * @package  Dhl\Shipping\AutoCreate
- * @author   Paul Siedler <paul.siedler@netresearch.de>
+ * @package Dhl\Shipping\AutoCreate
+ * @author  Paul Siedler <paul.siedler@netresearch.de>
+ * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link    https://www.netresearch.de/
  */
 class LabelGenerator implements LabelGeneratorInterface
 {
@@ -81,8 +82,8 @@ class LabelGenerator implements LabelGeneratorInterface
     }
 
     /**
-     * @inheritdoc
      * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $orderShipment
+     * @return void
      * @throws LocalizedException
      * @throws \Zend_Pdf_Exception
      */

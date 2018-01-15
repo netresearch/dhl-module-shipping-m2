@@ -16,18 +16,17 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Model
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Serialized;
 
-use \Magento\Framework\App\Config\Data\ProcessorInterface;
-use \Magento\Framework\App\Config\ScopeConfigInterface;
-use \Magento\Framework\App\Config\Value;
+use Magento\Framework\App\Config\Data\ProcessorInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Value;
 
 /**
  * Save and load config data array in JSON format.
@@ -35,8 +34,7 @@ use \Magento\Framework\App\Config\Value;
  * Conversion is also supposed to happen in M2.1 environments where the core
  * converter and serializer classes do not yet exist.
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Model
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

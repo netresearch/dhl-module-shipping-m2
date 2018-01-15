@@ -16,27 +16,26 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Block
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @copyright 2017 Netresearch GmbH & Co. KG
+ * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
-use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use \Magento\Backend\Block\Template\Context;
-use \Magento\Framework\Json\EncoderInterface;
-use \Magento\Shipping\Model\Carrier\Source\GenericInterface;
-use \Magento\Framework\Registry;
-use \Magento\Shipping\Model\CarrierFactory;
-use \Magento\Framework\App\Config\ScopeConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Json\EncoderInterface;
+use Magento\Framework\Registry;
+use Magento\Shipping\Model\Carrier\Source\GenericInterface;
+use Magento\Shipping\Model\CarrierFactory;
 
 /**
  * Packaging
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Block
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -72,8 +71,9 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         ModuleConfigInterface $moduleConfig,
         array $data = []
     ) {
-        $this->moduleConfig = $moduleConfig;
         $this->scopeConfig = $context->getScopeConfig();
+        $this->moduleConfig = $moduleConfig;
+
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
 
@@ -82,7 +82,8 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
      */
     public function displayCustomsValue()
     {
-        $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
+        $destCountryId = $this->getShipment()->getShippingAddress()->getCountryId();
+
         return $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
     }
 
