@@ -26,8 +26,8 @@ namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event;

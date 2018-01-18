@@ -86,6 +86,7 @@
 
     <preference for="Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface" type="Dhl\Shipping\Util\ShippingProducts\ShippingProducts" />
     <preference for="Dhl\Shipping\Util\ShippingRoutes\RoutesInterface" type="Dhl\Shipping\Util\ShippingRoutes\Routes" />
+    <preference for="Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface" type="Dhl\Shipping\Util\ShippingRoutes\RouteValidator" />
     <preference for="Dhl\Shipping\Util\StreetSplitterInterface" type="Dhl\Shipping\Util\StreetSplitter" />
     <preference for="Dhl\Shipping\Util\ExportTypeInterface" type="Dhl\Shipping\Util\ExportType" />
 

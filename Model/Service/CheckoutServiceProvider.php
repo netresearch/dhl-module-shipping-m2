@@ -27,6 +27,7 @@ namespace Dhl\Shipping\Model\Service;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
+use Magento\Quote\Api\Data\CartInterface;
 
 /**
  * Load services for display in checkout
@@ -60,13 +61,21 @@ class CheckoutServiceProvider
     }
 
     /**
+     * @param CartInterface|\Magento\Quote\Model\Quote $quote
      * @return ServiceCollection|ServiceInterface[]
      */
-    public function getServices()
+    public function getServices(CartInterface $quote)
     {
-        // todo(nr): load defaults from config
+        // todo(nr): load service defaults from config
         $presets = [];
-        $serviceCollection = $this->servicePool->getServices($presets);
+
+        // todo(nr): merge config defaults with values from session?
+
+        $serviceCollection = $this->servicePool->getServices(
+            $quote->getStoreId(),
+            $quote->getShippingAddress()->getCountryId(),
+            $presets
+        );
 
         // show only services available for customers
         $filter = CustomerSelectionFilter::create();

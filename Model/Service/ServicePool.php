@@ -27,6 +27,7 @@ namespace Dhl\Shipping\Model\Service;
 use Dhl\Shipping\Api\ServiceProviderInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\Service\ConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
 /**
  * Central hub for all shipping services, e.g.
@@ -43,31 +44,48 @@ use Dhl\Shipping\Api\Data\Service\ConfigInterface;
 class ServicePool
 {
     /**
+     * @var ModuleConfigInterface
+     */
+    private $config;
+
+    /**
      * @var ServiceProviderInterface[]
      */
     private $serviceProviders;
 
     /**
-     * ServiceProvider constructor.
+     * ServicePool constructor.
+     * @param ModuleConfigInterface $config
      * @param ServiceProviderInterface[] $serviceProviders
      */
-    public function __construct($serviceProviders = [])
+    public function __construct(ModuleConfigInterface $config, $serviceProviders = [])
     {
+        $this->config = $config;
         $this->serviceProviders = $serviceProviders;
     }
 
     /**
      * Obtain all available services, optionally configured with presets.
      *
+     * @param mixed $store
+     * @param string $destinationCountryId
      * @param ConfigInterface[] $servicePresets
      * @return ServiceCollection|ServiceInterface[]
      */
-    public function getServices(array $servicePresets = [])
+    public function getServices($store, $destinationCountryId, array $servicePresets = [])
     {
+        $originCountryId = $this->config->getShipperCountry($store);
+        $euCountries = $this->config->getEuCountryList($store);
         $services = [];
 
         foreach ($this->serviceProviders as $serviceProvider) {
-            $services = array_merge($services, $serviceProvider->getServices($servicePresets));
+            $providerServices = $serviceProvider->getServices(
+                $originCountryId,
+                $destinationCountryId,
+                $euCountries,
+                $servicePresets
+            );
+            $services = array_merge($services, $providerServices);
         }
 
         return ServiceCollection::fromArray($services);

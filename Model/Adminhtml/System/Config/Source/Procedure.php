@@ -24,7 +24,7 @@
  */
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-use Dhl\Shipping\Util\ShippingProducts;
+use Dhl\Shipping\Util\ShippingProducts\ShippingProducts;
 
 /**
  * Procedure
