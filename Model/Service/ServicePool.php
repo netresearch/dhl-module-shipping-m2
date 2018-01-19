@@ -26,7 +26,7 @@ namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\ServiceProviderInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
-use Dhl\Shipping\Api\Data\Service\ConfigInterface;
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
 /**
@@ -69,7 +69,7 @@ class ServicePool
      *
      * @param mixed $store
      * @param string $destinationCountryId
-     * @param ConfigInterface[] $servicePresets
+     * @param ServiceSettingsInterface[] $servicePresets
      * @return ServiceCollection|ServiceInterface[]
      */
     public function getServices($store, $destinationCountryId, array $servicePresets = [])

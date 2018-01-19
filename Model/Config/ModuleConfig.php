@@ -26,9 +26,21 @@
 
 namespace Dhl\Shipping\Model\Config;
 
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
+use Dhl\Shipping\Service\Bcs\BulkyGoods;
+use Dhl\Shipping\Service\Bcs\Cod;
+use Dhl\Shipping\Service\Bcs\Insurance;
+use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
+use Dhl\Shipping\Service\Bcs\PreferredDay;
+use Dhl\Shipping\Service\Bcs\PreferredLocation;
+use Dhl\Shipping\Service\Bcs\PreferredNeighbour;
+use Dhl\Shipping\Service\Bcs\PreferredTime;
+use Dhl\Shipping\Service\Bcs\PrintOnlyIfCodeable;
+use Dhl\Shipping\Service\Bcs\ReturnShipment;
+use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Util\ShippingProductsInterface;
-use Dhl\Shipping\Util\ShippingRoutes;
 use Dhl\Shipping\Util\ShippingRoutesInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;
@@ -60,20 +72,28 @@ class ModuleConfig implements ModuleConfigInterface
     private $shippingProducts;
 
     /**
+     * @var ServiceSettingsInterfaceFactory
+     */
+    private $serviceSettingsFactory;
+
+    /**
      * ModuleConfig constructor.
      *
      * @param ConfigAccessorInterface $configAccessor
-     * @param ShippingRoutesInterface $routeConfig
+     * @param RoutesInterface $routeConfig
      * @param ShippingProductsInterface $shippingProducts
+     * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
-        ShippingRoutesInterface $routeConfig,
-        ShippingProductsInterface $shippingProducts
+        RoutesInterface $routeConfig,
+        ShippingProductsInterface $shippingProducts,
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory
     ) {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
         $this->shippingProducts = $shippingProducts;
+        $this->serviceSettingsFactory = $serviceSettingsFactory;
     }
 
     /**
@@ -280,6 +300,158 @@ class ModuleConfig implements ModuleConfigInterface
             $destinationCountryId,
             $this->getEuCountries($storeId)
         );
+    }
+
+    /**
+     * @param mixed $store
+     * @return \Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface[]
+     */
+    public function getServiceSettings($store = null)
+    {
+        $bulkyGoodsCode = BulkyGoods::CODE;
+        $bulkyGoodsConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true, // general availability of service
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false, // customer can select service
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true, // merchant can select service
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($bulkyGoodsCode),
+                $store
+            ), // by default, service is selected for shipment order
+            ServiceSettingsInterface::OPTIONS => [], // possible service properties
+        ]);
+
+        $codCode = Cod::CODE;
+        $codConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => false,
+            ServiceSettingsInterface::IS_SELECTED => false,
+            ServiceSettingsInterface::OPTIONS => [],
+        ]);
+
+        $insuranceCode = Insurance::CODE;
+        $insuranceConfig =  $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => false,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($insuranceCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [],
+        ]);
+
+        $parcelAnnouncementCode = ParcelAnnouncement::CODE;
+        $parcelAnnouncementConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($parcelAnnouncementCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [],
+        ]);
+
+        $preferredDayCode = PreferredDay::CODE;
+        $preferredDayConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($preferredDayCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [], // todo(nr): init with possible values
+        ]);
+
+        $preferredLocationCode = PreferredLocation::CODE;
+        $preferredLocationConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($preferredLocationCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [],
+        ]);
+
+        $preferredNeighbourCode = PreferredNeighbour::CODE;
+        $preferredNeighbourConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($preferredNeighbourCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [],
+        ]);
+
+        $preferredTimeCode = PreferredTime::CODE;
+        $preferredTimeConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($preferredTimeCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [], // todo(nr): init with possible values
+        ]);
+
+        $printOnlyIfCodeableCode = PrintOnlyIfCodeable::CODE;
+        $printOnlyIfCodeableConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($printOnlyIfCodeableCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [],
+        ]);
+
+        $returnShipmentCode = ReturnShipment::CODE;
+        $returnShipmentConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($returnShipmentCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [],
+        ]);
+
+        $visualCheckOfAgeCode = VisualCheckOfAge::CODE;
+        $visualCheckOfAgeConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
+            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
+                'carriers/dhlshipping/shipment_service_' . strtolower($visualCheckOfAgeCode),
+                $store
+            ),
+            ServiceSettingsInterface::OPTIONS => [], // todo(nr): init with possible values
+        ]);
+
+        $settings = [
+            $bulkyGoodsCode => $bulkyGoodsConfig,
+            $codCode => $codConfig,
+            $insuranceCode => $insuranceConfig,
+            $parcelAnnouncementCode => $parcelAnnouncementConfig,
+            $preferredDayCode => $preferredDayConfig,
+            $preferredLocationCode => $preferredLocationConfig,
+            $preferredNeighbourCode => $preferredNeighbourConfig,
+            $preferredTimeCode => $preferredTimeConfig,
+            $printOnlyIfCodeableCode => $printOnlyIfCodeableConfig,
+            $returnShipmentCode => $returnShipmentConfig,
+            $visualCheckOfAgeCode => $visualCheckOfAgeConfig,
+        ];
+
+        return $settings;
     }
 
     /**

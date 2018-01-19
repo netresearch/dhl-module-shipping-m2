@@ -66,9 +66,7 @@ class CheckoutServiceProvider
      */
     public function getServices(CartInterface $quote)
     {
-        // todo(nr): load service defaults from config
-        $presets = [];
-
+        $presets = $this->config->getServiceSettings($quote->getStoreId());
         // todo(nr): merge config defaults with values from session?
 
         $serviceCollection = $this->servicePool->getServices(

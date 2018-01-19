@@ -37,6 +37,9 @@ use Magento\Framework\Option\ArrayInterface;
  */
 class VisualCheckOfAge implements ArrayInterface
 {
+    const OPTION_A16 = 'A16';
+    const OPTION_A18 = 'A18';
+
     /**
      * Options getter
      *
@@ -50,12 +53,12 @@ class VisualCheckOfAge implements ArrayInterface
                 'label' => __('No')
             ],
             [
-                'value' => \Dhl\Shipping\Service\VisualCheckOfAge::A16,
-                'label' => \Dhl\Shipping\Service\VisualCheckOfAge::A16,
+                'value' => self::OPTION_A16,
+                'label' => self::OPTION_A16,
             ],
             [
-                'value' => \Dhl\Shipping\Service\VisualCheckOfAge::A18,
-                'label' => \Dhl\Shipping\Service\VisualCheckOfAge::A18,
+                'value' => self::OPTION_A18,
+                'label' => self::OPTION_A18,
             ]
         ];
 
