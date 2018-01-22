@@ -290,7 +290,7 @@ class ModuleConfig implements ModuleConfigInterface
 
     /**
      * @param int $destinationCountryId
-     * @param int | null $storeId
+     * @param int|null $storeId
      * @return bool
      */
     public function isCrossBorderRoute($destinationCountryId, $storeId = null)
@@ -310,6 +310,7 @@ class ModuleConfig implements ModuleConfigInterface
     {
         $bulkyGoodsCode = BulkyGoods::CODE;
         $bulkyGoodsConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Bulky Goods', // display name
             ServiceSettingsInterface::IS_ENABLED => true, // general availability of service
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false, // customer can select service
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true, // merchant can select service
@@ -322,6 +323,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $codCode = Cod::CODE;
         $codConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Cash On Delivery',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => false,
@@ -331,6 +333,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $insuranceCode = Insurance::CODE;
         $insuranceConfig =  $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Additional Insurance',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => false,
@@ -343,6 +346,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $parcelAnnouncementCode = ParcelAnnouncement::CODE;
         $parcelAnnouncementConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Parcel Announcement',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
@@ -355,6 +359,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $preferredDayCode = PreferredDay::CODE;
         $preferredDayConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Preferred Day',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
@@ -367,6 +372,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $preferredLocationCode = PreferredLocation::CODE;
         $preferredLocationConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Preferred Location',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
@@ -379,6 +385,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $preferredNeighbourCode = PreferredNeighbour::CODE;
         $preferredNeighbourConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Preferred Neighbour',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
@@ -391,6 +398,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $preferredTimeCode = PreferredTime::CODE;
         $preferredTimeConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Preferred Time',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
@@ -403,6 +411,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $printOnlyIfCodeableCode = PrintOnlyIfCodeable::CODE;
         $printOnlyIfCodeableConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Print Only If Codeable',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
@@ -415,6 +424,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $returnShipmentCode = ReturnShipment::CODE;
         $returnShipmentConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Return Shipment',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
@@ -427,6 +437,7 @@ class ModuleConfig implements ModuleConfigInterface
 
         $visualCheckOfAgeCode = VisualCheckOfAge::CODE;
         $visualCheckOfAgeConfig = $this->serviceSettingsFactory->create([
+            ServiceSettingsInterface::NAME => 'Visual Check Of Age',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,

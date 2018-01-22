@@ -27,6 +27,7 @@ namespace Dhl\Shipping\Model\Shipping;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Util\ExportTypeInterface;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;
 use Dhl\Shipping\Webservice\GatewayInterface;
 use Magento\Framework\EntityManager\EventManager;
 use Magento\Framework\Event\ManagerInterface;
@@ -63,6 +64,11 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @var ShippingProductsInterface
      */
     private $shippingProducts;
+
+    /**
+     * @var RoutesInterface
+     */
+    private $shippingRoutes;
 
     /**
      * @var GatewayInterface
@@ -106,6 +112,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param LabelGenerator $labelGenerator
      * @param ModuleConfigInterface $config
      * @param ShippingProductsInterface $shippingProducts
+     * @param RoutesInterface $shippingRoutes
      * @param ExportTypeInterface $exportTypes
      * @param GatewayInterface $webserviceGateway
      * @param ManagerInterface $eventManager
@@ -131,6 +138,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         LabelGenerator $labelGenerator,
         ModuleConfigInterface $config,
         ShippingProductsInterface $shippingProducts,
+        RoutesInterface $shippingRoutes,
         ExportTypeInterface $exportTypes,
         GatewayInterface $webserviceGateway,
         ManagerInterface $eventManager,
@@ -141,6 +149,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         $this->dataObjectFactory = $dataObjectFactory;
         $this->config = $config;
         $this->shippingProducts = $shippingProducts;
+        $this->shippingRoutes = $shippingRoutes;
         $this->webserviceGateway = $webserviceGateway;
         $this->exportTypes = $exportTypes;
         $this->labelGenerator = $labelGenerator;
@@ -359,6 +368,8 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     }
 
     /**
+     * Obtain content types for customs declaration.
+     *
      * @param \Magento\Framework\DataObject $params
      * @return \string[]
      */
@@ -372,11 +383,24 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             $countryRecipient = $params->getData('country_recipient');
         }
 
-        $contentTypes = $this->exportTypes->getApplicableTypes(
-            $countryShipper,
-            $countryRecipient,
-            $this->config->getEuCountryList()
-        );
+        if (!$countryShipper || !$countryRecipient) {
+            // cannot reliably determine route, need to return all content types
+            $isCrossBorderRoute = true;
+        } else {
+            $euCountries = $this->config->getEuCountryList();
+            $isCrossBorderRoute = $this->shippingRoutes->isCrossBorderRoute(
+                $countryShipper,
+                $countryRecipient,
+                $euCountries
+            );
+        }
+
+        if (!$isCrossBorderRoute) {
+            $contentTypes = [];
+        } else {
+            $contentTypes = $this->exportTypes->getContentTypes();
+        }
+
         return $contentTypes;
     }
 }

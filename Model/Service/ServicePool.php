@@ -67,24 +67,15 @@ class ServicePool
     /**
      * Obtain all available services, optionally configured with presets.
      *
-     * @param mixed $store
-     * @param string $destinationCountryId
      * @param ServiceSettingsInterface[] $servicePresets
      * @return ServiceCollection|ServiceInterface[]
      */
-    public function getServices($store, $destinationCountryId, array $servicePresets = [])
+    public function getServices(array $servicePresets = [])
     {
-        $originCountryId = $this->config->getShipperCountry($store);
-        $euCountries = $this->config->getEuCountryList($store);
         $services = [];
 
         foreach ($this->serviceProviders as $serviceProvider) {
-            $providerServices = $serviceProvider->getServices(
-                $originCountryId,
-                $destinationCountryId,
-                $euCountries,
-                $servicePresets
-            );
+            $providerServices = $serviceProvider->getServices($servicePresets);
             $services = array_merge($services, $providerServices);
         }
 

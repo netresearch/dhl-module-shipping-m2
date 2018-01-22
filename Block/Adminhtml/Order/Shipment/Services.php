@@ -26,6 +26,7 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Config\ServiceConfig;
+use Dhl\Shipping\Model\Service\PackagingServiceProvider;
 use Dhl\Shipping\Service\Filter\ProductFilter;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
@@ -63,6 +64,11 @@ class Services extends Template
     private $serviceConfig;
 
     /**
+     * @var PackagingServiceProvider
+     */
+    private $serviceProvider;
+
+    /**
      * @var CarrierFactory
      */
     private $carrierFactory;
@@ -79,6 +85,7 @@ class Services extends Template
      * @param Registry $registry
      * @param ModuleConfigInterface $moduleConfig
      * @param ServiceConfig $serviceConfig
+     * @param PackagingServiceProvider $serviceProvider
      * @param CarrierFactory $carrierFactory
      * @param DataObjectFactory $dataObjectFactory
      * @param mixed[] $data
@@ -88,6 +95,7 @@ class Services extends Template
         Registry $registry,
         ModuleConfigInterface $moduleConfig,
         ServiceConfig $serviceConfig,
+        PackagingServiceProvider $serviceProvider,
         CarrierFactory $carrierFactory,
         DataObjectFactory $dataObjectFactory,
         array $data = []
@@ -95,6 +103,7 @@ class Services extends Template
         $this->coreRegistry = $registry;
         $this->moduleConfig = $moduleConfig;
         $this->serviceConfig = $serviceConfig;
+        $this->serviceProvider = $serviceProvider;
         $this->carrierFactory = $carrierFactory;
         $this->dataObjectFactory = $dataObjectFactory;
 
@@ -112,45 +121,31 @@ class Services extends Template
     }
 
     /**
+     * Obtain template for rendering services.
      *
      * @return string
      */
     public function getTemplate()
     {
         $bcsCountries = ['DE', 'AT'];
-        $usedTemplate = self::BCS_SERVICES_TEMPLATE;
         $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
 
-        if (!in_array($originCountryId, $bcsCountries)) {
-            $usedTemplate = self::GL_SERVICES_TEMPLATE;
+        if (in_array($originCountryId, $bcsCountries)) {
+            $template = self::BCS_SERVICES_TEMPLATE;
+        } else {
+            $template = self::GL_SERVICES_TEMPLATE;
         }
 
-        return $usedTemplate;
+        return $template;
     }
 
     /**
-     * @return \Dhl\Shipping\Service\ServiceCollection
+     * @return \Dhl\Shipping\Model\Service\ServiceCollection
      */
-    public function getServiceCollection()
+    public function getServices()
     {
         $shipment = $this->getShipment();
-        $carrierCode = $shipment->getOrder()->getShippingMethod(true)->getData('carrier_code');
-        $carrier = $this->carrierFactory->create($carrierCode, $shipment->getStoreId());
-        $shipperCountry = $this->moduleConfig->getShipperCountry($shipment->getStoreId());
-        $destCountryId = $this->getShipment()->getShippingAddress()->getCountryId();
-
-        $params = $this->dataObjectFactory->create([
-            'data' => [
-                'country_shipper' => $shipperCountry,
-                'country_recipient' => $destCountryId
-            ]
-        ]);
-
-        $containerType = current(array_keys($carrier->getContainerTypes($params)));
-        $productFilter = ProductFilter::create($containerType);
-        $serviceCollection = $this->serviceConfig
-            ->getServices($this->getShipment()->getStoreId())
-            ->filter($productFilter);
+        $serviceCollection = $this->serviceProvider->getServices($shipment);
 
         return $serviceCollection;
     }

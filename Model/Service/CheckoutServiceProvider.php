@@ -27,6 +27,8 @@ namespace Dhl\Shipping\Model\Service;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
+use Dhl\Shipping\Service\Filter\RouteFilter;
+use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Quote\Api\Data\CartInterface;
 
 /**
@@ -50,14 +52,24 @@ class CheckoutServiceProvider
     private $config;
 
     /**
+     * @var RouteValidatorInterface
+     */
+    private $routeValidator;
+
+    /**
      * CheckoutServiceProvider constructor.
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
+     * @param RouteValidatorInterface $routeValidator
      */
-    public function __construct(ServicePool $servicePool, ModuleConfigInterface $config)
-    {
+    public function __construct(
+        ServicePool $servicePool,
+        ModuleConfigInterface $config,
+        RouteValidatorInterface $routeValidator
+    ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
+        $this->routeValidator = $routeValidator;
     }
 
     /**
@@ -69,15 +81,20 @@ class CheckoutServiceProvider
         $presets = $this->config->getServiceSettings($quote->getStoreId());
         // todo(nr): merge config defaults with values from session?
 
-        $serviceCollection = $this->servicePool->getServices(
-            $quote->getStoreId(),
-            $quote->getShippingAddress()->getCountryId(),
-            $presets
-        );
+        $serviceCollection = $this->servicePool->getServices($presets);
 
         // show only services available for customers
-        $filter = CustomerSelectionFilter::create();
-        $serviceCollection = $serviceCollection->filter($filter);
+        $checkoutFilter = CustomerSelectionFilter::create();
+        $routeFilter = RouteFilter::create(
+            $this->routeValidator,
+            $this->config->getShipperCountry($quote->getStoreId()),
+            $quote->getShippingAddress()->getCountryId(),
+            $this->config->getEuCountryList($quote->getStoreId())
+        );
+
+        $serviceCollection = $serviceCollection
+            ->filter($checkoutFilter)
+            ->filter($routeFilter);
 
         return $serviceCollection;
     }

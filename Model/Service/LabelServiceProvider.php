@@ -25,8 +25,11 @@
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
-use Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\SelectedFilter;
+use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
 
 /**
  * Load services for label request
@@ -44,22 +47,53 @@ class LabelServiceProvider
     private $servicePool;
 
     /**
-     * CheckoutServiceProvider constructor.
-     * @param ServicePool $servicePool
+     * @var ModuleConfigInterface
      */
-    public function __construct(ServicePool $servicePool)
-    {
+    private $config;
+
+    /**
+     * @var RouteValidatorInterface
+     */
+    private $routeValidator;
+
+    /**
+     * @var OrderAddressExtensionRepositoryInterface
+     */
+    private $addressExtensionRepository;
+
+    /**
+     * PackagingServiceProvider constructor.
+     * @param ServicePool $servicePool
+     * @param ModuleConfigInterface $config
+     * @param RouteValidatorInterface $routeValidator
+     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+     */
+    public function __construct(
+        ServicePool $servicePool,
+        ModuleConfigInterface $config,
+        RouteValidatorInterface $routeValidator,
+        OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+    ) {
         $this->servicePool = $servicePool;
+        $this->config = $config;
+        $this->routeValidator = $routeValidator;
+        $this->addressExtensionRepository = $addressExtensionRepository;
     }
 
     /**
-     * @param ShippingInfoInterface $shippingInfo
+     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
      * @return ServiceCollection|ServiceInterface[]
      */
-    public function getServices(ShippingInfoInterface $shippingInfo)
+    public function getServices(ShipmentInterface $shipment)
     {
+        $presets = $this->config->getServiceSettings($shipment->getStoreId());
+
+        $shippingAddress = $shipment->getShippingAddress();
+
         // todo(nr): load defaults from shipping info data structure
-        $presets = [];
+        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($shippingAddress->getId());
+        $shippingInfo->getServices();
+
         $serviceCollection = $this->servicePool->getServices($presets);
 
         // return only services selected by customer or merchant

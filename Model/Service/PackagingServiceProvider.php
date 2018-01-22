@@ -25,9 +25,12 @@
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
-use Dhl\Shipping\Api\Data\ShippingInfoInterface;
+use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\MerchantSelectionFilter;
+use Dhl\Shipping\Service\Filter\RouteFilter;
+use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
 
 /**
  * Load services for packaging popup
@@ -50,29 +53,62 @@ class PackagingServiceProvider
     private $config;
 
     /**
+     * @var RouteValidatorInterface
+     */
+    private $routeValidator;
+
+    /**
+     * @var OrderAddressExtensionRepositoryInterface
+     */
+    private $addressExtensionRepository;
+
+    /**
      * PackagingServiceProvider constructor.
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
+     * @param RouteValidatorInterface $routeValidator
+     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
      */
-    public function __construct(ServicePool $servicePool, ModuleConfigInterface $config)
-    {
+    public function __construct(
+        ServicePool $servicePool,
+        ModuleConfigInterface $config,
+        RouteValidatorInterface $routeValidator,
+        OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+    ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
+        $this->routeValidator = $routeValidator;
+        $this->addressExtensionRepository = $addressExtensionRepository;
     }
 
     /**
-     * @param ShippingInfoInterface $shippingInfo
+     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
      * @return ServiceCollection|ServiceInterface[]
      */
-    public function getServices(ShippingInfoInterface $shippingInfo)
+    public function getServices(ShipmentInterface $shipment)
     {
-        // todo(nr): load defaults from config
-        $presets = [];
+        $presets = $this->config->getServiceSettings($shipment->getStoreId());
+
+        $shippingAddress = $shipment->getShippingAddress();
+
+        //todo(nr): add settings from shipping info
+        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($shippingAddress->getId());
+        $shippingInfo->getServices();
+
         $serviceCollection = $this->servicePool->getServices($presets);
 
-        // show only services available for customers
-        $filter = MerchantSelectionFilter::create();
-        $serviceCollection = $serviceCollection->filter($filter);
+        // show services available for merchants
+        $adminFilter = MerchantSelectionFilter::create();
+        $routeFilter = RouteFilter::create(
+            $this->routeValidator,
+            $this->config->getShipperCountry($shipment->getStoreId()),
+            $shipment->getShippingAddress()->getCountryId(),
+            $this->config->getEuCountryList($shipment->getStoreId())
+        );
+
+        $serviceCollection = $serviceCollection
+            ->filter($adminFilter)
+            ->filter($routeFilter);
 
         return $serviceCollection;
     }
