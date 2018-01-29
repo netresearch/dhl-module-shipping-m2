@@ -145,6 +145,7 @@ class GlRestClient implements GlRestClientInterface
                 'labelSize' => $this->config->getLabelSize(),
                 'pageSize' => $this->config->getPageSize(),
                 'layout' => $this->config->getPageLayout(),
+                'autoClose' => 1,
             ]);
             $this->zendClient->setRawBody($rawRequest);
         } catch (\Zend\Http\Exception\InvalidArgumentException $argumentException) {
