@@ -33,11 +33,12 @@ use Magento\Shipping\Model\Config as ShippingConfig;
 use Magento\Store\Model\ScopeInterface;
 
 /**
- *
+ * Config field block for the Default Product select field.
+ * Filters options based on the configured shipping origin.
  *
  * @category Dhl
  * @package  Dhl\Shipping
- * @author    Max Melzer <max.melzer@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -48,6 +49,13 @@ class DefaultProduct extends Field
      */
     private $shippingProducts;
 
+    /**
+     * DefaultProduct constructor.
+     *
+     * @param ShippingProductsInterface $shippingProducts
+     * @param Context $context
+     * @param array $data
+     */
     public function __construct(
         ShippingProductsInterface $shippingProducts,
         Context $context,
