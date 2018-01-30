@@ -16,10 +16,9 @@
                 </field>
                 <!-- 020 Availability Message -->
                 <field id="availability_note" translate="label tooltip" type="note" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Foo</label>
-                    <hint>Bar</hint>
-                    <comment>Fox</comment>
-                    <tooltip>Baz</tooltip>
+                    <label>DHL Shipping is not available</label>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Warning</frontend_model>
+                    <comment>Your shipping origin country is not on the list of supported countries.</comment>
                     <depends>
                         <field id="api_type" separator="," negative="1">bcs,gla</field>
                     </depends>
