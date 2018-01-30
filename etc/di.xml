@@ -119,6 +119,11 @@
             <argument name="instanceName" xsi:type="string">\Dhl\Shipping\Http\VirtualClient</argument>
         </arguments>
     </type>
+    <type name="Dhl\Shipping\CustomerData\ServiceSource">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">\Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
     <type name="Dhl\Shipping\Model\Config\ConfigAccessor">
         <arguments>
             <argument name="systemConfigType" xsi:type="object">\Magento\Config\App\Config\Type\System</argument>

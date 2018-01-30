@@ -28,6 +28,7 @@ namespace Dhl\Shipping\Model\Config;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge as VisualCheckOfAgeOptions;
 use Dhl\Shipping\Service\Bcs\BulkyGoods;
 use Dhl\Shipping\Service\Bcs\Cod;
 use Dhl\Shipping\Service\Bcs\Insurance;
@@ -436,16 +437,23 @@ class ModuleConfig implements ModuleConfigInterface
         ]);
 
         $visualCheckOfAgeCode = VisualCheckOfAge::CODE;
+        $visualCheckOfAgeDefault = $this->configAccessor->getConfigValue(
+            'carriers/dhlshipping/shipment_service_' . strtolower($visualCheckOfAgeCode),
+            $store
+        );
         $visualCheckOfAgeConfig = $this->serviceSettingsFactory->create([
             ServiceSettingsInterface::NAME => 'Visual Check Of Age',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower($visualCheckOfAgeCode),
-                $store
-            ),
-            ServiceSettingsInterface::OPTIONS => [], // todo(nr): init with possible values
+            ServiceSettingsInterface::IS_SELECTED => (bool) $visualCheckOfAgeDefault,
+            ServiceSettingsInterface::OPTIONS => [
+                VisualCheckOfAgeOptions::OPTION_A16 => VisualCheckOfAgeOptions::OPTION_A16,
+                VisualCheckOfAgeOptions::OPTION_A18 => VisualCheckOfAgeOptions::OPTION_A18,
+            ],
+            ServiceSettingsInterface::PROPERTIES => [
+                VisualCheckOfAge::PROPERTY_AGE => $visualCheckOfAgeDefault,
+            ],
         ]);
 
         $settings = [

@@ -24,15 +24,9 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
-use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Config\ServiceConfig;
+use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Service\PackagingServiceProvider;
-use Dhl\Shipping\Service\Filter\ProductFilter;
-use Magento\Backend\Block\Template;
-use Magento\Backend\Block\Template\Context;
-use Magento\Framework\DataObjectFactory;
-use Magento\Framework\Registry;
-use Magento\Shipping\Model\CarrierFactory;
+use Magento\Shipping\Block\Adminhtml\Order\Packaging;
 
 /**
  * Services
@@ -42,101 +36,34 @@ use Magento\Shipping\Model\CarrierFactory;
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link    http://www.netresearch.de/
  */
-class Services extends Template
+class Services extends Packaging
 {
-    const BCS_SERVICES_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_services_bcs.phtml';
-
-    const GL_SERVICES_TEMPLATE = '';
-
-    /**
-     * @var ModuleConfigInterface
-     */
-    private $moduleConfig;
-
-    /**
-     * @var Registry
-     */
-    private $coreRegistry;
-
-    /**
-     * @var ServiceConfig
-     */
-    private $serviceConfig;
-
     /**
      * @var PackagingServiceProvider
      */
     private $serviceProvider;
 
     /**
-     * @var CarrierFactory
-     */
-    private $carrierFactory;
-
-    /**
-     * @var DataObjectFactory
-     */
-    private $dataObjectFactory;
-
-    /**
-     * Services constructor.
-     *
-     * @param Context $context
-     * @param Registry $registry
-     * @param ModuleConfigInterface $moduleConfig
-     * @param ServiceConfig $serviceConfig
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
+     * @param \Magento\Shipping\Model\Carrier\Source\GenericInterface $sourceSizeModel
+     * @param \Magento\Framework\Registry $coreRegistry
+     * @param \Magento\Shipping\Model\CarrierFactory $carrierFactory
      * @param PackagingServiceProvider $serviceProvider
-     * @param CarrierFactory $carrierFactory
-     * @param DataObjectFactory $dataObjectFactory
      * @param mixed[] $data
      */
     public function __construct(
-        Context $context,
-        Registry $registry,
-        ModuleConfigInterface $moduleConfig,
-        ServiceConfig $serviceConfig,
+        \Magento\Backend\Block\Template\Context $context,
+        \Magento\Framework\Json\EncoderInterface $jsonEncoder,
+        \Magento\Shipping\Model\Carrier\Source\GenericInterface $sourceSizeModel,
+        \Magento\Framework\Registry $coreRegistry,
+        \Magento\Shipping\Model\CarrierFactory $carrierFactory,
         PackagingServiceProvider $serviceProvider,
-        CarrierFactory $carrierFactory,
-        DataObjectFactory $dataObjectFactory,
         array $data = []
     ) {
-        $this->coreRegistry = $registry;
-        $this->moduleConfig = $moduleConfig;
-        $this->serviceConfig = $serviceConfig;
         $this->serviceProvider = $serviceProvider;
-        $this->carrierFactory = $carrierFactory;
-        $this->dataObjectFactory = $dataObjectFactory;
 
-        parent::__construct($context, $data);
-    }
-
-    /**
-     * Retrieve shipment model instance
-     *
-     * @return \Magento\Sales\Model\Order\Shipment
-     */
-    public function getShipment()
-    {
-        return $this->coreRegistry->registry('current_shipment');
-    }
-
-    /**
-     * Obtain template for rendering services.
-     *
-     * @return string
-     */
-    public function getTemplate()
-    {
-        $bcsCountries = ['DE', 'AT'];
-        $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
-
-        if (in_array($originCountryId, $bcsCountries)) {
-            $template = self::BCS_SERVICES_TEMPLATE;
-        } else {
-            $template = self::GL_SERVICES_TEMPLATE;
-        }
-
-        return $template;
+        parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
 
     /**
@@ -148,5 +75,25 @@ class Services extends Template
         $serviceCollection = $this->serviceProvider->getServices($shipment);
 
         return $serviceCollection;
+    }
+
+    /**
+     * @param ServiceInterface $service
+     * @return string
+     */
+    public function getServiceHtml($service)
+    {
+        // set block template according to service input type
+        $template = sprintf(
+            'Dhl_Shipping::order/packaging/popup_service_%s.phtml',
+            $service->getInputType()
+        );
+
+        /** @var \Magento\Backend\Block\Template $serviceBlock */
+        $serviceBlock = $this->getChildBlock('dhl_shipment_packaging_service');
+        $serviceBlock->setTemplate($template);
+        $serviceBlock->setData('service', $service);
+
+        return $serviceBlock->toHtml();
     }
 }

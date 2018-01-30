@@ -79,7 +79,7 @@ class CheckoutServiceProvider
     public function getServices(CartInterface $quote)
     {
         $presets = $this->config->getServiceSettings($quote->getStoreId());
-        // todo(nr): merge config defaults with values from session?
+        // todo(nr): merge config defaults with values from session or shipping info structure?
 
         $serviceCollection = $this->servicePool->getServices($presets);
 
