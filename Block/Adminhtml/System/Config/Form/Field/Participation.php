@@ -170,20 +170,14 @@ class Participation extends AbstractFieldArray
     private function filterAvailable($rows)
     {
         $scopeId = $this->_request->getParam('website', 0);
-        if ($scopeId) {
-            $shippingOrigin = $this->_scopeConfig->getValue(
-                ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID,
-                ScopeInterface::SCOPE_WEBSITE,
-                $scopeId
-            );
-        } else {
-            $shippingOrigin = $this->_scopeConfig->getValue(
-                ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID
-            );
-        }
+        $shippingOrigin = $this->_scopeConfig->getValue(
+            ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID,
+            ScopeInterface::SCOPE_WEBSITE,
+            $scopeId
+        );
         $availableProcedures = $this->shippingProducts->getApplicableProcedures($shippingOrigin);
-        array_filter($rows, function ($row) use ($availableProcedures) {
-            return in_array($row->getProcedure(), $availableProcedures);
+        $rows = array_filter($rows, function ($row) use ($availableProcedures) {
+            return in_array($row->getData('procedure'), $availableProcedures);
         });
 
         return $rows;
