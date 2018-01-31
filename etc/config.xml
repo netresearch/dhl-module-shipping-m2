@@ -46,7 +46,7 @@
                 <bcs_account_participations backend_model="Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\ArraySerialized"><![CDATA[{"_1485789382230_230":{"procedure":"01","participation":"04"},"_1508418821593_593":{"procedure":"55","participation":"01"},"_1485789931170_170":{"procedure":"53","participation":"01"},"_1485789932261_261":{"procedure":"86","participation":"02"},"_1485789932731_731":{"procedure":"87","participation":"02"},"_1485789933215_215":{"procedure":"82","participation":"02"},"_1485789933729_729":{"procedure":"07","participation":"01"},"_1485789955040_40":{"procedure":"83","participation":"02"},"_1485789964896_896":{"procedure":"85","participation":"02"}}]]></bcs_account_participations>
 
                 <bcs_api_auth_username>NRMAG_2_1</bcs_api_auth_username>
-                <bcs_api_auth_password>UlWwlRXgmQre9AP0irEF98MAVX8tCv</bcs_api_auth_password>
+                <bcs_api_auth_password>D8diEGyMVzLq9xUvEtxUU3R278iNRB</bcs_api_auth_password>
 
                 <bcs_sandbox_api_endpoint>https://cig.dhl.de/services/sandbox/soap</bcs_sandbox_api_endpoint>
                 <bcs_sandbox_api_auth_username>magento_1</bcs_sandbox_api_auth_username>
