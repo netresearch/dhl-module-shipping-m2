@@ -28,9 +28,7 @@ namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 use Dhl\Shipping\Util\ShippingProductsInterface;
 use Magento\Backend\Block\Template\Context;
 use \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Shipping\Model\Config as ShippingConfig;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\ScopeInterface;
 
 /**
@@ -53,16 +51,6 @@ class Participation extends AbstractFieldArray
     private $templateRenderer;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
      * @var ShippingProductsInterface
      */
     private $shippingProducts;
@@ -71,30 +59,24 @@ class Participation extends AbstractFieldArray
      * Participation constructor.
      *
      * @param Context $context
-     * @param StoreManagerInterface $storeManager
-     * @param ScopeConfigInterface $scopeConfig
      * @param ShippingProductsInterface $shippingProducts
      * @param array $data
      */
     public function __construct(
         Context $context,
-        StoreManagerInterface $storeManager,
-        ScopeConfigInterface $scopeConfig,
         ShippingProductsInterface $shippingProducts,
         array $data = []
     ) {
-        $this->storeManager = $storeManager;
-        $this->scopeConfig = $scopeConfig;
         $this->shippingProducts = $shippingProducts;
 
         parent::__construct($context, $data);
     }
 
-
     /**
      * Create renderer used for displaying the country select element
      *
-     * @return Procedures
+     * @return Procedures|\Magento\Framework\View\Element\BlockInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function getTemplateRenderer()
     {
@@ -122,13 +104,11 @@ class Participation extends AbstractFieldArray
         return $rows;
     }
 
-
     /**
      * Prepare existing row data object
      *
      * @param \Magento\Framework\DataObject $row
-     *
-     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function _prepareArrayRow(\Magento\Framework\DataObject $row)
     {
@@ -144,7 +124,7 @@ class Participation extends AbstractFieldArray
     /**
      * Prepare to render
      *
-     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     protected function _prepareToRender()
     {
