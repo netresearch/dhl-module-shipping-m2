@@ -29,7 +29,6 @@ namespace Dhl\Shipping\Webservice;
 use Dhl\Shipping\Webservice\RequestType;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollectionInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
@@ -124,7 +123,7 @@ class GlDataMapper implements GlDataMapperInterface
             $package->getTermsOfTrade(),
             null,
             null,
-            $shipmentDetails->getShipmentComment(),
+            $package->getExportDescription(),
             $sequenceNumber,
             null,
             null

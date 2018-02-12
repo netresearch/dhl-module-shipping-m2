@@ -29,6 +29,7 @@
         <tr>
             <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Terms of Trade')) ?></span></th>
             <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Dangerous Goods Category')) ?></span></th>
+            <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Export Description')) ?></span></th>
         </tr>
     </thead>
     <tbody>
@@ -43,13 +44,20 @@
             </td>
             <td>
                 <select data-module="dhl_shipping" data-name="dhl_customs_dangerous_goods_category"
-                        title="<?= $block->escapeHtmlAttr(__('Dangerous Goods Category')) ?>" class="admin__control-select" style="max-width:25%;">
+                        title="<?= $block->escapeHtmlAttr(__('Dangerous Goods Category')) ?>" class="admin__control-select">
                     <?php foreach ($block->getDangerousGoodsCategoryOptions() as $option) : ?>
                         <option value="<?= $block->escapeHtmlAttr($option['value']); ?>">
                             <?= $block->escapeHtml($option['label']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
+            </td>
+            <td>
+                <textarea maxlength="50" cols="50"
+                          data-module="dhl_shipping"
+                          data-name="dhl_customs_export_description"
+                          title="<?php echo $block->escapeHtml(__('Export Description')) ?>"
+                          class="admin__control-textarea"></textarea>
             </td>
         </tr>
     </tbody>

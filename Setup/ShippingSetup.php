@@ -27,6 +27,7 @@
 namespace Dhl\Shipping\Setup;
 
 use Dhl\Shipping\Config\BcsConfigInterface;
+use Dhl\Shipping\Model\Attribute\Backend\ExportDescription;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Magento\Eav\Setup\EavSetup;
@@ -39,6 +40,7 @@ use Magento\Framework\App\Config\Storage\WriterInterface;
  * @category Dhl
  * @package  Dhl\Shipping
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -86,6 +88,28 @@ class ShippingSetup
                 'sort_order' => 50,
                 'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
                 'backend' => TariffNumber::class,
+                'visible' => true,
+            ]
+        );
+    }
+
+    /**
+     * @param EavSetup $eavSetup
+     */
+    public static function addExportDescriptionAttribute(EavSetup $eavSetup)
+    {
+        $eavSetup->addAttribute(
+            \Magento\Catalog\Model\Product::ENTITY,
+            ExportDescription::CODE,
+            [
+                'group' => '',
+                'type' => 'varchar',
+                'label' => 'DHL Export Description',
+                'input' => 'text',
+                'required' => false,
+                'sort_order' => 50,
+                'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_WEBSITE,
+                'backend' => ExportDescription::class,
                 'visible' => true,
             ]
         );

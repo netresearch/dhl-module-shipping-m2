@@ -92,5 +92,8 @@ class UpgradeData implements UpgradeDataInterface
         if (version_compare($context->getVersion(), '0.6.0', '<')) {
             ShippingSetup::convertSerializedToJson($this->scopeConfig, $this->configWriter);
         }
+        if (version_compare($context->getVersion(), '0.9.0', '<')) {
+            ShippingSetup::addExportDescriptionAttribute($eavSetup);
+        }
     }
 }

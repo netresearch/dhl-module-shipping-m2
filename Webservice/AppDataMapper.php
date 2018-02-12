@@ -372,7 +372,6 @@ class AppDataMapper implements AppDataMapperInterface
         $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
         $qtyShipped = $request->getOrderShipment()->getTotalQty();
         $productCode = $request->getData('packaging_type');
-        $shipmentComment = $request->getOrderShipment()->getCustomerNote();
 
         $ekp = $this->bcsConfig->getAccountEkp($storeId);
         $participations = $this->bcsConfig->getAccountParticipations($storeId);
@@ -398,7 +397,6 @@ class AppDataMapper implements AppDataMapperInterface
             'returnShipmentReference'     => $request->getOrderShipment()->getOrder()->getIncrementId(),
             'shipmentDate'                => date("Y-m-d"),
             'bankData'                    => $bankData,
-            'shipmentComment'             => $shipmentComment,
         ]);
 
         return $shipmentDetails;
@@ -758,6 +756,7 @@ class AppDataMapper implements AppDataMapperInterface
                 'attestationNumber' => $packageCustoms->getData('attestation_number'),
                 'exportNotification' => (bool)$packageCustoms->getData('export_notification'),
                 'dgCategory' => $packageCustoms->getData('dangerous_goods_category'),
+                'exportDescription' => $packageCustoms->getData('export_description'),
                 'items' => $packageItems,
             ]
         );

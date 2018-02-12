@@ -26,6 +26,7 @@
 
 namespace Dhl\Shipping\Setup;
 
+use Dhl\Shipping\Model\Attribute\Backend\ExportDescription;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Magento\Eav\Setup\EavSetup;
@@ -107,6 +108,10 @@ class Uninstall implements UninstallInterface
         $uninstaller->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
             TariffNumber::CODE
+        );
+        $uninstaller->removeAttribute(
+            \Magento\Catalog\Model\Product::ENTITY,
+            ExportDescription::CODE
         );
     }
 }
