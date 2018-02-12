@@ -49,6 +49,7 @@ $viewModel = $block->getData('viewModel');
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Country of Origin')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Dangerous Goods Category')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Tariff Number')) ?></th>
+                    <th class="data-grid-th"><?= $block->escapeHtml(__('Export Description') ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Weight')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Customs Value')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Qty Ordered')) ?></th>
@@ -122,6 +123,14 @@ $viewModel = $block->getData('viewModel');
                                title="<?= $block->escapeHtmlAttr(__('Tariff Number')) ?>" minlength="4" maxlength="10"
                                value="<?= $block->escapeHtmlAttr($tariffNumber); ?>"
                         />
+                    </td>
+                    <td>
+                        <input data-module="dhl_shipping" data-name="export_description"
+                               type="text"
+                               class="input-text admin__control-text validate-length maximum-length-20"
+                               title="<?php echo __('Export Description') ?>" maxlength="20"
+                               value="<?php /** @noEscape */
+                               echo $block->getExportDescription($_orderItem->getProductId()); ?>"/>
                     </td>
 
                     <td data-role="item-weight">

@@ -278,6 +278,8 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                 }
             }.bind(this));
 
+            this.updateExportDescription(obj);
+
             // packing items
             if (anySelected) {
                 var packItems = packageBlock.select('.package_items')[0];
@@ -352,11 +354,50 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                 packagePrepareGrid.update();
             }
 
+
+
             // show/hide disable/enable
             packagePrepare.hide();
             packageBlock.select('[data-action=package-save-items]')[0].hide();
             packageBlock.select('[data-action=package-add-items]')[0].show();
             this._setAllItemsPackedState()
+        },
+
+        /**
+        * Search items in package for exportDescriptions.
+        * Update the Export Description textarea of the package block with values.
+        *
+        * @param HTMLElement obj
+        */
+        updateExportDescription: function(obj) {
+            var itemSeparator = ' ';
+            var packageBlock = $(obj).up('[id^="package_block"]');
+            var packagePrepare = packageBlock.select('[data-role=package-items]')[0];
+            var packagePrepareGrid = packagePrepare.select('.grid_prepare')[0];
+            var descriptionTextarea = packageBlock.select('[data-name=dhl_customs_export_description]')[0];
+            var descriptions = [];
+
+
+            /**
+             * Skip if no description textarea is present in the grid.
+             */
+            if (!descriptionTextarea) {
+                return;
+            }
+
+            if (descriptionTextarea.value) {
+                descriptions.push(descriptionTextarea.value);
+            }
+
+            packagePrepareGrid.select('.grid tbody tr').each(function (item) {
+                var itemExportDescription = item.select('[data-name=export_description]')[0].value;
+                if (itemExportDescription) {
+                    descriptions.push(itemExportDescription);
+              }
+            });
+            var textAreaValue = descriptions.join(itemSeparator).substring(0,50);
+
+            descriptionTextarea.setValue(textAreaValue);
         }
     });
 });

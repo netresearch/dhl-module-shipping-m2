@@ -31,7 +31,6 @@ use \Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
 use \Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
 use \Dhl\Shipping\Bcs as BcsApi;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
@@ -51,8 +50,7 @@ use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Ab
 class BcsDataMapper implements BcsDataMapperInterface
 {
     /**
-     * @param ShipmentDetails\ShipmentDetailsInterface $shipmentDetails
-     * @param PackageInterface[] $packages
+     * @param ShipmentOrderInterface $shipmentOrder
      * @return BcsApi\ShipmentDetailsTypeType
      */
     private function getShipmentDetails(ShipmentOrderInterface $shipmentOrder)

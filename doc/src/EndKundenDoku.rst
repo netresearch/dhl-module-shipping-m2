@@ -426,6 +426,15 @@ Bei Nutzung der *eCommerce Global Label API* werden für Ziele außerhalb des
 Ursprungslandes zusätzliche Felder im Popup eingeblendet. Geben Sie mindestens
 die Zolltarifnummern sowie die Handelsklauseln an.
 
+Außerdem sichtbar ist ein Textfeld *Export Description* für Zollinformationen über den Inhalt des Paketes.
+Dieses wird automatisch mit *Export Descriptions* einzelner Versandartikel vorausgefüllt
+(sofern verfügbar).
+
+.. admonition:: Export Beschreibungen für Artikel
+
+   Sie können für Produkte in Ihrem Katalog *Export Description*s über das Produktattribut
+   *DHL Export Description* festlegen.
+
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 
 Service-Auswahl

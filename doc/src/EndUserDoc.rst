@@ -423,6 +423,13 @@ origin country, additional fields will be displayed in the popup window. Enter
 at least the terms of trade (Incoterms) as well as the customs tariff number
 (HS Code) for each item.
 
+There is also an *Export Description* text area for each package.
+It will be automatically pre-filled with descriptions of individual items where available.
+
+.. admonition:: Item Export Descriptions
+
+   You can define preset export descriptions for your product catalog via the product attribute *DHL Export Description*.
+
 Everything else is the same as described in the section `National shipments`_.
 
 Service selection
