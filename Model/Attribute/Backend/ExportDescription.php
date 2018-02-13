@@ -33,7 +33,8 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class ExportDescription extends AbstractBackend
 {
-    const  CODE = 'dhl_export_description';
+    const CODE = 'dhl_export_description';
+    const MAX_LENGTH = 50;
 
     /**
      * @inheritdoc
@@ -43,11 +44,12 @@ class ExportDescription extends AbstractBackend
     {
         $value = $object->getData(self::CODE);
         $frontendLabel = $this->getAttribute()->getData('frontend_label');
-        if (strlen((string)$value) > 20) {
+        if (strlen((string)$value) > static::MAX_LENGTH) {
             throw new LocalizedException(
                 __(
-                    'The value of attribute "%1" must be not be longer than 20 characters',
-                    $frontendLabel
+                    'The value of attribute "%1" must be not be longer than %2 characters',
+                    $frontendLabel,
+                    static::MAX_LENGTH
                 )
             );
         }
