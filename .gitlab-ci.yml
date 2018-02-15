@@ -6,7 +6,7 @@ stages:
   - validate
 
 variables:
-  MODULE_VERSION: "0.8.1"
+  MODULE_VERSION: "0.9.0"
   MODULE_NAME: "Dhl_Shipping"
 
 phpcs:
