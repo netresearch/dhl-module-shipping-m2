@@ -1,0 +1,66 @@
+image: registry.netresearch.de/magento-ci/ci-toolchain:latest
+
+stages:
+  - analyze
+  - build
+  - validate
+
+variables:
+  MODULE_VERSION: "1.0.0"
+  MODULE_NAME: "Dhl_Shipping"
+
+phpcs:
+  stage: analyze
+  only:
+  - DHLVM2-200
+  - develop
+  - master
+  script:
+  - phpcs --standard=MEQP2
+          --severity=10
+          --extensions=php,phtml
+          --ignore=*/Test/*,*/build/*
+          ${CI_PROJECT_DIR}
+
+#phpunit:5.6:
+#  stage: analyze
+#  only:
+#  - develop
+#  - master
+#  script:
+#  - php /phpunit-6.5.phar --version
+#  - php /phpunit-5.7.phar --version
+#  - php /phpunit-4.8.phar --version
+
+package-build:
+  stage: build
+  only:
+  - DHLVM2-200
+  - master
+  script:
+  - rst2pdf -v -b 1
+            -o doc/${MODULE_NAME}_Documentation.pdf
+            -s doc/src/dhl.style
+            doc/src/EndUserDoc.rst
+  - rst2pdf -v -b 1
+              -o doc/${MODULE_NAME}_Dokumentation.pdf
+              -s doc/src/dhl.style
+              doc/src/EndKundenDoku.rst
+  - zip -r
+        -x "*build/*" "*Test/*" "*doc/src*" "*.gitignore" "*.gitlab-ci.yml" "*.git*"
+        -o ${MODULE_NAME}-${MODULE_VERSION}.zip
+        .
+  artifacts:
+      when: on_success
+      paths:
+      - ${MODULE_NAME}-${MODULE_VERSION}.zip
+
+package-validate:
+  stage: validate
+  only:
+  - DHLVM2-200
+  - master
+  script:
+  - m2eval ${MODULE_NAME}-${MODULE_VERSION}.zip
+  dependencies:
+  - package-build
