@@ -428,15 +428,14 @@ There is also an *Export Description* text area for each package.
 The *Tariff number* and *Export Description* are taken over from the data storage of the product
  when assigning in the package popup. Otherwise they can be edited here.
 
-.. admonition:: Note
+.. admonition:: Product data maintenance
 
-   Please note: In the case of *Configurable product* in an order,
+   You can define preset export descriptions for your product catalog via the product attribute *DHL Export Description*
+   and traiffnumber via the product attribute *Tariff number*.
+
+   **Please note:** In the case of *Configurable product* in an order,
    the data from its data storage is transferred to the *Package popup*
    and not the data that is possibly filled on a *Simple product* linked to the *Configurable product*.
-
-.. admonition:: Item Export Descriptions
-
-   You can define preset export descriptions for your product catalog via the product attribute *DHL Export Description*.
 
 Everything else is the same as described in the section `National shipments`_.
 
