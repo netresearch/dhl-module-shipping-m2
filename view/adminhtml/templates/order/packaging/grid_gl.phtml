@@ -127,8 +127,8 @@ $viewModel = $block->getData('viewModel');
                     <td>
                         <input data-module="dhl_shipping" data-name="export_description"
                                type="text"
-                               class="input-text admin__control-text validate-length maximum-length-20"
-                               title="<?php echo __('Export Description') ?>" maxlength="20"
+                               class="input-text admin__control-text validate-length maximum-length-50"
+                               title="<?php echo __('Export Description') ?>" maxlength="50"
                                value="<?php /** @noEscape */
                                echo $block->getExportDescription($_orderItem->getProductId()); ?>"/>
                     </td>
