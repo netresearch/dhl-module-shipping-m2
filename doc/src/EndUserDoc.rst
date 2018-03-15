@@ -361,7 +361,7 @@ The module offers limited support for DHL delivery addresses in the checkout:
 
    For successful transmission to DHL, the above information must be entered in
    the correct format.
-   
+
    See also `Shipping to post offices <https://www.dhl.de/en/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/filiale-empfang.html>`_
    and `Shipping to Packstations <https://www.dhl.de/en/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/packstation-empfang.html>`_.
 
@@ -424,7 +424,15 @@ at least the terms of trade (Incoterms) as well as the customs tariff number
 (HS Code) for each item.
 
 There is also an *Export Description* text area for each package.
-It will be automatically pre-filled with descriptions of individual items where available.
+
+The *Tariff number* and *Export Description* are taken over from the data storage of the product
+ when assigning in the package popup. Otherwise they can be edited here.
+
+.. admonition:: Note
+
+   Please note: In the case of *Configurable product* in an order,
+   the data from its data storage is transferred to the *Package popup*
+   and not the data that is possibly filled on a *Simple product* linked to the *Configurable product*.
 
 .. admonition:: Item Export Descriptions
 

@@ -365,7 +365,7 @@ Das Modul bietet eine eingeschränkte Unterstüzung von DHL Lieferadressen im Ch
 .. admonition:: Hinweis
 
    Für die Übertragung an DHL ist die korrekte Schreibweise der o.g. Angaben entscheidend.
-   
+
    Siehe auch `Versand an Filialen <https://www.dhl.de/de/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/filiale-empfang.html>`_
    und `Versand an Packstationen <https://www.dhl.de/de/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/packstation-empfang.html>`_.
 
@@ -427,8 +427,15 @@ Ursprungslandes zusätzliche Felder im Popup eingeblendet. Geben Sie mindestens
 die Zolltarifnummern sowie die Handelsklauseln an.
 
 Außerdem sichtbar ist ein Textfeld *Export Description* für Zollinformationen über den Inhalt des Paketes.
-Dieses wird automatisch mit *Export Descriptions* einzelner Versandartikel vorausgefüllt
-(sofern verfügbar).
+
+Die *Tariff number* und *Export Description* werden bei Zuordnung im *Package popup* von der Datenhaltung
+des Produktes übernommen. Andernfalls können Sie hier an dieser Stelle editiert werden.
+
+.. admonition:: Hinweis
+
+   Bitte beachten Sie: Im Fall von *Configurable product* in einer Order werden die Daten von dessen Datenhaltung
+   ins *Package popup* übernommen und nicht die Daten die eventuell an einem mit dem *Configurable product*
+   verknüpften *Simple product* befüllt sind.
 
 .. admonition:: Export Beschreibungen für Artikel
 
