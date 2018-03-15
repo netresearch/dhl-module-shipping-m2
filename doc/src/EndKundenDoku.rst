@@ -419,11 +419,11 @@ Internationale Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Bei Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)* werden für Ziele
-außerhalb der EU zusätzliche Felder im Popup eingeblendet. Geben Sie für die Erstellung der
+außerhalb der EU zusätzliche Felder im *Package popup* eingeblendet. Geben Sie für die Erstellung der
 Exportdokumente mindestens die Zolltarifnummern sowie den Inhaltstyp der Sendung an.
 
 Bei Nutzung der *eCommerce Global Label API* werden für Ziele außerhalb des
-Ursprungslandes zusätzliche Felder im Popup eingeblendet. Geben Sie mindestens
+Ursprungslandes zusätzliche Felder im *Package popup* eingeblendet. Geben Sie mindestens
 die Zolltarifnummern sowie die Handelsklauseln an.
 
 Außerdem sichtbar ist ein Textfeld *Export Description* für Zollinformationen über den Inhalt des Paketes.
@@ -431,16 +431,14 @@ Außerdem sichtbar ist ein Textfeld *Export Description* für Zollinformationen 
 Die *Tariff number* und *Export Description* werden bei Zuordnung im *Package popup* von der Datenhaltung
 des Produktes übernommen. Andernfalls können Sie hier an dieser Stelle editiert werden.
 
-.. admonition:: Hinweis
+.. admonition:: Datenpflege am Produkt
 
-   Bitte beachten Sie: Im Fall von *Configurable product* in einer Order werden die Daten von dessen Datenhaltung
+   Sie können für Produkte in Ihrem Katalog *Export Description* über das Produktattribut
+   *DHL Export Description* und die Zolltarifnummer über das Produktattribut *Tariff Number* festlegen.
+
+   **Bitte beachten Sie:** Im Fall von *Configurable product* in einer Order werden die Daten von dessen Datenhaltung
    ins *Package popup* übernommen und nicht die Daten die eventuell an einem mit dem *Configurable product*
    verknüpften *Simple product* befüllt sind.
-
-.. admonition:: Export Beschreibungen für Artikel
-
-   Sie können für Produkte in Ihrem Katalog *Export Description*s über das Produktattribut
-   *DHL Export Description* festlegen.
 
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 
