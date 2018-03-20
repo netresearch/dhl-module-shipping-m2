@@ -433,12 +433,12 @@ des Produktes übernommen. Andernfalls können Sie hier an dieser Stelle editier
 
 .. admonition:: Datenpflege am Produkt
 
-   Sie können für Produkte in Ihrem Katalog *Export Description* über das Produktattribut
+   Sie können für Produkte in Ihrem Katalog die *Export Description* über das Produktattribut
    *DHL Export Description* und die Zolltarifnummer über das Produktattribut *Tariff Number* festlegen.
 
-   **Bitte beachten Sie:** Im Fall von *Configurable product* in einer Order werden die Daten von dessen Datenhaltung
-   ins *Package popup* übernommen und nicht die Daten die eventuell an einem mit dem *Configurable product*
-   verknüpften *Simple product* befüllt sind.
+   **Bitte beachten Sie:** Im Fall eines *Configurable product* in einer Bestellung werden die Daten von dessen
+   Datenhaltung ins *Package popup* übernommen und nicht die Daten, die eventuell an einem mit dem *Configurable product*
+   verknüpften *Simple product* hängen.
 
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 

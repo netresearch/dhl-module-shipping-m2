@@ -431,11 +431,11 @@ The *Tariff number* and *Export Description* are taken over from the data storag
 .. admonition:: Product data maintenance
 
    You can define preset export descriptions for your product catalog via the product attribute *DHL Export Description*
-   and traiffnumber via the product attribute *Tariff number*.
+   and tariff numbers via the product attribute *Tariff number*.
 
-   **Please note:** In the case of *Configurable product* in an order,
+   **Please note:** In the case of an *Configurable product* in an order,
    the data from its data storage is transferred to the *Package popup*
-   and not the data that is possibly filled on a *Simple product* linked to the *Configurable product*.
+   and not the data that might be stored on a *Simple product* linked to the *Configurable product*.
 
 Everything else is the same as described in the section `National shipments`_.
 
