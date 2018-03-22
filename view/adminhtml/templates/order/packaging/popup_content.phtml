@@ -24,7 +24,10 @@
  * @link      http://www.netresearch.de/
  */
 /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging $block  */ ?>
-<?php $girthEnabled = 0;?>
+<?php
+    $girthEnabled = 0;
+    $isMetric = $block->isMetricUnit();
+?>
 <div id="packaging_window">
     <div class="message message-warning" style="display: none"></div>
     <section class="admin__page-section" id="package_template" style="display:none;">
@@ -108,6 +111,7 @@
                                     onchange="packaging.changeMeasures(this);">
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::INCH) ?>" selected="selected" ><?= $block->escapeHtml(__('in')) ?></option>
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>" ><?= $block->escapeHtml(__('cm')) ?></option>
+
                             </select>
                         </td>
                     <?php endif; ?>
@@ -140,6 +144,7 @@
                                     onchange="packaging.changeMeasures(this);">
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::POUND) ?>" selected="selected"><?= $block->escapeHtml(__('lb')) ?></option>
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::KILOGRAM) ?>" ><?= $block->escapeHtml(__('kg')) ?></option>
+
                             </select>
                             <span class="admin__addon-prefix"></span>
                         </div>
