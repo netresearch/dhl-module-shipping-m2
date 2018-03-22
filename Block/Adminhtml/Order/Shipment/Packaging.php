@@ -31,6 +31,7 @@ use \Magento\Framework\Json\EncoderInterface;
 use \Magento\Shipping\Model\Carrier\Source\GenericInterface;
 use \Magento\Framework\Registry;
 use \Magento\Shipping\Model\CarrierFactory;
+use \Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Packaging
@@ -45,6 +46,8 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
 {
     /** @var  ModuleConfigInterface */
     private $moduleConfig;
+
+    protected $_scopeConfig;
 
     /**
      * Packaging constructor.
@@ -63,9 +66,11 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         Registry $coreRegistry,
         CarrierFactory $carrierFactory,
         ModuleConfigInterface $moduleConfig,
+        ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
+        $this->_scopeConfig = $scopeConfig;
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
 
@@ -77,5 +82,28 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
 
         return $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStoreWeightUnit()
+    {
+        $scopeId = $this->getShipment()->getStoreId();
+
+        return strtoupper($this->_scopeConfig->getValue(
+            'general/locale/weight_unit',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $scopeId
+        ));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMetricUnit()
+    {
+        $unit = $this->getStoreWeightUnit();
+        return $unit != \Zend_Measure_Weight::LBS;
     }
 }
