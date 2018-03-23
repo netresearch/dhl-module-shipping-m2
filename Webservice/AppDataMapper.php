@@ -714,7 +714,7 @@ class AppDataMapper implements AppDataMapperInterface
                 $carry,
                 $item
             ) {
-                $price = $item['price'] * 1000;
+                $price = $item['customs_value'] * 1000;
                 $carry += ($price * $item['qty']);
 
                 return $carry;
