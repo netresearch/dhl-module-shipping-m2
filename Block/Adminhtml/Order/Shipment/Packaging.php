@@ -47,7 +47,10 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
     /** @var  ModuleConfigInterface */
     private $moduleConfig;
 
-    protected $_scopeConfig;
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
 
     /**
      * Packaging constructor.
@@ -56,8 +59,8 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
      * @param GenericInterface $sourceSizeModel
      * @param Registry $coreRegistry
      * @param CarrierFactory $carrierFactory
-     * @param array $data
      * @param ModuleConfigInterface $moduleConfig
+     * @param array $data
      */
     public function __construct(
         Context $context,
@@ -66,11 +69,10 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         Registry $coreRegistry,
         CarrierFactory $carrierFactory,
         ModuleConfigInterface $moduleConfig,
-        ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
-        $this->_scopeConfig = $scopeConfig;
+        $this->scopeConfig = $context->getScopeConfig();
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
 
@@ -80,7 +82,6 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
     public function displayCustomsValue()
     {
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
-
         return $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
     }
 
@@ -91,7 +92,7 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
     {
         $scopeId = $this->getShipment()->getStoreId();
 
-        return strtoupper($this->_scopeConfig->getValue(
+        return strtoupper($this->scopeConfig->getValue(
             'general/locale/weight_unit',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
             $scopeId
