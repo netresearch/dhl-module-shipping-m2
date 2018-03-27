@@ -234,12 +234,11 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     {
         $items = $this->getCollection();
 
-        $productIds = array_map(
-            function (\Magento\Sales\Model\Order\Shipment\Item $item) {
-                return $item->getProductId();
-            },
-            $items
-        );
+        $productIds = [];
+
+        foreach ($items as $item) {
+            $productIds[] = $item->getProductId();
+        }
 
         /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
         $productCollection = $this->productFactory->create()->getCollection();
