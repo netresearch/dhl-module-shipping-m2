@@ -232,10 +232,9 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      */
     private function initItemAttributes()
     {
-        $items = $this->getCollection();
-
         $productIds = [];
-
+        /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
+        $items = $this->getCollection();
         foreach ($items as $item) {
             $productIds[] = $item->getProductId();
         }
