@@ -26,14 +26,10 @@
 
 namespace Dhl\Shipping\Cron;
 
-use Dhl\Shipping\AutoCreate\LabelGeneratorInterface;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
-use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\CreateShipment;
 use Magento\Cron\Model\Schedule;
-use Magento\Framework\DB\TransactionFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Model\Order\Email\Sender\ShipmentSender;
-use Magento\Sales\Model\Order\ShipmentFactory;
 
 /**
  * Cron entry point for automatic shipment creation and label retrieval
@@ -53,54 +49,22 @@ class AutoCreate
      */
     private $orderProvider;
 
-    /**
-     * @var LabelGeneratorInterface
+    /** @var
+     * CreateShipment
      */
-    private $labelGenerator;
-
-    /**
-     * @var ShipmentFactory
-     */
-    private $shipmentFactory;
-
-    /**
-     * @var TransactionFactory
-     */
-    private $transactionFactory;
-
-    /**
-     * @var ShipmentSender
-     */
-    private $shipmentSender;
-
-    /**
-     * @var ModuleConfigInterface
-     */
-    private $moduleConfig;
+    private $createShipment;
 
     /**
      * AutoCreate constructor.
      * @param OrderProviderInterface $orderProvider
-     * @param LabelGeneratorInterface $labelGenerator
-     * @param ShipmentFactory $shipmentFactory
-     * @param TransactionFactory $transactionFactory
-     * @param ShipmentSender $shipmentSender
-     * @param ModuleConfigInterface $moduleConfig
+     * @param CreateShipment $createShipment
      */
     public function __construct(
         OrderProviderInterface $orderProvider,
-        LabelGeneratorInterface $labelGenerator,
-        ShipmentFactory $shipmentFactory,
-        TransactionFactory $transactionFactory,
-        ShipmentSender $shipmentSender,
-        ModuleConfigInterface $moduleConfig
+        CreateShipment $createShipment
     ) {
         $this->orderProvider = $orderProvider;
-        $this->labelGenerator = $labelGenerator;
-        $this->shipmentFactory = $shipmentFactory;
-        $this->transactionFactory = $transactionFactory;
-        $this->shipmentSender = $shipmentSender;
-        $this->moduleConfig = $moduleConfig;
+        $this->createShipment = $createShipment;
     }
 
     /**
@@ -119,22 +83,8 @@ class AutoCreate
         foreach ($orders as $order) {
             try {
                 /** @var \Magento\Sales\Model\Order\Shipment $shipment */
-                $shipment = $this->shipmentFactory->create($order);
-                $shipment->addComment('Shipment automatically created by Dhl Shipping.');
-                $shipment->register();
-
-                $this->labelGenerator->create($shipment);
-                $shipment->getOrder()->setIsInProcess(true);
-                $transaction = $this->transactionFactory->create();
-                $transaction->addObject($shipment);
-                $transaction->addObject($shipment->getOrder());
-                $transaction->save();
-
+                $this->createShipment->create($order);
                 $createdShipments[$order->getIncrementId()] = $shipment->getIncrementId();
-
-                if ($this->moduleConfig->getAutoCreateNotifyCustomer($order->getStoreId())) {
-                    $this->shipmentSender->send($shipment);
-                }
             } catch (LocalizedException $exception) {
                 $failedShipments[$order->getIncrementId()] = $exception->getMessage();
             }
