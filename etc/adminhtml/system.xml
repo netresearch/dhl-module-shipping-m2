@@ -181,15 +181,15 @@
                     </depends>
                 </field>
                 <!-- 420 Default Product -->
-                <field id="default_shipping_product" translate="label" type="select" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="default_shipping_product" translate="label, comment" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Product</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DefaultProduct</source_model>
+                    <!--<source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DefaultProduct</source_model>-->
                     <comment>This product will be pre-selected for shipping label creation. You can still select another product when creating shipping labels manually.</comment>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
-                </field>
+                </group>
 
                 <!-- 500 BCS Shipping Settings -->
                 <field id="fields_shipping_bcs" translate="label" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
