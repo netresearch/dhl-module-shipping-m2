@@ -52,14 +52,11 @@ class DefaultProduct extends Field
     protected $isCollapsedDefault = true;
 
     /**
-     * Field renderer
-     *
-     * @var \Magento\Config\Block\System\Config\Form\Field
+     * DefaultProduct constructor.
+     * @param Context $context
+     * @param ShippingProductsInterface $shippingProducts
+     * @param array $data
      */
-    protected $_fieldRenderer;
-
-    const DEFAULT_TEMPLATE= 'Dhl_Shipping::system/config/defaults.phtml';
-
     public function __construct(Context $context, ShippingProductsInterface $shippingProducts, array $data = [])
     {
         $this->shippingProducts = $shippingProducts;
@@ -72,8 +69,6 @@ class DefaultProduct extends Field
      */
     public function render(AbstractElement $element)
     {
-        $html = '';
-
         $configValue = $element->getValue();
 
         $routes = $this->getAvailableOptions();
@@ -85,61 +80,29 @@ class DefaultProduct extends Field
             if ($count > 1) {
                 $type = 'select';
                 $config = [
-                    'name' => 'groups[dhlshipping][fields][default_shipping_product]['.$key.']',
+                    'name' => 'groups[dhlshipping][fields][default_shipping_products]['.$key.']',
                     'label' => __('Ship to ').$key,
                     'title' => __('Ship to ').$key,
                     'values' => $options,
-                    'value' => isset($configValue[$key]) ? $configValue[$key] : '',
+                    'value' => isset($configValue[$key]) ? $configValue[$key] : ''
                 ];
             } else {
                 $type = 'text';
                 $config = [
-                    'name' => 'groups[dhlshipping][fields][default_shipping_product]['.$key.']',
+                    'name' => 'groups[dhlshipping][fields][default_shipping_products]['.$key.']',
                     'label' => __('Ship to ').$key,
                     'title' => __('Ship to ').$key,
-                    'value' => isset($configValue[$key]) ? $configValue[$key] : $options[0]['value'],
+                    'readonly' => true,
+                    'disabled' => true,
+                    'value' => isset($configValue[$key]) ?
+                        $this->shippingProducts->getProductName($configValue[$key]) : $options[0]['label']
                 ];
             }
 
-            $element->addField('default_product_'.$key, $type, $config)->setRenderer(
-                $this->getLayout()->getBlockSingleton(
-                    \Magento\Config\Block\System\Config\Form\Field::class
-                )
-            );
-            if ($type == 'text') {
-                $element->setReadonly(true, true);
-            }
-
+            $element->addField('default_product_'.$key, $type, $config);
         }
+        $element->addClass('dhlshipping_default_product');
         return parent::render($element);
-    }
-
-    /**
-     * Get dummy element
-     *
-     * @return \Magento\Framework\DataObject
-     */
-    protected function _getDummyElement()
-    {
-        if (empty($this->_dummyElement)) {
-            $this->_dummyElement = new \Magento\Framework\DataObject(['showInDefault' => 1, 'showInWebsite' => 1]);
-        }
-        return $this->_dummyElement;
-    }
-
-    /**
-     * Get field renderer
-     *
-     * @return \Magento\Config\Block\System\Config\Form\Field
-     */
-    protected function _getFieldRenderer()
-    {
-        if (empty($this->_fieldRenderer)) {
-            $this->_fieldRenderer = $this->getLayout()->getBlockSingleton(
-                \Magento\Config\Block\System\Config\Form\Field::class
-            );
-        }
-        return $this->_fieldRenderer;
     }
 
     /**
@@ -163,6 +126,9 @@ class DefaultProduct extends Field
         return $items;
     }
 
+    /**
+     * @return mixed
+     */
     private function getAvailableOptions()
     {
         $scopeId = $this->_request->getParam('website', 0);
@@ -176,11 +142,22 @@ class DefaultProduct extends Field
         return $routes;
     }
 
+    /**
+     * @param $items
+     * @return array
+     */
     public function getProductNames($items)
     {
         $values = [];
         foreach ($items as $item => $value) {
-            array_push($values, ['value' => $value, 'label' => $this->shippingProducts->getProductName($value), 'selected' => 'selected']);
+            array_push(
+                $values,
+                [
+                    'value' => $value,
+                    'label' => $this->shippingProducts->getProductName($value),
+                    'selected' => 'selected'
+                ]
+            );
         }
         return $values;
     }

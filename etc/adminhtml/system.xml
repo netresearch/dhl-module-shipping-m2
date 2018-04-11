@@ -181,8 +181,8 @@
                     </depends>
                 </field>
                 <!-- 420 Default Product -->
-                <field id="default_shipping_product" translate="label, comment" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1" type="fieldset">
-                    <label>Default Product</label>
+                <field id="default_shipping_products" translate="label, comment" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1" type="fieldset">
+                    <label>Default Products</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
 
                     <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\DefaultProduct</backend_model>

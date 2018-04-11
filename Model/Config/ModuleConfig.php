@@ -27,6 +27,7 @@
 
 namespace Dhl\Shipping\Model\Config;
 
+use Dhl\Shipping\Util\ShippingRoutes;
 use Dhl\Shipping\Util\ShippingRoutesInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 
@@ -157,12 +158,26 @@ class ModuleConfig implements ModuleConfigInterface
      * Obtain the default product setting. This is used to highlight one
      * shipping product in case multiple products apply to the current route.
      *
-     * @param mixed $store
+     * @param mixed $recipientCountry
+     * @param mixed $storeId
      * @return string
      */
-    public function getDefaultProduct($store = null)
+    public function getDefaultProduct($recipientCountry, $storeId = null)
     {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PRODUCT, $store);
+        $defaultProducts = json_decode(
+            $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PRODUCTS, $storeId),
+            true
+        );
+        if (isset($defaultProducts[$recipientCountry])) {
+            $defaultProduct = $defaultProducts[$recipientCountry];
+        } elseif (in_array($recipientCountry, $this->getEuCountryList()) &&
+            isset($defaultProducts[ShippingRoutes::REGION_EU])
+        ) {
+            $defaultProduct = $defaultProducts[ShippingRoutes::REGION_EU];
+        } else {
+            $defaultProduct = $defaultProducts[ShippingRoutes::REGION_INTERNATIONAL];
+        }
+        return $defaultProduct;
     }
 
     /**

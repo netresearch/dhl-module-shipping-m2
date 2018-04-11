@@ -42,6 +42,7 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
     const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
     const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
+    const CONFIG_XML_PATH_DEFAULT_PRODUCTS = 'carriers/dhlshipping/default_shipping_products';
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
     const CONFIG_XML_PATH_MODULE_VERSION = 'modules/Dhl_Shipping/version';
 
@@ -91,10 +92,11 @@ interface ModuleConfigInterface
      * Obtain the default product setting. This is used to highlight one
      * shipping product in case multiple products apply to the current route.
      *
-     * @param mixed $store
+     * @param mixed $recipientCountry
+     * @param mixed $storeId
      * @return string
      */
-    public function getDefaultProduct($store = null);
+    public function getDefaultProduct($recipientCountry, $storeId = null);
 
     /**
      * Obtain shipper country from shipping origin configuration.
