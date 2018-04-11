@@ -28,6 +28,7 @@ namespace Dhl\Shipping\Model\Shipping;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Util\ExportTypeInterface;
 use Dhl\Shipping\Util\ShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingRoutes;
 use Dhl\Shipping\Webservice\GatewayInterface;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
@@ -124,6 +125,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         ShippingProductsInterface $shippingProducts,
         ExportTypeInterface $exportTypes,
         GatewayInterface $webserviceGateway,
+        ShippingRoutes $shippingRoutes,
         array $data = []
     ) {
         $this->_code = self::CODE;
@@ -163,8 +165,9 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param string $countryRecipient
      * @return string[]
      */
-    private function getShippingProducts($countryShipper, $countryRecipient)
+    private function getShippingProducts($countryShipper, $countryRecipient, $storeId)
     {
+
         // read available codes
         if (!$countryShipper || !$countryRecipient) {
             $codes = $this->shippingProducts->getAllCodes();
@@ -179,8 +182,8 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         }, $codes);
         $shippingProducts = array_combine($codes, $names);
 
+        $defaultProduct = $this->config->getDefaultProduct($countryRecipient, $storeId);
         // move default product to top of the list, if available
-        $defaultProduct = $this->config->getDefaultProduct();
         if ($defaultProduct) {
             uksort($shippingProducts, function ($keyA, $keyB) use ($defaultProduct) {
                 if ($keyA == $defaultProduct) {
@@ -231,9 +234,10 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         } else {
             $countryShipper = $params->getData('country_shipper');
             $countryRecipient = $params->getData('country_recipient');
+            $storeId = $params->getData('storeId');
         }
 
-        $products = $this->getShippingProducts($countryShipper, $countryRecipient);
+        $products = $this->getShippingProducts($countryShipper, $countryRecipient, $storeId);
 
         return $products;
     }
