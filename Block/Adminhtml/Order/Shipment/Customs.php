@@ -27,6 +27,8 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs;
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla;
 
 /**
  * Customs
@@ -56,16 +58,30 @@ class Customs extends \Magento\Backend\Block\Template
      */
     private $dgCategoryAttribute;
 
+    /**
+     * @var TermsOfTradeBcs
+     */
+    private $bcsTerms;
+
+    /**
+     * @var TermsOfTradeGla
+     */
+    private $glaTerms;
+
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magento\Backend\Block\Template\Context $context,
         ModuleConfigInterface $moduleConfig,
         DGCategory $category,
+        TermsOfTradeBcs $termsOfTradeBcs,
+        TermsOfTradeGla $termsOfTradeGla,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
         $this->coreRegistry = $registry;
         $this->dgCategoryAttribute = $category;
+        $this->bcsTerms = $termsOfTradeBcs;
+        $this->glaTerms = $termsOfTradeGla;
         parent::__construct($context, $data);
     }
 
@@ -120,5 +136,56 @@ class Customs extends \Magento\Backend\Block\Template
     public function getDangerousGoodsCategoryOptions()
     {
         return $this->dgCategoryAttribute->toOptionArray();
+    }
+
+    /**
+     * Get Options for Terms of Trade
+     *
+     * @return mixed[]
+     */
+    public function getTermsOfTradeOptions()
+    {
+        $api = $this->moduleConfig->getApiType($this->getShipment()->getStoreId());
+        switch ($api) {
+            case 'bcs':
+                return $this->bcsTerms->toOptionArray();
+
+            default:
+                return $this->glaTerms->toOptionArray();
+        }
+    }
+
+    /**
+     * Get Terms of Trade default value for current scope
+     *
+     * @return mixed
+     */
+    public function getTermsOfTradeDefault()
+    {
+        $scopeId = $this->getShipment()->getStoreId();
+        $terms = $this->moduleConfig->getTermsOfTrade($scopeId);
+
+        return $terms;
+    }
+
+    /**
+     * Get Additional Fee default value for current scope
+     * @return mixed
+     */
+    public function getAddtionalFeeDefault()
+    {
+        $scopeId = $this->getShipment()->getStoreId();
+        return $this->moduleConfig->getDefaultAdditionalFee($scopeId);
+    }
+
+    /**
+     * Get Place of Commital default value for current scope
+     *
+     * @return string
+     */
+    public function getPlaceOfCommitalDefault()
+    {
+        $scopeId = $this->getShipment()->getStoreId();
+        return $this->moduleConfig->getDefaultPlaceOfCommital($scopeId);
     }
 }
