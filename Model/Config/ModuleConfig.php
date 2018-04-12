@@ -339,6 +339,7 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function getTermsOfTrade($store = null)
     {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PTH_DEFAULT_TERM_OF_TRADE, $store);
+        $api = $this->getApiType($store);
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_TERM_OF_TRADE.'_'.$api, $store);
     }
 }
