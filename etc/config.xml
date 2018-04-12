@@ -67,7 +67,7 @@
                 <gl_label_size>4x4</gl_label_size>
                 <gl_page_size>A4</gl_page_size>
                 <gl_page_layout>1x1</gl_page_layout>
-
+                <shipmemt_autocreate_termsoftrade>DDP,DXV,DDU,DDX</shipmemt_autocreate_termsoftrade>
 
                 <shipment_autocreate_service_visualcheckofage>0</shipment_autocreate_service_visualcheckofage>
                 <shipment_autocreate_service_returnshipment>0</shipment_autocreate_service_returnshipment>

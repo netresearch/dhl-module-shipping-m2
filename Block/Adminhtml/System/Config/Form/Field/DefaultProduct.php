@@ -76,7 +76,6 @@ class DefaultProduct extends Field
             $options = $this->getProductNames($value);
             $count = count($options);
 
-            $type = $count > 1 ? 'select' : 'text';
             if ($count > 1) {
                 $type = 'select';
                 $config = [
@@ -93,7 +92,6 @@ class DefaultProduct extends Field
                     'label' => __('Ship to ').$key,
                     'title' => __('Ship to ').$key,
                     'readonly' => true,
-                    'disabled' => true,
                     'value' => isset($configValue[$key]) ?
                         $this->shippingProducts->getProductName($configValue[$key]) : $options[0]['label']
                 ];
@@ -138,7 +136,7 @@ class DefaultProduct extends Field
             $scopeId
         );
         $routes = $this->shippingProducts->getAvailableShippingRoutes($shippingOrigin);
-        $applicableCodes = $this->shippingProducts->getApplicableCodes($shippingOrigin);
+
         return $routes;
     }
 

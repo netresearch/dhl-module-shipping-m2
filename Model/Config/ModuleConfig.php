@@ -297,4 +297,48 @@ class ModuleConfig implements ModuleConfigInterface
     {
         return $this->configAccessor->getConfigValue(ModuleConfigInterface::CONFIG_XML_PATH_MODULE_VERSION, $store);
     }
+
+    /**
+     * Get default value of Place of Commital
+     *
+     * @param mixed $store
+     * @return mixed|string
+     */
+    public function getDefaultPlaceOfCommital($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PLACE_OF_COMMITAL, $store);
+    }
+
+    /**
+     * Get the default value of Addtional Fee
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getDefaultAdditionalFee($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_ADDITIONAL_FEE, $store);
+    }
+
+    /**
+     * Get the current Api Type
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getApiType($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_API_TYPE, $store);
+    }
+
+    /**
+     * Get the default value of Terms of Trade
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getTermsOfTrade($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PTH_DEFAULT_TERM_OF_TRADE, $store);
+    }
 }

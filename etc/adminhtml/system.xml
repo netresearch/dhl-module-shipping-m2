@@ -193,6 +193,38 @@
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
+                <!-- 430 General Automatic Shipment Creation Settings -->
+                <field id="fields_automatic_shipping_general" translate="label" sortOrder="430" showInDefault="1" showInStore="1" showInWebsite="1">
+                    <label>Automatic Shipmment Creation Settings</label>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
+                </field>
+                <field id="shipmemt_autocreate_termsoftrade" translate="label" sortOrder="431" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
+                    <label>Terms of Trade</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTrade</source_model>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\TermsOfTrade</frontend_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
+                </field>
+
+                <field id="shipmemt_autocreate_placeofcommital" translate="label" sortOrder="440" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                    <label>Place of Commital</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                    <validate>validate-length maximum-length-35</validate>
+                </field>
+
+                <field id="shipmemt_autocreate_addtionalfee" translate="label" sortOrder="450" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                    <label>Additional Fee</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                    <validate>validate-number</validate>
+                </field>
 
                 <!-- 500 BCS Shipping Settings -->
                 <field id="fields_shipping_bcs" translate="label" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
