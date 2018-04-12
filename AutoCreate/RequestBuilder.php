@@ -286,11 +286,11 @@ class RequestBuilder implements RequestBuilderInterface
         $carrier = $this->carrierFactory->create($carrierCode, $storeId);
         $shipperCountry = $this->moduleConfig->getShipperCountry($storeId);
         $destCountryId =  $shipmentRequest->getOrderShipment()->getShippingAddress()->getCountryId();
-
         $params = $this->dataObjectFactory->create([
             'data' => [
                 'country_shipper' => $shipperCountry,
-                'country_recipient' => $destCountryId
+                'country_recipient' => $destCountryId,
+                'storeId' => $storeId
             ]
         ]);
 
@@ -313,6 +313,13 @@ class RequestBuilder implements RequestBuilderInterface
             ? \Zend_Measure_Length::INCH
             : \Zend_Measure_Length::CENTIMETER;
 
+        $apiType = $this->moduleConfig->getApiType($storeId);
+        $defaultTod = $this->moduleConfig->getTermsOfTrade($storeId);
+        if ($apiType == 'bcs') {
+            $defaultAdditionFee = $this->moduleConfig->getDefaultAdditionalFee($storeId);
+            $defaultPoc = $this->moduleConfig->getDefaultPlaceOfCommital($storeId);
+        }
+
         $package['params']['container'] = $container;
         $package['params']['weight'] = $totalWeight;
         $package['params']['length'] = '';
@@ -323,6 +330,15 @@ class RequestBuilder implements RequestBuilderInterface
         $package['params']['content_type'] = '';
         $package['params']['content_type_other'] = '';
         $package['params']['services'] = $serviceCollection->getConfiguration();
+        if (isset($defaultTod)) {
+            $package['params']['customs']['terms_of_trade'] = $defaultTod;
+        }
+        if (isset($defaultAdditionFee)) {
+            $package['params']['customs']['additional_fee'] = $defaultAdditionFee;
+        }
+        if (isset($defaultPoc)) {
+            $package['params']['customs']['place_of_commital'] = $defaultPoc;
+        }
 
         $packages = [1 => $package];
         $shipmentRequest->setData('packages', $packages);
