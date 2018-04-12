@@ -23,7 +23,16 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-/** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
+/** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */
+
+$termOptions = $block->getTermsOfTradeOptions();
+$termsDefaultValue = $block->getTermsOfTradeDefault();
+$addtionalFee = $block->getAddtionalFeeDefault();
+$placeOfCommital = $block->getPlaceOfCommitalDefault();
+
+$addtionalFeeDefaultValue = isset($addtionalFee) ? $addtionalFee : 0;
+$placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
+?>
 <table cellspacing="0" class="data-table admin__control-table">
     <thead>
         <tr class="headings">
@@ -42,16 +51,21 @@
                 <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade"
                         title="<?= $block->escapeHtmlAttr(__('Terms of Trade')) ?>"
                         class="input-select admin__control-select">
-                    <option value="DDP">DDP</option>
-                    <option value="DXV">DXV</option>
-                    <option value="DDU">DDU</option>
-                    <option value="DDP">DDX</option>
+                    <?php foreach ($termOptions as $option) : ?>
+                        <option value="<?= $block->escapeHtmlAttr($option['value']) ?>"
+                        <?php if ($option['value'] == $termsDefaultValue) : ?>
+                            selected="selected"
+                        <?php endif; ?> >
+                            <?= $block->escapeHtml($option['value']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </td>
             <td>
                 <div class="admin__control-addon">
                     <input data-module="dhl_shipping" data-name="dhl_customs_additional_fee" type="text"
-                           title="" value="0"
+                           title=""
+                           value="<?= $block->escapeHtmlAttr($addtionalFeeDefaultValue) ?>"
                            class="input-text admin__control-text required-entry validate-number"/>
                     <span class="admin__addon-suffix">
                         <span class="customs-value-currency"><?= $block->escapeHtml($block->getCustomValueCurrencyCode()) ?></span>
@@ -61,7 +75,9 @@
             <td>
                 <input data-module="dhl_shipping" data-name="dhl_customs_place_of_commital" type="text"
                        class="input-text admin__control-text required-entry validate-length maximum-length-35"
-                       maxlength="35" />
+                       maxlength="35"
+                       value="<?= $block->escapeHtmlAttr($placeOfCommitalDefaultValue) ?>"
+                />
             </td>
             <td>
                 <input data-module="dhl_shipping" data-name="dhl_customs_permit_number" type="text"

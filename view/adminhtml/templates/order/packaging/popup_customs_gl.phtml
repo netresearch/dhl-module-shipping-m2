@@ -23,7 +23,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-/** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */ ?>
+/** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs $block */
+
+$termsOptions = $block->getTermsOfTradeOptions();
+$termDefaultValue = $block->getTermsOfTradeDefault();
+
+?>
 <table cellspacing="0" class="data-table admin__control-table">
     <thead>
         <tr>
@@ -38,8 +43,14 @@
                 <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade"
                         title="<?= $block->escapeHtmlAttr(__('Terms of Trade')) ?>"
                         class="input-select admin__control-select">
-                    <option value="DDU">DDU</option>
-                    <option value="DDP">DDP</option>
+                        <?php foreach ($termsOptions as $option) : ?>
+                            <option value="<?php echo $option['value']?>"
+                                    <?php if ($option['value'] == $termDefaultValue) : ?>
+                                        selected="selected"
+                                    <?php endif; ?> >
+                                <?php echo $option['value'] ?>
+                            </option>
+                        <?php endforeach; ?>
                 </select>
             </td>
             <td>
