@@ -1,9 +1,27 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: andreas
- * Date: 03.04.18
- * Time: 15:45
+ * Dhl Shipping
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 7
+ *
+ * @category  Dhl
+ * @package   Dhl\Shipping
+ * @author    Andreas Müller <andreas.mueller@netresearch.de>
+ * @copyright 2018 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
  */
 
 namespace Dhl\Shipping\Model;
@@ -18,6 +36,15 @@ use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Sales\Model\Order;
 
+/**
+ * CreateShipment
+ *
+ * @category Dhl
+ * @package  Dhl\Shipping
+ * @author   Andreas Müller <andreas.mueller@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class CreateShipment
 {
     /**
@@ -77,14 +104,6 @@ class CreateShipment
         }
         if (!$order->canShip()) {
             throw new LocalizedException(__('Order cannot be shipped'));
-        }
-
-        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute(
-            $order->getShippingAddress()->getCountryId(),
-            $order->getStoreId()
-        );
-        if ($isCrossBorder) {
-            throw new LocalizedException(__('Crossboarder shipments cannot be created automatically'));
         }
 
         $items = [];
