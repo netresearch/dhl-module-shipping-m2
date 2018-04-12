@@ -201,12 +201,18 @@
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <field id="shipmemt_autocreate_termsoftrade" translate="label" sortOrder="431" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
+                <field id="shipmemt_autocreate_termsoftrade_bcs" translate="label" sortOrder="431" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
                     <label>Terms of Trade</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTrade</source_model>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\TermsOfTrade</frontend_model>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs</source_model>
                     <depends>
-                        <field id="api_type" separator=",">bcs,gla</field>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <field id="shipmemt_autocreate_termsoftrade_gla" translate="label" sortOrder="432" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
+                    <label>Terms of Trade</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla</source_model>
+                    <depends>
+                        <field id="api_type">gla</field>
                     </depends>
                 </field>
 
