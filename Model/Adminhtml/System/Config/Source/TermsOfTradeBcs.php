@@ -26,7 +26,15 @@
 
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-
+/**
+ * TermsOfTradeBcs
+ *
+ * @category Dhl
+ * @package  Dhl\Shipping
+ * @author   Andreas Müller <andreas.mueller@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class TermsOfTradeBcs
 {
 
