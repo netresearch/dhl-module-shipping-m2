@@ -26,7 +26,8 @@
 
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-class TermsOfTrade
+
+class TermsOfTradeBcs
 {
 
     const TOD_DDP = 'DDP';
