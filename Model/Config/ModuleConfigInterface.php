@@ -49,6 +49,10 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_AUTOCREATE_ENABLED = 'carriers/dhlshipping/shipment_autocreate_enabled';
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'carriers/dhlshipping/shipment_autocreate_order_status';
     const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'carriers/dhlshipping/shipment_autocreate_send_shippinginfo';
+    const CONFIG_XML_PATH_DEFAULT_ADDITIONAL_FEE = 'carriers/dhlshipping/shipmemt_autocreate_addtionalfee';
+    const CONFIG_XML_PATH_DEFAULT_PLACE_OF_COMMITAL = 'carriers/dhlshipping/shipmemt_autocreate_placeofcommital';
+    const CONFIG_XML_PATH_API_TYPE = 'carriers/dhlshipping/api_type';
+    const CONFIG_XML_PATH_DEFAULT_TERM_OF_TRADE = 'carriers/dhlshipping/shipmemt_autocreate_termsoftrade';
 
     /**
      * Check if logging is enabled
@@ -177,4 +181,37 @@ interface ModuleConfigInterface
      * @return string
      */
     public function getModuleVersion($store = null);
+
+    /**
+     * Get default value for PLace of Commital
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getDefaultPlaceOfCommital($store = null);
+
+    /**
+     * Get default value of Additional Fee
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getDefaultAdditionalFee($store = null);
+
+    /**
+     * Get the current Api Type
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getApiType($store = null);
+
+
+    /**
+     * Get the default value of Terms of Trade
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getTermsOfTrade($store = null);
 }
