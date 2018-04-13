@@ -39,6 +39,8 @@ use Magento\Shipping\Model\Shipment\Request;
 use Magento\Shipping\Model\Shipment\RequestFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Directory\Helper\Data;
+use Dhl\Shipping\Helper\Data as Helper;
+use Dhl\Shipping\Util\ExportTypeInterface;
 
 /**
  * Class RequestBuilder
@@ -88,6 +90,10 @@ class RequestBuilder implements RequestBuilderInterface
      */
     private $carrierFactory;
 
+    private $helper;
+
+    private $exportType;
+
     /**
      * @var mixed[]
      */
@@ -109,7 +115,9 @@ class RequestBuilder implements RequestBuilderInterface
         ScopeConfigInterface $scopeConfig,
         RegionFactory $regionFactory,
         DataObjectFactory $dataObjectFactory,
-        \Magento\Shipping\Model\CarrierFactory $carrierFactory
+        \Magento\Shipping\Model\CarrierFactory $carrierFactory,
+        ExportTypeInterface $exportType,
+        Helper $helper
     ) {
         $this->moduleConfig = $moduleConfig;
         $this->serviceConfig = $serviceConfig;
@@ -118,6 +126,8 @@ class RequestBuilder implements RequestBuilderInterface
         $this->regionFactory = $regionFactory;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->carrierFactory = $carrierFactory;
+        $this->helper = $helper;
+        $this->exportType = $exportType;
     }
 
     /**
@@ -149,13 +159,14 @@ class RequestBuilder implements RequestBuilderInterface
         $shipmentRequest = $this->shipmentRequestFactory->create();
 
         $shipmentRequest->setOrderShipment($orderShipment);
-        $this->addShipperData($shipmentRequest);
-        $this->addReceiverData($shipmentRequest);
-        $this->preparePackageData($shipmentRequest);
-        $shipmentRequest->setShippingMethod($shippingMethod->getMethod());
+        $shipmentRequest->setShippingMethod($shippingMethod->getData('method'));
         $shipmentRequest->setPackageWeight($order->getWeight());
         $shipmentRequest->setBaseCurrencyCode($baseCurrencyCode);
         $shipmentRequest->setStoreId($orderShipment->getStoreId());
+        $this->addShipperData($shipmentRequest);
+        $this->addReceiverData($shipmentRequest);
+        $this->preparePackageData($shipmentRequest);
+
 
         $this->data = [];
         return $shipmentRequest;
@@ -259,12 +270,20 @@ class RequestBuilder implements RequestBuilderInterface
     private function preparePackageData(Request $shipmentRequest)
     {
         $storeId = $shipmentRequest->getOrderShipment()->getStoreId();
+        $apiType = $this->moduleConfig->getApiType($storeId);
+        $shipperCountry = $this->moduleConfig->getShipperCountry($storeId);
+        $reciepientCountry = $shipmentRequest->getRecipientAddressCountryCode();
+        $euCountries = $this->moduleConfig->getEuCountryList($storeId);
+        $isCrossboarder = $this->moduleConfig->isCrossBorderRoute($reciepientCountry, $storeId);
+
         $totalWeight = 0;
         $package = [
             'params' => [],
             'items' => [],
         ];
 
+        $productIds = [];
+        $orderItemIds = [];
         /** @var \Magento\Sales\Model\Order\Shipment\Item $item */
         foreach ($shipmentRequest->getOrderShipment()->getAllItems() as $item) {
             if ($item->getOrderItem()->isDummy(true)) {
@@ -273,8 +292,30 @@ class RequestBuilder implements RequestBuilderInterface
 
             $totalWeight += $item->getWeight();
 
-            $itemData = $item->toArray(['qty', 'price', 'name', 'weight', 'product_id', 'order_item_id']);
+            if ($apiType == 'bcs') {
+                $itemData = $item->toArray(
+                    [
+                        'qty',
+                        'customs_value',
+                        'price',
+                        'name',
+                        'weight',
+                        'product_id',
+                        'order_item_id',
+                        'customs_item_description',
+                        'item_origin_country',
+                        'tariff_number'
+                    ]
+                );
+                $itemData['customs_value'] = $itemData['price'];
+                $itemData['item_origin_country'] = $shipperCountry;
+            } else {
+                $itemData = $item->toArray(['qty', 'price', 'name', 'weight', 'product_id', 'order_item_id']);
+            }
             $package['items'][$item->getOrderItemId()] = $itemData;
+
+            $productIds[] = $item->getProductId();
+            $orderItemIds[$item->getOrderItemId()] = $item->getProductId();
         }
 
         $carrierCode = $shipmentRequest
@@ -284,7 +325,7 @@ class RequestBuilder implements RequestBuilderInterface
             ->getData('carrier_code');
 
         $carrier = $this->carrierFactory->create($carrierCode, $storeId);
-        $shipperCountry = $this->moduleConfig->getShipperCountry($storeId);
+
         $destCountryId =  $shipmentRequest->getOrderShipment()->getShippingAddress()->getCountryId();
         $params = $this->dataObjectFactory->create([
             'data' => [
@@ -313,12 +354,28 @@ class RequestBuilder implements RequestBuilderInterface
             ? \Zend_Measure_Length::INCH
             : \Zend_Measure_Length::CENTIMETER;
 
-        $apiType = $this->moduleConfig->getApiType($storeId);
+
         $defaultTod = $this->moduleConfig->getTermsOfTrade($storeId);
-        if ($apiType == 'bcs') {
+        $productData = $this->helper->getProductData($productIds, $storeId);
+
+        if ($apiType == 'bcs' && $isCrossboarder) {
             $defaultAdditionFee = $this->moduleConfig->getDefaultAdditionalFee($storeId);
             $defaultPoc = $this->moduleConfig->getDefaultPlaceOfCommital($storeId);
+            $contentType = $this->exportType->getApplicableTypes($shipperCountry, $reciepientCountry, $euCountries);
+
+            foreach ($orderItemIds as $itemId => $productId) {
+                $package['items'][$itemId]['customs_item_description'] =
+                    $productData[$productId]['dhl_export_description'];
+                $package['items'][$itemId]['tariff_number'] = $productData[$productId]['dhl_tariff_number'];
+            }
         }
+
+        $exportDescription = '';
+        foreach ($productData as $data) {
+            $exportDescription .= $data['dhl_export_description'];
+        }
+        $exportDescription = substr($exportDescription,0, 50);
+
 
         $package['params']['container'] = $container;
         $package['params']['weight'] = $totalWeight;
@@ -327,7 +384,7 @@ class RequestBuilder implements RequestBuilderInterface
         $package['params']['height'] = '';
         $package['params']['weight_units'] = $weightUnit;
         $package['params']['dimension_units'] = $dimensionUnit;
-        $package['params']['content_type'] = '';
+        $package['params']['content_type'] = isset($contentType) ? current($contentType) : '';
         $package['params']['content_type_other'] = '';
         $package['params']['services'] = $serviceCollection->getConfiguration();
         if (isset($defaultTod)) {
@@ -338,6 +395,9 @@ class RequestBuilder implements RequestBuilderInterface
         }
         if (isset($defaultPoc)) {
             $package['params']['customs']['place_of_commital'] = $defaultPoc;
+        }
+        if (!empty($exportDescription)) {
+            $package['params']['customs']['export_description'] = $exportDescription;
         }
 
         $packages = [1 => $package];

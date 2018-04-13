@@ -231,6 +231,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         if ($params == null) {
             $countryShipper = '';
             $countryRecipient = '';
+            $storeId = '';
         } else {
             $countryShipper = $params->getData('country_shipper');
             $countryRecipient = $params->getData('country_recipient');
