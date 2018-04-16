@@ -188,14 +188,14 @@
                     <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\DefaultProduct</backend_model>
                     <!--<source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DefaultProduct</source_model>-->
 
-                    <comment>This product will be pre-selected for shipping label creation. You can still select another product when creating shipping labels manually.</comment>
+                    <comment>This products will be pre-selected for automatic shipping label creation. You can still select another product when creating shipping labels manually.</comment>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
                 <!-- 430 General Automatic Shipment Creation Settings -->
                 <field id="fields_automatic_shipping_general" translate="label" sortOrder="430" showInDefault="1" showInStore="1" showInWebsite="1">
-                    <label>Automatic Shipment Creation Settings</label>
+                    <label>Automatic Shipment Creation Default Values</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
@@ -241,7 +241,7 @@
                 <field id="shipment_autocreate_export_contenttype_explanation" translate="label" sortOrder="460" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
                     <label>Explanation</label>
                     <depends>
-                        <field id="shipment_autocreate_content_type">OTHER</field>
+                        <field id="shipment_autocreate_export_contenttype">OTHER</field>
                     </depends>
                 </field>
 
