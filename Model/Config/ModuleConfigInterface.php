@@ -53,6 +53,9 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_DEFAULT_PLACE_OF_COMMITAL = 'carriers/dhlshipping/shipmemt_autocreate_placeofcommital';
     const CONFIG_XML_PATH_API_TYPE = 'carriers/dhlshipping/api_type';
     const CONFIG_XML_PATH_DEFAULT_TERM_OF_TRADE = 'carriers/dhlshipping/shipmemt_autocreate_termsoftrade';
+    const CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE = 'carriers/dhlshipping/shipment_autocreate_export_contenttype';
+    const CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE_EXPLANATION  =
+        'carriers/dhlshipping/shipment_autocreate_export_contenttype_explanation';
 
     /**
      * Check if logging is enabled
@@ -214,4 +217,20 @@ interface ModuleConfigInterface
      * @return mixed
      */
     public function getTermsOfTrade($store = null);
+
+    /**
+     * Get the default value of Export Content Type
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getDefaultExportContentType($store = null);
+
+    /**
+     * Get default value of Export Content Type Explanation if Content Type is 'Other'
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getDefaultExportContentTypeExplanation($store = null);
 }

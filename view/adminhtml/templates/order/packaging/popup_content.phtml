@@ -27,6 +27,12 @@
 <?php
     $girthEnabled = 0;
     $isMetric = $block->isMetricUnit();
+    $configDefaultEct = $block->getDefaultExportContentType();
+    $configDefaultEctExplanation = $block->getDefaultExportContentTypeExplanation();
+
+    $exportContenttype = isset($configDefaultEct) ? $configDefaultEct : '';
+    $exportContenttypeExplanation = isset($configDefaultEctExplanation) ? $configDefaultEctExplanation : '';
+
 ?>
 <div id="packaging_window">
     <div class="message message-warning" style="display: none"></div>
@@ -206,7 +212,10 @@
                                     class="admin__control-select"
                                     onchange="packaging.changeContentTypes(this);">
                                 <?php foreach ($block->getContentTypes() as $key => $value) : ?>
-                                    <option value="<?= $block->escapeHtmlAttr($key) ?>" >
+                                    <option value="<?= $block->escapeHtmlAttr($key) ?>"
+                                        <?php if ($key == $configDefaultEct) : ?>
+                                            selected="selected"
+                                        <?php endif; ?>>
                                         <?= $block->escapeHtml($value) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -215,8 +224,16 @@
                         <td>
                             <input name="content_type_other"
                                    type="text"
-                                   class="input-text admin__control-text options-content-type disabled"
-                                   disabled="disabled" />
+                                    <?php if ($exportContenttype == 'OTHER') : ?>
+                                        class="input-text admin__control-text options-content-type"
+                                        <?php if ($exportContenttypeExplanation) : ?>
+                                        value="<?php echo $exportContenttypeExplanation ?>"
+                                        <?php endif; ?>
+                                    <?php else : ?>
+                                        class="input-text admin__control-text options-content-type disabled"
+                                        disabled="disabled"
+                                    <?php endif; ?>
+                            />
                         </td>
                     </tr>
                     </tbody>

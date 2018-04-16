@@ -30,7 +30,7 @@ use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 
 /**
- * Class Data
+ * Class ProductData
  *
  *
  *
@@ -38,11 +38,15 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
  * @package  Dhl\Shipping
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  */
-class Data
+class ProductData
 {
+    /** @var Collection  */
     private $productCollection;
 
-
+    /**
+     * ProductData constructor.
+     * @param Collection $collection
+     */
     public function __construct(Collection $collection)
     {
         $this->productCollection = $collection;

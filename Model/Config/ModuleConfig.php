@@ -342,4 +342,27 @@ class ModuleConfig implements ModuleConfigInterface
         $api = $this->getApiType($store);
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_TERM_OF_TRADE.'_'.$api, $store);
     }
+
+    /**
+     * Get the default value of Export Content Type
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getDefaultExportContentType($store = null)
+    {
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE, $store);
+    }
+
+    /**
+     * Get default value of Export Content Type Explanation if Content Type is 'Other'
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getDefaultExportContentTypeExplanation($store = null)
+    {
+        return $this->configAccessor
+            ->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE_EXPLANATION, $store);
+    }
 }
