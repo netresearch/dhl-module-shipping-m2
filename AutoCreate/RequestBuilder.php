@@ -41,7 +41,7 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Directory\Helper\Data;
 use Dhl\Shipping\Helper\ProductData as Helper;
 use Dhl\Shipping\Util\ExportTypeInterface;
-use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;;
 
 /**
  * Class RequestBuilder
@@ -91,8 +91,14 @@ class RequestBuilder implements RequestBuilderInterface
      */
     private $carrierFactory;
 
+    /**
+     * @var Helper
+     */
     private $helper;
 
+    /**
+     * @var ExportTypeInterface
+     */
     private $exportType;
 
     /**
@@ -364,7 +370,9 @@ class RequestBuilder implements RequestBuilderInterface
                 $defaultAdditionFee = $this->moduleConfig->getDefaultAdditionalFee($storeId);
                 $defaultPoc = $this->moduleConfig->getDefaultPlaceOfCommital($storeId);
                 $contentType = $this->moduleConfig->getDefaultExportContentType($storeId);
-                $contentTypeOther = $this->moduleConfig->getDefaultExportContentTypeExplanation($storeId);
+                if ($contentType == $this->exportType::TYPE_OTHER) {
+                    $contentTypeOther = $this->moduleConfig->getDefaultExportContentTypeExplanation($storeId);
+                }
 
                 foreach ($orderItemIds as $itemId => $productId) {
                     $package['items'][$itemId]['customs_item_description'] =
