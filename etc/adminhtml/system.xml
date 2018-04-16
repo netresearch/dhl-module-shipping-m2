@@ -195,7 +195,7 @@
                 </field>
                 <!-- 430 General Automatic Shipment Creation Settings -->
                 <field id="fields_automatic_shipping_general" translate="label" sortOrder="430" showInDefault="1" showInStore="1" showInWebsite="1">
-                    <label>Automatic Shipmment Creation Settings</label>
+                    <label>Automatic Shipment Creation Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
@@ -230,6 +230,19 @@
                         <field id="api_type">bcs</field>
                     </depends>
                     <validate>validate-number</validate>
+                </field>
+                <field id="shipment_autocreate_export_contenttype" translate="label" sortOrder="455" showInDefault="1" showInStore="1" showInWebsite="1" type="select">
+                    <label>Export Content Type</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\ExportContentType</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <field id="shipment_autocreate_export_contenttype_explanation" translate="label" sortOrder="460" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                    <label>Explanation</label>
+                    <depends>
+                        <field id="shipment_autocreate_content_type">OTHER</field>
+                    </depends>
                 </field>
 
                 <!-- 500 BCS Shipping Settings -->

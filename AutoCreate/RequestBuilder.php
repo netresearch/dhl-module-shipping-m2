@@ -39,7 +39,7 @@ use Magento\Shipping\Model\Shipment\Request;
 use Magento\Shipping\Model\Shipment\RequestFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Directory\Helper\Data;
-use Dhl\Shipping\Helper\Data as Helper;
+use Dhl\Shipping\Helper\ProductData as Helper;
 use Dhl\Shipping\Util\ExportTypeInterface;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 
@@ -108,6 +108,9 @@ class RequestBuilder implements RequestBuilderInterface
      * @param ScopeConfigInterface $scopeConfig
      * @param RegionFactory $regionFactory
      * @param DataObjectFactory $dataObjectFactory
+     * @param \Magento\Shipping\Model\CarrierFactory $carrierFactory
+     * @param ExportTypeInterface $exportType
+     * @param Helper $helper
      */
     public function __construct(
         ModuleConfigInterface $moduleConfig,
@@ -274,7 +277,6 @@ class RequestBuilder implements RequestBuilderInterface
         $apiType = $this->moduleConfig->getApiType($storeId);
         $shipperCountry = $this->moduleConfig->getShipperCountry($storeId);
         $destCountryId =  $shipmentRequest->getOrderShipment()->getShippingAddress()->getCountryId();
-        $euCountries = $this->moduleConfig->getEuCountryList($storeId);
         $isCrossboarder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $storeId);
 
         $totalWeight = 0;
@@ -361,12 +363,18 @@ class RequestBuilder implements RequestBuilderInterface
             if ($apiType == ApiType::API_TYPE_BCS) {
                 $defaultAdditionFee = $this->moduleConfig->getDefaultAdditionalFee($storeId);
                 $defaultPoc = $this->moduleConfig->getDefaultPlaceOfCommital($storeId);
-                $contentType = $this->exportType->getApplicableTypes($shipperCountry, $destCountryId, $euCountries);
+                $contentType = $this->moduleConfig->getDefaultExportContentType($storeId);
+                $contentTypeOther = $this->moduleConfig->getDefaultExportContentTypeExplanation($storeId);
 
                 foreach ($orderItemIds as $itemId => $productId) {
                     $package['items'][$itemId]['customs_item_description'] =
-                        $productData[$productId]['dhl_export_description'];
-                    $package['items'][$itemId]['tariff_number'] = $productData[$productId]['dhl_tariff_number'];
+                        isset($productData[$productId]['dhl_export_description']) ?
+                            $productData[$productId]['dhl_export_description'] :
+                            '';
+                    $package['items'][$itemId]['tariff_number'] =
+                        isset($productData[$productId]['dhl_tariff_number']) ?
+                            $productData[$productId]['dhl_tariff_number'] :
+                            '';
                 }
             }
             $exportDescription = '';
@@ -398,8 +406,9 @@ class RequestBuilder implements RequestBuilderInterface
         $package['params']['weight_units'] = $weightUnit;
         $package['params']['dimension_units'] = $dimensionUnit;
         $package['params']['content_type'] =
-            isset($contentType) ? strtoupper(str_replace(' ', '_', current($contentType))) : '';
-        $package['params']['content_type_other'] = '';
+            isset($contentType) ? $contentType : '';
+        $package['params']['content_type_other'] =
+            isset($contentTypeOther) ? $contentTypeOther : '';
         $package['params']['services'] = $serviceCollection->getConfiguration();
 
         if (isset($customsParams)) {

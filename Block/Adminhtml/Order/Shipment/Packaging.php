@@ -107,4 +107,22 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         $unit = $this->getStoreWeightUnit();
         return $unit != \Zend_Measure_Weight::LBS;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultExportContentType()
+    {
+        $storeId = $this->getShipment()->getStoreId();
+        return $this->moduleConfig->getDefaultExportContentType($storeId);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultExportContentTypeExplanation()
+    {
+        $storeId = $this->getShipment()->getStoreId();
+        return $this->moduleConfig->getDefaultExportContentTypeExplanation($storeId);
+    }
 }
