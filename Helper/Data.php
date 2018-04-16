@@ -1,9 +1,25 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: andreas
- * Date: 13.04.18
- * Time: 08:49
+ * Dhl Shipping
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * @category  Dhl
+ * @package   Dhl\Shipping\Cron\AutoCreate
+ * @author    Andreas Müller <andreas.mueller@netresearch.de>
+ * @copyright 2018 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
  */
 
 namespace Dhl\Shipping\Helper;
@@ -13,10 +29,18 @@ use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 
+/**
+ * Class Data
+ *
+ *
+ *
+ * @category Dhl
+ * @package  Dhl\Shipping
+ * @author   Andreas Müller <andreas.mueller@netresearch.de>
+ */
 class Data
 {
     private $productCollection;
-
 
 
     public function __construct(Collection $collection)
