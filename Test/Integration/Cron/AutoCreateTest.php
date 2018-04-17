@@ -32,6 +32,7 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\Config\ServiceConfig;
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
+use Dhl\Shipping\Model\CreateShipment;
 use Dhl\Shipping\Test\Fixture\OrderCollectionFixture;
 use Magento\Cron\Model\Schedule;
 use Magento\Sales\Model\Order;
@@ -74,6 +75,11 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
      */
     private $labelGenerator;
 
+    /**
+     * @var CreateShipment | \PHPUnit_Framework_MockObject_MockObject
+     */
+    private $createShipment;
+
     public static function createOrdersFixtures()
     {
         OrderCollectionFixture::createOrdersFixture();
@@ -106,12 +112,19 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
                                    ->setMethods(['getStoresConfigByPath'])
                                    ->getMock();
 
-
-
         $this->labelGenerator = $this->getMockBuilder(LabelGenerator::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['create'])
-            ->getMock();
+                                     ->disableOriginalConstructor()
+                                     ->setMethods(['create'])
+                                     ->getMock();
+
+        $this->createShipment = $this->objectManager->create(
+            CreateShipment::class,
+            [
+                'labelGenerator' => $this->labelGenerator,
+            ]
+        );
+
+
 
         $orderProvider = $this->objectManager->create(OrderProvider::class, [
             'moduleConfig' => $this->moduleConfig,
@@ -123,7 +136,7 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
             AutoCreate::class,
             [
                 'orderProvider' => $orderProvider,
-                'labelGenerator' => $this->labelGenerator,
+                'createShipment' => $this->createShipment
                 // 'moduleConfig' => $this->moduleConfig,
             ]
         );
