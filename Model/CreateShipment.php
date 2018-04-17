@@ -94,6 +94,8 @@ class CreateShipment
 
     /**
      * @param Order $order
+     * @return Order\Shipment
+     * @throws LocalizedException
      */
     public function create(Order $order)
     {
@@ -126,5 +128,7 @@ class CreateShipment
         if ($this->moduleConfig->getAutoCreateNotifyCustomer($order->getStoreId())) {
             $this->shipmentSender->send($shipment);
         }
+
+        return $shipment;
     }
 }

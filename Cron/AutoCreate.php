@@ -83,7 +83,7 @@ class AutoCreate
         foreach ($orders as $order) {
             try {
                 /** @var \Magento\Sales\Model\Order\Shipment $shipment */
-                $this->createShipment->create($order);
+                $shipment = $this->createShipment->create($order);
                 $createdShipments[$order->getIncrementId()] = $shipment->getIncrementId();
             } catch (LocalizedException $exception) {
                 $failedShipments[$order->getIncrementId()] = $exception->getMessage();
