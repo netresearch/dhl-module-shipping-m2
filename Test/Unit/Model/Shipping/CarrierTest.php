@@ -43,7 +43,7 @@ use \Magento\Shipping\Model\Carrier\CarrierInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class CarrierTest extends \PHPUnit_Framework_TestCase
+class CarrierTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectManager
@@ -51,12 +51,12 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     private $objectManager;
 
     /**
-     * @var DataObjectFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var DataObjectFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     private $dataObjectFactory;
 
     /**
-     * @var Gateway|\PHPUnit_Framework_MockObject_MockObject
+     * @var Gateway|\PHPUnit\Framework\MockObject\MockObject
      */
     private $webserviceGateway;
 
@@ -69,13 +69,19 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         $testName = $this->getName(false);
         $factoryIsInvoked = in_array($testName, ['shipmentRequestSuccess', 'shipmentRequestError']);
         $dataObject = $this->objectManager->getObject(DataObject::class);
-        $this->dataObjectFactory = $this->getMock(DataObjectFactory::class, ['create'], [], '', false);
+        $this->dataObjectFactory = $this->getMockBuilder(DataObjectFactory::class)
+                                        ->setMethods(['create'])
+                                        ->disableOriginalConstructor()
+                                        ->getMock();
         $this->dataObjectFactory
             ->expects($this->exactly((int)$factoryIsInvoked))
             ->method('create')
             ->willReturn($dataObject);
 
-        $this->webserviceGateway = $this->getMock(Gateway::class, ['createLabels'], [], '', false);
+        $this->webserviceGateway = $this->getMockBuilder(Gateway::class)
+                                        ->setMethods(['createLabels'])
+                                        ->disableOriginalConstructor()
+                                        ->getMock();
     }
 
     /**
@@ -211,12 +217,18 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             ->method('createLabels')
             ->willReturn($mockResponse);
 
-        $order = $this->objectManager->getObject(DataObject::class, ['data' => [
-            'increment_id' => $incrementId,
-        ]]);
-        $shipment = $this->objectManager->getObject(DataObject::class, ['data' => [
-            'order' => $order,
-        ]]);
+        $order = $this->objectManager->getObject(
+            DataObject::class,
+            ['data' => [
+                'increment_id' => $incrementId,
+            ]]
+        );
+        $shipment = $this->objectManager->getObject(
+            DataObject::class,
+            ['data' => [
+                'order' => $order,
+            ]]
+        );
         $package = [
             'params' => [
                 'container' => 'foo',
@@ -226,16 +238,22 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         ];
 
         /** @var ShipmentRequest $request */
-        $request = $this->objectManager->getObject(ShipmentRequest::class, ['data' => [
-            'packages' => [$packageId => $package],
-            'order_shipment' => $shipment,
-        ]]);
+        $request = $this->objectManager->getObject(
+            ShipmentRequest::class,
+            ['data' => [
+                'packages' => [$packageId => $package],
+                'order_shipment' => $shipment,
+            ]]
+        );
 
         /** @var Carrier $carrier */
-        $carrier = $this->objectManager->getObject(Carrier::class, [
-            'dataObjectFactory' => $this->dataObjectFactory,
-            'webserviceGateway' => $this->webserviceGateway,
-        ]);
+        $carrier = $this->objectManager->getObject(
+            Carrier::class,
+            [
+                'dataObjectFactory' => $this->dataObjectFactory,
+                'webserviceGateway' => $this->webserviceGateway,
+            ]
+        );
         $response = $carrier->requestToShipment($request);
         $this->assertInstanceOf(DataObject::class, $response);
 

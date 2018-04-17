@@ -32,7 +32,7 @@ use \Magento\Framework\DataObject;
 use \Magento\Framework\Event;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use \PHPUnit_Framework_MockObject_MockObject as MockObject;
+use \PHPUnit\Framework\MockObject\MockObject as MockObject;
 
 /**
  * UpdateCarrierObserverTest
@@ -44,7 +44,7 @@ use \PHPUnit_Framework_MockObject_MockObject as MockObject;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class UpdateCarrierObserverTest extends \PHPUnit_Framework_TestCase
+class UpdateCarrierObserverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectManager
