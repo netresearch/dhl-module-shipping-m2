@@ -290,12 +290,14 @@ class ModuleConfigTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @test
-     * @magentoConfigFixture default/carriers/dhlshipping/default_shipping_product 4321
+     * @magentoConfigFixture default/carriers/dhlshipping/default_shipping_products {"DE":4321,"INTL":4444,"EURO":"1111"}
      */
     public function getDefaultProduct()
     {
         /** @var ModuleConfig $config */
         $config = $this->objectManager->create(ModuleConfig::class);
-        $this->assertEquals('4321', $config->getDefaultProduct());
+        $this->assertEquals('4321', $config->getDefaultProduct('DE'));
+        $this->assertEquals('4444', $config->getDefaultProduct('MY'));
+        $this->assertEquals('1111', $config->getDefaultProduct('AT'));
     }
 }

@@ -32,7 +32,6 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\ShipmentFactory;
 use Magento\Sales\Model\Order\Email\Sender\ShipmentSender;
-use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\Framework\DB\TransactionFactory;
 use Magento\Sales\Model\Order;
 
@@ -63,10 +62,6 @@ class CreateShipment
     private $transactionFactory;
 
     /**
-     * @var TransactionRepositoryInterface
-     */
-    private $transactionRepository;
-    /**
      * @var ShipmentSender
      */
     private $shipmentSender;
@@ -76,17 +71,24 @@ class CreateShipment
      */
     private $moduleConfig;
 
+    /**
+     * CreateShipment constructor.
+     *
+     * @param ShipmentFactory $shipmentFactory
+     * @param TransactionFactory $transactionFactory
+     * @param ShipmentSender $shipmentSender
+     * @param LabelGeneratorInterface $labelGenerator
+     * @param ModuleConfigInterface $moduleConfig
+     */
     public function __construct(
         ShipmentFactory $shipmentFactory,
         TransactionFactory $transactionFactory,
-        TransactionRepositoryInterface $transactionRepository,
         ShipmentSender $shipmentSender,
         LabelGeneratorInterface $labelGenerator,
         ModuleConfigInterface $moduleConfig
     ) {
         $this->shipmentFactory = $shipmentFactory;
         $this->transactionFactory = $transactionFactory;
-        $this->transactionRepository = $transactionRepository;
         $this->moduleConfig = $moduleConfig;
         $this->labelGenerator = $labelGenerator;
         $this->shipmentSender = $shipmentSender;
@@ -96,10 +98,11 @@ class CreateShipment
      * @param Order $order
      * @return Order\Shipment
      * @throws LocalizedException
+     * @throws \Exception
      */
     public function create(Order $order)
     {
-        $shippingMethod = $order->getShippingMethod( true);
+        $shippingMethod = $order->getShippingMethod(true);
 
         if ($shippingMethod->getData('carrier_code') !== Carrier::CODE) {
             throw new LocalizedException(__('Not a DHL order'));
@@ -108,6 +111,7 @@ class CreateShipment
             throw new LocalizedException(__('Order cannot be shipped'));
         }
 
+        /** @var array $items   [itemId => itemQtyOrdered] */
         $items = [];
         foreach ($order->getAllItems() as $orderItem) {
             $items[$orderItem->getItemId()] = $orderItem->getQtyOrdered();

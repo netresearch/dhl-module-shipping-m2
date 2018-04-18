@@ -64,8 +64,9 @@ class DefaultProduct extends Field
     }
 
     /**
-     * @param Fieldset $element
+     * @param AbstractElement $element
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function render(AbstractElement $element)
     {
@@ -74,9 +75,8 @@ class DefaultProduct extends Field
         $routes = $this->getAvailableOptions();
         foreach ($routes as $key => $value) {
             $options = $this->getProductNames($value);
-            $count = count($options);
 
-            if ($count > 1) {
+            if (!empty($options)) {
                 $type = 'select';
                 $config = [
                     'name' => 'groups[dhlshipping][fields][default_shipping_products]['.$key.']',
@@ -101,27 +101,6 @@ class DefaultProduct extends Field
         }
         $element->addClass('dhlshipping_default_product');
         return parent::render($element);
-    }
-
-    /**
-     * @param string[] $items
-     * @return string[]
-     */
-    private function filterAvailable($items)
-    {
-        $scopeId = $this->_request->getParam('website', 0);
-        $shippingOrigin = $this->_scopeConfig->getValue(
-            ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID,
-            ScopeInterface::SCOPE_WEBSITE,
-            $scopeId
-        );
-        $applicableCodes = $this->shippingProducts->getApplicableCodes($shippingOrigin);
-
-        $items = array_filter($items, function ($item) use ($applicableCodes) {
-            return in_array($item['value'], $applicableCodes);
-        });
-
-        return $items;
     }
 
     /**

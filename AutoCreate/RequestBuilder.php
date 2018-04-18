@@ -177,13 +177,13 @@ class RequestBuilder implements RequestBuilderInterface
         $this->addReceiverData($shipmentRequest);
         $this->preparePackageData($shipmentRequest);
 
-
         $this->data = [];
         return $shipmentRequest;
     }
 
     /**
      * @param Request $shipmentRequest
+     * @throws LocalizedException
      */
     private function addShipperData(Request $shipmentRequest)
     {
@@ -254,6 +254,7 @@ class RequestBuilder implements RequestBuilderInterface
 
     /**
      * @param Request $shipmentRequest
+     * @throws LocalizedException
      */
     private function addReceiverData(Request $shipmentRequest)
     {
@@ -264,7 +265,9 @@ class RequestBuilder implements RequestBuilderInterface
         $shipmentRequest->setRecipientContactCompanyName($address->getCompany());
         $shipmentRequest->setRecipientContactPhoneNumber($address->getTelephone());
         $shipmentRequest->setRecipientEmail($address->getEmail());
-        $shipmentRequest->setRecipientAddressStreet(trim($address->getStreetLine(1) . ' ' . $address->getStreetLine(2)));
+        $shipmentRequest->setRecipientAddressStreet(
+            trim($address->getStreetLine(1) . ' ' . $address->getStreetLine(2))
+        );
         $shipmentRequest->setRecipientAddressStreet1($address->getStreetLine(1));
         $shipmentRequest->setRecipientAddressStreet2($address->getStreetLine(2));
         $shipmentRequest->setRecipientAddressCity($address->getCity());
@@ -283,7 +286,7 @@ class RequestBuilder implements RequestBuilderInterface
         $apiType = $this->moduleConfig->getApiType($storeId);
         $shipperCountry = $this->moduleConfig->getShipperCountry($storeId);
         $destCountryId =  $shipmentRequest->getOrderShipment()->getShippingAddress()->getCountryId();
-        $isCrossboarder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $storeId);
+        $isCrossborder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $storeId);
 
         $totalWeight = 0;
         $package = [
@@ -301,7 +304,7 @@ class RequestBuilder implements RequestBuilderInterface
 
             $totalWeight += $item->getWeight();
 
-            if ($apiType == ApiType::API_TYPE_BCS && $isCrossboarder) {
+            if ($apiType == ApiType::API_TYPE_BCS && $isCrossborder) {
                 $itemData = $item->toArray(
                     [
                         'qty',
@@ -362,8 +365,8 @@ class RequestBuilder implements RequestBuilderInterface
             ? \Zend_Measure_Length::INCH
             : \Zend_Measure_Length::CENTIMETER;
 
-        if ($isCrossboarder) {
-            $defaultTod = $this->moduleConfig->getTermsOfTrade($storeId);
+        if ($isCrossborder) {
+            $defaultTot = $this->moduleConfig->getTermsOfTrade($storeId);
             $productData = $this->helper->getProductData($productIds, $storeId);
 
             if ($apiType == ApiType::API_TYPE_BCS) {
@@ -390,11 +393,11 @@ class RequestBuilder implements RequestBuilderInterface
                 $exportDescription .= $data['dhl_export_description'];
             }
 
-            !empty($exportDescription) ? substr($exportDescription, 0, 50) : '';
+            $exportDescription = !empty($exportDescription) ? substr($exportDescription, 0, 50) : '';
 
             $customsParams = [];
-            if (isset($defaultTod)) {
-                $customsParams['terms_of_trade'] = $defaultTod;
+            if (isset($defaultTot)) {
+                $customsParams['terms_of_trade'] = $defaultTot;
             }
             if (isset($defaultAdditionFee)) {
                 $customsParams['additional_fee'] = $defaultAdditionFee;

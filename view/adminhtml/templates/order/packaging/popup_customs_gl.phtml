@@ -45,9 +45,7 @@ $termDefaultValue = $block->getTermsOfTradeDefault();
                         class="input-select admin__control-select">
                         <?php foreach ($termsOptions as $option) : ?>
                             <option value="<?php echo $option['value']?>"
-                                    <?php if ($option['value'] == $termDefaultValue) : ?>
-                                        selected="selected"
-                                    <?php endif; ?> >
+                                    <?php echo ($option['value'] == $termDefaultValue) ? 'selected' : '' ?>>
                                 <?php echo $option['value'] ?>
                             </option>
                         <?php endforeach; ?>
@@ -56,6 +54,7 @@ $termDefaultValue = $block->getTermsOfTradeDefault();
             <td>
                 <select data-module="dhl_shipping" data-name="dhl_customs_dangerous_goods_category"
                         title="<?= $block->escapeHtmlAttr(__('Dangerous Goods Category')) ?>" class="admin__control-select">
+
                     <?php foreach ($block->getDangerousGoodsCategoryOptions() as $option) : ?>
                         <option value="<?= $block->escapeHtmlAttr($option['value']); ?>">
                             <?= $block->escapeHtml($option['label']); ?>

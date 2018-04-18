@@ -29,7 +29,6 @@ namespace Dhl\Shipping\Cron;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\CreateShipment;
 use Magento\Cron\Model\Schedule;
-use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Cron entry point for automatic shipment creation and label retrieval
@@ -49,13 +48,14 @@ class AutoCreate
      */
     private $orderProvider;
 
-    /** @var
-     * CreateShipment
+    /**
+     * @var CreateShipment
      */
     private $createShipment;
 
     /**
      * AutoCreate constructor.
+     *
      * @param OrderProviderInterface $orderProvider
      * @param CreateShipment $createShipment
      */
@@ -78,14 +78,12 @@ class AutoCreate
         $failedShipments = [];
         $createdShipments = [];
 
-        $orders = $this->orderProvider->getOrders();
         /** @var \Magento\Sales\Model\Order $order */
-        foreach ($orders as $order) {
+        foreach ($this->orderProvider->getOrders() as $order) {
             try {
-                /** @var \Magento\Sales\Model\Order\Shipment $shipment */
                 $shipment = $this->createShipment->create($order);
                 $createdShipments[$order->getIncrementId()] = $shipment->getIncrementId();
-            } catch (LocalizedException $exception) {
+            } catch (\Exception $exception) {
                 $failedShipments[$order->getIncrementId()] = $exception->getMessage();
             }
         }

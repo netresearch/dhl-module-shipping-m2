@@ -86,6 +86,7 @@ class LabelGenerator implements LabelGeneratorInterface
      * @inheritdoc
      * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $orderShipment
      * @throws LocalizedException
+     * @throws \Zend_Pdf_Exception
      */
     public function create(ShipmentInterface $orderShipment)
     {

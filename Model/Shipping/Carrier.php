@@ -163,6 +163,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      *
      * @param string $countryShipper
      * @param string $countryRecipient
+     * @param int $storeId
      * @return string[]
      */
     private function getShippingProducts($countryShipper, $countryRecipient, $storeId)

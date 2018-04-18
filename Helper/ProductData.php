@@ -32,19 +32,20 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 /**
  * Class ProductData
  *
- *
- *
  * @category Dhl
  * @package  Dhl\Shipping
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  */
 class ProductData
 {
-    /** @var Collection  */
+    /**
+     * @var Collection
+     */
     private $productCollection;
 
     /**
      * ProductData constructor.
+     *
      * @param Collection $collection
      */
     public function __construct(Collection $collection)
@@ -52,7 +53,12 @@ class ProductData
         $this->productCollection = $collection;
     }
 
-    public function getProductData($productIds, $storeId)
+    /**
+     * @param array $productIds
+     * @param int $storeId
+     * @return array
+     */
+    public function getProductData(array $productIds, $storeId)
     {
         $this->productCollection->addStoreFilter($storeId)
             ->addFieldToFilter(
@@ -74,8 +80,8 @@ class ProductData
         while ($product = $this->productCollection->fetchItem()) {
             $data[$product->getId()] = [
                 DGCategory::CODE        => $product->getData(DGCategory::CODE),
-                TariffNumber::CODE      =>$product->getData(TariffNumber::CODE),
-                ExportDescription::CODE =>$product->getData(ExportDescription::CODE)
+                TariffNumber::CODE      => $product->getData(TariffNumber::CODE),
+                ExportDescription::CODE => $product->getData(ExportDescription::CODE)
 
             ];
         }

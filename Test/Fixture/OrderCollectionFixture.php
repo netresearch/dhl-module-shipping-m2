@@ -56,10 +56,11 @@ final class OrderCollectionFixture
             'status' => Order::STATE_PROCESSING,
         ],
         '0000000002' => [
-            'status' => Order::STATE_COMPLETE,
+            'state' => Order::STATE_CANCELED,
+            'status' => Order::STATE_CANCELED,
         ],
         '0000000003' => [
-            'shipping_method' => 'foo'
+            'shipping_method' => 'bar_foo',
         ],
         '0000000004' => [],
         '0000000005' => [],

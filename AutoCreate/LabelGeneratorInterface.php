@@ -27,6 +27,11 @@ namespace Dhl\Shipping\AutoCreate;
 
 use \Magento\Sales\Api\Data\ShipmentInterface;
 
+/**
+ * Interface LabelGeneratorInterface
+ *
+ * @package Dhl\Shipping\AutoCreate
+ */
 interface LabelGeneratorInterface
 {
     /**
