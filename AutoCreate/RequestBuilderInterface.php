@@ -28,6 +28,11 @@ use Magento\Framework\Api\SimpleBuilderInterface;
 use Magento\Sales\Api\Data\ShipmentInterface;
 use Magento\Shipping\Model\Shipment\Request;
 
+/**
+ * Interface RequestBuilderInterface
+ *
+ * @package Dhl\Shipping\AutoCreate
+ */
 interface RequestBuilderInterface extends SimpleBuilderInterface
 {
     /**

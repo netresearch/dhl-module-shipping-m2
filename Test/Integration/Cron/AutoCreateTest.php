@@ -30,7 +30,6 @@ use Dhl\Shipping\AutoCreate\OrderProvider;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Config\ModuleConfig;
-use Dhl\Shipping\Model\Config\ServiceConfig;
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Model\CreateShipment;
 use Dhl\Shipping\Test\Fixture\OrderCollectionFixture;
@@ -124,8 +123,6 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
             ]
         );
 
-
-
         $orderProvider = $this->objectManager->create(OrderProvider::class, [
             'moduleConfig' => $this->moduleConfig,
             'storesConfig' => $this->storesConfig,
@@ -137,7 +134,6 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
             [
                 'orderProvider' => $orderProvider,
                 'createShipment' => $this->createShipment
-                // 'moduleConfig' => $this->moduleConfig,
             ]
         );
     }

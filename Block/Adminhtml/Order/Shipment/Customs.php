@@ -68,6 +68,17 @@ class Customs extends \Magento\Backend\Block\Template
      */
     private $glaTerms;
 
+    /**
+     * Customs constructor.
+     *
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param ModuleConfigInterface $moduleConfig
+     * @param DGCategory $category
+     * @param TermsOfTradeBcs $termsOfTradeBcs
+     * @param TermsOfTradeGla $termsOfTradeGla
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magento\Backend\Block\Template\Context $context,
@@ -82,6 +93,7 @@ class Customs extends \Magento\Backend\Block\Template
         $this->dgCategoryAttribute = $category;
         $this->bcsTerms = $termsOfTradeBcs;
         $this->glaTerms = $termsOfTradeGla;
+
         parent::__construct($context, $data);
     }
 
@@ -103,6 +115,7 @@ class Customs extends \Magento\Backend\Block\Template
     public function getCustomValueCurrencyCode()
     {
         $orderInfo = $this->getShipment()->getOrder();
+
         return $orderInfo->getBaseCurrency()->getCurrencyCode();
     }
 

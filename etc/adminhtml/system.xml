@@ -184,11 +184,8 @@
                 <field id="default_shipping_products" translate="label, comment" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1" type="fieldset">
                     <label>Default Products</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
-
                     <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\DefaultProduct</backend_model>
-                    <!--<source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DefaultProduct</source_model>-->
-
-                    <comment>This products will be pre-selected for automatic shipping label creation. You can still select another product when creating shipping labels manually.</comment>
+                    <comment>These products will be pre-selected for automatic shipping label creation. You can still select another product when creating shipping labels manually.</comment>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>

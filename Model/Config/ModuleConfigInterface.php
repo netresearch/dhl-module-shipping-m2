@@ -41,7 +41,6 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_DHLMETHODS = 'carriers/dhlshipping/shipment_dhlmethods';
     const CONFIG_XML_PATH_CODMETHODS = 'carriers/dhlshipping/shipment_dhlcodmethods';
     const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlshipping/logging_enabled';
-    const CONFIG_XML_PATH_DEFAULT_PRODUCT = 'carriers/dhlshipping/default_shipping_product';
     const CONFIG_XML_PATH_DEFAULT_PRODUCTS = 'carriers/dhlshipping/default_shipping_products';
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlshipping/sandbox_mode';
     const CONFIG_XML_PATH_MODULE_VERSION = 'modules/Dhl_Shipping/version';

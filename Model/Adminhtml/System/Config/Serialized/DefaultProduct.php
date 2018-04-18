@@ -43,8 +43,23 @@ use Magento\Store\Model\ScopeInterface;
  */
 class DefaultProduct extends Value
 {
+    /**
+     * @var ShippingProductsInterface
+     */
     private $shippingProducts;
 
+    /**
+     * DefaultProduct constructor.
+     *
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param ScopeConfigInterface $config
+     * @param \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param ShippingProductsInterface $shippingProducts
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -53,7 +68,6 @@ class DefaultProduct extends Value
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         ShippingProductsInterface $shippingProducts,
-        ShippingConfig $shippingConfig,
         array $data = []
     ) {
         $this->shippingProducts = $shippingProducts;
@@ -70,7 +84,6 @@ class DefaultProduct extends Value
             ScopeInterface::SCOPE_WEBSITE,
             $scopeId
         );
-
 
         $routeOptions = $this->shippingProducts->getAvailableShippingRoutes($shippingOrigin);
         foreach ($routeOptions as $option => $optionValue) {
@@ -103,12 +116,20 @@ class DefaultProduct extends Value
         }
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     public function processValue($value)
     {
         $result = json_decode($value, true);
         return $result;
     }
 
+    /**
+     * @return mixed|string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function getOldValue()
     {
         $oldValue = $this->_config->getValue(

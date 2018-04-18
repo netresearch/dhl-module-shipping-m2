@@ -52,10 +52,14 @@ class AutoCreate extends \Magento\Backend\App\Action
      */
     const ADMIN_RESOURCE = 'Magento_Sales::shipment';
 
-    /** @var CollectionFactory */
+    /**
+     * @var CollectionFactory
+     */
     private $collectionFactory;
 
-    /** @var OrderResourceInterface */
+    /**
+     * @var OrderResourceInterface
+     */
     private $orderResource;
 
     /**
@@ -68,6 +72,15 @@ class AutoCreate extends \Magento\Backend\App\Action
      */
     private $createShipment;
 
+    /**
+     * AutoCreate constructor.
+     *
+     * @param \Magento\Backend\App\Action\Context $context
+     * @param OrderResourceInterface $orderResource
+     * @param CollectionFactory $collectionFactory
+     * @param Filter $filter
+     * @param CreateShipment $createShipment
+     */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         OrderResourceInterface $orderResource,
@@ -82,6 +95,12 @@ class AutoCreate extends \Magento\Backend\App\Action
             parent::__construct($context);
     }
 
+    /**
+     * Recieve Orders from a mass action and try to create shipments for them via the corresponding API.
+     *
+     * @return $this|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws LocalizedException
+     */
     public function execute()
     {
         $failedShipments = [];
@@ -94,7 +113,7 @@ class AutoCreate extends \Magento\Backend\App\Action
             try {
                 $this->createShipment->create($order);
                 $createdShipments[] = $order->getId();
-            } catch (LocalizedException $exception) {
+            } catch (\Exception $exception) {
                 $failedShipments[$order->getIncrementId()] = $exception->getMessage();
             }
         }
