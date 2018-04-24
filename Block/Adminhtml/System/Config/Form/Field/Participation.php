@@ -93,18 +93,6 @@ class Participation extends AbstractFieldArray
     }
 
     /**
-     * Obtain existing data from form element
-     *
-     * @return \Magento\Framework\DataObject[]
-     */
-    public function getArrayRows()
-    {
-        $rows = parent::getArrayRows();
-        $rows = $this->filterAvailable($rows);
-        return $rows;
-    }
-
-    /**
      * Prepare existing row data object
      *
      * @param \Magento\Framework\DataObject $row
@@ -141,25 +129,5 @@ class Participation extends AbstractFieldArray
 
         // hide "Add after" button
         $this->_addAfter = false;
-    }
-
-    /**
-     * @param \Magento\Framework\DataObject[] $rows
-     * @return \Magento\Framework\DataObject[]
-     */
-    private function filterAvailable($rows)
-    {
-        $scopeId = $this->_request->getParam('website', 0);
-        $shippingOrigin = $this->_scopeConfig->getValue(
-            ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID,
-            ScopeInterface::SCOPE_WEBSITE,
-            $scopeId
-        );
-        $availableProcedures = $this->shippingProducts->getApplicableProcedures($shippingOrigin);
-        $rows = array_filter($rows, function ($row) use ($availableProcedures) {
-            return in_array($row->getData('procedure'), $availableProcedures);
-        });
-
-        return $rows;
     }
 }

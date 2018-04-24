@@ -26,8 +26,11 @@
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use \Dhl\Shipping\Model\Adminhtml\System\Config\Source\Procedure;
+use Dhl\Shipping\Util\ShippingProductsInterface;
 use \Magento\Framework\View\Element\Context;
 use \Magento\Framework\View\Element\Html\Select;
+use \Magento\Shipping\Model\Config as ShippingConfig;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Dhl Shipping Form Field Html Select Block
@@ -46,15 +49,26 @@ class Procedures extends Select
     private $source;
 
     /**
-     * Constructor
-     *
-     * @param Context   $context
-     * @param Procedure $source
-     * @param array     $data
+     * @var ShippingProductsInterface
      */
-    public function __construct(Context $context, Procedure $source, array $data = [])
-    {
+    private $shippingProducts;
+
+    /**
+     * Procedures constructor.
+     *
+     * @param Context $context
+     * @param Procedure $source
+     * @param ShippingProductsInterface $shippingProducts
+     * @param array $data
+     */
+    public function __construct(
+        Context $context,
+        Procedure $source,
+        ShippingProductsInterface $shippingProducts,
+        array $data = []
+    ) {
         $this->source = $source;
+        $this->shippingProducts = $shippingProducts;
 
         parent::__construct($context, $data);
     }
@@ -78,11 +92,30 @@ class Procedures extends Select
     {
         if (!$this->getOptions()) {
             $this->addOption('0', __('Select Procedure'));
-            foreach ($this->source->toOptionArray() as $procedureData) {
+            $procedures = $this->filterAvailable($this->source->toOptionArray());
+            foreach ($procedures as $procedureData) {
                 $this->addOption($procedureData['value'], $this->escapeHtml($procedureData['label']));
             }
         }
 
         return parent::_toHtml();
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    private function filterAvailable($data)
+    {
+        $shippingOrigin = $this->_scopeConfig->getValue(
+            ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID,
+            ScopeInterface::SCOPE_WEBSITE
+        );
+        $availableProcedures = $this->shippingProducts->getApplicableProcedures($shippingOrigin);
+        $data = array_filter($data, function ($element) use ($availableProcedures) {
+            return in_array($element['value'], $availableProcedures);
+        });
+
+        return $data;
     }
 }
