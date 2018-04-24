@@ -106,7 +106,7 @@ class CreateShipment
         $shippingMethod = $order->getShippingMethod(true);
 
         if ($shippingMethod->getData('carrier_code') !== Carrier::CODE) {
-            throw new LocalizedException(__('Not a DHL order'));
+            throw new LocalizedException(__('Order cannot be shipped with DHL'));
         }
         if (!$order->canShip()) {
             throw new LocalizedException(__('Order cannot be shipped'));
@@ -121,7 +121,7 @@ class CreateShipment
         /** @var Order\Shipment $shipment */
         $shipment = $this->shipmentFactory->create($order, $items);
         if ($isCron) {
-            $shipment->addComment('Shipment automatically created by Dhl Shipping.');
+            $shipment->addComment('Shipment automatically created by DHL Shipping.');
         }
         $shipment->register();
 
