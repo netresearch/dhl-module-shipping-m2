@@ -119,13 +119,19 @@ class AutoCreate extends \Magento\Backend\App\Action
         }
 
         if (empty($failedShipments)) {
-            $this->messageManager->addSuccessMessage(
-                sprintf(__('A total of %s have been created.'), count($createdShipments))
-            );
+            if (count($createdShipments === 1)) {
+                $message = 'One Shipment and Label have been created.';
+            } else {
+                $message = 'A total of %s Shipments and Labels have been created.';
+            }
+
+                $this->messageManager->addSuccessMessage(
+                    sprintf(__($message), count($createdShipments))
+                );
         } else {
             $this->messageManager->addWarningMessage(
                 sprintf(
-                    __('The labels for %s order(s) could not be created. %s labels were successfully created.'),
+                    __('The label(s) for %s order(s) could not be created. %s label(s) were successfully created.'),
                     count($failedShipments),
                     count($createdShipments)
                 )

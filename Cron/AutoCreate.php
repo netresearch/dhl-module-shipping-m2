@@ -81,7 +81,7 @@ class AutoCreate
         /** @var \Magento\Sales\Model\Order $order */
         foreach ($this->orderProvider->getOrders() as $order) {
             try {
-                $shipment = $this->createShipment->create($order);
+                $shipment = $this->createShipment->create($order, true);
                 $createdShipments[$order->getIncrementId()] = $shipment->getIncrementId();
             } catch (\Exception $exception) {
                 $failedShipments[$order->getIncrementId()] = $exception->getMessage();
