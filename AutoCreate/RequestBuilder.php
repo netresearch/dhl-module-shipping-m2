@@ -409,7 +409,7 @@ class RequestBuilder implements RequestBuilderInterface
             $customsParams['export_description'] = $exportDescription;
         }
 
-        $package['params']['container'] = $container;
+        $package['params']['container'] = (string) $container;
         $package['params']['weight'] = $totalWeight;
         $package['params']['length'] = '';
         $package['params']['width'] = '';
