@@ -96,11 +96,12 @@ class CreateShipment
 
     /**
      * @param Order $order
+     * @param bool $isCron
      * @return Order\Shipment
      * @throws LocalizedException
      * @throws \Exception
      */
-    public function create(Order $order)
+    public function create(Order $order, $isCron = false)
     {
         $shippingMethod = $order->getShippingMethod(true);
 
@@ -119,7 +120,9 @@ class CreateShipment
 
         /** @var Order\Shipment $shipment */
         $shipment = $this->shipmentFactory->create($order, $items);
-        $shipment->addComment('Shipment automatically created by Dhl Shipping.');
+        if ($isCron) {
+            $shipment->addComment('Shipment automatically created by Dhl Shipping.');
+        }
         $shipment->register();
 
         $this->labelGenerator->create($shipment);

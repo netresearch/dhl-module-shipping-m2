@@ -265,7 +265,8 @@
                     <label>Additional Service Default Values</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
-                        <field id="api_type" separator=",">bcs,gla</field>
+                        <!-- If gla services are added, this heading should be shown for gla as well. -->
+                        <field id="api_type" separator=",">bcs</field>
                     </depends>
                 </field>
 
