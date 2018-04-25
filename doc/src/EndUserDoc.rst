@@ -236,9 +236,24 @@ the DHL webservice is made.
   used for calculating shipping costs in the checkout. Only shipping methods that are
   selected here will be handled by the DHL extension when creating shipments.
 * *Default product*: Set the DHL product which should be used by default for creating
-  shipments. Please note the information in section `Module configuration`_ regarding
-  the sender (origin) address.
+  shipments. If no selection is possible, the fields will be disabled. Please note the
+  information in section `Module configuration`_ regarding the sender (origin) address.
 
+Automatic Shipment Creation Default Values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In this section, the default values are configured for shipments that are created
+automatically (Cronjob) or via the `Mass action`_.
+
+Depending on the selected API (DHL Business Customer Shipping, eCommerce Global Label API, ...),
+different values can be configured.
+
+Please also note the configuration of customs information in the product attributes, see
+section `International shipments`_.
+
+.. raw:: pdf
+
+   PageBreak
 
 DHL Business Customer Shipping Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -306,6 +321,10 @@ eCommerce Global API Shipping Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section you can configure the label size, page size, and layout.
+
+.. raw:: pdf
+
+   PageBreak
 
 Automatic Shipment Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -410,34 +429,42 @@ of the popup. You might have to scroll up inside the popup to see the error mess
 
 The incorrect data can now be corrected, see also `Troubleshooting`_.
 
+.. raw:: pdf
+
+   PageBreak
+
 International shipments
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-When using *DHL Business Customer Shipping (Geschäftskundenversand)* for destinations
-outside of the EU, additional fields will be displayed in the popup window. To create
-the customs declaration, enter at least the customs tariff number and the content type of
-the shipment.
+For international shipment, information for the customs declaration might be needed.
 
-When using the *eCommerce Global Label API* for destinations other than the
-origin country, additional fields will be displayed in the popup window. Enter
-at least the terms of trade (Incoterms) as well as the customs tariff number
-(HS Code) for each item.
+In particular:
 
-There is also an *Export Description* text area for each package.
+*  When using *DHL Business Customer Shipping (Geschäftskundenversand)* for destinations
+   outside of the EU,  at least the customs tariff number and the export content type of
+   the shipment are needed.
+*  When using the *eCommerce Global Label API* for destinations outside of the origin
+   country, at least the Terms Of Trade (Incoterms), the Customs Tariff Number (HS Code), and
+   the product export description are needed.
 
-The *Tariff number* and *Export Description* are taken over from the data storage of the product
- when assigning in the package popup. Otherwise they can be edited here.
+The **export description** and the **tariff number** are taken from the respectice **product attributes**.
 
-.. admonition:: Product data maintenance
+Additional values (e.g. Terms Of Trade) can be set in the configuration section `Automatic Shipment Creation Default Values`_,
+e.g. for shipments with non-default values.
 
-   You can define preset export descriptions for your product catalog via the product attribute *DHL Export Description*
-   and tariff numbers via the product attribute *Tariff number*.
-
-   **Please note:** In the case of an *Configurable product* in an order,
-   the data from its data storage is transferred to the *Package popup*
-   and not the data that might be stored on a *Simple product* linked to the *Configurable product*.
+Alternatively, you can enter the information by hand in the popup when creating the shipment,
+e.g. for cases with different, non-default information.
 
 Everything else is the same as described in the section `National shipments`_.
+
+.. admonition:: About configurable products
+
+   For **configurable* products, the aforementioned attributes must be set directly in the configurable
+   product, **not** in the associated simple products.
+
+.. raw:: pdf
+
+   PageBreak
 
 Service selection
 ~~~~~~~~~~~~~~~~~
@@ -453,6 +480,33 @@ The preselection of the services depends on the default values from the general
 .. admonition:: Note
 
    This screenshot is just an example. Not all services shown here might be available yet.
+
+.. raw:: pdf
+
+   PageBreak
+
+Mass action
+~~~~~~~~~~~
+
+Shipments and labels can also be created using a mass action in the orders grid:
+
+* Sales → Orders → Mass action *Create Shipping Labels*
+
+This allows to create shipping labels with no further user input
+
+* for all items contained in the order
+* with the services selected during checkout
+* with the services selected in the *Automatic Shipment Creation* `Module configuration`_.
+
+For international shipments, the customs information will be taken from the product attributes
+and the default values in the configuration (see `International shipments`_), if necessary.
+
+.. admonition:: Note
+
+   The dropdwon contains two very similar entries: *Print shipping labels* and *Create shipping labels*.
+   Make sure to use the correct entry!
+
+   The function *Print shipping labels* only allows printing **existing** shipping labels again.
 
 .. raw:: pdf
 
@@ -550,9 +604,6 @@ If the transmission was successful, the label will be stored in |mage| and the
 |mage| shipments will be created.
 
 Error messages will be shown in the order comments.
-
-The automatic mode will not include shipments that require customs declarations,
-see also `International shipments`_.
 
 .. raw:: pdf
 

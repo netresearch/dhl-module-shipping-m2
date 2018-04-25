@@ -236,8 +236,25 @@ für die Erstellung von Versandaufträgen über den DHL Webservice erforderlich 
   Versandkostenberechnung im Checkout verwendet werden sollen. Nur die hier ausgewählten
   Versandarten werden bei der Lieferscheinerstellung über die DHL-Extension abgewickelt.
 - *Standardprodukt*: Stellen Sie hier das DHL Produkt ein, das standardmäßig zur
-  Erstellung von Versandaufträgen verwendet werden soll. Beachten Sie die Hinweise im
-  Abschnitt Modulkonfiguration_ zur Absenderadresse.
+  Erstellung von Versandaufträgen verwendet werden soll. Wenn keine Auswahl möglich ist,
+  sind die Felder ausgegraut. Beachten Sie die Hinweise im Abschnitt Modulkonfiguration_
+  zur Absenderadresse.
+
+Standardwerte für automatische Sendungserstellung
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In diesem Konfigurationsbereich legen Sie die Standardwerte für Sendungen fest, die
+automatisch (per Cronjob) oder über die Massenaktion_ erstellt werden.
+
+Je nach gewählter API (DHL Business Customer Shipping, eCommerce Global Label API, ...) erscheinen
+hier unterschiedliche Eingabemöglichkeiten.
+
+Beachten Sie zudem die Konfiguration von Zollinformationen über die Produkt-Attribute, siehe
+Abschnitt `Internationale Sendungen`_.
+
+.. raw:: pdf
+
+   PageBreak
 
 DHL Geschäftskundenversand Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -287,6 +304,10 @@ zur allgemeinen |mage|-Konfiguration an DHL übermittelt werden sollen.
 
 Bei Nutzung der *eCommerce Global Label API* können hier keine zusätzlichen Angaben
 eingetragen werden.
+
+.. raw:: pdf
+
+   PageBreak
 
 Bankverbindung
 ~~~~~~~~~~~~~~
@@ -415,32 +436,44 @@ wenn nötig im Popup nach oben, falls die Fehlermeldung nicht sofort zu sehen is
 
 Die Bestellung kann entsprechend korrigiert werden, siehe auch `Fehlerbehandlung`_.
 
+.. raw:: pdf
+
+   PageBreak
+
 Internationale Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Bei Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)* werden für Ziele
-außerhalb der EU zusätzliche Felder im *Package popup* eingeblendet. Geben Sie für die Erstellung der
-Exportdokumente mindestens die Zolltarifnummern sowie den Inhaltstyp der Sendung an.
+Für internationale Sendungen sind unter bestimmten Umständen Zollinformationen notwendig.
 
-Bei Nutzung der *eCommerce Global Label API* werden für Ziele außerhalb des
-Ursprungslandes zusätzliche Felder im *Package popup* eingeblendet. Geben Sie mindestens
-die Zolltarifnummern sowie die Handelsklauseln an.
+Dabei gilt:
 
-Außerdem sichtbar ist ein Textfeld *Export Description* für Zollinformationen über den Inhalt des Paketes.
+* Bei Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)* müssen für Ziele
+  außerhalb der EU mindestens die Zolltarifnummern sowie der Inhaltstyp der Sendung angegeben
+  werden.
+* Bei Nutzung der *eCommerce Global Label API* müssen für Ziele außerhalb des Ursprungslandes
+  mindestens die Zolltarifnummern, die Handelsklauseln und der Inhaltstyp der Sendung angegeben
+  werden.
 
-Die *Tariff number* und *Export Description* werden bei Zuordnung im *Package popup* von der Datenhaltung
-des Produktes übernommen. Andernfalls können Sie hier an dieser Stelle editiert werden.
+Die **Produktbeschreibung** (DHL Export Description) und **Zolltarifnummer** (Tariff number) werden
+aus den gleichnamigen **Produkt-Attributen** übernommen.
 
-.. admonition:: Datenpflege am Produkt
+Weitere Angaben (z.B. Handelsklauseln) können in der Konfiguration unter *Standardwerte für
+automatische Sendungserstellung* vorgenommen werden.
 
-   Sie können für Produkte in Ihrem Katalog die *Export Description* über das Produktattribut
-   *DHL Export Description* und die Zolltarifnummer über das Produktattribut *Tariff Number* festlegen.
-
-   **Bitte beachten Sie:** Im Fall eines *Configurable product* in einer Bestellung werden die Daten von dessen
-   Datenhaltung ins *Package popup* übernommen und nicht die Daten, die eventuell an einem mit dem *Configurable product*
-   verknüpften *Simple product* hängen.
+Alternativ können die Angaben auch von Hand in das Popup zur Sendungserstellung eingegeben werden,
+z.B. für Sonderfälle, die von den Standardwerten abweichen.
 
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
+
+.. admonition:: Besonderheit bei konfigurierbaren Produkten
+
+   Bei **konfigurierbaren** Produkten (Configurable products) müssen die o.g. Attribute direkt am
+   konfigurierbaren Produkt selbst gepflegt werden, **nicht** an den verknüpften einfachen Produkten
+   (Simple products)!
+
+.. raw:: pdf
+
+   PageBreak
 
 Service-Auswahl
 ~~~~~~~~~~~~~~~
@@ -457,6 +490,35 @@ Die Vorauswahl der Services hängt von den Standardwerten in der allgemeinen
 
    Dieser Screenshot ist nur ein Beispiel. Es stehen evtl. noch nicht alle hier gezeigten
    Services zur Verfügung.
+
+.. raw:: pdf
+
+   PageBreak
+
+Massenaktion
+~~~~~~~~~~~~
+
+Lieferscheine und Paketaufkleber können über die Massenaktion
+*Paketaufkleber abrufen* in der Bestellübersicht erzeugt werden:
+
+* Verkäufe → Bestellungen → Massenaktion *Paketaufkleber abrufen*
+
+Dies ermöglicht es, Paketaufkleber ohne zusätzliche Eingaben zu erstellen
+
+* für alle in der Bestellung enthaltenen Artikel
+* mit den im Checkout gewählten Zusatzleistungen
+* mit den im Bereich *Automatische Sendungserstellung* der Modulkonfiguration_
+  gewählten Zusatzleistungen.
+
+Bei internationalen Sendungen werden wenn nötig die Zollinformationen aus den Produkt-Attributen
+sowie aus den Standardwerten in der Konfiguration verwendet (siehe `Internationale Sendungen`_).
+
+.. admonition:: Hinweis
+
+   Im Dropdown sind zwei ähnliche Einträge zu finden: *Paketaufkleber abrufen* und *Paketaufkleber drucken*.
+   Achten Sie darauf, den korrekten Eintrag zu nutzen!
+   
+   Die Funktion *Paketaufkleber drucken* ermöglicht lediglich den erneuten Ausdruck **bereits gespeicherter** DHL-Label.
 
 .. raw:: pdf
 
@@ -555,9 +617,6 @@ Bei erfolgreicher Übertragung werden die DHL-Label in |mage| gespeichert und di
 Lieferscheine erstellt.
 
 Im Fehlerfall sehen Sie die entsprechende Meldung in den Bestellkommentaren.
-
-Grundsätzlich ausgenommen von der automatischen Sendungserstellung sind Bestellungen,
-die Exportdokumente erfordern, siehe auch `Internationale Sendungen`_.
 
 .. raw:: pdf
 
