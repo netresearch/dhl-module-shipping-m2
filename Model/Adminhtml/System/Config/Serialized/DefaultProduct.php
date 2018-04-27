@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Andreas Müller <andreas.mueller@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
@@ -35,7 +34,6 @@ use Magento\Store\Model\ScopeInterface;
 /**
  * DefaultProduct
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -111,14 +109,13 @@ class DefaultProduct extends Value
     protected function _afterLoad()
     {
         $value = $this->getValue();
-        if (!is_array($value)) {
-            $this->setValue(empty($value) ? false : $this->processValue($value));
-        }
+        $value = empty($value) ? [] : $this->processValue($value);
+        $this->setValue($value);
     }
 
     /**
      * @param $value
-     * @return mixed
+     * @return array
      */
     public function processValue($value)
     {

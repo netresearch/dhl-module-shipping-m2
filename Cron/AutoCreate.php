@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Paul Siedler <paul.siedler@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG

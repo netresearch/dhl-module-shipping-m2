@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -27,19 +26,18 @@
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
 use Dhl\Shipping\Model\Attribute\Backend\ExportDescription;
-use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
+use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use \Magento\Backend\Block\Template\Context;
-use \Magento\Sales\Model\Order\Shipment\ItemFactory;
-use \Magento\Catalog\Model\ProductFactory;
-use \Magento\Directory\Model\ResourceModel\Country\Collection as CountryCollection;
-use \Magento\Framework\Registry;
+use Magento\Backend\Block\Template\Context;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Directory\Model\ResourceModel\Country\Collection as CountryCollection;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\Order\Shipment\ItemFactory;
 
 /**
  * Grid
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author   Max Melzer <max.melzer@netresearch.de>
@@ -54,13 +52,19 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     const STANDARD_TEMPLATE = 'Magento_Shipping::order/packaging/grid.phtml';
 
-    /** @var  ModuleConfigInterface */
+    /**
+     * @var  ModuleConfigInterface
+     */
     private $moduleConfig;
 
-    /** @var  ProductFactory */
+    /**
+     * @var  ProductFactory
+     */
     private $productFactory;
 
-    /** @var  CountryCollection */
+    /**
+     * @var  CountryCollection
+     */
     private $countryCollection;
 
     /**
@@ -105,44 +109,22 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         $this->countryCollection = $countryCollection;
         $this->productFactory = $productFactory;
         $this->moduleConfig = $moduleConfig;
-        parent::__construct(
-            $context,
-            $shipmentItemFactory,
-            $registry,
-            $data
-        );
+
+        parent::__construct($context, $shipmentItemFactory, $registry, $data);
     }
 
     public function getTemplate()
     {
-        $originCountryId = $this->moduleConfig->getShipperCountry(
-            $this->getShipment()->getStoreId()
-        );
+        $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
         $destCountryId = $this->getShipment()->getShippingAddress()->getCountryId();
-        $bcsCountries = [
-            'DE',
-            'AT'
-        ];
+        $bcsCountries = ['DE', 'AT'];
 
-        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute(
-            $destCountryId,
-            $this->getShipment()->getStoreId()
-        );
+        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
         $usedTemplate = self::STANDARD_TEMPLATE;
 
-        if ($isCrossBorder
-            && in_array(
-                $originCountryId,
-                $bcsCountries
-            )
-        ) {
+        if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::BCS_GRID_TEMPLATE;
-        } elseif ($isCrossBorder
-            && !in_array(
-                $originCountryId,
-                $bcsCountries
-            )
-        ) {
+        } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {
             $usedTemplate = self::GL_GRID_TEMPLATE;
         }
 
@@ -196,9 +178,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
         if (!isset($this->countriesOfManufacture[$productId])) {
             // fallback to shipper country
-            return $this->moduleConfig->getShipperCountry(
-                $this->getShipment()->getStoreId()
-            );
+            return $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
         }
 
         return $this->countriesOfManufacture[$productId];

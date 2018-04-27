@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
@@ -158,8 +157,8 @@ class ModuleConfig implements ModuleConfigInterface
      * Obtain the default product setting. This is used to highlight one
      * shipping product in case multiple products apply to the current route.
      *
-     * @param mixed $recipientCountry
-     * @param mixed $storeId
+     * @param string $recipientCountry
+     * @param string $storeId
      * @return string
      */
     public function getDefaultProduct($recipientCountry, $storeId = null)
@@ -170,8 +169,8 @@ class ModuleConfig implements ModuleConfigInterface
         );
         if (isset($defaultProducts[$recipientCountry])) {
             $defaultProduct = $defaultProducts[$recipientCountry];
-        } elseif (in_array($recipientCountry, $this->getEuCountryList()) &&
-            isset($defaultProducts[ShippingRoutes::REGION_EU])
+        } elseif (in_array($recipientCountry, $this->getEuCountryList())
+                && isset($defaultProducts[ShippingRoutes::REGION_EU])
         ) {
             $defaultProduct = $defaultProducts[ShippingRoutes::REGION_EU];
         } else {

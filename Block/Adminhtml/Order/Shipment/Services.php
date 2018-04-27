@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -25,9 +24,8 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
-use Dhl\Shipping\Config\BcsConfigInterface;
-use Dhl\Shipping\Model\Config\ServiceConfig;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ServiceConfig;
 use Dhl\Shipping\Service\Filter\ProductFilter;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
@@ -38,7 +36,6 @@ use Magento\Shipping\Model\CarrierFactory;
 /**
  * Services
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

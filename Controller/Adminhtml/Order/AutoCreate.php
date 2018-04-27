@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Andreas Müller <andreas.mueller@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
@@ -27,8 +26,8 @@
 namespace Dhl\Shipping\Controller\Adminhtml\Order;
 
 use Dhl\Shipping\Model\CreateShipment;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Sales\Model\Spi\OrderResourceInterface;
@@ -37,7 +36,6 @@ use Magento\Ui\Component\MassAction\Filter;
 /**
  * AutoCreate
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -92,13 +90,13 @@ class AutoCreate extends \Magento\Backend\App\Action
         $this->collectionFactory = $collectionFactory;
         $this->filter = $filter;
         $this->createShipment = $createShipment;
-            parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**
      * Recieve Orders from a mass action and try to create shipments for them via the corresponding API.
      *
-     * @return $this|\Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return \Magento\Framework\Controller\ResultInterface
      * @throws LocalizedException
      */
     public function execute()
@@ -119,15 +117,8 @@ class AutoCreate extends \Magento\Backend\App\Action
         }
 
         if (empty($failedShipments)) {
-            if (count($createdShipments === 1)) {
-                $message = 'One Shipment and Label have been created.';
-            } else {
-                $message = 'A total of %s Shipments and Labels have been created.';
-            }
-
-                $this->messageManager->addSuccessMessage(
-                    sprintf(__($message), count($createdShipments))
-                );
+            $message = 'A total of %s Shipments and Labels have been created.';
+            $this->messageManager->addSuccessMessage(sprintf(__($message), count($createdShipments)));
         } else {
             $this->messageManager->addWarningMessage(
                 sprintf(

@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Max Melzer <max.melzer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -49,8 +48,6 @@ class DefaultProduct extends Field
      */
     private $shippingProducts;
 
-    protected $isCollapsedDefault = true;
-
     /**
      * DefaultProduct constructor.
      * @param Context $context
@@ -76,31 +73,29 @@ class DefaultProduct extends Field
         foreach ($routes as $key => $value) {
             $options = $this->getProductNames($value);
 
-            if (!empty($options)) {
-                $count = count($options);
-                if ($count > 1) {
-                    $type = 'select';
-                    $config = [
-                        'name' => 'groups[dhlshipping][fields][default_shipping_products]['.$key.']',
-                        'label' => __('Ship to ').$key,
-                        'title' => __('Ship to ').$key,
-                        'values' => $options,
-                        'value' => isset($configValue[$key]) ? $configValue[$key] : ''
-                    ];
-                } else {
-                    $type = 'text';
-                    $config = [
-                        'name' => 'groups[dhlshipping][fields][default_shipping_products]['.$key.']',
-                        'label' => __('Ship to ').$key,
-                        'title' => __('Ship to ').$key,
-                        'readonly' => true,
-                        'value' => isset($configValue[$key]) ?
-                            $this->shippingProducts->getProductName($configValue[$key]) : $options[0]['label']
-                    ];
-                }
-                $element->addField('default_product_'.$key, $type, $config);
+            if (count($options) > 1) {
+                $type = 'select';
+                $config = [
+                    'name' => 'groups[dhlshipping][fields][default_shipping_products][' . $key . ']',
+                    'label' => __('Ship to ') . $key,
+                    'title' => __('Ship to ') . $key,
+                    'values' => $options,
+                    'value' => isset($configValue[$key]) ? $configValue[$key] : ''
+                ];
+            } else {
+                $type = 'text';
+                $config = [
+                    'name' => 'groups[dhlshipping][fields][default_shipping_products][' . $key . ']',
+                    'label' => __('Ship to ') . $key,
+                    'title' => __('Ship to ') . $key,
+                    'readonly' => true,
+                    'value' => isset($configValue[$key]) ?
+                        $this->shippingProducts->getProductName($configValue[$key]) : $options[0]['label']
+                ];
             }
+                $element->addField('default_product_'.$key, $type, $config);
         }
+
         $element->addClass('dhlshipping_default_product');
 
         return parent::render($element);

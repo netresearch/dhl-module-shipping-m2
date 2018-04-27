@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -25,17 +24,16 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
-use \Dhl\Shipping\Model\Adminhtml\System\Config\Source\Procedure;
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Procedure;
 use Dhl\Shipping\Util\ShippingProductsInterface;
-use \Magento\Framework\View\Element\Context;
-use \Magento\Framework\View\Element\Html\Select;
-use \Magento\Shipping\Model\Config as ShippingConfig;
+use Magento\Framework\View\Element\Context;
+use Magento\Framework\View\Element\Html\Select;
+use Magento\Shipping\Model\Config as ShippingConfig;
 use Magento\Store\Model\ScopeInterface;
 
 /**
  * Dhl Shipping Form Field Html Select Block
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

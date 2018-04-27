@@ -14,7 +14,6 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @category  Dhl
  * @package   Dhl\Shipping\Cron\AutoCreate
  * @author    Andreas Müller <andreas.mueller@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
