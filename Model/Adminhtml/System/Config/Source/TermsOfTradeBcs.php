@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Andreas Müller <andreas.mueller@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
@@ -29,7 +28,6 @@ namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 /**
  * TermsOfTradeBcs
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Andreas Müller <andreas.mueller@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
@@ -27,18 +26,17 @@
 namespace Dhl\Shipping\Model;
 
 use Dhl\Shipping\AutoCreate\LabelGeneratorInterface;
-use Dhl\Shipping\Model\Shipping\Carrier;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Sales\Model\Order\ShipmentFactory;
-use Magento\Sales\Model\Order\Email\Sender\ShipmentSender;
+use Dhl\Shipping\Model\Shipping\Carrier;
 use Magento\Framework\DB\TransactionFactory;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\ShipmentSender;
+use Magento\Sales\Model\Order\ShipmentFactory;
 
 /**
  * CreateShipment
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Andreas Müller <andreas.mueller@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)

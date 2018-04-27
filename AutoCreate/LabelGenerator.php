@@ -14,8 +14,7 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @category  Dhl
- * @package   Dhl\Shipping\Cron\AutoCreate
+ * @package   Dhl\Shipping\AutoCreate
  * @author    Paul Siedler <paul.siedler@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -26,8 +25,8 @@ namespace Dhl\Shipping\AutoCreate;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\ShipmentInterface;
-use Magento\Shipping\Model\Order\TrackFactory;
 use Magento\Shipping\Model\CarrierFactory;
+use Magento\Shipping\Model\Order\TrackFactory;
 use Magento\Shipping\Model\Shipping\LabelGenerator as CoreLabelGenerator;
 
 /**
@@ -38,8 +37,7 @@ use Magento\Shipping\Model\Shipping\LabelGenerator as CoreLabelGenerator;
  *
  * @see \Magento\Shipping\Model\Shipping\LabelGenerator
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\AutoCreate
  * @author   Paul Siedler <paul.siedler@netresearch.de>
  */
 class LabelGenerator implements LabelGeneratorInterface

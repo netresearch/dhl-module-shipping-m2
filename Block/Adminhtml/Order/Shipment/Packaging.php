@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -44,7 +43,9 @@ use \Magento\Framework\App\Config\ScopeConfigInterface;
  */
 class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
 {
-    /** @var  ModuleConfigInterface */
+    /**
+     * @var ModuleConfigInterface
+     */
     private $moduleConfig;
 
     /**
@@ -90,13 +91,13 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
      */
     public function getStoreWeightUnit()
     {
-        $scopeId = $this->getShipment()->getStoreId();
-
-        return strtoupper($this->scopeConfig->getValue(
+        $weightUnit = strtoupper($this->scopeConfig->getValue(
             'general/locale/weight_unit',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-            $scopeId
+            $this->getShipment()->getStoreId()
         ));
+
+        return $weightUnit;
     }
 
     /**

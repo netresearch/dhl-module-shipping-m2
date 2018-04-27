@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -28,7 +27,6 @@ namespace Dhl\Shipping\Model\Config;
 /**
  * ModuleConfigInterface
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -207,7 +205,6 @@ interface ModuleConfigInterface
      * @return mixed
      */
     public function getApiType($store = null);
-
 
     /**
      * Get the default value of Terms of Trade

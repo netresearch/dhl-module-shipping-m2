@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -25,27 +24,29 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
-use Dhl\Shipping\Model\Attribute\Source\DGCategory;
-use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla;
+use Dhl\Shipping\Model\Attribute\Source\DGCategory;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Magento\Backend\Block\Template;
 
 /**
  * Customs
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Customs extends \Magento\Backend\Block\Template
+class Customs extends Template
 {
     const BCS_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_bcs.phtml';
 
     const GL_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_gl.phtml';
 
-    /** @var  ModuleConfigInterface */
+    /*
+     * @var ModuleConfigInterface
+     */
     private $moduleConfig;
 
     /**
@@ -120,7 +121,7 @@ class Customs extends \Magento\Backend\Block\Template
     }
 
     /**
-     * Return Template bases on origin country and crossborder shipping.
+     * Return Template based on origin country and crossborder shipping.
      *
      * @return string
      */
@@ -159,13 +160,12 @@ class Customs extends \Magento\Backend\Block\Template
     public function getTermsOfTradeOptions()
     {
         $api = $this->moduleConfig->getApiType($this->getShipment()->getStoreId());
-        switch ($api) {
-            case 'bcs':
-                return $this->bcsTerms->toOptionArray();
 
-            default:
-                return $this->glaTerms->toOptionArray();
+        if ($api === 'bcs') {
+            return $this->bcsTerms->toOptionArray();
         }
+
+        return $this->glaTerms->toOptionArray();
     }
 
     /**
@@ -185,7 +185,7 @@ class Customs extends \Magento\Backend\Block\Template
      * Get Additional Fee default value for current scope
      * @return mixed
      */
-    public function getAddtionalFeeDefault()
+    public function getAdditionalFeeDefault()
     {
         $scopeId = $this->getShipment()->getStoreId();
         return $this->moduleConfig->getDefaultAdditionalFee($scopeId);

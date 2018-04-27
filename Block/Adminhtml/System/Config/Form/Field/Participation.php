@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -27,16 +26,13 @@ namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use Dhl\Shipping\Util\ShippingProductsInterface;
 use Magento\Backend\Block\Template\Context;
-use \Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
-use Magento\Shipping\Model\Config as ShippingConfig;
-use Magento\Store\Model\ScopeInterface;
+use Magento\Config\Block\System\Config\Form\Field\FieldArray\AbstractFieldArray;
 
 /**
  * Array configuration field with procedures and the merchant's participation number.
  * The procedures dropdown is rendered per row using a separate form field.
  * @see Procedures
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @author   Max Melzer <max.melzer@netresearch.de>

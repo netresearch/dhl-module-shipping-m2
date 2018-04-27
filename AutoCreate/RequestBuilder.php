@@ -14,8 +14,7 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @category  Dhl
- * @package   Dhl\Shipping\Cron\AutoCreate
+ * @package   Dhl\Shipping\AutoCreate
  * @author    Paul Siedler <paul.siedler@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -24,11 +23,14 @@
 
 namespace Dhl\Shipping\AutoCreate;
 
+use Dhl\Shipping\Helper\ProductData as Helper;
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Config\ServiceConfig;
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Service\Filter\EnabledFilter;
-use Dhl\Shipping\Service\ServiceInterface;
+use Dhl\Shipping\Util\ExportType;
+use Dhl\Shipping\Util\ExportTypeInterface;
+use Magento\Directory\Helper\Data;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObjectFactory;
@@ -38,18 +40,13 @@ use Magento\Sales\Model\Order\Shipment;
 use Magento\Shipping\Model\Shipment\Request;
 use Magento\Shipping\Model\Shipment\RequestFactory;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Directory\Helper\Data;
-use Dhl\Shipping\Helper\ProductData as Helper;
-use Dhl\Shipping\Util\ExportTypeInterface;
-use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;;
 
 /**
  * Class RequestBuilder
  *
  * Encapsulates building a ShipmentRequest object through injected config and a given order shipment
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\AutoCreate
  * @author   Paul Siedler <paul.siedler@netresearch.de>
  */
 class RequestBuilder implements RequestBuilderInterface
@@ -97,11 +94,6 @@ class RequestBuilder implements RequestBuilderInterface
     private $helper;
 
     /**
-     * @var ExportTypeInterface
-     */
-    private $exportType;
-
-    /**
      * @var mixed[]
      */
     private $data = [];
@@ -115,7 +107,6 @@ class RequestBuilder implements RequestBuilderInterface
      * @param RegionFactory $regionFactory
      * @param DataObjectFactory $dataObjectFactory
      * @param \Magento\Shipping\Model\CarrierFactory $carrierFactory
-     * @param ExportTypeInterface $exportType
      * @param Helper $helper
      */
     public function __construct(
@@ -126,7 +117,6 @@ class RequestBuilder implements RequestBuilderInterface
         RegionFactory $regionFactory,
         DataObjectFactory $dataObjectFactory,
         \Magento\Shipping\Model\CarrierFactory $carrierFactory,
-        ExportTypeInterface $exportType,
         Helper $helper
     ) {
         $this->moduleConfig = $moduleConfig;
@@ -137,7 +127,6 @@ class RequestBuilder implements RequestBuilderInterface
         $this->dataObjectFactory = $dataObjectFactory;
         $this->carrierFactory = $carrierFactory;
         $this->helper = $helper;
-        $this->exportType = $exportType;
     }
 
     /**
@@ -259,19 +248,21 @@ class RequestBuilder implements RequestBuilderInterface
     private function addReceiverData(Request $shipmentRequest)
     {
         $address = $shipmentRequest->getOrderShipment()->getShippingAddress();
-        $shipmentRequest->setRecipientContactPersonName(trim($address->getFirstname() . ' ' . $address->getLastname()));
+        $personName = trim($address->getFirstname() . ' ' . $address->getLastname());
+        $addressStreet = trim($address->getStreetLine(1) . ' ' . $address->getStreetLine(2));
+        $region = $address->getRegionCode() ? $address->getRegionCode() : $address->getRegion();
+
+        $shipmentRequest->setRecipientContactPersonName($personName);
         $shipmentRequest->setRecipientContactPersonFirstName($address->getFirstname());
         $shipmentRequest->setRecipientContactPersonLastName($address->getLastname());
         $shipmentRequest->setRecipientContactCompanyName($address->getCompany());
         $shipmentRequest->setRecipientContactPhoneNumber($address->getTelephone());
         $shipmentRequest->setRecipientEmail($address->getEmail());
-        $shipmentRequest->setRecipientAddressStreet(
-            trim($address->getStreetLine(1) . ' ' . $address->getStreetLine(2))
-        );
+        $shipmentRequest->setRecipientAddressStreet($addressStreet);
         $shipmentRequest->setRecipientAddressStreet1($address->getStreetLine(1));
         $shipmentRequest->setRecipientAddressStreet2($address->getStreetLine(2));
         $shipmentRequest->setRecipientAddressCity($address->getCity());
-        $shipmentRequest->setRecipientAddressStateOrProvinceCode($address->getRegionCode() ?: $address->getRegion());
+        $shipmentRequest->setRecipientAddressStateOrProvinceCode($region);
         $shipmentRequest->setRecipientAddressRegionCode($address->getRegionCode());
         $shipmentRequest->setRecipientAddressPostalCode($address->getPostcode());
         $shipmentRequest->setRecipientAddressCountryCode($address->getCountryId());
@@ -285,8 +276,8 @@ class RequestBuilder implements RequestBuilderInterface
         $storeId = $shipmentRequest->getOrderShipment()->getStoreId();
         $apiType = $this->moduleConfig->getApiType($storeId);
         $shipperCountry = $this->moduleConfig->getShipperCountry($storeId);
-        $destCountryId =  $shipmentRequest->getOrderShipment()->getShippingAddress()->getCountryId();
-        $isCrossborder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $storeId);
+        $destCountryId = $shipmentRequest->getOrderShipment()->getShippingAddress()->getCountryId();
+        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $storeId);
 
         $totalWeight = 0;
         $package = [
@@ -304,7 +295,7 @@ class RequestBuilder implements RequestBuilderInterface
 
             $totalWeight += $item->getWeight();
 
-            if ($apiType == ApiType::API_TYPE_BCS && $isCrossborder) {
+            if ($apiType == ApiType::API_TYPE_BCS && $isCrossBorder) {
                 $itemData = $item->toArray(
                     [
                         'qty',
@@ -365,7 +356,7 @@ class RequestBuilder implements RequestBuilderInterface
             ? \Zend_Measure_Length::INCH
             : \Zend_Measure_Length::CENTIMETER;
 
-        if ($isCrossborder) {
+        if ($isCrossBorder) {
             $defaultTot = $this->moduleConfig->getTermsOfTrade($storeId);
             $productData = $this->helper->getProductData($productIds, $storeId);
 
@@ -373,7 +364,7 @@ class RequestBuilder implements RequestBuilderInterface
                 $defaultAdditionFee = $this->moduleConfig->getDefaultAdditionalFee($storeId);
                 $defaultPoc = $this->moduleConfig->getDefaultPlaceOfCommital($storeId);
                 $contentType = $this->moduleConfig->getDefaultExportContentType($storeId);
-                if ($contentType == $this->exportType::TYPE_OTHER) {
+                if ($contentType == ExportType::TYPE_OTHER) {
                     $contentTypeOther = $this->moduleConfig->getDefaultExportContentTypeExplanation($storeId);
                 }
 
@@ -382,6 +373,7 @@ class RequestBuilder implements RequestBuilderInterface
                         isset($productData[$productId]['dhl_export_description']) ?
                             $productData[$productId]['dhl_export_description'] :
                             '';
+
                     $package['items'][$itemId]['tariff_number'] =
                         isset($productData[$productId]['dhl_tariff_number']) ?
                             $productData[$productId]['dhl_tariff_number'] :
@@ -409,17 +401,15 @@ class RequestBuilder implements RequestBuilderInterface
             $customsParams['export_description'] = $exportDescription;
         }
 
-        $package['params']['container'] = (string) $container;
+        $package['params']['container'] = (string)$container;
         $package['params']['weight'] = $totalWeight;
         $package['params']['length'] = '';
         $package['params']['width'] = '';
         $package['params']['height'] = '';
         $package['params']['weight_units'] = $weightUnit;
         $package['params']['dimension_units'] = $dimensionUnit;
-        $package['params']['content_type'] =
-            isset($contentType) ? $contentType : '';
-        $package['params']['content_type_other'] =
-            isset($contentTypeOther) ? $contentTypeOther : '';
+        $package['params']['content_type'] = isset($contentType) ? $contentType : '';
+        $package['params']['content_type_other'] = isset($contentTypeOther) ? $contentTypeOther : '';
         $package['params']['services'] = $serviceCollection->getConfiguration();
 
         if (isset($customsParams)) {
