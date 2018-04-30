@@ -160,10 +160,17 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
             ->method('createLabels')
             ->willReturn($response);
 
+
+        $orderId = $incrementId;
         /** @var \Magento\Sales\Model\Order $order */
-        $order = $this->objectManager->create(DataObject::class, ['data' => [
-            'increment_id' => $incrementId
-        ]]);
+        $order = $this->createMock(\Magento\Sales\Model\Order::class);
+        $order->expects($this->any())
+              ->method('getId')
+              ->willReturn($orderId);
+        $order->expects($this->any())
+            ->method('getShippingMethod')
+            ->willReturn(new DataObject(['carrier_code' => 'foo']));
+
         $shipment = $this->objectManager->create(DataObject::class, ['data' => [
             'order' => $order,
         ]]);
@@ -206,9 +213,17 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
             ->willReturn($response);
 
         /** @var \Magento\Sales\Model\Order $order */
-        $order = $this->objectManager->create(DataObject::class, ['data' => [
-            'increment_id' => $incrementId
-        ]]);
+        $orderId = 1;
+        $order = $this->createMock(\Magento\Sales\Model\Order::class);
+        $order->expects($this->any())
+              ->method('getId')
+              ->willReturn($orderId);
+        $order->expects($this->any())
+              ->method('getShippingMethod')
+              ->willReturn(new DataObject(['carrier_code' => 'dhlshipping']));
+        $order->expects($this->once())
+            ->method('getIsVirtual')
+            ->willReturn(1);
         $shipment = $this->objectManager->create(DataObject::class, ['data' => [
             'order' => $order,
         ]]);

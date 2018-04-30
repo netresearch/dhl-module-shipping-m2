@@ -153,7 +153,7 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
         $this->autoCreate->execute();
 
         $this->assertEquals(
-            'The labels for 4 order(s) could not be created. 3 labels were successfully created.',
+            'The label(s) for 4 order(s) could not be created. 3 label(s) were successfully created.',
             $this->messageManager->getMessages()->getItems()[0]->getText()
         );
     }

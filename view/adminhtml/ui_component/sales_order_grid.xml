@@ -40,4 +40,18 @@
             </action>
         </massaction>
     </listingToolbar>
+    <columns name="sales_order_columns">
+        <column name="dhlshipping_label_status"
+                component="Magento_Ui/js/grid/columns/column"
+                class="Dhl\Shipping\Ui\Component\Listing\Column\LabelStatus\Icon">
+            <settings>
+                <filter>select</filter>
+                <options class="Dhl\Shipping\Ui\Component\Listing\Column\LabelStatus\Options"/>
+                <visible>true</visible>
+                <dataType>select</dataType>
+                <label translate="true">DHL Label Status</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+    </columns>
 </listing>
