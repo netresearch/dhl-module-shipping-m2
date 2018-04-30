@@ -609,6 +609,29 @@ Error messages will be shown in the order comments.
 
    PageBreak
 
+Shipment Overview
+-----------------
+
+In the order grid at "Sales → Orders" you will find a column "DHL Label Status".
+It displays the current status of your DHL shipments.
+
+.. image:: images/en/label_status.png
+   :scale: 75 %
+
+The symbols have the following meaning:
+
+- *colored DHL logo*: The DHL shipment was successfully created
+- *grey DHL logo*: The DHL shipment was not yet created or the order was only partially shipped
+- *crossed-out DHL logo*: There was an error during the last attempt to create a DHL shipment
+
+Shipments that can not be processed by DHL Shipping will not display a logo in the DHL Label Status column.
+
+You can filter orders by DHL label status using the "Filters" function above the order grid.
+
+.. raw:: pdf
+
+   PageBreak
+
 Troubleshooting
 ---------------
 
