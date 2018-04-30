@@ -72,8 +72,8 @@ class DefaultProduct extends Field
         $routes = $this->getAvailableOptions();
         foreach ($routes as $key => $value) {
             $options = $this->getProductNames($value);
-
-            if (count($options) > 1) {
+            $count = count($options);
+            if ($count > 1) {
                 $type = 'select';
                 $config = [
                     'name' => 'groups[dhlshipping][fields][default_shipping_products][' . $key . ']',
@@ -82,7 +82,8 @@ class DefaultProduct extends Field
                     'values' => $options,
                     'value' => isset($configValue[$key]) ? $configValue[$key] : ''
                 ];
-            } else {
+                $element->addField('default_product_' . $key, $type, $config);
+            } elseif ($count === 1) {
                 $type = 'text';
                 $config = [
                     'name' => 'groups[dhlshipping][fields][default_shipping_products][' . $key . ']',
@@ -92,10 +93,9 @@ class DefaultProduct extends Field
                     'value' => isset($configValue[$key]) ?
                         $this->shippingProducts->getProductName($configValue[$key]) : $options[0]['label']
                 ];
+                $element->addField('default_product_' . $key, $type, $config);
             }
-                $element->addField('default_product_'.$key, $type, $config);
         }
-
         $element->addClass('dhlshipping_default_product');
 
         return parent::render($element);
