@@ -622,6 +622,28 @@ Im Fehlerfall sehen Sie die entsprechende Meldung in den Bestellkommentaren.
 
    PageBreak
 
+Übersicht über offene und erstellte Sendungen
+---------------------------------------------
+
+Unter "Verkäufe → Bestellungen" finden Sie eine Spalte "DHL Label Status".
+Dort wird der aktuelle Zustand Ihrer DHL-Sendungen abgebildet.
+
+.. image:: images/de/label_status.png
+
+Die Symbole haben folgende Bedeutung:
+
+- *DHL-Logo farbig*: Die DHL-Sendung wurde erfolgreich erstellt
+- *DHL-Logo ausgegraut*: Die DHL-Sendung wurde noch nicht oder nur teilweise erstellt
+- *DHL-Logo durchgestrichen*: Beim Erstellen der DHL-Sendung ist zuletzt ein Fehler aufgetreten
+
+Bei Sendungen, die nicht mit DHL Shipping verarbeitet werden können, wird kein Logo angezeigt.
+
+Über die Funktion "Filter" in der Bestellübersicht lassen sich Bestellungen nach den verschiedenen Labelstati filtern.
+
+.. raw:: pdf
+
+   PageBreak
+
 Fehlerbehandlung
 ----------------
 
