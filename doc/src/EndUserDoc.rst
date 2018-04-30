@@ -436,18 +436,18 @@ The incorrect data can now be corrected, see also `Troubleshooting`_.
 International shipments
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-For international shipment, information for the customs declaration might be needed.
+For international shipments, information for the customs declaration might be needed.
 
 In particular:
 
 *  When using *DHL Business Customer Shipping (Geschäftskundenversand)* for destinations
-   outside of the EU,  at least the customs tariff number and the export content type of
+   outside of the EU, at least the customs tariff number and the export content type of
    the shipment are needed.
 *  When using the *eCommerce Global Label API* for destinations outside of the origin
    country, at least the Terms Of Trade (Incoterms), the Customs Tariff Number (HS Code), and
    the product export description are needed.
 
-The **export description** and the **tariff number** are taken from the respectice **product attributes**.
+The **export description** and the **tariff number** are taken from the respective **product attributes**.
 
 Additional values (e.g. Terms Of Trade) can be set in the configuration section `Automatic Shipment Creation Default Values`_,
 e.g. for shipments with non-default values.
@@ -492,7 +492,7 @@ Shipments and labels can also be created using a mass action in the orders grid:
 
 * Sales → Orders → Mass action *Create Shipping Labels*
 
-This allows to create shipping labels with no further user input
+This allows the creation of shipping labels with no further user input
 
 * for all items contained in the order
 * with the services selected during checkout
@@ -503,10 +503,10 @@ and the default values in the configuration (see `International shipments`_), if
 
 .. admonition:: Note
 
-   The dropdwon contains two very similar entries: *Print shipping labels* and *Create shipping labels*.
+   The dropdown contains two very similar entries: *Print shipping labels* and *Create shipping labels*.
    Make sure to use the correct entry!
 
-   The function *Print shipping labels* only allows printing **existing** shipping labels again.
+   The function *Print shipping labels* only allows re-printing **existing** shipping labels.
 
 .. raw:: pdf
 
