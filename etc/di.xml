@@ -39,6 +39,8 @@
     <preference for="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteAddressExtension" />
     <preference for="Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderAddressExtensionRepository" />
     <preference for="Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteAddressExtensionRepository" />
+    <preference for="Dhl\Shipping\Api\Data\LabelStatusInterface" type="Dhl\Shipping\Model\Label\LabelStatus" />
+    <preference for="Dhl\Shipping\Api\LabelStatusRepositoryInterface" type="\Dhl\Shipping\Model\LabelStatusRepository" />
 
     <!-- library preferences -->
     <preference for="Dhl\Shipping\Api\Data\ShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo" />
@@ -172,4 +174,31 @@
             </argument>
         </arguments>
     </type>
+    <type name="Dhl\Shipping\Model\SalesOrderGrid\OrderGridUpdater">
+        <arguments>
+            <argument name="entityGrid" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\Grid</argument>
+        </arguments>
+    </type>
+    <virtualType name="DhlShippingLabelStatusIdListProvider" type="Magento\Sales\Model\ResourceModel\Provider\NotSyncedDataProvider">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="dhlshipping" xsi:type="string">Dhl\Shipping\Model\SalesOrderGrid\NotSyncedOrderIdListProvider</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid">
+        <arguments>
+            <argument name="idListProvider" xsi:type="object">DhlShippingLabelStatusIdListProvider</argument>
+            <argument name="joins" xsi:type="array">
+                <item name="dhlshipping_label_status" xsi:type="array">
+                    <item name="table" xsi:type="string">dhlshipping_label_status</item>
+                    <item name="origin_column" xsi:type="string">entity_id</item>
+                    <item name="target_column" xsi:type="string">order_id</item>
+                </item>
+            </argument>
+            <argument name="columns" xsi:type="array">
+                <item name="dhlshipping_label_status" xsi:type="string">dhlshipping_label_status.status_code</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>

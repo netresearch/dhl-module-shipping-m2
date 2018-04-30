@@ -31,6 +31,7 @@ use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use \Dhl\Shipping\Config\BcsConfigInterface;
 use \Dhl\Shipping\Config\GlConfigInterface;
 use \Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Util\OrderShipmentDetails;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
 use \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use \Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
@@ -325,34 +326,6 @@ class AppDataMapper implements AppDataMapperInterface
     }
 
     /**
-     * Calculate total value of (partial) shipment
-     * FIXME(nr): obtain value including tax
-     *
-     * @param ShipmentRequest $request
-     * @return MonetaryValueInterface
-     */
-    private function getShipmentValue(ShipmentRequest $request)
-    {
-        $shipmentValue = 0;
-        foreach ($request->getData('packages') as $packageId => $package) {
-            $shipmentValue += array_reduce($package['items'], function ($carry, $item) {
-                // precision: 3
-                $price = $item['price'] * 1000;
-                $carry += ($price * $item['qty']);
-
-                return $carry;
-            }, $shipmentValue);
-        }
-
-        $declaredValue = $this->monetaryValueFactory->create([
-            'value' => 0.001 * $shipmentValue,
-            'currencyCode' => $request->getData('base_currency_code'),
-        ]);
-
-        return $declaredValue;
-    }
-
-    /**
      * @param ShipmentRequest $request
      *
      * @return ShipmentDetailsInterface
@@ -369,8 +342,7 @@ class AppDataMapper implements AppDataMapperInterface
             'accountReference' => $this->bcsConfig->getBankDataAccountReference($storeId),
         ]);
 
-        $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
-        $qtyShipped = $request->getOrderShipment()->getTotalQty();
+        $isPartial = OrderShipmentDetails::isPartial($request->getOrderShipment());
         $productCode = $request->getData('packaging_type');
 
         $ekp = $this->bcsConfig->getAccountEkp($storeId);
@@ -385,7 +357,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $shipmentDetails = $this->shipmentDetailsFactory->create([
             'isPrintOnlyIfCodeable'       => $printOnlyIfCodeAble ? $printOnlyIfCodeAble->isActive() : false,
-            'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
+            'isPartialShipment'           => $isPartial || (count($request->getData('packages')) > 1),
             'product'                     => $productCode,
             'accountNumber'               => $billingNumber,
             'returnShipmentAccountNumber' => $returnBillingNumber,

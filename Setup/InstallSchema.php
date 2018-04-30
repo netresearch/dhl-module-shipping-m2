@@ -34,7 +34,6 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 /**
  * InstallSchema
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -47,6 +46,7 @@ class InstallSchema implements InstallSchemaInterface
      *
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
+     * @throws \Zend_Db_Exception
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -108,5 +108,10 @@ class InstallSchema implements InstallSchemaInterface
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
         );
         $installer->getConnection()->createTable($table);
+
+        /**
+         * Create table dhlshipping_label_status
+         */
+        ShippingSetup::createLabelStatusTable($setup);
     }
 }

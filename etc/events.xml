@@ -43,4 +43,10 @@
     <event name="sales_order_shipment_track_delete_before">
         <observer name="shipping_delete_track" instance="Dhl\Shipping\Observer\DeleteTrackObserver" />
     </event>
+    <event name="checkout_submit_all_after">
+        <observer name="shipping_init_label_status" instance="Dhl\Shipping\Observer\UpdateLabelStatusObserver" />
+    </event>
+    <event name="dhlshipping_label_create_after">
+        <observer name="shipping_update_label_status" instance="Dhl\Shipping\Observer\UpdateLabelStatusObserver" />
+    </event>
 </config>

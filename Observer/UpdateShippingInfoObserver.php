@@ -16,7 +16,6 @@
  *
  * PHP version 7
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -25,8 +24,6 @@
  */
 namespace Dhl\Shipping\Observer;
 
-use \Dhl\Shipping\Api\Data\OrderAddressExtensionInterface;
-//use \Dhl\Shipping\Api\Data\OrderAddressExtensionInterfaceFactory;
 use Dhl\Shipping\Api\Data\ShippingInfoInterface;
 use \Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
@@ -42,7 +39,6 @@ use \Magento\Sales\Api\OrderAddressRepositoryInterface;
 /**
  * Update shipping info when order address was updated in admin panel.
  *
- * @category Dhl
  * @package  Dhl\Shipping
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -61,7 +57,7 @@ class UpdateShippingInfoObserver implements ObserverInterface
     private $addressRepository;
 
     /**
-     * @var OrderAddressExtensionRepositoryInterface
+     * @var OrderAddressExtensionRepositoryInterface sitoryInterface
      */
     private $addressExtensionRepository;
 
@@ -85,7 +81,7 @@ class UpdateShippingInfoObserver implements ObserverInterface
      *
      * @param RequestInterface $request
      * @param OrderAddressRepositoryInterface $addressRepository
-     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepo
      * @param OrderAddressExtensionFactory $addressExtensionFactory
      * @param ShippingInfoBuilder $shippingInfoBuilder
      * @param CountryFactory $countryFactory
@@ -93,14 +89,14 @@ class UpdateShippingInfoObserver implements ObserverInterface
     public function __construct(
         RequestInterface $request,
         OrderAddressRepositoryInterface $addressRepository,
-        OrderAddressExtensionRepositoryInterface $addressExtensionRepository,
+        OrderAddressExtensionRepositoryInterface $addressExtensionRepo,
         OrderAddressExtensionFactory $addressExtensionFactory,
         ShippingInfoBuilder $shippingInfoBuilder,
         CountryFactory $countryFactory
     ) {
         $this->request = $request;
         $this->addressRepository = $addressRepository;
-        $this->addressExtensionRepository = $addressExtensionRepository;
+        $this->addressExtensionRepository = $addressExtensionRepo;
         $this->addressExtensionFactory = $addressExtensionFactory;
         $this->shippingInfoBuilder = $shippingInfoBuilder;
 
@@ -115,6 +111,7 @@ class UpdateShippingInfoObserver implements ObserverInterface
      *
      * @param Observer $observer
      * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function execute(Observer $observer)
     {

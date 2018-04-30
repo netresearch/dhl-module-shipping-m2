@@ -26,13 +26,15 @@ namespace Dhl\Shipping\Model\Shipping;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Util\ExportTypeInterface;
+use Dhl\Shipping\Util\OrderShipmentDetails;
 use Dhl\Shipping\Util\ShippingProductsInterface;
-use Dhl\Shipping\Util\ShippingRoutes;
 use Dhl\Shipping\Webservice\GatewayInterface;
+use Magento\Framework\EntityManager\EventManager;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Shipping\LabelGenerator;
+use Magento\Framework\Event\ManagerInterface;
 
 /**
  * Carrier
@@ -77,7 +79,13 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     private $labelGenerator;
 
     /**
+     * @var EventManager;
+     */
+    private $eventManager;
+
+    /**
      * Carrier constructor.
+     *
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Quote\Model\Quote\Address\RateResult\ErrorFactory $rateErrorFactory
      * @param \Psr\Log\LoggerInterface $logger
@@ -99,6 +107,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param ShippingProductsInterface $shippingProducts
      * @param ExportTypeInterface $exportTypes
      * @param GatewayInterface $webserviceGateway
+     * @param ManagerInterface $eventManager
      * @param array $data
      */
     public function __construct(
@@ -123,7 +132,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         ShippingProductsInterface $shippingProducts,
         ExportTypeInterface $exportTypes,
         GatewayInterface $webserviceGateway,
-        ShippingRoutes $shippingRoutes,
+        ManagerInterface $eventManager,
         array $data = []
     ) {
         $this->_code = self::CODE;
@@ -134,6 +143,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         $this->webserviceGateway = $webserviceGateway;
         $this->exportTypes = $exportTypes;
         $this->labelGenerator = $labelGenerator;
+        $this->eventManager = $eventManager;
 
         parent::__construct(
             $scopeConfig,
@@ -249,6 +259,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      *
      * @param \Magento\Shipping\Model\Shipment\Request|\Magento\Framework\DataObject $request
      * @return \Magento\Framework\DataObject
+     * @throws \Zend_Pdf_Exception
      */
     protected function _doShipmentRequest(\Magento\Framework\DataObject $request)
     {
@@ -257,12 +268,17 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             $request->getOrderShipment()->getOrder()->getIncrementId(),
             $request->getData('package_id')
         );
+        $orderShipment = $request->getOrderShipment();
 
         $result = $this->dataObjectFactory->create();
+        $eventData = [
+            'order' => $orderShipment->getOrder()
+        ];
         $response = $this->webserviceGateway->createLabels([$sequenceNumber => $request]);
         if ($response->getStatus()->isError()) {
             // plain string seems to be expected for errors
             $result->setData('errors', $response->getStatus()->getMessage());
+            $eventData['errors'] = $response->getStatus()->getMessage();
         } else {
             $createdItems = $response->getCreatedItems();
             $createdItem = current($createdItems);
@@ -278,6 +294,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
                 ]
             );
         }
+        $this->eventManager->dispatch('dhlshipping_label_create_after', $eventData);
 
         return $result;
     }

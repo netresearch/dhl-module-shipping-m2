@@ -552,7 +552,7 @@
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 920 Cron Order Status -->
+                <!-- 920 Cron Order LabelStatus -->
                 <field id="shipment_autocreate_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order Status</label>
                     <tooltip>Create shipments for orders with the given status.</tooltip>
