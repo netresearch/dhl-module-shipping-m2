@@ -43,7 +43,7 @@
         </arguments>
     </type>
 
-    <type name="\Magento\Shipping\Block\Adminhtml\Order\Packaging">
-        <plugin name="packaging" type="Dhl\Shipping\Plugin\Adminhtml\Packaging\PackagingPlugin" />
+    <type name="Magento\Shipping\Controller\Adminhtml\Order\Shipment\GetShippingItemsGrid">
+        <plugin name="shippingItemsGrid" type="Dhl\Shipping\Plugin\Adminhtml\Packaging\ShippingItemsGridPlugin" />
     </type>
 </config>

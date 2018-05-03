@@ -16,30 +16,27 @@
  *
  * PHP version 7
  *
- * @category  Dhl
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Block
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging;
 
-use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
+use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use \Magento\Backend\Block\Template\Context;
-use \Magento\Sales\Model\Order\Shipment\ItemFactory;
-use \Magento\Catalog\Model\ProductFactory;
-use \Magento\Directory\Model\ResourceModel\Country\Collection as CountryCollection;
-use \Magento\Framework\Registry;
+use Magento\Backend\Block\Template\Context;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Directory\Model\ResourceModel\Country\Collection as CountryCollection;
+use Magento\Framework\Registry;
+use Magento\Sales\Model\Order\Shipment\ItemFactory;
 
 /**
  * Grid
  *
- * @category Dhl
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Block
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -50,25 +47,31 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     const GL_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_gl.phtml';
 
-    const STANDARD_TEMPLATE = 'Magento_Shipping::order/packaging/grid.phtml';
-
-    /** @var  ModuleConfigInterface */
+    /**
+     * @var ModuleConfigInterface
+     */
     private $moduleConfig;
 
-    /** @var  ProductFactory */
+    /**
+     * @var ProductFactory
+     */
     private $productFactory;
 
-    /** @var  CountryCollection */
+    /**
+     * @var CountryCollection
+     */
     private $countryCollection;
 
     /**
      * @var string[]
      */
     private $countriesOfManufacture = [];
+
     /**
      * @var string[]
      */
     private $dangerousGoodsCategories = [];
+
     /**
      * @var string[]
      */
@@ -96,6 +99,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         $this->countryCollection = $countryCollection;
         $this->productFactory = $productFactory;
         $this->moduleConfig = $moduleConfig;
+
         parent::__construct(
             $context,
             $shipmentItemFactory,
@@ -104,40 +108,22 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         );
     }
 
+    /**
+     * Decide whether to use BCS or GL template.
+     * It is assumed that the given shipment is always CrossBorder.
+     *
+     * @return string
+     */
     public function getTemplate()
     {
-        $originCountryId = $this->moduleConfig->getShipperCountry(
-            $this->getShipment()->getStoreId()
-        );
-        $destCountryId = $this->getShipment()->getShippingAddress()->getCountryId();
-        $bcsCountries = [
-            'DE',
-            'AT'
-        ];
+        $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
+        $bcsCountries = ['DE', 'AT'];
 
-        $isCrossBorder = $this->moduleConfig->isCrossBorderRoute(
-            $destCountryId,
-            $this->getShipment()->getStoreId()
-        );
-        $usedTemplate = self::STANDARD_TEMPLATE;
-
-        if ($isCrossBorder
-            && in_array(
-                $originCountryId,
-                $bcsCountries
-            )
-        ) {
-            $usedTemplate = self::BCS_GRID_TEMPLATE;
-        } elseif ($isCrossBorder
-            && !in_array(
-                $originCountryId,
-                $bcsCountries
-            )
-        ) {
-            $usedTemplate = self::GL_GRID_TEMPLATE;
+        if (in_array($originCountryId, $bcsCountries)) {
+            return self::BCS_GRID_TEMPLATE;
+        } else {
+            return self::GL_GRID_TEMPLATE;
         }
-
-        return $usedTemplate;
     }
 
     /**
@@ -189,6 +175,10 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         return $this->countryCollection->toOptionArray();
     }
 
+    /**
+     * @param int $productId
+     * @return string
+     */
     public function getDangerousGoodsCategory($productId)
     {
         if (empty($this->dangerousGoodsCategories)) {
@@ -198,6 +188,9 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
         return $this->dangerousGoodsCategories[$productId];
     }
 
+    /**
+     * Load itemAttributes from products and assign to class members.
+     */
     private function initItemAttributes()
     {
         $items = $this->getCollection();
