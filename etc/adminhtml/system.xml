@@ -174,7 +174,7 @@
                 <field id="shipment_dhlcodmethods" translate="label tooltip" type="multiselect" sortOrder="510" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Cash On Delivery Payment Methods for DHL Shipping</label>
                     <tooltip>These payment methods will be treated as COD methods during shipment order creation.</tooltip>
-                    <source_model>Magento\Payment\Model\Config\Source\Allmethods</source_model>
+                    <source_model>Dhl\Shipping\Model\Payment\Config\Source\Allmethods</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>
