@@ -3,18 +3,18 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="carriers">
-            <group id="dhlshipping" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="dhlshipping" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>DHL Shipping</label>
 
-                <!-- 010 Api Type -->
+                <!-- Api Type -->
                 <field id="api_type" translate="label tooltip" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API Connection</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType</source_model>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\ApiType</frontend_model>
-                    <comment>Select an API connection to configure.</comment>
-                    <tooltip>If you are shipping from Germany or Austria, select Business Customer Shipping. If you are shipping from other countries, select eCommerce Global API.</tooltip>
+                    <comment><![CDATA[Select an API connection to configure. This setting does <strong>not</strong> select an API for use. The API used depends on your shipping origin country.]]></comment>
+                    <tooltip>If you are shipping from Germany or Austria, configure Business Customer Shipping. If you are shipping from other countries, configure eCommerce Global API.</tooltip>
                 </field>
-                <!-- 020 Availability Message -->
+                <!-- Availability Message -->
                 <field id="availability_note" translate="label tooltip" type="note" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>DHL Shipping is not available</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Warning</frontend_model>
@@ -24,24 +24,31 @@
                     </depends>
                 </field>
 
-                <!-- 100 General Settings -->
-                <field id="fields_general" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+
+
+
+
+
+
+
+                <!-- General Settings -->
+                <field id="fields_general" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>General Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 140 Sandbox Mode -->
-                <field id="sandbox_mode" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Sandbox Mode -->
+                <field id="sandbox_mode" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Sandbox Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 150 Enable Logging -->
-                <field id="logging_enabled" translate="label comment" type="select" sortOrder="150" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Enable Logging -->
+                <field id="logging_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enable Logging</label>
                     <comment/>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -50,8 +57,8 @@
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 160 Log Level -->
-                <field id="log_level" translate="label comment" type="select" sortOrder="160" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Log Level -->
+                <field id="log_level" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Log Level</label>
                     <comment><![CDATA[Beware: Log level <em>Debug</em> will result in large log files.]]></comment>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Loglevel</source_model>
@@ -61,17 +68,28 @@
                     </depends>
                 </field>
 
-                <!-- 200 Account Data Business Customer Shipping -->
-                <field id="fields_account_bcs" translate="label comment" sortOrder="200" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Account Data Business Customer Shipping</label>
+
+
+
+
+
+
+
+
+
+
+
+                <!-- Account Data Business Customer Shipping -->
+                <field id="fields_account_bcs" translate="label comment" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Business Customer Shipping Account Data</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="sandbox_mode">0</field>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <!-- 210 User -->
-                <field id="bcs_account_user" translate="label tooltip" type="text" sortOrder="210" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- User -->
+                <field id="bcs_account_user" translate="label tooltip" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>User</label>
                     <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
                     <depends>
@@ -79,8 +97,8 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <!-- 220 Signature -->
-                <field id="bcs_account_signature" translate="label tooltip" type="obscure" sortOrder="220" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Signature -->
+                <field id="bcs_account_signature" translate="label tooltip" type="obscure" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Signature</label>
                     <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -89,8 +107,8 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <!-- 230 EKP -->
-                <field id="bcs_account_ekp" translate="label tooltip" type="text" sortOrder="230" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- EKP -->
+                <field id="bcs_account_ekp" translate="label tooltip" type="text" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>EKP</label>
                     <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
                     <validate>validate-length maximum-length-10 minimum-length-10 validate-digits</validate>
@@ -99,8 +117,8 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <!-- 240 Participation Numbers -->
-                <field id="bcs_account_participations" type="select" translate="label" sortOrder="240" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Participation Numbers -->
+                <field id="bcs_account_participations" type="select" sortOrder="100" translate="label" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Participation Numbers</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Participation</frontend_model>
                     <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\ArraySerialized</backend_model>
@@ -110,16 +128,23 @@
                     </depends>
                 </field>
 
-                <!-- 300 Account Data eCommerce Global API -->
-                <field id="fields_account_gla" translate="label comment" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Account Data eCommerce Global API</label>
+
+
+
+
+
+
+
+                <!-- Account Data eCommerce Global API -->
+                <field id="fields_account_gla" translate="label comment" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>eCommerce Global API Account Data</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
                 </field>
-                <!-- 310 Pickup Account Number -->
-                <field id="gl_pickup_number" type="text" translate="label" sortOrder="310" showInDefault="1" showInWebsite="1" showInStore="0">
+                <!-- Pickup Account Number -->
+                <field id="gl_pickup_number" type="text" translate="label" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Pickup Account Number</label>
                     <validate>validate-digits</validate>
                     <depends>
@@ -127,8 +152,8 @@
                     </depends>
                     <comment>Please enter the number you received from DHL.</comment>
                 </field>
-                <!-- 315 Unique Customer Prefix -->
-                <field id="gl_customer_prefix" type="text" translate="label" sortOrder="315" showInDefault="1" showInWebsite="1" showInStore="0">
+                <!-- Unique Customer Prefix -->
+                <field id="gl_customer_prefix" type="text" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Customer Prefix</label>
                     <validate>validate-alphanum validate-length maximum-length-5</validate>
                     <depends>
@@ -136,238 +161,68 @@
                     </depends>
                     <comment>Please enter the customer prefix you received from DHL.</comment>
                 </field>
-                <!-- 320 Distribution Center -->
-                <field id="gl_distribution_center" type="text" translate="label" sortOrder="320" showInDefault="1" showInWebsite="1" showInStore="0">
+                <!-- Distribution Center -->
+                <field id="gl_distribution_center" type="text" translate="label" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Distribution Center</label>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
                     <comment>Primary DHL eCommerce Distribution center assigned to your products/services. This will be provided by DHL.</comment>
                 </field>
-                <!-- 330 Client ID -->
-                <field id="gl_api_auth_username" type="text" translate="label" sortOrder="330" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Client ID -->
+                <field id="gl_api_auth_username" type="text" translate="label" sortOrder="150" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Client ID</label>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
-                    <comment>This is a hash-value which will be provided by DHL.</comment>
+                    <comment>This is a hash value which will be provided by DHL.</comment>
                 </field>
-                <!-- 340 Client Secret -->
-                <field id="gl_api_auth_password" type="password" translate="label" sortOrder="340" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Client Secret -->
+                <field id="gl_api_auth_password" type="password" translate="label" sortOrder="160" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Client Secret</label>
                     <depends>
                         <field id="api_type">gla</field>
                     </depends>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
-                    <comment>This is a hash-value which will be provided by DHL.</comment>
+                    <comment>This is a hash value which will be provided by DHL.</comment>
                 </field>
 
-                <!-- 400 General Shipping Settings -->
-                <field id="fields_shipping_general" translate="label" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
+
+
+
+
+
+
+
+
+                <!-- General Shipping Settings -->
+                <field id="fields_shipping_general" translate="label" sortOrder="161" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>General Shipping Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 410 Shipping Methods for DHL Shipping -->
-                <field id="shipment_dhlmethods" translate="label tooltip comment" type="multiselect" sortOrder="410" showInDefault="1" showInWebsite="1" showInStore="0">
+                <!-- Shipping Methods for DHL Shipping -->
+                <field id="shipment_dhlmethods" translate="label tooltip comment" type="multiselect" sortOrder="162" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Shipping Methods for DHL Shipping</label>
-                    <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
-                    <comment>These shipping methods will be processed with DHL Shipping.</comment>
+                    <comment>Selected shipping methods will be processed with DHL Shipping.</comment>
                     <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 420 Default Product -->
-                <field id="default_shipping_products" translate="label, comment" sortOrder="420" showInDefault="1" showInWebsite="1" showInStore="1" type="fieldset">
-                    <label>Default Products</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
-                    <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\DefaultProduct</backend_model>
-                    <comment>These products will be pre-selected for automatic shipping label creation. You can still select another product when creating shipping labels manually.</comment>
-                    <depends>
-                        <field id="api_type" separator=",">bcs,gla</field>
-                    </depends>
-                </field>
-                <!-- 430 General Automatic Shipment Creation Settings -->
-                <field id="fields_automatic_shipping_general" translate="label" sortOrder="430" showInDefault="1" showInStore="1" showInWebsite="1">
-                    <label>Automatic Shipment Creation Default Values</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
-                    <depends>
-                        <field id="api_type" separator=",">bcs,gla</field>
-                    </depends>
-                </field>
-                <field id="shipmemt_autocreate_termsoftrade_bcs" translate="label" sortOrder="431" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
-                    <label>Terms of Trade</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <field id="shipmemt_autocreate_termsoftrade_gla" translate="label" sortOrder="432" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
-                    <label>Terms of Trade</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla</source_model>
-                    <depends>
-                        <field id="api_type">gla</field>
-                    </depends>
-                </field>
 
-                <field id="shipmemt_autocreate_placeofcommital" translate="label" sortOrder="440" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
-                    <label>Place of Commital</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                    <validate>validate-length maximum-length-35</validate>
-                </field>
-
-                <field id="shipmemt_autocreate_addtionalfee" translate="label" sortOrder="450" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
-                    <label>Additional Fee</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                    <validate>validate-number</validate>
-                </field>
-                <field id="shipment_autocreate_export_contenttype" translate="label" sortOrder="455" showInDefault="1" showInStore="1" showInWebsite="1" type="select">
-                    <label>Export Content Type</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\ExportContentType</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <field id="shipment_autocreate_export_contenttype_explanation" translate="label" sortOrder="460" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
-                    <label>Explanation</label>
-                    <depends>
-                        <field id="shipment_autocreate_export_contenttype">OTHER</field>
-                    </depends>
-                </field>
-
-                <!-- 500 BCS Shipping Settings -->
-                <field id="fields_shipping_bcs" translate="label" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Business Customer Shipping Settings</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 510 Cash On Delivery Payment Methods for DHL Shipping -->
-                <field id="shipment_dhlcodmethods" translate="label tooltip" type="multiselect" sortOrder="510" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Cash On Delivery Payment Methods for DHL Shipping</label>
-                    <tooltip>These payment methods will be treated as COD methods during shipment order creation.</tooltip>
-                    <source_model>Dhl\Shipping\Model\Payment\Config\Source\Allmethods</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <!--515 Additional Services -->
-                <field id="additional_services" translate="label" type="select" sortOrder="515" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Additional Service Default Values</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
-                    <depends>
-                        <!-- If gla services are added, this heading should be shown for gla as well. -->
-                        <field id="api_type" separator=",">bcs</field>
-                    </depends>
-                </field>
-
-                <!-- 520 Print Only If Codeable -->
-                <field id="shipment_service_printonlyifcodeable" translate="label" type="select" sortOrder="520" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Print Only If Codeable</label>
-                    <tooltip><![CDATA[If set to <em>Yes</em>, shipment orders will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 530 Parcel Announcement -->
-                <field id="shipment_service_parcelannouncement" translate="label" type="select" sortOrder="530" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Parcel Announcement</label>
-                    <tooltip><![CDATA[If set to <em>Yes</em>, DHL will send shipment status updates to the customer.]]></tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 540 Visal Check of Age -->
-                <field id="shipment_service_visualcheckofage" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Visual Check of Age</label>
-                    <tooltip>If enabled, the visual age check service will be booked during shipment orders.</tooltip>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 550 Return Shipment -->
-                <field id="shipment_service_returnshipment" translate="label" type="select" sortOrder="550" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Return Shipment</label>
-                    <tooltip><![CDATA[If set to <em>Yes</em>, a return shipment label will be requested from the webservice.]]></tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 560 Additional Insurance -->
-                <field id="shipment_service_additionalinsurance" translate="label" type="select" sortOrder="560" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Additional Insurance</label>
-                    <tooltip><![CDATA[If set to <em>Yes</em>, shipments will be insured with higher than standard amount.]]></tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 570 Bulky Goods -->
-                <field id="shipment_service_bulkygoods" translate="label" type="select" sortOrder="570" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Bulky Goods</label>
-                    <tooltip><![CDATA[If set to <em>Yes</em>, shipments will be marked as bulk freight.]]></tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-                <!-- 600 eCommerce Global API Settings -->
-                <field id="fields_shipping_gla" translate="label" sortOrder="600" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>eCommerce Global API Shipping Settings</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
-                    <depends>
-                        <field id="api_type">gla</field>
-                    </depends>
-                </field>
-                <!-- 620 Label Size -->
-                <field id="gl_label_size" translate="label" type="select" sortOrder="620" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Label Size</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\LabelSize</source_model>
-                    <depends>
-                        <field id="api_type">gla</field>
-                    </depends>
-                </field>
-                <!-- 630 Page Size -->
-                <field id="gl_page_size" translate="label" type="select" sortOrder="630" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Page Size</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageSize</source_model>
-                    <depends>
-                        <field id="api_type">gla</field>
-                    </depends>
-                </field>
-                <!-- 640 Page Layout -->
-                <field id="gl_page_layout" translate="label" type="select" sortOrder="640" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Page Layout</label>
-                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageLayout</source_model>
-                    <depends>
-                        <field id="api_type">gla</field>
-                        <field id="page_size">A4</field>
-                    </depends>
-                </field>
 
                 <!-- Additional Services In Checkout -->
-                <field id="services_in_checkout" translate="label" type="select" sortOrder="650" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="services_in_checkout" translate="label" type="select" sortOrder="163" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Additional Services In Checkout</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="651" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="164" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred location</label>
                     <tooltip>Allow customers to declare a preferred parcel location during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -375,7 +230,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="652" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="165" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred neighbor</label>
                     <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -383,7 +238,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="653" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="166" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Parcel announcement</label>
                     <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -391,7 +246,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="654" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="167" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred day</label>
                     <tooltip>Allow customers to select a preferred day of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -399,7 +254,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredday_handling_fee" translate="label" type="text" sortOrder="655" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredday_handling_fee" translate="label" type="text" sortOrder="168" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Additional charge for your preferred day</label>
                     <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                     <comment>Use . as decimal separator.</comment>
@@ -409,7 +264,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredday_handling_fee_text" translate="label" type="textarea" sortOrder="656" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredday_handling_fee_text" translate="label" type="textarea" sortOrder="169" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Preferred day handling fee text</label>
                     <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
                     <depends>
@@ -417,7 +272,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_cutoff_time" translate="label" type="time" sortOrder="657" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_cutoff_time" translate="label" type="time" sortOrder="170" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Cut off time</label>
                     <tooltip>Orders placed after the cut-off time will not be shipped the same day.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
@@ -426,7 +281,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="658" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="171" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Enable Preferred time</label>
                     <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -434,7 +289,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredtime_handling_fee" translate="label" type="text" sortOrder="659" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredtime_handling_fee" translate="label" type="text" sortOrder="172" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Additional charge for your preferred time</label>
                     <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                     <comment>Use . as decimal separator.</comment>
@@ -444,7 +299,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredtime_handling_fee_text" translate="label" type="textarea" sortOrder="660" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredtime_handling_fee_text" translate="label" type="textarea" sortOrder="173" showInDefault="0" showInWebsite="0" showInStore="0">
                     <label>Preferred time handling fee text</label>
                     <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
                     <depends>
@@ -453,107 +308,318 @@
                     </depends>
                 </field>
 
-                <!-- 700 Additional Contact Information -->
-                <field id="fields_contact" translate="label" sortOrder="700" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Additional Contact Information</label>
+
+
+
+                <!-- eCommerce Global API Shipping Settings -->
+                <field id="fields_shipping_gla" translate="label" sortOrder="180" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>eCommerce Global API Shipping Settings</label>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type">gla</field>
+                    </depends>
+                </field>
+                <!-- Label Size -->
+                <field id="gl_label_size" translate="label" type="select" sortOrder="181" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Label Size</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\LabelSize</source_model>
+                    <depends>
+                        <field id="api_type">gla</field>
+                    </depends>
+                </field>
+                <!-- Page Size -->
+                <field id="gl_page_size" translate="label" type="select" sortOrder="182" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Page Size</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageSize</source_model>
+                    <depends>
+                        <field id="api_type">gla</field>
+                    </depends>
+                </field>
+                <!-- Page Layout -->
+                <field id="gl_page_layout" translate="label" type="select" sortOrder="183" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Page Layout</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageLayout</source_model>
+                    <depends>
+                        <field id="api_type">gla</field>
+                        <field id="page_size">A4</field>
+                    </depends>
+                </field>
+
+
+                <!-- BCS Shipping Settings -->
+                <field id="fields_shipping_bcs" translate="label" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Business Customer Shipping Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <!-- 710 Name of Company (2) -->
-                <field id="bcs_shipper_contact_company_addition" translate="label" type="text" sortOrder="710" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Name of Company (2)</label>
+
+
+
+
+
+
+
+
+
+
+                <!-- Cash on Delivery Settings -->
+                <field id="fields_bank_data" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1"
+                        showInStore="0">
+                    <label>Cash on Delivery Settings</label>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                    <comment>Configure the use of Cash on Delivery payments.</comment>
+                </field>
+
+                <!-- Cash On Delivery Payment Methods for DHL Shipping -->
+                <field id="shipment_dhlcodmethods" translate="label tooltip" type="multiselect" sortOrder="210" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cash On Delivery Payment Methods for DHL Shipping</label>
+                    <comment>Selected payment methods will be treated as CoD methods during shipment order creation.</comment>
+                    <source_model>Dhl\Shipping\Model\Payment\Config\Source\Allmethods</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <!-- 720 Dispatching Information -->
-                <field id="bcs_shipper_contact_dispatchinfo" translate="label" type="text" sortOrder="720" showInDefault="1" showInWebsite="1" showInStore="0">
+
+                <!-- Bank Data -->
+                <field id="bcs_bankdata_account_owner" translate="label" type="text" sortOrder="220" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Account Owner</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Bank Name -->
+                <field id="bcs_bankdata_bankname" translate="label" type="text" sortOrder="230" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Bank Name</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- IBAN -->
+                <field id="bcs_bankdata_iban" translate="label" type="text" sortOrder="240" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>IBAN</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- BIC -->
+                <field id="bcs_bankdata_bic" translate="label" type="text" sortOrder="250" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>BIC</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Reason for Payment -->
+                <field id="bcs_bankdata_note1" translate="label" type="text" sortOrder="260" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Reason for Payment</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Reason for Payment -->
+                <field id="bcs_bankdata_note2" translate="label" type="text" sortOrder="270" showInDefault="1"
+                       showInWebsite="1" showInStore="0">
+                    <label>Reason for Payment (2)</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Reason for Payment -->
+                <field id="bcs_bankdata_account_reference" translate="label" type="text" sortOrder="280" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Account Reference to Customer Profile</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Name of Company (2) -->
+                <field id="bcs_shipper_contact_company_addition" translate="label" type="text" sortOrder="281" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Name of Company</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Dispatching Information -->
+                <field id="bcs_shipper_contact_dispatchinfo" translate="label" type="text" sortOrder="282" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Dispatching Information</label>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
 
-                <!-- 800 Bank Data -->
-                <field id="fields_bank_data" translate="label" sortOrder="800" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Bank Data</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
 
-                <!-- 810 Bank Data -->
-                <field id="bcs_bankdata_account_owner" translate="label" type="text" sortOrder="810" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Account Owner</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 820 Bank Name -->
-                <field id="bcs_bankdata_bankname" translate="label" type="text" sortOrder="820" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Bank Name</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 830 IBAN -->
-                <field id="bcs_bankdata_iban" translate="label" type="text" sortOrder="830" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>IBAN</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 840 BIC -->
-                <field id="bcs_bankdata_bic" translate="label" type="text" sortOrder="840" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>BIC</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 850 Reason for Payment -->
-                <field id="bcs_bankdata_note1" translate="label" type="text" sortOrder="850" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Reason for Payment</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 860 Reason for Payment -->
-                <field id="bcs_bankdata_note2" translate="label" type="text" sortOrder="860" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Reason for Payment (2)</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <!-- 870 Reason for Payment -->
-                <field id="bcs_bankdata_account_reference" translate="label" type="text" sortOrder="870" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Account Reference to Customer Profile</label>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
 
-                <!-- 900 Automatic Shipment Creation -->
-                <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Automatic Shipment Creation</label>
+
+
+
+
+                <!-- General Automatic Shipment Creation Settings -->
+                <field id="fields_automatic_shipping_general" translate="label" sortOrder="290" showInDefault="1"
+                       showInStore="1" showInWebsite="1">
+                    <label>Bulk Shipment Creation Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 910 Cron Job -->
-                <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
+                <!-- Default Product -->
+                <field id="default_shipping_products" translate="label, comment" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1" type="fieldset">
+                    <label>Default Products</label>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
+                    <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\DefaultProduct</backend_model>
+                    <comment>Selected products will be pre-selected for automatic shipping label creation. You can still
+                        select another product when creating shipping labels manually.
+                    </comment>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
+                </field>
+                <!-- Terms of Trade BCS -->
+                <field id="shipmemt_autocreate_termsoftrade_bcs" translate="label" sortOrder="310" showInWebsite="1"
+                       showInStore="1" showInDefault="1" type="select">
+                    <label>Default Terms of Trade</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Terms of Trade GLA -->
+                <field id="shipmemt_autocreate_termsoftrade_gla" translate="label" sortOrder="320" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
+                    <label>Default Terms of Trade</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla</source_model>
+                    <depends>
+                        <field id="api_type">gla</field>
+                    </depends>
+                </field>
+                <!-- Place of Commital -->
+                <field id="shipmemt_autocreate_placeofcommital" translate="label" sortOrder="320" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                    <label>Default Place of Commital</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                    <validate>validate-length maximum-length-35</validate>
+                </field>
+                <!-- Additional Fee -->
+                <field id="shipmemt_autocreate_addtionalfee" translate="label" sortOrder="330" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                    <label>Default Additional Fee</label>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                    <validate>validate-number</validate>
+                </field>
+                <!-- Export Content Type -->
+                <field id="shipment_autocreate_export_contenttype" translate="label" sortOrder="340" showInDefault="1" showInStore="1" showInWebsite="1" type="select">
+                    <label>Default Export Content Type</label>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\ExportContentType</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Description -->
+                <field id="shipment_autocreate_export_contenttype_explanation" translate="label" sortOrder="350" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                    <label>Export Content Description</label>
+                    <depends>
+                        <field id="shipment_autocreate_export_contenttype">OTHER</field>
+                    </depends>
+                </field>
+
+
+                <!-- Additional Services -->
+                <!-- Print Only If Codeable -->
+                <field id="shipment_service_printonlyifcodeable" translate="label" type="select" sortOrder="352" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use Print Only If Codeable Service</label>
+                    <tooltip>
+                        <![CDATA[Relevant for bulk actions and actions via cron. If set to <em>Yes</em>, shipment orders will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Parcel Announcement -->
+                <field id="shipment_service_parcelannouncement" translate="label" type="select" sortOrder="353" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use Parcel Announcement Service</label>
+                    <tooltip>
+                        <![CDATA[Relevant for bulk actions and actions via cron. If set to <em>Yes</em>, DHL will send shipment status updates to the customer.]]></tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Visal Check of Age -->
+                <field id="shipment_service_visualcheckofage" translate="label" type="select" sortOrder="354" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Use Visual Check of Age Service</label>
+                    <tooltip>Relevant for bulk actions and actions via cron. If enabled, the visual age check service will be booked during shipment orders.</tooltip>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Return Shipment -->
+                <field id="shipment_service_returnshipment" translate="label" type="select" sortOrder="355" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Use Return Shipment Service</label>
+                    <tooltip>
+                        <![CDATA[Relevant for bulk actions and actions via cron. If set to <em>Yes</em>, a return shipment label will be requested from the webservice.]]></tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Additional Insurance -->
+                <field id="shipment_service_additionalinsurance" translate="label" type="select" sortOrder="356" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Use Additional Insurance Service</label>
+                    <tooltip>
+                        <![CDATA[Relevant for bulk actions and actions via cron. If set to <em>Yes</em>, shipments will be insured with higher than standard amount.]]></tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+                <!-- Bulky Goods -->
+                <field id="shipment_service_bulkygoods" translate="label" type="select" sortOrder="357" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Use Bulky Goods Service</label>
+                    <tooltip><![CDATA[Relevant for bulk actions and actions via cron. If set to <em>Yes</em>, shipments will be marked as bulk freight.]]></tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="api_type">bcs</field>
+                    </depends>
+                </field>
+
+
+
+
+
+
+
+
+
+                <!-- Automatic Shipment Creation -->
+                <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Automatic Shipment Creation Settings</label>
+                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
+                    <depends>
+                        <field id="api_type" separator=",">bcs,gla</field>
+                    </depends>
+                    <comment>Automatic shipment creation will periodically collect all orders ready for shipping and create shipments with DHL. Orders are processed every 15 minutes.</comment>
+                </field>
+                <!-- Cron Job -->
+                <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="550" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enabled</label>
-                    <tooltip>Create shipments and retrieve labels via cron job.</tooltip>
+                    <comment>Create shipments and retrieve labels via cron job.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 920 Cron Order LabelStatus -->
-                <field id="shipment_autocreate_order_status" translate="label" type="multiselect" sortOrder="920" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- Cron Order LabelStatus -->
+                <field id="shipment_autocreate_order_status" translate="label" type="multiselect" sortOrder="560" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Order Status</label>
                     <tooltip>Create shipments for orders with the given status.</tooltip>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
@@ -561,15 +627,23 @@
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-                <!-- 930 Notify Customer -->
-                <field id="shipment_autocreate_send_shippinginfo" translate="label" type="select" sortOrder="930" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Send Shipment Confirmation</label>
+                <!-- Notify Customer -->
+                <field id="shipment_autocreate_send_shippinginfo" translate="label" type="select" sortOrder="570" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Send Shipment Confirmation Email</label>
                     <tooltip><![CDATA[If set to <em>Yes</em>, a shipment confirmation email will be sent to the customer when shipment and label were created.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
+
+
+
+
+
+
+
+
             </group>
         </section>
     </system>
