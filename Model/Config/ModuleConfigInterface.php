@@ -199,7 +199,7 @@ interface ModuleConfigInterface
     public function getDefaultAdditionalFee($store = null);
 
     /**
-     * Get the current Api Type
+     * Infer Api Type of a store
      *
      * @param null $store
      * @return mixed
