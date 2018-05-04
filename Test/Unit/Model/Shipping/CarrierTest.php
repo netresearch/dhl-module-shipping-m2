@@ -51,12 +51,12 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
     private $objectManager;
 
     /**
-     * @var DataObjectFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var DataObjectFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $dataObjectFactory;
 
     /**
-     * @var Gateway|\PHPUnit\Framework\MockObject\MockObject
+     * @var Gateway|\PHPUnit_Framework_MockObject_MockObject
      */
     private $webserviceGateway;
 

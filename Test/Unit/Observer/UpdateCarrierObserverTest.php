@@ -32,7 +32,7 @@ use \Magento\Framework\DataObject;
 use \Magento\Framework\Event;
 use \Magento\Framework\Event\Observer;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
-use \PHPUnit\Framework\MockObject\MockObject as MockObject;
+use \PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * UpdateCarrierObserverTest
