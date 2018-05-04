@@ -24,7 +24,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
-use Dhl\Shipping\Util\ShippingProductsInterface;
+use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
