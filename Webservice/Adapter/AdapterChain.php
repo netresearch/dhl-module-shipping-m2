@@ -27,11 +27,7 @@ namespace Dhl\Shipping\Webservice\Adapter;
 
 use \Dhl\Shipping\Webservice\RequestType;
 use \Dhl\Shipping\Webservice\ResponseType;
-use \Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatusInterface;
-use Dhl\Shipping\Webservice\Adapter\AdapterInterface;
 use Dhl\Shipping\Webservice\Exception\ApiAdapterException;
-use \Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection;
-use \Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatus;
 
 /**
  * AdapterChain

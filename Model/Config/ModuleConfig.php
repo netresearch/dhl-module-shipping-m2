@@ -26,6 +26,8 @@
 
 namespace Dhl\Shipping\Model\Config;
 
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
+use Dhl\Shipping\Util\ShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingRoutes;
 use Dhl\Shipping\Util\ShippingRoutesInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
@@ -53,16 +55,25 @@ class ModuleConfig implements ModuleConfigInterface
     private $routeConfig;
 
     /**
+     * @var ShippingProductsInterface
+     */
+    private $shippingProducts;
+
+    /**
      * ModuleConfig constructor.
+     *
      * @param ConfigAccessorInterface $configAccessor
      * @param ShippingRoutesInterface $routeConfig
+     * @param ShippingProductsInterface $shippingProducts
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
-        ShippingRoutesInterface $routeConfig
+        ShippingRoutesInterface $routeConfig,
+        ShippingProductsInterface $shippingProducts
     ) {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
+        $this->shippingProducts = $shippingProducts;
     }
 
     /**
@@ -327,7 +338,17 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function getApiType($store = null)
     {
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_API_TYPE, $store);
+        $shippingOrigin = $this->getShipperCountry($store);
+
+        switch ($shippingOrigin) {
+            case 'DE':
+            case 'AT':
+                return ApiType::API_TYPE_BCS;
+            default:
+                return in_array($shippingOrigin, $this->shippingProducts->getAllCountries())
+                    ? ApiType::API_TYPE_GLA
+                    : ApiType::API_TYPE_NA;
+        }
     }
 
     /**
@@ -361,7 +382,9 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function getDefaultExportContentTypeExplanation($store = null)
     {
-        return $this->configAccessor
-            ->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE_EXPLANATION, $store);
+        return $this->configAccessor->getConfigValue(
+            self::CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE_EXPLANATION,
+            $store
+        );
     }
 }

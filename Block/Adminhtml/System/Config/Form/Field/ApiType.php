@@ -26,6 +26,7 @@
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType as Source;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Util\ShippingProductsInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
@@ -48,23 +49,23 @@ use Magento\Store\Model\ScopeInterface;
 class ApiType extends Field
 {
     /**
-     * @var ShippingProductsInterface
+     * @var ModuleConfigInterface
      */
-    private $shippingProducts;
+    private $moduleConfig;
 
     /**
      * ApiType constructor.
      *
      * @param Context $context
-     * @param ShippingProductsInterface $shippingProducts
+     * @param ModuleConfigInterface $moduleConfig
      * @param array $data
      */
     public function __construct(
         Context $context,
-        ShippingProductsInterface $shippingProducts,
+        ModuleConfigInterface $moduleConfig,
         array $data = []
     ) {
-        $this->shippingProducts = $shippingProducts;
+        $this->moduleConfig = $moduleConfig;
 
         parent::__construct($context, $data);
     }
@@ -86,28 +87,10 @@ class ApiType extends Field
         }
 
         $scopeId = $this->_request->getParam('website', 0);
-        if ($scopeId) {
-            $shippingOrigin = $this->_scopeConfig->getValue(
-                ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID,
-                ScopeInterface::SCOPE_WEBSITE,
-                $scopeId
-            );
-        } else {
-            $shippingOrigin = $this->_scopeConfig->getValue(ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID);
-        }
+        $apiType = $this->moduleConfig->getApiType($scopeId);
 
-        switch ($shippingOrigin) {
-            case 'DE':
-            case 'AT':
-                $elementValue = Source::API_TYPE_BCS;
-                break;
-            default:
-                $elementValue = in_array($shippingOrigin, $this->shippingProducts->getAllCountries())
-                    ? Source::API_TYPE_GLA
-                    : Source::API_TYPE_NA;
-        }
-        $element->setData('value', $elementValue);
-        if ($elementValue === Source::API_TYPE_NA) {
+        $element->setData('value', $apiType);
+        if ($apiType === Source::API_TYPE_NA) {
             $element->setData('disabled', true);
         }
 

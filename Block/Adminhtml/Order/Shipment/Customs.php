@@ -24,6 +24,7 @@
  */
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
+use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
@@ -129,15 +130,11 @@ class Customs extends Template
     {
         $destCountryId   = $this->getShipment()->getShippingAddress()->getCountryId();
         $isCrossBorder = $this->moduleConfig->isCrossBorderRoute($destCountryId, $this->getShipment()->getStoreId());
-        $bcsCountries = ['DE', 'AT'];
+        $apiType = $this->moduleConfig->getApiType($this->getShipment()->getStoreId());
         $usedTemplate = '';
-        $originCountryId = $this->moduleConfig->getShipperCountry(
-            $this->getShipment()->getStoreId()
-        );
-
-        if ($isCrossBorder && in_array($originCountryId, $bcsCountries)) {
+        if ($isCrossBorder && $apiType === ApiType::API_TYPE_BCS) {
             $usedTemplate = self::BCS_CUSTOMS_TEMPLATE;
-        } elseif ($isCrossBorder && !in_array($originCountryId, $bcsCountries)) {
+        } elseif ($isCrossBorder && $apiType === ApiType::API_TYPE_GLA) {
             $usedTemplate = self::GL_CUSTOMS_TEMPLATE;
         }
 
