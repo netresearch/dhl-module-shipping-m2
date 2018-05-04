@@ -36,7 +36,7 @@ use \Magento\Framework\Event\Observer;
 use \Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use \Magento\OfflinePayments\Model\Cashondelivery;
 use \Magento\OfflinePayments\Model\Checkmo;
-use \PHPUnit\Framework\MockObject\MockObject as MockObject;
+use \PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * DisableCodPaymentObserverTest
