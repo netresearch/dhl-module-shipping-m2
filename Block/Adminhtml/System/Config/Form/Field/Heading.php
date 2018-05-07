@@ -49,7 +49,7 @@ class Heading extends Field
     {
         $comment = $element->getData('comment');
         if ($comment) {
-            $comment = "<p>$comment</p>";
+            $comment = "<p class='comment'>$comment</p>";
         }
         $html = sprintf('<td colspan="5"><h4>%s</h4>%s</td>', $element->getData('label'), $comment);
 
