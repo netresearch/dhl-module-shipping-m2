@@ -14,8 +14,7 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @category  Dhl
- * @package   Dhl\Shipping\Model\Attribute
+ * @package   Dhl\Shipping\Model
  * @author    Paul Siedler <paul.siedler@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -26,10 +25,21 @@ namespace Dhl\Shipping\Model\Attribute\Source;
 
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
+/**
+ * DGCategory
+ *
+ * @package  Dhl\Shipping\Model
+ * @author   Paul Siedler <paul.siedler@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class DGCategory extends AbstractSource
 {
     const CODE = 'dhl_dangerous_goods_category';
 
+    /**
+     * @return mixed[]
+     */
     public function getAllOptions()
     {
         if (!$this->_options) {

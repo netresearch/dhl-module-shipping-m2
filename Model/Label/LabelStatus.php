@@ -27,8 +27,8 @@
 namespace Dhl\Shipping\Model\Label;
 
 use Dhl\Shipping\Api\Data\LabelStatusInterface;
-use Magento\Framework\Model\AbstractModel;
 use Dhl\Shipping\Model\ResourceModel\Label\LabelStatus as LabelStatusResource;
+use Magento\Framework\Model\AbstractModel;
 
 /**
  * LabelStatus
@@ -43,7 +43,6 @@ class LabelStatus extends AbstractModel implements LabelStatusInterface
 {
     const FIELD_ORDER_ID = 'order_id';
     const FIELD_STATUS_CODE = 'status_code';
-
 
     /**
      * Label not yet requested

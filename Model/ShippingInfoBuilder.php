@@ -379,8 +379,16 @@ class ShippingInfoBuilder
      *
      * @return void
      */
-    public function setParcelShop($station, $zip, $city, $countryCode, $streetName = '', $streetNumber = '', $country = '', $state = '')
-    {
+    public function setParcelShop(
+        $station,
+        $zip,
+        $city,
+        $countryCode,
+        $streetName = '',
+        $streetNumber = '',
+        $country = '',
+        $state = ''
+    ) {
         if (!isset($this->info[ShippingInfoInterface::RECEIVER])) {
             $this->info[ShippingInfoInterface::RECEIVER] = [];
         }

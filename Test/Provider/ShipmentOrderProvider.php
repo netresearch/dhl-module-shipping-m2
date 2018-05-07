@@ -108,6 +108,7 @@ class ShipmentOrderProvider
             false
         );
 
+        /** @var \Dhl\Shipping\Webservice\RequestServiceFactory $requestServiceFactoryMock */
         $requestServiceFactoryMock = $mockObjectGenerator->getMock(
             \Dhl\Shipping\Webservice\RequestServiceFactory::class,
             [],

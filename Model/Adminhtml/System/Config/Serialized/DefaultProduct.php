@@ -25,10 +25,10 @@
 
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Serialized;
 
-use Magento\Shipping\Model\Config as ShippingConfig;
-use \Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Config\Value;
 use Dhl\Shipping\Util\ShippingProductsInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Config\Value;
+use Magento\Shipping\Model\Config as ShippingConfig;
 use Magento\Store\Model\ScopeInterface;
 
 /**
@@ -72,6 +72,9 @@ class DefaultProduct extends Value
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
     }
 
+    /**
+     * @return $this
+     */
     public function beforeSave()
     {
         $groups = $this->getData('groups');
