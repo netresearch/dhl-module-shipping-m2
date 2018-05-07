@@ -29,7 +29,6 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
-use Magento\Quote\Api\Data\CartInterface;
 
 /**
  * Load services for display in checkout
@@ -73,12 +72,13 @@ class CheckoutServiceProvider
     }
 
     /**
-     * @param CartInterface|\Magento\Quote\Model\Quote $quote
+     * @param string $countryId
+     * @param string $storeId
      * @return ServiceCollection|ServiceInterface[]
      */
-    public function getServices(CartInterface $quote)
+    public function getServices($countryId, $storeId)
     {
-        $presets = $this->config->getServiceSettings($quote->getStoreId());
+        $presets = $this->config->getServiceSettings($storeId);
         // todo(nr): merge config defaults with values from session or shipping info structure?
 
         $serviceCollection = $this->servicePool->getServices($presets);
@@ -87,15 +87,37 @@ class CheckoutServiceProvider
         $checkoutFilter = CustomerSelectionFilter::create();
         $routeFilter = RouteFilter::create(
             $this->routeValidator,
-            $this->config->getShipperCountry($quote->getStoreId()),
-            $quote->getShippingAddress()->getCountryId(),
-            $this->config->getEuCountryList($quote->getStoreId())
+            $this->config->getShipperCountry($storeId),
+            $countryId,
+            $this->config->getEuCountryList($storeId)
         );
 
+        /** @var ServiceCollection $serviceCollection */
         $serviceCollection = $serviceCollection
             ->filter($checkoutFilter)
             ->filter($routeFilter);
 
-        return $serviceCollection;
+        $callback = $this->getTransformCallback();
+        $services = $serviceCollection->map($callback);
+
+        return $services;
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getTransformCallback()
+    {
+        // obtain simple serializable data structure
+        $transformFn = function (ServiceInterface $service) {
+            // todo(nr): add further properties as needed
+            return [
+                'code' => $service->getCode(),
+                'name' => $service->getName(),
+                'inputType' => $service->getInputType(),
+            ];
+        };
+
+        return $transformFn;
     }
 }

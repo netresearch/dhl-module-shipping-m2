@@ -1,26 +1,34 @@
 define([
+    'underscore',
     'uiComponent',
     'ko',
-    'Dhl_Shipping/js/model/services-data',
+    'Dhl_Shipping/js/action/get-services',
     'Magento_Checkout/js/model/quote'
-], function (Component, ko, serviceData, quote) {
+], function (_, Component, ko, serviceAction, quote) {
 
     'use strict';
+
+    var services = ko.observableArray([]);
+
+    quote.shippingMethod.subscribe(function () {
+        var countryId = quote.shippingAddress().countryId;
+        var carrierCode = quote.shippingMethod().carrier_code;
+        if (countryId && carrierCode) {
+            var callback = function (result) {
+                services(result);
+            };
+
+            serviceAction(countryId, carrierCode, callback);
+        }
+    });
 
     return Component.extend({
         defaults: {
             template: 'Dhl_Shipping/checkout/shipping/service-block'
         },
 
-        isDhlMethod: function () {
-            var dhlMethods = serviceData.getDhlMethods();
-            var selectedShippingMethod  = quote.shippingMethod();
-            var carrierCode = selectedShippingMethod.carrier_code + '_' + selectedShippingMethod.method_code;
-
-            if (dhlMethods.indexOf(carrierCode) != -1) {
-                return true;
-            }
-            return false;
+        getServices: function () {
+            return services();
         }
     });
 });
