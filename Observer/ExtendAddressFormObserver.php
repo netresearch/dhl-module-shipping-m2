@@ -60,8 +60,10 @@ class ExtendAddressFormObserver implements ObserverInterface
      * @param Registry $coreRegistry
      * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
      */
-    public function __construct(Registry $coreRegistry, OrderAddressExtensionRepositoryInterface $addressExtensionRepository)
-    {
+    public function __construct(
+        Registry $coreRegistry,
+        OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+    ) {
         $this->coreRegistry = $coreRegistry;
         $this->addressExtensionRepository = $addressExtensionRepository;
     }

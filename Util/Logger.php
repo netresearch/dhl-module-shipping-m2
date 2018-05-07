@@ -75,5 +75,4 @@ class Logger extends Monolog
 
         return false;
     }
-
 }

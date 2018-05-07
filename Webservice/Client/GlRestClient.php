@@ -64,6 +64,7 @@ class GlRestClient implements GlRestClientInterface
      *
      * @param GlConfigInterface $config
      * @param Version           $version
+     * @param \Zend\Http\Client $zendClient
      */
     public function __construct(
         GlConfigInterface $config,

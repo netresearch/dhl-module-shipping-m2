@@ -178,6 +178,9 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
         $schedule = $this->objectManager->get(Schedule::class);
         $this->autoCreate->run($schedule);
 
-        $this->assertEquals('3 shipments were created. 0 shipments could not be created.', $schedule->getData('messages'));
+        $this->assertEquals(
+            '3 shipments were created. 0 shipments could not be created.',
+            $schedule->getData('messages')
+        );
     }
 }

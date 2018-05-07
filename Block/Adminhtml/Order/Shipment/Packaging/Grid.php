@@ -16,7 +16,7 @@
  *
  * PHP version 7
  *
- * @package   Dhl\Shipping
+ * @package   Dhl\Shipping\Block
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -30,7 +30,7 @@ use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Backend\Block\Template\Context;
-use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\Directory\Model\ResourceModel\Country\Collection as CountryCollection;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order\Shipment\ItemFactory;
@@ -38,7 +38,7 @@ use Magento\Sales\Model\Order\Shipment\ItemFactory;
 /**
  * Grid
  *
- * @package  Dhl\Shipping
+ * @package  Dhl\Shipping\Block
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -58,9 +58,9 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     private $moduleConfig;
 
     /**
-     * @var  ProductFactory
+     * @var  ProductCollectionFactory
      */
-    private $productFactory;
+    private $productCollectionFactory;
 
     /**
      * @var  CountryCollection
@@ -93,26 +93,29 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param ItemFactory $shipmentItemFactory
      * @param Registry $registry
      * @param ModuleConfigInterface $moduleConfig
-     * @param ProductFactory $productFactory
+     * @param ProductCollectionFactory $productCollectionFactory
      * @param CountryCollection $countryCollection
-     * @param array $data
+     * @param mixed[] $data
      */
     public function __construct(
         Context $context,
         ItemFactory $shipmentItemFactory,
         Registry $registry,
         ModuleConfigInterface $moduleConfig,
-        ProductFactory $productFactory,
         CountryCollection $countryCollection,
+        ProductCollectionFactory $productCollectionFactory,
         array $data = []
     ) {
-        $this->countryCollection = $countryCollection;
-        $this->productFactory = $productFactory;
         $this->moduleConfig = $moduleConfig;
+        $this->countryCollection = $countryCollection;
+        $this->productCollectionFactory = $productCollectionFactory;
 
         parent::__construct($context, $shipmentItemFactory, $registry, $data);
     }
 
+    /**
+     * @return string
+     */
     public function getTemplate()
     {
         $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
@@ -219,8 +222,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
             $productIds[] = $item->getProductId();
         }
 
-        /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
-        $productCollection = $this->productFactory->create()->getCollection();
+        $productCollection = $this->productCollectionFactory->create();
         $productCollection->addStoreFilter($this->getShipment()->getStoreId())
             ->addFieldToFilter(
                 'entity_id',
