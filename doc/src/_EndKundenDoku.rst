@@ -240,6 +240,18 @@ für die Erstellung von Versandaufträgen über den DHL Webservice erforderlich 
   sind die Felder ausgegraut. Beachten Sie die Hinweise im Abschnitt Modulkonfiguration_
   zur Absenderadresse.
 
+Standardwerte für automatische Sendungserstellung
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In diesem Konfigurationsbereich legen Sie die Standardwerte für Sendungen fest, die
+automatisch (per Cronjob) oder über die Massenaktion_ erstellt werden.
+
+Je nach gewählter API (DHL Business Customer Shipping, eCommerce Global Label API, ...) erscheinen
+hier unterschiedliche Eingabemöglichkeiten.
+
+Beachten Sie zudem die Konfiguration von Zollinformationen über die Produkt-Attribute, siehe
+Abschnitt `Internationale Sendungen`_.
+
 .. raw:: pdf
 
    PageBreak
@@ -255,32 +267,12 @@ Die Einstellungen in diesem Bereich sind speziell bei Nutzung des
   bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende
   Nachnahme-Label zu erzeugen.
 
-- Ebenso legen Sie fest, welche Bankdaten für
-  Nachnahme-Versandaufträge an DHL übermittelt werden. Der vom Empfänger erhobene
-  Nachnahmebetrag wird auf dieses Konto transferiert.
+Bei Nutzung der *eCommerce Global Label API* ist derzeit kein Nachnahmeversand verfügbar.
 
-  Beachten Sie, dass die Bankverbindung ggf. auch in Ihrem DHL-Konto hinterlegt werden
-  muss. I.d.R. kann dies über das DHL Geschäftskundenportal erledigt werden.
+DHL Zusatzleistungen Standardwerte
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Weitehin können Sie festlegen, welche Absenderdaten ergänzend
-  zur allgemeinen |mage|-Konfiguration an DHL übermittelt werden sollen.
-
-Dieser Abschnitt wird bei Nutzung der *eCommerce Global Label API* nicht angezeigt,
-da hier kein Nachnahmeversand möglich ist.
-
-Standardwerte für automatische Sendungserstellung
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In diesem Konfigurationsbereich legen Sie die Standardwerte für Sendungen fest, die
-automatisch (per Cronjob) oder über die Massenaktion_ erstellt werden.
-
-Je nach gewählter API (DHL Business Customer Shipping, eCommerce Global Label API, ...) erscheinen
-hier unterschiedliche Eingabemöglichkeiten.
-
-Beachten Sie zudem die Konfiguration von Zollinformationen über die Produkt-Attribute, siehe
-Abschnitt `Internationale Sendungen`_.
-
-Weiterhin können in diesem Konfigurationsbereich die Standardwerte für DHL Zusatzleistungen
+In diesem Konfigurationsbereich können die Standardwerte für DHL Zusatzleistungen
 (Services) eingestellt werden.
 
 - *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
@@ -304,9 +296,31 @@ Weiterhin können in diesem Konfigurationsbereich die Standardwerte für DHL Zus
   hinzugebucht werden soll.
 - *Sperrgut:* Wählen Sie, ob der Service *Sperrgut* hinzugebucht werden soll.
 
+Kontaktinformationen
+~~~~~~~~~~~~~~~~~~~~
+
+In diesem Konfigurationsbereich legen Sie fest, welche Absenderdaten ergänzend
+zur allgemeinen |mage|-Konfiguration an DHL übermittelt werden sollen.
+
+Bei Nutzung der *eCommerce Global Label API* können hier keine zusätzlichen Angaben
+eingetragen werden.
+
 .. raw:: pdf
 
    PageBreak
+
+Bankverbindung
+~~~~~~~~~~~~~~
+
+Im Konfigurationsbereich *Bankverbindung* legen Sie fest, welche Bankdaten für
+Nachnahme-Versandaufträge an DHL übermittelt werden. Der vom Empfänger erhobene
+Nachnahmebetrag wird auf dieses Konto transferiert.
+
+Beachten Sie, dass die Bankverbindung ggf. auch in Ihrem DHL-Konto hinterlegt werden
+muss. I.d.R. kann dies über das DHL Geschäftskundenportal erledigt werden.
+
+Dieser Abschnitt wird bei Nutzung der *eCommerce Global Label API* nicht angezeigt,
+da hier kein Nachnahmeversand möglich ist.
 
 eCommerce Global API Versandeinstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
