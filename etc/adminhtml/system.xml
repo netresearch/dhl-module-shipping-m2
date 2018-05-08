@@ -419,7 +419,7 @@
                 </field>
                 <!-- Reason for Payment -->
                 <field id="bcs_bankdata_note1" translate="label" type="text" sortOrder="260" showInDefault="1"
-                       showInWebsite="1" showInStore="0">
+                       showInWebsite="1" showInStore="1">
                     <label>Reason for Payment</label>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -427,7 +427,7 @@
                 </field>
                 <!-- Reason for Payment -->
                 <field id="bcs_bankdata_note2" translate="label" type="text" sortOrder="270" showInDefault="1"
-                       showInWebsite="1" showInStore="0">
+                       showInWebsite="1" showInStore="1">
                     <label>Reason for Payment (2)</label>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -448,7 +448,7 @@
                     </depends>
                 </field>
                 <!-- Dispatching Information -->
-                <field id="bcs_shipper_contact_dispatchinfo" translate="label" type="text" sortOrder="282" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="bcs_shipper_contact_dispatchinfo" translate="label" type="text" sortOrder="282" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Dispatching Information</label>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -471,7 +471,7 @@
                     </depends>
                 </field>
                 <!-- Default Product -->
-                <field id="default_shipping_products" translate="label, comment" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1" type="fieldset">
+                <field id="default_shipping_products" translate="label, comment" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="0" type="fieldset">
                     <label>Default Products</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
                     <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Serialized\DefaultProduct</backend_model>
@@ -484,7 +484,7 @@
                 </field>
                 <!-- Terms of Trade BCS -->
                 <field id="shipmemt_autocreate_termsoftrade_bcs" translate="label" sortOrder="310" showInWebsite="1"
-                       showInStore="1" showInDefault="1" type="select">
+                       showInStore="0" showInDefault="1" type="select">
                     <label>Default Terms of Trade</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs</source_model>
                     <depends>
@@ -492,7 +492,7 @@
                     </depends>
                 </field>
                 <!-- Terms of Trade GLA -->
-                <field id="shipmemt_autocreate_termsoftrade_gla" translate="label" sortOrder="320" showInWebsite="1" showInStore="1" showInDefault="1" type="select">
+                <field id="shipmemt_autocreate_termsoftrade_gla" translate="label" sortOrder="320" showInWebsite="1" showInStore="0" showInDefault="1" type="select">
                     <label>Default Terms of Trade</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla</source_model>
                     <depends>
@@ -508,7 +508,7 @@
                     <validate>validate-length maximum-length-35</validate>
                 </field>
                 <!-- Additional Fee -->
-                <field id="shipmemt_autocreate_addtionalfee" translate="label" sortOrder="330" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                <field id="shipmemt_autocreate_addtionalfee" translate="label" sortOrder="330" showInDefault="1" showInStore="0" showInWebsite="1" type="text">
                     <label>Default Additional Fee</label>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -516,7 +516,7 @@
                     <validate>validate-number</validate>
                 </field>
                 <!-- Export Content Type -->
-                <field id="shipment_autocreate_export_contenttype" translate="label" sortOrder="340" showInDefault="1" showInStore="1" showInWebsite="1" type="select">
+                <field id="shipment_autocreate_export_contenttype" translate="label" sortOrder="340" showInDefault="1" showInStore="0" showInWebsite="1" type="select">
                     <label>Default Export Content Type</label>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\ExportContentType</source_model>
                     <depends>
@@ -524,7 +524,7 @@
                     </depends>
                 </field>
                 <!-- Description -->
-                <field id="shipment_autocreate_export_contenttype_explanation" translate="label" sortOrder="350" showInDefault="1" showInStore="1" showInWebsite="1" type="text">
+                <field id="shipment_autocreate_export_contenttype_explanation" translate="label" sortOrder="350" showInDefault="1" showInStore="0" showInWebsite="1" type="text">
                     <label>Export Content Description</label>
                     <depends>
                         <field id="shipment_autocreate_export_contenttype">OTHER</field>
@@ -534,7 +534,7 @@
 
                 <!-- Additional Services -->
                 <!-- Print Only If Codeable -->
-                <field id="shipment_service_printonlyifcodeable" translate="label" type="select" sortOrder="352" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="shipment_service_printonlyifcodeable" translate="label" type="select" sortOrder="352" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Use Print Only If Codeable Service</label>
                     <tooltip>
                         <![CDATA[Relevant for bulk actions and actions via cron. If set to <em>Yes</em>, shipment orders will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
@@ -544,7 +544,7 @@
                     </depends>
                 </field>
                 <!-- Parcel Announcement -->
-                <field id="shipment_service_parcelannouncement" translate="label" type="select" sortOrder="353" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="shipment_service_parcelannouncement" translate="label" type="select" sortOrder="353" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Use Parcel Announcement Service</label>
                     <tooltip>
                         <![CDATA[Relevant for bulk actions and actions via cron. If set to <em>Yes</em>, DHL will send shipment status updates to the customer.]]></tooltip>
@@ -601,7 +601,7 @@
 
 
                 <!-- Automatic Shipment Creation -->
-                <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Automatic Shipment Creation Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
@@ -610,7 +610,7 @@
                     <comment>Automatic shipment creation will periodically collect all orders ready for shipping and create shipments with DHL. Orders are processed every 15 minutes.</comment>
                 </field>
                 <!-- Cron Job -->
-                <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="550" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="shipment_autocreate_enabled" translate="label" type="select" sortOrder="550" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enabled</label>
                     <comment>Create shipments and retrieve labels via cron job.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
