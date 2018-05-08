@@ -239,18 +239,6 @@ the DHL webservice is made.
   shipments. If no selection is possible, the fields will be disabled. Please note the
   information in section `Module configuration`_ regarding the sender (origin) address.
 
-Automatic Shipment Creation Default Values
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In this section, the default values are configured for shipments that are created
-automatically (Cronjob) or via the `Mass action`_.
-
-Depending on the selected API (DHL Business Customer Shipping, eCommerce Global Label API, ...),
-different values can be configured.
-
-Please also note the configuration of customs information in the product attributes, see
-section `International shipments`_.
-
 .. raw:: pdf
 
    PageBreak
@@ -266,13 +254,32 @@ This section contains settings which are relevant if the
   to transmit the additional charge for Cash On Delivery to the DHL webservice
   and create Cash On Delivery labels.
 
+- Also you configure the bank account to be used for Cash On
+  Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer
+  will be transferred to this bank account.
+
+  Please note that you might also have to store the bank data in your DHL account.
+  Usually, this can be done through the DHL Business Customer Portal (Geschäftskundenportal).
+
+- At least you configure which sender (shipper) information should be
+  transmitted to DHL in addition to the general |mage| configuration settings.
+
 When using the *eCommerce Global Label API*, the service Cash On Delivery is
 currently not available.
 
-Additional Service Default Values
+Bulk Shipment Creation Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This configuration sections defines the default values for additional DHL services.
+In this section, the default values are configured for shipments that are created
+automatically (Cronjob) or via the `Mass action`_.
+
+Depending on the selected API (DHL Business Customer Shipping, eCommerce Global Label API, ...),
+different values can be configured.
+
+Please also note the configuration of customs information in the product attributes, see
+section `International shipments`_.
+
+Furthermore, in this configuration section, the default values for additional DHL services must be defined.
 
 - *Print only if codeable*: If this is enabled, only shipments with perfectly
   valid addresses will be accepted by DHL. Otherwise, DHL will reject the shipment
@@ -295,36 +302,15 @@ This configuration sections defines the default values for additional DHL servic
   the shipment.
 - *Bulky Goods:* Select if the service for bulky goods (bulk freight) should be booked.
 
-Contact Data
-~~~~~~~~~~~~
+.. raw:: pdf
 
-In this section, you configure which sender (shipper) information should be
-transmitted to DHL in addition to the general |mage| configuration settings.
-
-When using the *eCommerce Global Label API* no additional information can be entered
-here.
-
-Bank Data
-~~~~~~~~~
-
-In the section *Bank Data* you configure the bank account to be used for Cash On
-Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer
-will be transferred to this bank account.
-
-Please note that you might also have to store the bank data in your DHL account.
-Usually, this can be done through the DHL Business Customer Portal (Geschäftskundenportal).
-
-This section is not visible when using the *eCommerce Global Label API* because it does
-not allow Cash On Delivery shipments.
+   PageBreak
 
 eCommerce Global API Shipping Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section you can configure the label size, page size, and layout.
 
-.. raw:: pdf
-
-   PageBreak
 
 Automatic Shipment Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
