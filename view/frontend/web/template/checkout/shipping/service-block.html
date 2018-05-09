@@ -1,33 +1,18 @@
-<!-- ko if: getServices().length -->
-<form id="carrier-fields-block" class="form form-shipping-address form-carrier-fields">
-    <div class="fieldset">
-        <!-- ko foreach: getServices() -->
-        <!-- ko if: inputType == 'checkbox' -->
-        <table class="table-checkout-shipping-method">
-            <tbody>
-            <tr class="row">
-                <td class="col col-method" width="10px">
-                    <input type="checkbox"/>
-                </td>
-                <td class="col">
-                    <label data-bind="i18n: name"></label>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+<!-- ko if: hasServices() -->
+    <fieldset class="fieldset">
+        <legend class="label">
+            <h3 data-bind="text: 'DHL Services'"></h3>
+        </legend>
+        <!-- ko foreach: { data: elems, as: 'element' } -->
+         <render if="hasTemplate()"></render>
         <!-- /ko -->
 
-        <!-- ko if: inputType == 'text' -->
-        <div class="field">
-            <label class="label">
-                <span data-bind="i18n: name"></span>
-            </label>
-            <div class="control">
-                <input class="input-text"/>
-            </div>
-        </div>
+        <!-- ko if: validateWholeGroup -->
+            <!-- ko  foreach: { data: elems, as: 'element' } -->
+                <!-- ko if: element.error() && element.visible() -->
+                    <label class="error" data-bind="attr: { for: uid }, text: element.error"></label>
+                <!-- /ko -->
+            <!-- /ko -->
         <!-- /ko -->
-        <!-- /ko -->
-    </div>
-</form>
+    </fieldset>
 <!-- /ko -->

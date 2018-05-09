@@ -38,7 +38,7 @@ use Magento\Quote\Model\QuoteRepository;
  * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link      http://www.netresearch.de/
+ * @link     http://www.netresearch.de/
  */
 class CartServiceFieldManagement implements CartServiceManagementInterface
 {
@@ -86,7 +86,7 @@ class CartServiceFieldManagement implements CartServiceManagementInterface
         $quote = $this->quoteRepository->get($cartId);
         $dhlShippingMethod = $this->moduleConfig->getShippingMethods($quote->getStoreId());
 
-        if (!$shippingMethod !== $dhlShippingMethod) {
+        if (!in_array($shippingMethod, $dhlShippingMethod)) {
             return [];
         }
 

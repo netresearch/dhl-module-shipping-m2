@@ -28,7 +28,7 @@ namespace Dhl\Shipping\Model\Config;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
-use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge as VisualCheckOfAgeOptions;
+use Dhl\Shipping\Model\Service\ServiceOptionProvider;
 use Dhl\Shipping\Service\Bcs\BulkyGoods;
 use Dhl\Shipping\Service\Bcs\Cod;
 use Dhl\Shipping\Service\Bcs\Insurance;
@@ -78,23 +78,31 @@ class ModuleConfig implements ModuleConfigInterface
     private $serviceSettingsFactory;
 
     /**
+     * @var ServiceOptionProvider
+     */
+    private $serviceOptionProvider;
+
+    /**
      * ModuleConfig constructor.
      *
      * @param ConfigAccessorInterface $configAccessor
      * @param RoutesInterface $routeConfig
      * @param ShippingProductsInterface $shippingProducts
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
+     * @param ServiceOptionProvider $serviceOptionProvider
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         RoutesInterface $routeConfig,
         ShippingProductsInterface $shippingProducts,
-        ServiceSettingsInterfaceFactory $serviceSettingsFactory
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory,
+        ServiceOptionProvider $serviceOptionProvider
     ) {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
         $this->shippingProducts = $shippingProducts;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
+        $this->serviceOptionProvider = $serviceOptionProvider;
     }
 
     /**
@@ -344,70 +352,74 @@ class ModuleConfig implements ModuleConfigInterface
             ),
             ServiceSettingsInterface::OPTIONS => [],
         ]);
-
         $parcelAnnouncementCode = ParcelAnnouncement::CODE;
+        $parcelAnnouncementEnabled =  (bool) $this->configAccessor->getConfigValue(
+            'carriers/dhlshipping/service_' . strtolower($parcelAnnouncementCode) . '_enabled',
+            $store
+        );
         $parcelAnnouncementConfig = $this->serviceSettingsFactory->create([
             ServiceSettingsInterface::NAME => 'Parcel Announcement',
-            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_ENABLED => $parcelAnnouncementEnabled,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower($parcelAnnouncementCode),
-                $store
-            ),
+            ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::OPTIONS => [],
         ]);
 
         $preferredDayCode = PreferredDay::CODE;
+        $preferredDayEnabled = (bool) $this->configAccessor->getConfigValue(
+            'carriers/dhlshipping/service_' . strtolower($preferredDayCode) . '_enabled',
+            $store
+        );
         $preferredDayConfig = $this->serviceSettingsFactory->create([
             ServiceSettingsInterface::NAME => 'Preferred Day',
-            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_ENABLED => $preferredDayEnabled,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower($preferredDayCode),
-                $store
-            ),
-            ServiceSettingsInterface::OPTIONS => [], // todo(nr): init with possible values
+            ServiceSettingsInterface::IS_SELECTED => false,
+            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredDayOptions()
         ]);
 
         $preferredLocationCode = PreferredLocation::CODE;
+        $preferredLocationEnabled = (bool) $this->configAccessor->getConfigValue(
+            'carriers/dhlshipping/service_' . strtolower($preferredLocationCode) . '_enabled',
+            $store
+        );
         $preferredLocationConfig = $this->serviceSettingsFactory->create([
             ServiceSettingsInterface::NAME => 'Preferred Location',
-            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_ENABLED => $preferredLocationEnabled,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower($preferredLocationCode),
-                $store
-            ),
+            ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::OPTIONS => [],
         ]);
 
         $preferredNeighbourCode = PreferredNeighbour::CODE;
+        $preferredNeighbourEnabled = (bool) $this->configAccessor->getConfigValue(
+            'carriers/dhlshipping/service_' . strtolower($preferredNeighbourCode) . '_enabled',
+            $store
+        );
         $preferredNeighbourConfig = $this->serviceSettingsFactory->create([
             ServiceSettingsInterface::NAME => 'Preferred Neighbour',
-            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_ENABLED => $preferredNeighbourEnabled,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower($preferredNeighbourCode),
-                $store
-            ),
+            ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::OPTIONS => [],
         ]);
 
         $preferredTimeCode = PreferredTime::CODE;
+        $preferredTimeEnabled = (bool) $this->configAccessor->getConfigValue(
+            'carriers/dhlshipping/service_' . strtolower($preferredTimeCode) . '_enabled',
+            $store
+        );
         $preferredTimeConfig = $this->serviceSettingsFactory->create([
             ServiceSettingsInterface::NAME => 'Preferred Time',
-            ServiceSettingsInterface::IS_ENABLED => true,
+            ServiceSettingsInterface::IS_ENABLED => $preferredTimeEnabled,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower($preferredTimeCode),
-                $store
-            ),
-            ServiceSettingsInterface::OPTIONS => [], // todo(nr): init with possible values
+            ServiceSettingsInterface::IS_SELECTED => false,
+            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredTimeOptions()
         ]);
 
         $printOnlyIfCodeableCode = PrintOnlyIfCodeable::CODE;
@@ -447,10 +459,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => (bool) $visualCheckOfAgeDefault,
-            ServiceSettingsInterface::OPTIONS => [
-                VisualCheckOfAgeOptions::OPTION_A16 => VisualCheckOfAgeOptions::OPTION_A16,
-                VisualCheckOfAgeOptions::OPTION_A18 => VisualCheckOfAgeOptions::OPTION_A18,
-            ],
+            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getVisualCheckOfAgeOptions(),
             ServiceSettingsInterface::PROPERTIES => [
                 VisualCheckOfAge::PROPERTY_AGE => $visualCheckOfAgeDefault,
             ],

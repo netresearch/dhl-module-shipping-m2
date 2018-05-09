@@ -115,6 +115,7 @@ class CheckoutServiceProvider
                 'code' => $service->getCode(),
                 'name' => $service->getName(),
                 'inputType' => $service->getInputType(),
+                'options' => $service->getOptions()
             ];
         };
 

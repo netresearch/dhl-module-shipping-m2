@@ -146,9 +146,6 @@
     </type>
 
     <!-- plugins -->
-    <type name="Magento\Checkout\Model\ShippingInformationManagement">
-        <plugin name="initShippingInfo" type="Dhl\Shipping\Plugin\Checkout\ShippingInformationManagementPlugin" />
-    </type>
     <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">
         <plugin name="logWsApiCalls" type="Dhl\Shipping\Plugin\AdapterChainPlugin" />
     </type>

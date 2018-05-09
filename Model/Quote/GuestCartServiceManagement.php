@@ -83,7 +83,7 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
     }
 
     /**
-     * @param int $cartId
+     * @param string $cartId
      * @param string $countryId
      * @param string $shippingMethod
      * @return ServiceCollection|ServiceInterface[]
@@ -92,7 +92,7 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
     {
         /** @var QuoteIdMask $quoteIdMask */
         $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-        $quote = $this->quoteRepository->get($quoteIdMask->getQuoteId());
+        $quote = $this->quoteRepository->get($quoteIdMask->getData('quote_id'));
         $dhlShippingMethod = $this->moduleConfig->getShippingMethods($quote->getStoreId());
         $shippingMethod = $shippingMethod . '_' . $shippingMethod;
 

@@ -1,10 +1,12 @@
 define([
     'underscore',
-    'uiComponent',
+    'uiCollection',
+    'uiLayout',
     'ko',
     'Dhl_Shipping/js/action/get-services',
-    'Magento_Checkout/js/model/quote'
-], function (_, Component, ko, serviceAction, quote) {
+    'Magento_Checkout/js/model/quote',
+    'Dhl_Shipping/js/model/services',
+], function (_, UiCollection, layout, ko, serviceAction, quote, serviceModel) {
 
     'use strict';
 
@@ -22,13 +24,43 @@ define([
         }
     });
 
-    return Component.extend({
+    return UiCollection.extend({
         defaults: {
             template: 'Dhl_Shipping/checkout/shipping/service-block'
         },
 
-        getServices: function () {
-            return services();
+        initialize: function () {
+            this._super();
+            services.subscribe(function (services) {
+                this.destroyChildren();
+                var servicesLayout = _.map(services, function (service) {
+                    return this.getServiceFieldLayout(service);
+                }, this);
+
+                layout(servicesLayout);
+
+                _.each(this.elems, function (elem) {
+                    elem.value.subscribe(function (newValue) {
+                        serviceModel[this.name] = newValue;
+                    }, elem)
+                })
+            }, this);
+        },
+
+        getServiceFieldLayout: function (service) {
+            return {
+                parent: this.name,
+                component: 'Dhl_Shipping/js/view/checkout/shipping/service',
+                service: service
+            }
+        },
+
+        validateWholeGroup: function () {
+            return false;
+        },
+
+        hasServices: function () {
+            return services().length > 0;
         }
     });
 });
