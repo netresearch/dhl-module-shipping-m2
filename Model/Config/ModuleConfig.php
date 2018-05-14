@@ -327,6 +327,7 @@ class ModuleConfig implements ModuleConfigInterface
                 'carriers/dhlshipping/shipment_service_' . strtolower($bulkyGoodsCode),
                 $store
             ), // by default, service is selected for shipment order
+            ServiceSettingsInterface::SORT_ORDER => 100,
             ServiceSettingsInterface::OPTIONS => [], // possible service properties
         ]);
 
@@ -338,6 +339,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => false,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::SORT_ORDER => 110,
         ]);
 
         $insuranceCode = Insurance::CODE;
@@ -351,6 +353,7 @@ class ModuleConfig implements ModuleConfigInterface
                 $store
             ),
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::SORT_ORDER => 120,
         ]);
         $parcelAnnouncementCode = ParcelAnnouncement::CODE;
         $parcelAnnouncementEnabled =  (bool) $this->configAccessor->getConfigValue(
@@ -364,6 +367,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::SORT_ORDER => 30,
         ]);
 
         $preferredDayCode = PreferredDay::CODE;
@@ -377,6 +381,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
+            ServiceSettingsInterface::SORT_ORDER => 10,
             ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredDayOptions()
         ]);
 
@@ -392,6 +397,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::SORT_ORDER => 40,
         ]);
 
         $preferredNeighbourCode = PreferredNeighbour::CODE;
@@ -406,6 +412,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::SORT_ORDER => 50,
         ]);
 
         $preferredTimeCode = PreferredTime::CODE;
@@ -419,6 +426,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
+            ServiceSettingsInterface::SORT_ORDER => 20,
             ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredTimeOptions()
         ]);
 
@@ -433,6 +441,7 @@ class ModuleConfig implements ModuleConfigInterface
                 $store
             ),
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::SORT_ORDER => 130,
         ]);
 
         $returnShipmentCode = ReturnShipment::CODE;
@@ -446,6 +455,7 @@ class ModuleConfig implements ModuleConfigInterface
                 $store
             ),
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::SORT_ORDER => 140,
         ]);
 
         $visualCheckOfAgeCode = VisualCheckOfAge::CODE;
@@ -463,6 +473,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::PROPERTIES => [
                 VisualCheckOfAge::PROPERTY_AGE => $visualCheckOfAgeDefault,
             ],
+            ServiceSettingsInterface::SORT_ORDER => 150,
         ]);
 
         $settings = [

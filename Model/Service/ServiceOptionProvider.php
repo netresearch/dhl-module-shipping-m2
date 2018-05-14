@@ -25,6 +25,7 @@
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge as VisualCheckOfAgeOptions;
+use Yasumi\Yasumi;
 
 /**
  * Provide Service Options for Checkout Services.
@@ -36,16 +37,49 @@ use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge a
  */
 class ServiceOptionProvider
 {
+
     public function getPreferredDayOptions()
     {
-        //todo(nr): once holiday package is added, we need to calculate the next 5 working days -> see: versenden-m1
-        return [1, 2, 3, 4, 5,];
+        $options = [];
+        $daysToCalculate = 5;
+        $year = date('Y');
+        $holidayProvider = Yasumi::create('Germany', $year, 'de_DE');
+
+        for ($i = 1; $i <= $daysToCalculate; $i++) {
+            $disabled = false;
+            $date = date("Y-m-d", time() + 86400 * $i);
+            $dateTime = new \DateTime($date);
+            $dayOfWeek = date("l", strtotime($date));
+            if ($holidayProvider->isHoliday($dateTime) || ($dayOfWeek === 'Sunday')) {
+                $disabled = true;
+                $daysToCalculate++;
+            }
+
+            $options[] = [
+                'label' => substr($dayOfWeek, 0, 3),
+                'labelValue' => substr($date, -2),
+                'value' => $date,
+                'disabled' => $disabled
+            ];
+        }
+
+        return $options;
     }
 
     public function getPreferredTimeOptions()
     {
-        //todo(nr): return time -> see: versenden-m1
-        return [1, 2, 3, 4, 5];
+        $options = [
+            [
+                'label' => __('18 - 20'),
+                'value' => '18002000'
+            ],
+            [
+                'label' => __('19 - 21'),
+                'value' => '19002100'
+            ]
+        ];
+
+        return $options;
     }
 
     public function getVisualCheckOfAgeOptions()
@@ -56,5 +90,3 @@ class ServiceOptionProvider
         ];
     }
 }
-
-

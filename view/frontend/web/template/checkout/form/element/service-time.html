@@ -8,10 +8,12 @@
     <div class="admin__field admin__field-option">
         <input type="radio"
                class="admin__control-radio"
-               data-bind="checkedValue: option"
+               data-bind="checkedValue: option.value"
                ko-disable="disabled"
                attr="id: $parent.uid, name: $parent.name"/>
 
-        <label class="admin__field-label" text="$data" attr="for: $parent.uid"/>
+        <label class="admin__field-label" attr="for: $parent.uid">
+            <span data-bind="text:option.label"> </span>
+        </label>
     </div>
 <!-- /ko -->

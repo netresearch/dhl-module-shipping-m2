@@ -69,4 +69,15 @@ class ServiceCollection extends \ArrayIterator
         $mappedServices = array_map($callback, $this->getArrayCopy());
         return $mappedServices;
     }
+
+    /**
+     * @param callable $callback
+     * @return static
+     */
+    public function sort(callable $callback)
+    {
+        $services = $this->getArrayCopy();
+        usort($services, $callback);
+        return static::fromArray($services);
+    }
 }

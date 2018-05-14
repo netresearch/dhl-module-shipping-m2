@@ -97,6 +97,9 @@ class CheckoutServiceProvider
             ->filter($checkoutFilter)
             ->filter($routeFilter);
 
+        $callback = $this->getSortCallback();
+        $serviceCollection = $serviceCollection->sort($callback);
+
         $callback = $this->getTransformCallback();
         $services = $serviceCollection->map($callback);
 
@@ -115,10 +118,25 @@ class CheckoutServiceProvider
                 'code' => $service->getCode(),
                 'name' => $service->getName(),
                 'inputType' => $service->getInputType(),
-                'options' => $service->getOptions()
+                'options' => $service->getOptions(),
             ];
         };
 
         return $transformFn;
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getSortCallback()
+    {
+        $sortFn = function (ServiceInterface $serviceA, ServiceInterface $serviceB) {
+            if ($serviceA->getSortOrder() == $serviceB->getSortOrder()) {
+                return 0;
+            }
+            return ($serviceA->getSortOrder() < $serviceB->getSortOrder()) ? -1 : 1;
+        };
+
+        return $sortFn;
     }
 }

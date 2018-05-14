@@ -5,7 +5,7 @@ define([
     'ko',
     'Dhl_Shipping/js/action/get-services',
     'Magento_Checkout/js/model/quote',
-    'Dhl_Shipping/js/model/services',
+    'Dhl_Shipping/js/model/services'
 ], function (_, UiCollection, layout, ko, serviceAction, quote, serviceModel) {
 
     'use strict';

@@ -24,6 +24,7 @@
         "magento/module-store": "^100.2.3",
         "magento/module-ui": "^101.0.4",
         "magento/zendframework1": "~1.13.0"
+        "azuyalabs/yasumi": "1.8.0"
     },
     "require-dev": {
       "phpunit/phpunit": "~6.2.0",

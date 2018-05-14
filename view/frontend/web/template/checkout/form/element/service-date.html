@@ -1,0 +1,19 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!-- ko foreach: { data: service.options, as: 'option' } -->
+    <div class="admin__field admin__field-option">
+        <input type="radio"
+               class="admin__control-radio"
+               data-bind="checkedValue: option.value"
+               attr="id: $parent.uid, name: $parent.name, disabled:option.disabled"/>
+
+        <label class="admin__field-label" attr="for: $parent.uid">
+            <span data-bind="text:option.labelValue"> </span>
+            <span data-bind="text:option.label"> </span>
+        </label>
+    </div>
+<!-- /ko -->
