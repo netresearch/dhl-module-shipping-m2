@@ -1,7 +1,10 @@
 define([
-    'Magento_Ui/js/form/element/abstract'
-], function (Component) {
+    'Magento_Ui/js/form/element/abstract',
+    'mage/utils/wrapper',
+    'Magento_Checkout/js/action/set-shipping-information'
+], function (Component, wrapper) {
     'use strict';
+
 
     return Component.extend({
         defaults: {
@@ -13,7 +16,6 @@ define([
         initialize: function() {
             this._super();
             this.initFieldData();
-
         },
 
         initFieldData: function () {
