@@ -254,14 +254,14 @@ This section contains settings which are relevant if the
   to transmit the additional charge for Cash On Delivery to the DHL webservice
   and create Cash On Delivery labels.
 
-- Also you configure the bank account to be used for Cash On
+- configure the bank account to be used for Cash On
   Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer
   will be transferred to this bank account.
 
   Please note that you might also have to store the bank data in your DHL account.
   Usually, this can be done through the DHL Business Customer Portal (Geschäftskundenportal).
 
-- At least you configure which sender (shipper) information should be
+- configure which sender (shipper) information should be
   transmitted to DHL in addition to the general |mage| configuration settings.
 
 When using the *eCommerce Global Label API*, the service Cash On Delivery is
