@@ -32,22 +32,22 @@
                 $code = $service->getCode();
                 $name = __('Bulky Goods');
             ?>
-            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+            <dt class="service-<?= /* @noEscape */ $code; ?>">
 
                 <label class="checkbox-label">
                     <input
                         data-module="dhl_shipping"
-                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
-                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-                        <?php echo $service->getValue() ? "checked" : ""; ?>
+                        name="shipment_service[<?= /* @noEscape */ $code ?>]"
+                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        <?= /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
-                    <?php echo $block->escapeHtml($name) ?>
+                    <?= $block->escapeHtml($name) ?>
                 </label>
             </dt>
-            <dd class="service-<?php  /* @noEscape */ echo $code ?>">
+            <dd class="service-<?= /* @noEscape */ $code ?>">
             </dd>
         <?php endif; ?>
 
@@ -58,18 +58,18 @@
             $code = $service->getCode();
             $name = __('Parcel Announcement');
             ?>
-            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+            <dt class="service-<?= /* @noEscape */ $code; ?>">
                 <label class="checkbox-label">
                     <input
                         data-module="dhl_shipping"
-                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
-                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-                        <?php echo $service->getValue() ? "checked" : ""; ?>
+                        name="shipment_service[<?= /* @noEscape */ $code ?>]"
+                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        <?= /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
-                    <?php echo $block->escapeHtml($name) ?>
+                    <?= $block->escapeHtml($name) ?>
                 </label>
             </dt>
         <?php endif; ?>
@@ -81,18 +81,18 @@
             $code = $service->getCode();
             $name = __('Additional Insurance');
             ?>
-            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+            <dt class="service-<?= /* @noEscape */ $code; ?>">
                 <label class="checkbox-label">
                     <input
                         data-module="dhl_shipping"
-                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
-                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-                        <?php echo $service->getValue() ? "checked" : ""; ?>
+                        name="shipment_service[<?= /* @noEscape */ $code ?>]"
+                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        <?= /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
-                    <?php echo $block->escapeHtml($name) ?>
+                    <?= $block->escapeHtml($name) ?>
                 </label>
             </dt>
         <?php endif; ?>
@@ -104,18 +104,18 @@
             $code = $service->getCode();
             $name = __('Print Only If Codeable');
             ?>
-            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+            <dt class="service-<?= /* @noEscape */ $code; ?>">
                 <label class="checkbox-label">
                     <input
                         data-module="dhl_shipping"
-                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
-                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-                        <?php echo $service->getValue() ? "checked" : ""; ?>
+                        name="shipment_service[<?= /* @noEscape */ $code ?>]"
+                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        <?=  /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
-                    <?php echo $block->escapeHtml($name) ?>
+                    <?= $block->escapeHtml($name) ?>
                 </label>
             </dt>
         <?php endif; ?>
@@ -127,18 +127,18 @@
             $code = $service->getCode();
             $name = __('Return Shipment');
             ?>
-            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+            <dt class="service-<?= /* @noEscape */ $code; ?>">
                 <label class="checkbox-label">
                     <input
                         data-module="dhl_shipping"
-                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
-                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-                        <?php echo $service->getValue() ? "checked" : ""; ?>
+                        name="shipment_service[<?= /* @noEscape */ $code ?>]"
+                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        <?=  /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
-                    <?php echo $block->escapeHtml($name) ?>
+                    <?= $block->escapeHtml($name) ?>
                 </label>
             </dt>
         <?php endif; ?>
@@ -150,23 +150,23 @@
             $code = $service->getCode();
             $name = __('Visual Check of Age');
             ?>
-            <dt class="service-<?php /* @noEscape */ echo $code; ?>">
+            <dt class="service-<?= /* @noEscape */ $code; ?>">
                 <label class="checkbox-label">
                     <input
                         data-module="dhl_shipping"
-                        data-name="service_<?php /* @noEscape */ echo $code ?>"
+                        data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
-                        name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                        value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-                        <?php echo $service->getValue() ? "checked" : ""; ?>
+                        name="shipment_service[<?= /* @noEscape */ $code ?>]"
+                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        <?=  /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
-                    <?php echo $block->escapeHtml($name) ?>
+                    <?= $block->escapeHtml($name) ?>
                 </label>
             </dt>
-            <dd class="service-select <?php /* @noEscape */ echo $code ?> dd-select">
-                <select name="service_setting[visualCheckOfAge]" class="admin__control-select" data-module="dhl_shipping" data-name="service_<?php
-                /* @noEscape */ echo $code ?>">
+            <dd class="service-select <?= /* @noEscape */ $code ?> dd-select">
+                <select data-module="dhl_shipping" name="service_setting[visualCheckOfAge]"
+                        class="admin__control-select" data-name="service_<?= /* @noEscape */ $code ?>">
                     <option value="A16" <?php if ($service->getValue() ==='A16'): ?>selected="selected"<?php endif; ?>>A16</option>
                     <option value="A18" <?php if ($service->getValue() ==='A18'): ?>selected="selected"<?php endif; ?>>A18</option>
                 </select>

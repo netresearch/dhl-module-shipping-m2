@@ -33,30 +33,24 @@ $girthEnabled = $block->isDisplayGirthValue() && $block->isGirthAllowed() ? 1 : 
         "jquery",
         "prototype",
         "Magento_Shipping/order/packaging",
-        "Dhl_Shipping/order/packaging",
         "Magento_Ui/js/modal/modal"
     ], function(jQuery){
 
-        packaging = new Packaging(<?php /* @escapeNotVerified */ echo $block->getConfigDataJson() ?>);
+        window.packaging = new Packaging(<?= /* @noEscape */ $block->getConfigDataJson() ?>);
         packaging.changeContainerType($$('select[name=package_container]')[0]);
         packaging.checkSizeAndGirthParameter(
             $$('select[name=package_container]')[0],
-            <?php /* @escapeNotVerified */ echo $girthEnabled; ?>
+            <?= /* @noEscape */ $girthEnabled ?>
         );
         packaging.setConfirmPackagingCallback(function(){
-            if($('edit_form') == null) {
-                packaging.setParamsCreateLabelRequest(jQuery('#edit_form').serialize(true));
-            } else {
-                packaging.setParamsCreateLabelRequest($('edit_form').serialize(true));
-            }
-
+            packaging.setParamsCreateLabelRequest($('edit_form').serialize(true));
             packaging.sendCreateLabelRequest();
         });
         packaging.setLabelCreatedCallback(function(response){
-            setLocation("<?php /* @escapeNotVerified */ echo $block->getUrl(
+            setLocation("<?= $block->escapeUrl($block->getUrl(
                 'sales/order/view',
                 ['order_id' => $block->getShipment()->getOrderId()]
-            ); ?>");
+            )); ?>");
         });
         packaging.setCancelCallback(function() {
             if ($('create_shipping_label')) {
@@ -73,32 +67,32 @@ $girthEnabled = $block->isDisplayGirthValue() && $block->isGirthAllowed() ? 1 : 
         });
         jQuery('#packaging_window').modal({
             type: 'slide',
-            title: '<?php /* @escapeNotVerified */ echo __('Create Packages') ?>',
-            buttons: [
-                {
-                    text: '<?php /* @escapeNotVerified */ echo __('Cancel') ?>',
-                    'class': 'action-secondary',
-                    click: function () {
-                        packaging.cancelPackaging();
-                        this.closeModal();
-                    }
-                }, {
-                    text: '<?php /* @escapeNotVerified */ echo __('Save') ?>',
-                    'attr': {'disabled':'disabled', 'data-action':'save-packages'},
-                    'class': 'action-primary _disabled',
-                    click: function () {
-                        packaging.confirmPackaging();
-                    }
-                }, {
-                    text: '<?php /* @escapeNotVerified */ echo __('Add Package') ?>',
-                    'attr': {'data-action':'add-packages'},
-                    'class': 'action-secondary',
-                    click: function () {
-                        packaging.newPackage();
-                    }
+            title: '<?= $block->escapeHtml(__('Create Packages')) ?>',
+            buttons: [{
+                text: '<?= $block->escapeHtml(__('Cancel')) ?>',
+                'class': 'action-secondary',
+                click: function () {
+                    packaging.cancelPackaging();
+                    this.closeModal();
                 }
-            ]
+            }, {
+                text: '<?= $block->escapeHtml(__('Save')) ?>',
+                'attr': {'disabled':'disabled', 'data-action':'save-packages'},
+                'class': 'action-primary _disabled',
+                click: function () {
+                    packaging.confirmPackaging();
+                }
+            }, {
+                text: '<?= $block->escapeHtml(__('Add Package')) ?>',
+                'attr': {'data-action':'add-packages'},
+                'class': 'action-secondary',
+                click: function () {
+                    packaging.newPackage();
+                }
+            }]
         });
+        jQuery(document).trigger('packaging:inited');
+        jQuery(document).data('packagingInited', true);
     });
 </script>
-<?php echo $block->getChildHtml('dhl_shipping_packaging_content') ?>
+<?= /* @noEscape */ $block->getChildHtml('dhl_shipping_packaging_content') ?>
