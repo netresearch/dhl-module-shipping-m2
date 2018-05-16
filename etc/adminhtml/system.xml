@@ -464,7 +464,7 @@
                 <!-- General Automatic Shipment Creation Settings -->
                 <field id="fields_automatic_shipping_general" translate="label" sortOrder="290" showInDefault="1"
                        showInStore="1" showInWebsite="1">
-                    <label>Bulk Shipment Creation Settings</label>
+                    <label>Shipping label creation settings for bulk action</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
@@ -602,7 +602,7 @@
 
                 <!-- Automatic Shipment Creation -->
                 <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Automatic Shipment Creation Settings</label>
+                    <label>Shipping label creation settings for cron action</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
