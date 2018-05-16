@@ -33,7 +33,7 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class TariffNumber extends AbstractBackend
 {
-    const  CODE = 'dhl_tariff_number';
+    const CODE = 'dhl_tariff_number';
 
     /**
      * @inheritdoc

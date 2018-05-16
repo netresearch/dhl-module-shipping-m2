@@ -15,7 +15,6 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @category  Dhl
  * @package   Dhl\Shipping
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2017 Netresearch GmbH & Co. KG
@@ -41,9 +40,5 @@
                 <item name="restClient" xsi:type="object">\Dhl\Shipping\Webservice\Client\GlRestClientInterface</item>
             </argument>
         </arguments>
-    </type>
-
-    <type name="Magento\Shipping\Controller\Adminhtml\Order\Shipment\GetShippingItemsGrid">
-        <plugin name="shippingItemsGrid" type="Dhl\Shipping\Plugin\Adminhtml\Packaging\ShippingItemsGridPlugin" />
     </type>
 </config>

@@ -23,7 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-/** @var \Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging\Grid $block */
+?>
+<?php
+/** @var \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid $block */
+/** @var \Dhl\Shipping\ViewModel\Packaging\ShippingItems $viewModel */
+$viewModel = $block->getData('viewModel');
 ?>
 <div class="grid">
     <?php $randomId = rand(); ?>
@@ -53,6 +57,8 @@
             </thead>
             <tbody>
             <?php $i=0; ?>
+            <?php /** @var \Magento\Sales\Model\Order\Shipment\Item $item */ ?>
+            <?php /** @var \Magento\Sales\Model\Order\Item $_orderItem */ ?>
             <?php foreach ($block->getCollection() as $item) : ?>
                 <?php
                     $_order = $block->getShipment()->getOrder();
@@ -89,8 +95,8 @@
                         <select data-module="dhl_shipping" data-name="item_origin_country" name="customs_origin"
                                 class="input-select admin__control-select"
                                 title="<?php echo __('Country of Origin') ?>">
-                            <?php $selectedCountry = $block->getCountryOfManufacture($_orderItem->getProductId()); ?>
-                            <?php foreach ($block->getCountries() as $countryInfo) : ?>
+                            <?php $selectedCountry = $_orderItem->getProduct()->getData('country_of_manufacture'); ?>
+                            <?php foreach ($viewModel->getCountries() as $countryInfo) : ?>
                                 <option
                                     value="<?php echo $countryInfo['value'] ?>"
                                     <?php if ($countryInfo['value'] == $selectedCountry) :
@@ -103,17 +109,19 @@
                     </td>
                     <td>
                         <span data-module="dhl_shipping" data-name="dangerous_goods_category" data-updatePackage=true>
-                            <?php /** @noEscape */ echo $block->getDangerousGoodsCategory($_orderItem->getProductId()); ?>
+                            <?php $dgCategory = $_orderItem->getProduct()->getData('dhl_dangerous_goods_category'); ?>
+                            <?php echo $block->escapeHtml($dgCategory); ?>
                         </span>
                     </td>
 
                     <td>
+                        <?php $tariffNumber = $_orderItem->getProduct()->getData('dhl_tariff_number'); ?>
                         <input data-module="dhl_shipping" data-name="tariff_number"
                                type="text"
                                class="input-text admin__control-text required-entry validate-length maximum-length-10"
                                title="<?php echo __('Tariff Number') ?>" minlength="4" maxlength="10"
-                               value="<?php /** @noEscape */
-                               echo $block->getTariffNumber($_orderItem->getProductId()); ?>"/>
+                               value="<?php echo $block->escapeHtmlAttr($tariffNumber); ?>"
+                        />
                     </td>
 
                     <td data-role="item-weight">
