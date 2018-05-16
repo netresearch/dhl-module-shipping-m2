@@ -27,15 +27,15 @@
 <table cellspacing="0" class="data-table admin__control-table">
     <thead>
         <tr>
-            <th class="no-link"><span class="nobr"><?php echo $block->escapeHtml(__('Terms of Trade')) ?></span></th>
-            <th class="no-link"><span class="nobr"><?php echo $block->escapeHtml(__('Dangerous Goods Category')) ?></span></th>
+            <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Terms of Trade')) ?></span></th>
+            <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Dangerous Goods Category')) ?></span></th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>
                 <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade"
-                        title="<?php echo $block->escapeHtml(__('Terms of Trade')) ?>"
+                        title="<?= $block->escapeHtmlAttr(__('Terms of Trade')) ?>"
                         class="input-select admin__control-select">
                     <option value="DDU">DDU</option>
                     <option value="DDP">DDP</option>
@@ -43,10 +43,10 @@
             </td>
             <td>
                 <select data-module="dhl_shipping" data-name="dhl_customs_dangerous_goods_category"
-                        title="<?php echo $block->escapeHtml(__('Dangerous Goods Category')) ?>" class="admin__control-select" style="max-width:25%;">
+                        title="<?= $block->escapeHtmlAttr(__('Dangerous Goods Category')) ?>" class="admin__control-select" style="max-width:25%;">
                     <?php foreach ($block->getDangerousGoodsCategoryOptions() as $option) : ?>
-                        <option value="<?php echo $block->escapeHtml($option['value']); ?>">
-                            <?php echo $block->escapeHtml($option['label']); ?>
+                        <option value="<?= $block->escapeHtmlAttr($option['value']); ?>">
+                            <?= $block->escapeHtml($option['label']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
