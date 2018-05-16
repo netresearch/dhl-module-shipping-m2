@@ -268,7 +268,7 @@ Die Einstellungen in diesem Bereich sind speziell bei Nutzung des
 Dieser Abschnitt wird bei Nutzung der *eCommerce Global Label API* nicht angezeigt,
 da hier kein Nachnahmeversand möglich ist.
 
-Standardwerte für automatische Sendungserstellung
+Einstellungen für die Massenerstellung von Versandetiketten
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In diesem Konfigurationsbereich legen Sie die Standardwerte für Sendungen fest, die

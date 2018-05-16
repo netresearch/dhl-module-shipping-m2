@@ -267,7 +267,7 @@ This section contains settings which are relevant if the
 When using the *eCommerce Global Label API*, the service Cash On Delivery is
 currently not available.
 
-Bulk Shipment Creation Settings
+Bulk Shipping Label Creation Settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section, the default values are configured for shipments that are created
@@ -312,7 +312,7 @@ eCommerce Global API Shipping Settings
 In this section you can configure the label size, page size, and layout.
 
 
-Automatic Shipment Creation
+Automatic Shipping Label Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The section *Automatic Shipment Creation* lets you choose if shipments should be
