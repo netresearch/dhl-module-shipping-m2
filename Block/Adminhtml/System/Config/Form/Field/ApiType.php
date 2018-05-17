@@ -27,12 +27,9 @@ namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType as Source;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Util\ShippingProductsInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Shipping\Model\Config as ShippingConfig;
-use Magento\Store\Model\ScopeInterface;
 
 /**
  * Config field block for the current API type. API type depends on shipping
