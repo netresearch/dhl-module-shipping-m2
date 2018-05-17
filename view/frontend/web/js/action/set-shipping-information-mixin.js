@@ -1,19 +1,13 @@
 define([
-    'underscore',
     'mage/utils/wrapper',
-    'Dhl_Shipping/js/model/services'
-], function (wrapper, services) {
+    'Dhl_Shipping/js/action/save-service-selection'
+], function (wrapper, saveServices) {
     'use strict';
 
     return function (setShippingInformationAction) {
-
-
-        _.each(services, function(service) {
-            console.log(service.value)
-        });
-
         return wrapper.wrap(setShippingInformationAction, function (originalAction) {
+            saveServices();
             return originalAction();
         });
-    };
+    }
 });

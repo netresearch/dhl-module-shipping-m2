@@ -47,4 +47,11 @@ interface CartServiceManagementInterface
      * @return ServiceCollection|ServiceInterface[]
      */
     public function getServices($cartId, $countryId, $shippingMethod);
+
+    /**
+     * @param int $cartId
+     * @param string[] $serviceSelection
+     * @return void
+     */
+    public function save($cartId, $serviceSelection);
 }

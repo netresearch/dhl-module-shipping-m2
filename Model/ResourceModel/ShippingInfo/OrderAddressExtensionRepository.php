@@ -25,7 +25,6 @@
 namespace Dhl\Shipping\Model\ResourceModel\ShippingInfo;
 
 use Dhl\Shipping\Api\Data\OrderAddressExtensionInterface;
-//use Dhl\Shipping\Api\Data\OrderAddressExtensionInterfaceFactory;
 use Dhl\Shipping\Api\Data\ShippingInfoInterface;
 use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
@@ -34,6 +33,8 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\AbstractModel;
+
+//use Dhl\Shipping\Api\Data\OrderAddressExtensionInterfaceFactory;
 
 /**
  * Repository for DHL Shipping Quote Address Extension

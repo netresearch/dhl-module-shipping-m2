@@ -50,6 +50,7 @@ class ShippingSetup
     const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
     const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
     const TABLE_LABEL_STATUS = 'dhlshipping_label_status';
+    const TABLE_SERVICE_SELECTION = 'dhlshipping_service_selection';
 
     /**
      * @param EavSetup $eavSetup
@@ -200,5 +201,48 @@ class ShippingSetup
                 'comment' => 'DHL Shipping Label Status'
             ]
         );
+    }
+
+    /**
+     * Create table dhlshipping_label_status
+     *
+     * @param SchemaSetupInterface $setup
+     * @throws \Zend_Db_Exception
+     */
+    public static function createServiceSelectionTable(SchemaSetupInterface $setup)
+    {
+        $table = $setup->getConnection()
+            ->newTable($setup->getTable(self::TABLE_SERVICE_SELECTION));
+        $table->addColumn(
+            'address_id',
+            Table::TYPE_INTEGER,
+            null,
+            ['unsigned' => true, 'nullable' => false, 'primary' => true]
+        )->addColumn(
+            'service_code',
+            Table::TYPE_TEXT,
+            null,
+            ['identity'  => false, 'unsigned'  => true, 'nullable'  => false],
+            'Service Name'
+        )->addColumn(
+            'service_value',
+            Table::TYPE_TEXT,
+            20,
+            ['default' => 0, 'unsigned' => true, 'nullable' => false],
+            'Service Value'
+        )->addForeignKey(
+            $setup->getFkName(
+                $setup->getTable(self::TABLE_SERVICE_SELECTION),
+                'address_id',
+                $setup->getTable('quote_address'),
+                'address_id'
+            ),
+            'address_id',
+            $setup->getTable('quote_address'),
+            'address_id',
+            Table::ACTION_CASCADE
+        );
+
+        $setup->getConnection()->createTable($table);
     }
 }

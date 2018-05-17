@@ -104,4 +104,20 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
 
         return $services;
     }
+
+    /**
+     * @param string $cartId
+     * @param string[] $serviceSelection
+     * @return void
+     */
+    public function save($cartId, $serviceSelection)
+    {
+        /** @var QuoteIdMask $quoteIdMask */
+        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
+        $quote = $this->quoteRepository->get($quoteIdMask->getData('quote_id'));
+        $shippingAddressId = $quote->getShippingAddress()->getId();
+
+        $test = $serviceSelection;
+    }
+
 }

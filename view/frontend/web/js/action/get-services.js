@@ -3,13 +3,12 @@
  */
 
 define([
-    'underscore',
     'Magento_Checkout/js/model/url-builder',
     'Magento_Customer/js/model/customer',
     'mage/storage',
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/model/shipping-service'
-], function (_, urlBuilder, customer, storage, quote, shippingService) {
+], function (urlBuilder, customer, storage, quote, shippingService) {
     'use strict';
 
     return function (countryId, shippingMethod, successCallback) {
@@ -17,10 +16,10 @@ define([
         shippingService.isLoading(true);
         var url, urlParams, serviceUrl, payload;
         if (customer.isLoggedIn()) {
-            url = '/carts/mine/dhl-services';
+            url = '/carts/mine/dhl-services/get-services';
             urlParams = {};
         } else {
-            url = '/guest-carts/:cartId/dhl-services';
+            url = '/guest-carts/:cartId/dhl-services/get-services';
             urlParams = {
                 cartId: quote.getQuoteId()
             };

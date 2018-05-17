@@ -42,7 +42,7 @@ use Yasumi\Yasumi;
 class ServiceOptionProvider
 {
     const CUT_OFF_TIME_CONFIG_XML_PATH = 'carriers/dhlshipping/service_preferredday_cutoff_time';
-    const NON_WORKING_DAY = 'Sunday';
+    const NON_WORKING_DAY = 'Sun';
 
     /**
      * @var DateTimeFactory
@@ -99,18 +99,18 @@ class ServiceOptionProvider
 
         for ($i = $startDate; $i < $endDate; $i++) {
             $disabled  = false;
-            $date      = $dateModel->date("Y-m-d", time() + 86400 * $i);
-            $dateTime  = $this->timezoneFactory->create()->date($date);
-            $dayOfWeek = $dateModel->date("l", strtotime($date));
+            $time      = time() + 86400 * $i;
+            $dateTime  = $this->timezoneFactory->create()->date($time);
+            $dayOfWeek = $dateModel->date("D", $time);
+
             if ($holidayProvider->isHoliday($dateTime) || ($dayOfWeek === self::NON_WORKING_DAY)) {
                 $disabled = true;
                 $endDate++;
             }
 
             $options[] = [
-                'label' => substr($dayOfWeek, 0, 3),
-                'labelValue' => substr($date, -2),
-                'value' => $date,
+                'label' => $dateModel->date("D d", $time),
+                'value' => $dateModel->date("Y-m-d", $time),
                 'disabled' => $disabled
             ];
         }
@@ -122,11 +122,11 @@ class ServiceOptionProvider
     {
         $options = [
             [
-                'label' => __('18 - 20'),
+                'label' => __('18–20'),
                 'value' => '18002000'
             ],
             [
-                'label' => __('19 - 21'),
+                'label' => __('19–21'),
                 'value' => '19002100'
             ]
         ];

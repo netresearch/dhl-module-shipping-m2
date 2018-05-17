@@ -31,19 +31,24 @@ define([
 
         initialize: function () {
             this._super();
+
+            // add service components to layout
             services.subscribe(function (services) {
                 this.destroyChildren();
                 var servicesLayout = _.map(services, function (service) {
                     return this.getServiceFieldLayout(service);
                 }, this);
-
                 layout(servicesLayout);
 
-                _.each(this.elems, function (elem) {
-                    elem.value.subscribe(function (newValue) {
-                        serviceModel[this.name] = newValue;
-                    }, elem)
-                })
+                this.elems.extend({rateLimit: { timeout: 50, method: "notifyWhenChangesStop" }});
+                this.elems.subscribe(function (elems) {
+                    _.each(elems, function (elem) {
+                        elem.value.subscribe(function (newValue) {
+                            var serviceIndex =  elem.service.code.toLowerCase();
+                            serviceModel.addService(serviceIndex, newValue);
+                        }, elem)
+                    });
+                }, this);
             }, this);
         },
 

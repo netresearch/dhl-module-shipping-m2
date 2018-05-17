@@ -47,4 +47,11 @@ interface GuestCartServiceManagementInterface
      * @return ServiceCollection|ServiceInterface[]
      */
     public function getServices($cartId, $countryId, $shippingMethod);
+
+    /**
+     * @param string $cartId
+     * @param string[] $serviceSelection
+     * @return void
+     */
+    public function save($cartId, $serviceSelection);
 }

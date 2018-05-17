@@ -82,7 +82,6 @@ class CartServiceFieldManagement implements CartServiceManagementInterface
      */
     public function getServices($cartId, $countryId, $shippingMethod)
     {
-        /** @var QuoteIdMask $quoteIdMask */
         $quote = $this->quoteRepository->get($cartId);
         $dhlShippingMethod = $this->moduleConfig->getShippingMethods($quote->getStoreId());
 
@@ -93,5 +92,18 @@ class CartServiceFieldManagement implements CartServiceManagementInterface
         $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
 
         return $services;
+    }
+
+    /**
+     * @param string $cartId
+     * @param string[] $serviceSelection
+     * @return void
+     */
+    public function save($cartId, $serviceSelection)
+    {
+        $quote = $this->quoteRepository->get($cartId);
+        $shippingAddressId = $quote->getShippingAddress()->getId();
+
+        $test = $serviceSelection;
     }
 }

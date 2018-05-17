@@ -7,10 +7,11 @@
 <!-- ko foreach: { data: service.options, as: 'option' } -->
     <div class="admin__field admin__field-option">
         <input type="radio"
+               data-service-property="details"
                class="admin__control-radio"
-               data-bind="checkedValue: option.value"
-               ko-disable="disabled"
-               attr="id: $parent.uid, name: $parent.name"/>
+               data-bind="checkedValue: option.value, checked: $parent.value"
+               attr="id: $parent.uid, disabled:option.disabled , name: $parent.service.code"
+        />
 
         <label class="admin__field-label" attr="for: $parent.uid">
             <span data-bind="text:option.label"> </span>

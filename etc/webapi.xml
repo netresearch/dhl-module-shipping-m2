@@ -26,7 +26,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
 
     <!-- Managing DHL Services in Checkout -->
-    <route url="/V1/carts/mine/dhl-services" method="POST">
+    <route url="/V1/carts/mine/dhl-services/get-services" method="POST">
         <service class="Dhl\Shipping\Api\Quote\CartServiceManagementInterface" method="getServices"/>
         <resources>
             <resource ref="self" />
@@ -36,8 +36,25 @@
         </data>
     </route>
 
-    <route url="/V1/guest-carts/:cartId/dhl-services" method="POST">
+    <route url="/V1/guest-carts/:cartId/dhl-services/get-services" method="POST">
         <service class="Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface" method="getServices"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+    <route url="/V1/carts/mine/dhl-services/save-services" method="POST">
+        <service class="Dhl\Shipping\Api\Quote\CartServiceManagementInterface" method="save"/>
+        <resources>
+            <resource ref="self" />
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/guest-carts/:cartId/dhl-services/save-services" method="POST">
+        <service class="Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface" method="save"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>

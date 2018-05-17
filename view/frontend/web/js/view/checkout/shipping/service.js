@@ -32,8 +32,8 @@ define([
             var templates = {
                 text: 'Dhl_Shipping/checkout/form/element/input',
                 checkbox: 'ui/form/element/checkbox',
-                time: 'Dhl_Shipping/checkout/form/element/service-time',
-                date: 'Dhl_Shipping/checkout/form/element/service-date'
+                time: 'Dhl_Shipping/checkout/form/element/radio',
+                date: 'Dhl_Shipping/checkout/form/element/radio'
             };
             if (templates[type]) {
                 return templates[type];

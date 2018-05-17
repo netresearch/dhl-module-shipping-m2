@@ -3,6 +3,16 @@ define([
 ], function (ko) {
     'use strict';
 
-    return ko.observableArray([]);
+    var services = {};
 
+    return {
+
+        getServices: function () {
+            return services;
+        },
+
+        addService:function (name, value) {
+            services[name] = value;
+        }
+    };
 });

@@ -91,7 +91,7 @@ class PackagingServiceProvider
 
         $shippingAddress = $shipment->getShippingAddress();
 
-        //todo(nr): add settings from shipping info
+        //todo(nr): add service selection from db
         $shippingInfo = $this->addressExtensionRepository->getShippingInfo($shippingAddress->getId());
         $shippingInfo->getServices();
 
