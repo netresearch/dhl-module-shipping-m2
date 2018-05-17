@@ -295,7 +295,7 @@ class RequestBuilder implements RequestBuilderInterface
 
             $totalWeight += $item->getWeight();
 
-            if ($apiType == ApiType::API_TYPE_BCS && $isCrossBorder) {
+            if ($isCrossBorder) {
                 $itemData = $item->toArray(
                     [
                         'qty',
@@ -307,11 +307,23 @@ class RequestBuilder implements RequestBuilderInterface
                         'order_item_id',
                         'customs_item_description',
                         'item_origin_country',
-                        'tariff_number'
+                        'tariff_number',
+                        'sku'
                     ]
                 );
                 $itemData['customs_value'] = $itemData['price'];
                 $itemData['item_origin_country'] = $shipperCountry;
+                $itemData['customsDetails'] = [
+                    'itemDescription' => $itemData['name'],
+                    'descriptionExport' => $itemData['name'],
+                    'descriptionImport' => $itemData['name'],
+                    'countryOfOrgin' => $itemData['item_origin_country'],
+                    'hsCode' => $itemData['tariff_number'],
+                    'packageQuantitiy' => $itemData['qty'],
+                    'itemValue' => $itemData['customs_value'],
+                    'skuNumer' => $itemData['sku']
+                ];
+                $itemData['customs_item_description'] = $itemData['name'];
             } else {
                 $itemData = $item->toArray(['qty', 'price', 'name', 'weight', 'product_id', 'order_item_id']);
             }
@@ -367,18 +379,18 @@ class RequestBuilder implements RequestBuilderInterface
                 if ($contentType == ExportType::TYPE_OTHER) {
                     $contentTypeOther = $this->moduleConfig->getDefaultExportContentTypeExplanation($storeId);
                 }
+            }
 
-                foreach ($orderItemIds as $itemId => $productId) {
-                    $package['items'][$itemId]['customs_item_description'] =
-                        isset($productData[$productId]['dhl_export_description']) ?
-                            $productData[$productId]['dhl_export_description'] :
-                            '';
+            foreach ($orderItemIds as $itemId => $productId) {
+                $package['items'][$itemId]['customs_item_description'] =
+                    isset($productData[$productId]['dhl_export_description']) ?
+                        $productData[$productId]['dhl_export_description'] :
+                        $package['items'][$itemId]['name'];
 
-                    $package['items'][$itemId]['tariff_number'] =
-                        isset($productData[$productId]['dhl_tariff_number']) ?
-                            $productData[$productId]['dhl_tariff_number'] :
-                            '';
-                }
+                $package['items'][$itemId]['tariff_number'] =
+                    isset($productData[$productId]['dhl_tariff_number']) ?
+                        $productData[$productId]['dhl_tariff_number'] :
+                        '';
             }
             $exportDescription = '';
             foreach ($productData as $data) {
