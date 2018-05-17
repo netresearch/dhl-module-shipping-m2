@@ -158,7 +158,7 @@ class Customs extends Template
     {
         $api = $this->moduleConfig->getApiType($this->getShipment()->getStoreId());
 
-        if ($api === 'bcs') {
+        if ($api === ApiType::API_TYPE_BCS) {
             return $this->bcsTerms->toOptionArray();
         }
 
