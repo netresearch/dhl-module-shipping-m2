@@ -29,7 +29,6 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Service\Filter\EnabledFilter;
 use Dhl\Shipping\Util\ExportType;
-use Dhl\Shipping\Util\ExportTypeInterface;
 use Magento\Directory\Helper\Data;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
