@@ -25,12 +25,11 @@
 <?php $services = $block->getServiceCollection(); ?>
 <?php if (!empty($services)) : ?>
     <dl>
-        <?php if ($services->offsetExists(\Dhl\Shipping\Service\BulkyGoods::CODE)) : ?>
-            <?php
-                /** @var \Dhl\Shipping\Service\ServiceInterface $service */
-                $service = $services->offsetGet(\Dhl\Shipping\Service\BulkyGoods::CODE);
-                $code = $service->getCode();
-                $name = __('Bulky Goods');
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\BulkyGoods::CODE)) :
+            /** @var \Dhl\Shipping\Service\ServiceInterface $service */
+            $service = $services->offsetGet(\Dhl\Shipping\Service\BulkyGoods::CODE);
+            $code = $service->getCode();
+            $name = __('Bulky Goods');
             ?>
             <dt class="service-<?= /* @noEscape */ $code; ?>">
 
@@ -40,7 +39,8 @@
                         data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
                         name="shipment_service[<?= /* @noEscape */ $code ?>]"
-                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        value="<?= /* @noEscape */ $code ?>"
+                        class="checkbox"
                         <?= /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
@@ -51,8 +51,7 @@
             </dd>
         <?php endif; ?>
 
-        <?php if ($services->offsetExists(\Dhl\Shipping\Service\ParcelAnnouncement::CODE)) : ?>
-            <?php
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\ParcelAnnouncement::CODE)) :
             /** @var \Dhl\Shipping\Service\ServiceInterface $service */
             $service = $services->offsetGet(\Dhl\Shipping\Service\ParcelAnnouncement::CODE);
             $code = $service->getCode();
@@ -65,7 +64,8 @@
                         data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
                         name="shipment_service[<?= /* @noEscape */ $code ?>]"
-                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        value="<?= /* @noEscape */ $code ?>"
+                        class="checkbox"
                         <?= /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
@@ -74,8 +74,7 @@
             </dt>
         <?php endif; ?>
 
-        <?php if ($services->offsetExists(\Dhl\Shipping\Service\Insurance::CODE)) : ?>
-            <?php
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\Insurance::CODE)) :
             /** @var \Dhl\Shipping\Service\ServiceInterface $service */
             $service = $services->offsetGet(\Dhl\Shipping\Service\Insurance::CODE);
             $code = $service->getCode();
@@ -97,8 +96,7 @@
             </dt>
         <?php endif; ?>
 
-        <?php if ($services->offsetExists(\Dhl\Shipping\Service\PrintOnlyIfCodeable::CODE)) : ?>
-            <?php
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\PrintOnlyIfCodeable::CODE)) :
             /** @var \Dhl\Shipping\Service\ServiceInterface $service */
             $service = $services->offsetGet(\Dhl\Shipping\Service\PrintOnlyIfCodeable::CODE);
             $code = $service->getCode();
@@ -111,7 +109,8 @@
                         data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
                         name="shipment_service[<?= /* @noEscape */ $code ?>]"
-                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
+                        value="<?= /* @noEscape */ $code ?>"
+                        class="checkbox"
                         <?=  /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
@@ -120,8 +119,7 @@
             </dt>
         <?php endif; ?>
 
-        <?php if ($services->offsetExists(\Dhl\Shipping\Service\ReturnShipment::CODE)) : ?>
-            <?php
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\ReturnShipment::CODE)) :
             /** @var \Dhl\Shipping\Service\ServiceInterface $service */
             $service = $services->offsetGet(\Dhl\Shipping\Service\ReturnShipment::CODE);
             $code = $service->getCode();
@@ -134,8 +132,9 @@
                         data-name="service_<?= /* @noEscape */ $code ?>"
                         type="checkbox"
                         name="shipment_service[<?= /* @noEscape */ $code ?>]"
-                        value="<?= /* @noEscape */ $code ?>" class="checkbox"
-                        <?=  /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
+                        value="<?= /* @noEscape */ $code ?>"
+                        class="checkbox"
+                        <?= /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
                     <?= $block->escapeHtml($name) ?>
@@ -143,8 +142,7 @@
             </dt>
         <?php endif; ?>
 
-        <?php if ($services->offsetExists(\Dhl\Shipping\Service\VisualCheckOfAge::CODE)) : ?>
-            <?php
+        <?php if ($services->offsetExists(\Dhl\Shipping\Service\VisualCheckOfAge::CODE)) :
             /** @var \Dhl\Shipping\Service\ServiceInterface $service */
             $service = $services->offsetGet(\Dhl\Shipping\Service\VisualCheckOfAge::CODE);
             $code = $service->getCode();
@@ -158,7 +156,7 @@
                         type="checkbox"
                         name="shipment_service[<?= /* @noEscape */ $code ?>]"
                         value="<?= /* @noEscape */ $code ?>" class="checkbox"
-                        <?=  /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
+                        <?= /* @noEscape */ $service->getValue() ? "checked" : ""; ?>
                     />
                     <i class="custom-checkbox"></i>
                     <?= $block->escapeHtml($name) ?>
@@ -167,8 +165,14 @@
             <dd class="service-select <?= /* @noEscape */ $code ?> dd-select">
                 <select data-module="dhl_shipping" name="service_setting[visualCheckOfAge]"
                         class="admin__control-select" data-name="service_<?= /* @noEscape */ $code ?>">
-                    <option value="A16" <?php if ($service->getValue() ==='A16'): ?>selected="selected"<?php endif; ?>>A16</option>
-                    <option value="A18" <?php if ($service->getValue() ==='A18'): ?>selected="selected"<?php endif; ?>>A18</option>
+                    <option value="A16"
+                        <?= /* @noEscape */ $service->getValue() === 'A16' ? 'selected="selected"' : '' ?>>
+                        A16
+                    </option>
+                    <option value="A18"
+                        <?= /* @noEscape */ $service->getValue() === 'A18' ? 'selected="selected"' : '' ?>>
+                        A18
+                    </option>
                 </select>
             </dd>
         <?php endif; ?>

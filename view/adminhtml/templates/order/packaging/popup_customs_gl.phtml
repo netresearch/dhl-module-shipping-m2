@@ -44,16 +44,17 @@ $termDefaultValue = $block->getTermsOfTradeDefault();
                         title="<?= $block->escapeHtmlAttr(__('Terms of Trade')) ?>"
                         class="input-select admin__control-select">
                         <?php foreach ($termsOptions as $option) : ?>
-                            <option value="<?php echo $option['value']?>"
-                                    <?php echo ($option['value'] == $termDefaultValue) ? 'selected' : '' ?>>
-                                <?php echo $option['value'] ?>
+                            <option value="<?= $block->escapeHtmlAttr($option['value']) ?>"
+                                    <?= ($option['value'] == $termDefaultValue) ? 'selected' : '' ?>>
+                                <?= $block->escapeHtml($option['value']) ?>
                             </option>
                         <?php endforeach; ?>
                 </select>
             </td>
             <td>
                 <select data-module="dhl_shipping" data-name="dhl_customs_dangerous_goods_category"
-                        title="<?= $block->escapeHtmlAttr(__('Dangerous Goods Category')) ?>" class="admin__control-select">
+                        title="<?= $block->escapeHtmlAttr(__('Dangerous Goods Category')) ?>"
+                        class="admin__control-select">
 
                     <?php foreach ($block->getDangerousGoodsCategoryOptions() as $option) : ?>
                         <option value="<?= $block->escapeHtmlAttr($option['value']); ?>">
@@ -66,7 +67,7 @@ $termDefaultValue = $block->getTermsOfTradeDefault();
                 <textarea maxlength="50" cols="50"
                           data-module="dhl_shipping"
                           data-name="dhl_customs_export_description"
-                          title="<?php echo $block->escapeHtml(__('Export Description')) ?>"
+                          title="<?= $block->escapeHtmlAttr(__('Export Description')) ?>"
                           class="admin__control-textarea"></textarea>
             </td>
         </tr>
