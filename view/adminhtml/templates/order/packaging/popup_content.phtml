@@ -42,10 +42,16 @@
                 <?= $block->escapeHtml(__('Package')) ?> <span data-role="package-number"></span>
             </span>
             <div class="actions _primary">
-                <button type="button" class="action-secondary" data-action="package-save-items" onclick="packaging.packItems(this);">
+                <button type="button"
+                        class="action-secondary"
+                        data-action="package-save-items"
+                        onclick="packaging.packItems(this);">
                     <span><?= $block->escapeHtml(__('Add Selected Product(s) to Package')) ?></span>
                 </button>
-                <button type="button" class="action-secondary" data-action="package-add-items" onclick="packaging.getItemsForPack(this);">
+                <button type="button"
+                        class="action-secondary"
+                        data-action="package-add-items"
+                        onclick="packaging.getItemsForPack(this);">
                     <span><?= $block->escapeHtml(__('Add Products to Package')) ?></span>
                 </button>
             </div>
@@ -60,7 +66,8 @@
                         <th class="col-girth"><?= $block->escapeHtml(__('Girth')) ?></th>
                         <th>&nbsp;</th>
                     <?php endif; ?>
-                    <th class="col-custom" <?= /* @noEscape */ $block->displayCustomsValue() ? '' : 'style="display: none;"' ?>>
+                    <th class="col-custom"
+                        <?= /* @noEscape */ $block->displayCustomsValue() ? '' : 'style="display: none;"' ?>>
                         <?= $block->escapeHtml(__('Customs Value')) ?>
                     </th>
                     <th class="col-total-weight"><?= $block->escapeHtml(__('Total Weight')) ?></th>
@@ -115,8 +122,13 @@
                             <select name="container_girth_dimension_units"
                                     class="options-units-dimensions measures admin__control-select"
                                     onchange="packaging.changeMeasures(this);">
-                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::INCH) ?>" selected="selected" ><?= $block->escapeHtml(__('in')) ?></option>
-                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>" ><?= $block->escapeHtml(__('cm')) ?></option>
+                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::INCH) ?>"
+                                        selected="selected" >
+                                    <?= $block->escapeHtml(__('in')) ?>
+                                </option>
+                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>" >
+                                    <?= $block->escapeHtml(__('cm')) ?>
+                                </option>
 
                             </select>
                         </td>
@@ -133,23 +145,32 @@
                     <td class="col-custom" <?= /* @noEscape */ $customsValueDisplay ?>>
                         <div class="admin__control-addon">
                             <input type="text"
-                                   class="customs-value input-text admin__control-text <?= /* @noEscape */ $customsValueValidation ?>"
+                                   class="customs-value input-text
+                                    admin__control-text <?= /* @noEscape */ $customsValueValidation ?>"
                                    name="package_customs_value" />
                             <span class="admin__addon-suffix">
-                                <span class="customs-value-currency"><?= $block->escapeHtml($block->getCustomValueCurrencyCode()) ?></span>
+                                <span class="customs-value-currency">
+                                    <?= $block->escapeHtml($block->getCustomValueCurrencyCode()) ?>
+                                </span>
                             </span>
                         </div>
                     </td>
                     <td class="col-total-weight">
                         <div class="admin__control-addon">
                             <input type="text"
-                                   class="options-weight input-text admin__control-text required-entry validate-greater-than-zero"
+                                   class="options-weight input-text admin__control-text
+                                    required-entry validate-greater-than-zero"
                                    name="container_weight" />
                             <select name="container_weight_units"
                                     class="options-units-weight measures admin__control-select"
                                     onchange="packaging.changeMeasures(this);">
-                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::POUND) ?>" selected="selected"><?= $block->escapeHtml(__('lb')) ?></option>
-                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::KILOGRAM) ?>" ><?= $block->escapeHtml(__('kg')) ?></option>
+                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::POUND) ?>"
+                                        selected="selected">
+                                    <?= $block->escapeHtml(__('lb')) ?>
+                                </option>
+                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::KILOGRAM) ?>" >
+                                    <?= $block->escapeHtml(__('kg')) ?>
+                                </option>
 
                             </select>
                             <span class="admin__addon-prefix"></span>
@@ -174,14 +195,19 @@
                         <select name="container_dimension_units"
                                 class="options-units-dimensions measures admin__control-select"
                                 onchange="packaging.changeMeasures(this);">
-                            <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::INCH) ?>" selected="selected" ><?= $block->escapeHtml(__('in')) ?></option>
-                            <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>" ><?= $block->escapeHtml(__('cm')) ?></option>
+                            <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::INCH) ?>"
+                                    selected="selected" >
+                                <?= $block->escapeHtml(__('in')) ?>
+                            </option>
+                            <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>">
+                                <?= $block->escapeHtml(__('cm')) ?>
+                            </option>
                         </select>
                     </td>
                     <?php if ($block->getDeliveryConfirmationTypes()) : ?>
                         <td>
                             <select name="delivery_confirmation_types" class="admin__control-select">
-                                <?php foreach ($block->getDeliveryConfirmationTypes() as $key => $value): ?>
+                                <?php foreach ($block->getDeliveryConfirmationTypes() as $key => $value) : ?>
                                     <option value="<?= $block->escapeHtmlAttr($key) ?>" >
                                         <?= $block->escapeHtml($value) ?>
                                     </option>
@@ -190,7 +216,9 @@
                         </td>
                     <?php endif; ?>
                     <td class="col-actions">
-                        <button type="button" class="action-delete DeletePackageBtn" onclick="packaging.deletePackage(this);">
+                        <button type="button"
+                                class="action-delete DeletePackageBtn"
+                                onclick="packaging.deletePackage(this);">
                             <span><?= $block->escapeHtml(__('Delete Package')) ?></span>
                         </button>
                     </td>
@@ -227,7 +255,7 @@
                                     <?php if ($exportContenttype == 'OTHER') : ?>
                                         class="input-text admin__control-text options-content-type"
                                         <?php if ($exportContenttypeExplanation) : ?>
-                                        value="<?php echo $exportContenttypeExplanation ?>"
+                                        value="<?= $block->escapeHtmlAttr($exportContenttypeExplanation) ?>"
                                         <?php endif; ?>
                                     <?php else : ?>
                                         class="input-text admin__control-text options-content-type disabled"
@@ -243,7 +271,9 @@
 
         <div data-name="dhl_shipping_package_info" class="dhl_shipping_package_info">
             <img src="<?= $block->escapeUrl($this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png')) ?>"
-                 class="dhl-logo" title="DHL BCS Additional Services" alt="DHL BCS Additional Services" />
+                 class="dhl-logo"
+                 title="DHL BCS Additional Services"
+                 alt="DHL BCS Additional Services" />
             <?= /* @noEscape */ $block->getChildHtml('dhl_shipment_packaging_services');?>
 
             <!--our customs child block goes here -->
@@ -251,7 +281,6 @@
                 <?= /* @noEscape */ $block->getChildHtml('dhl_shipment_packaging_export_documents') ?>
             <?php endif;?>
         </div>
-
             <div class="admin__page-subsection" data-role="package-items">
                 <div class="grid_prepare admin__page-subsection">
             </div>

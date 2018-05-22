@@ -41,7 +41,9 @@ $placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
             <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Place of Commital')) ?></span></th>
             <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Permit Number')) ?></span></th>
             <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Attestation Number')) ?></span></th>
-            <th class="no-link last"><span class="nobr"><?= $block->escapeHtml(__('Electronic Export Notification')) ?></span></th>
+            <th class="no-link last">
+                <span class="nobr"><?= $block->escapeHtml(__('Electronic Export Notification')) ?></span>
+            </th>
         </tr>
     </thead>
 
@@ -67,7 +69,9 @@ $placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
                            value="<?= $block->escapeHtmlAttr($addtionalFeeDefaultValue) ?>"
                            class="input-text admin__control-text required-entry validate-number"/>
                     <span class="admin__addon-suffix">
-                        <span class="customs-value-currency"><?= $block->escapeHtml($block->getCustomValueCurrencyCode()) ?></span>
+                        <span class="customs-value-currency">
+                            <?= $block->escapeHtml($block->getCustomValueCurrencyCode()) ?>
+                        </span>
                     </span>
                 </div>
             </td>

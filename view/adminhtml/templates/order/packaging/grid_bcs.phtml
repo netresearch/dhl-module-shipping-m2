@@ -58,18 +58,22 @@ $viewModel = $block->getData('viewModel');
             <?php $i=0; ?>
             <?php /** @var \Magento\Sales\Model\Order\Shipment\Item $item */ ?>
             <?php /** @var \Magento\Sales\Model\Order\Item $_orderItem */ ?>
-            <?php foreach ($block->getCollection() as $item) : ?>
-                <?php
+            <?php foreach ($block->getCollection() as $item) :
                     $_order = $block->getShipment()->getOrder();
                     $_orderItem = $_order->getItemById($item->getOrderItemId());
-                ?>
-                <?php if ($item->getIsVirtual()
-                    || ($_orderItem->isShipSeparately() && !($_orderItem->getParentItemId() || $_orderItem->getParentItem()))
-                    || (!$_orderItem->isShipSeparately() && ($_orderItem->getParentItemId() ||
-                            $_orderItem->getParentItem()))) : ?>
-                    <?php continue; ?>
-                <?php endif; ?>
-                <tr class="data-grid-controls-row data-row <?= ($i++ % 2 != 0) ? '_odd-row' : '' ?>">
+                if ($item->getIsVirtual() ||
+                    (
+                        $_orderItem->isShipSeparately() &&
+                        !($_orderItem->getParentItemId() || $_orderItem->getParentItem())
+                    ) ||
+                    (
+                        !$_orderItem->isShipSeparately() &&
+                        ($_orderItem->getParentItemId() || $_orderItem->getParentItem())
+                    )
+                ) {
+                    continue;
+                } ?>
+                <tr class="data-grid-controls-row data-row <?= (($i+1) % 2 != 0) ? '_odd-row' : '' ?>">
                     <td class="data-grid-checkbox-cell">
                         <?php $id = $item->getId() ? $item->getId() : $item->getOrderItemId(); ?>
                         <label class="data-grid-checkbox-cell-inner">
@@ -92,14 +96,13 @@ $viewModel = $block->getData('viewModel');
 
                     <td>
                         <?php $selectedCountry = $_orderItem->getProduct()->getData('country_of_manufacture'); ?>
-                        <select data-module="dhl_shipping" data-name="item_origin_country"
-                                title="<?= $block->escapeHtmlAttr(__('Country of Origin')) ?>" class="admin__control-select">
+                        <select data-module="dhl_shipping"
+                                data-name="item_origin_country"
+                                title="<?= $block->escapeHtmlAttr(__('Country of Origin')) ?>"
+                                class="admin__control-select">
                             <?php foreach ($viewModel->getCountries() as $countryInfo) : ?>
                                 <option value="<?= $block->escapeHtmlAttr($countryInfo['value']) ?>"
-                                    <?php if ($countryInfo['value'] == $selectedCountry) : ?>
-                                        <?= /* @noEscape */ 'selected="selected"' ?>
-                                    <?php endif; ?>
-                                >
+                                    <?= /* @noEscape */ $countryInfo['value'] == $selectedCountry ? 'selected="selected"' : ''; ?>>
                                     <?= $block->escapeHtml($countryInfo['label']); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -110,9 +113,9 @@ $viewModel = $block->getData('viewModel');
                         <?php $tariffNumber = $_orderItem->getProduct()->getData('dhl_tariff_number'); ?>
                         <input data-module="dhl_shipping" data-name="tariff_number"
                                type="text"
-                               class="input-text admin__control-text required-entry validate-length
-                               maximum-length-10"
-                               title="<?= $block->escapeHtmlAttr( __('Tariff Number')) ?>" maxlength="10"
+                               class="input-text admin__control-text required-entry validate-length maximum-length-10"
+                               title="<?= $block->escapeHtmlAttr(__('Tariff Number')) ?>"
+                               maxlength="10"
                                value="<?= $block->escapeHtmlAttr($tariffNumber); ?>"
                         />
                     </td>
@@ -136,8 +139,14 @@ $viewModel = $block->getData('viewModel');
                         <input type="text"
                                name="qty"
                                value="<?= $block->escapeHtmlAttr($item->getQty()*1) ?>"
-                               class="input-text admin__control-text qty<?php if ($item->getOrderItem()->getIsQtyDecimal()): ?> qty-decimal<?php endif ?>">&nbsp;
-                        <button type="button" class="action-delete" data-action="package-delete-item" onclick="packaging.deleteItem(this);" style="display:none;">
+                               class="input-text admin__control-text qty
+                                <?= /* @noEscape */ $item->getOrderItem()->getIsQtyDecimal() ? 'qty-decimal' : '' ?>">
+                        &nbsp;
+                        <button type="button"
+                                class="action-delete"
+                                data-action="package-delete-item"
+                                onclick="packaging.deleteItem(this);"
+                                style="display:none;">
                             <span><?= $block->escapeHtml(__('Delete')) ?></span>
                         </button>
                     </td>
