@@ -32,8 +32,9 @@ $girthEnabled = $block->isDisplayGirthValue() && $block->isGirthAllowed() ? 1 : 
     require([
         "jquery",
         "prototype",
-        "Magento_Shipping/order/packaging",
-        "Magento_Ui/js/modal/modal"
+        "Magento_Shipping/order/packaging", // load core packaging.js
+        "Dhl_Shipping/order/packaging", // load DHL packaging.js which extends the core Packaging class
+        "Magento_Ui/js/modal/modal" // load modal jQuery plugin
     ], function(jQuery){
 
         window.packaging = new Packaging(<?= /* @noEscape */ $block->getConfigDataJson() ?>);
