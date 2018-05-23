@@ -6,13 +6,12 @@ stages:
   - validate
 
 variables:
-  MODULE_VERSION: "1.0.0"
+  MODULE_VERSION: "0.8.1"
   MODULE_NAME: "Dhl_Shipping"
 
 phpcs:
   stage: analyze
   only:
-  - DHLVM2-200
   - develop
   - master
   script:
@@ -35,7 +34,6 @@ phpcs:
 package-build:
   stage: build
   only:
-  - DHLVM2-200
   - master
   script:
   - rst2pdf -v -b 1
@@ -58,7 +56,6 @@ package-build:
 package-validate:
   stage: validate
   only:
-  - DHLVM2-200
   - master
   script:
   - m2eval ${MODULE_NAME}-${MODULE_VERSION}.zip
