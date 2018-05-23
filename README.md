@@ -45,7 +45,7 @@ replace this path with the actual artifact directory of choice.
         └── share
             └── marketplace
                └── dhl
-                    ├── Dhl_Shipping_Lib-0.8.1.zip
+                    ├── Dhl_Shipping_Lib-0.8.0.zip
                     └── Dhl_Shipping_Module_M2-0.8.1.zip
 
 Then navigate to the project root directory and run the following commands:
