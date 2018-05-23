@@ -9,9 +9,9 @@
               description="Different versions of PHP to setup docker containers"/>
 
     <property name="extension.name" value="Dhl_Shipping_Module_M2"/>
-    <property name="extension.version" value="0.8.0"/>
+    <property name="extension.version" value="0.8.1"/>
     <property name="library.name" value="Dhl_Shipping_Lib"/>
-    <property name="library.version" value="0.8.0"/>
+    <property name="library.version" value="0.8.1"/>
 
     <property name="buildzip" value="false"/>
     <property environment="env"/>
