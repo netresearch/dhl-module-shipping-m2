@@ -40,9 +40,8 @@ use Magento\Quote\Model\QuoteRepository;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class CartServiceFieldManagement implements CartServiceManagementInterface
+class CartServiceManagement implements CartServiceManagementInterface
 {
-
     /**
      * @var CheckoutServiceProvider
      */
@@ -59,7 +58,8 @@ class CartServiceFieldManagement implements CartServiceManagementInterface
     private $moduleConfig;
 
     /**
-     * CartServiceFieldManagement constructor.
+     * CartServiceManagement constructor.
+     *
      * @param CheckoutServiceProvider $serviceProvider
      * @param ModuleConfig $moduleConfig
      * @param QuoteRepository $quoteRepository
@@ -88,7 +88,6 @@ class CartServiceFieldManagement implements CartServiceManagementInterface
         if (!in_array($shippingMethod, $dhlShippingMethod)) {
             return [];
         }
-
         $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
 
         return $services;

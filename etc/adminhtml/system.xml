@@ -213,14 +213,14 @@
                     </depends>
                 </field>
                 <!-- Additional Services In Checkout -->
-                <field id="services_in_checkout" translate="label" type="select" sortOrder="163" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="services_in_checkout" translate="label" type="select" sortOrder="163" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Additional Services In Checkout</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="164" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="164" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Preferred location</label>
                     <tooltip>Allow customers to declare a preferred parcel location during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -228,7 +228,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="165" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="165" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Preferred neighbor</label>
                     <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -236,7 +236,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="166" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="166" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Parcel announcement</label>
                     <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -244,7 +244,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="167" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="167" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Preferred day</label>
                     <tooltip>Allow customers to select a preferred day of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -252,22 +252,13 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredday_handling_fee" translate="label" type="text" sortOrder="168" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredday_handling_fee" translate="label" type="text" sortOrder="168" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Additional charge for your preferred day</label>
                     <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                     <comment>Use . as decimal separator.</comment>
                     <validate>validate-not-negative-number required-entry</validate>
-                <!-- 511 Print Only If Codeable -->
-                <field id="shipment_service_printonlyifcodeable" translate="label" type="select" sortOrder="511" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Print Only If Codeable</label>
-                    <tooltip><![CDATA[If set to <em>Yes</em>, shipment orders will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id="service_preferredday_enabled">1</field>
-                        <field id="api_type">bcs</field>
-                    </depends>
                 </field>
-                <field id="service_preferredday_handling_fee_text" translate="label" type="textarea" sortOrder="169" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredday_handling_fee_text" translate="label" type="textarea" sortOrder="169" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Preferred day handling fee text</label>
                     <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
                     <depends>
@@ -275,7 +266,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_cutoff_time" translate="label" type="time" sortOrder="170" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_cutoff_time" translate="label" type="time" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cut off time</label>
                     <tooltip>Orders placed after the cut-off time will not be shipped the same day.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
@@ -284,7 +275,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="171" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="171" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Preferred time</label>
                     <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -292,7 +283,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredtime_handling_fee" translate="label" type="text" sortOrder="172" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredtime_handling_fee" translate="label" type="text" sortOrder="172" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Additional charge for your preferred time</label>
                     <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                     <comment>Use . as decimal separator.</comment>
@@ -302,7 +293,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredtime_handling_fee_text" translate="label" type="textarea" sortOrder="173" showInDefault="0" showInWebsite="0" showInStore="0">
+                <field id="service_preferredtime_handling_fee_text" translate="label" type="textarea" sortOrder="173" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Preferred time handling fee text</label>
                     <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
                     <depends>

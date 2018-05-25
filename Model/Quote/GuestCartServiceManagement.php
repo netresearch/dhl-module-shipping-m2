@@ -94,7 +94,6 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
         $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
         $quote = $this->quoteRepository->get($quoteIdMask->getData('quote_id'));
         $dhlShippingMethod = $this->moduleConfig->getShippingMethods($quote->getStoreId());
-        $shippingMethod = $shippingMethod . '_' . $shippingMethod;
 
         if (!in_array($shippingMethod, $dhlShippingMethod)) {
             return [];
@@ -119,5 +118,4 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
 
         $test = $serviceSelection;
     }
-
 }

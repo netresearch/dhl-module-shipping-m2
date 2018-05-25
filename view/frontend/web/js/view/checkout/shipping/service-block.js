@@ -14,7 +14,7 @@ define([
 
     quote.shippingMethod.subscribe(function () {
         var countryId = quote.shippingAddress().countryId;
-        var carrierCode = quote.shippingMethod().carrier_code;
+        var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
         if (countryId && carrierCode) {
             var callback = function (result) {
                 services(result);

@@ -33,7 +33,7 @@ use Dhl\Shipping\Model\Service\ServiceCollection;
  * Get Checkout Services
  *
  * @api
- * @package  Dhl\Shipping\Api
+ * @package  Dhl\Shipping\ApiCartServiceManagementInterface
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

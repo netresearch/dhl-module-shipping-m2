@@ -41,8 +41,7 @@ use Dhl\Shipping\Service\Bcs\PrintOnlyIfCodeable;
 use Dhl\Shipping\Service\Bcs\ReturnShipment;
 use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
-use Dhl\Shipping\Util\ShippingProductsInterface;
-use Dhl\Shipping\Util\ShippingRoutesInterface;
+use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;
 

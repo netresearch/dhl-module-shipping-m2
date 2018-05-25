@@ -105,7 +105,7 @@
 
     <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory" type="Dhl\Shipping\Webservice\RequestServiceFactory" />
 
-    <preference for="\Dhl\Shipping\Api\Quote\CartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\CartServiceFieldManagement" />
+    <preference for="\Dhl\Shipping\Api\Quote\CartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\CartServiceManagement" />
     <preference for="\Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\GuestCartServiceManagement" />
 
     <!-- third party library adapter -->
