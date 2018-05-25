@@ -214,10 +214,15 @@ class ShippingSetup
         $table = $setup->getConnection()
             ->newTable($setup->getTable(self::TABLE_SERVICE_SELECTION));
         $table->addColumn(
-            'address_id',
+            'entity_id',
             Table::TYPE_INTEGER,
             null,
             ['unsigned' => true, 'nullable' => false, 'primary' => true]
+        )->addColumn(
+            'address_id',
+            Table::TYPE_INTEGER,
+            null,
+            ['unsigned' => true, 'nullable' => false]
         )->addColumn(
             'service_code',
             Table::TYPE_TEXT,
