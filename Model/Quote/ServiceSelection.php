@@ -36,6 +36,12 @@ use Magento\Framework\Model\AbstractModel;
  */
 class ServiceSelection extends AbstractModel
 {
+    protected function _construct()
+    {
+        $this->_init(\Dhl\Shipping\Model\ResourceModel\Quote\ServiceSelection::class);
+    }
+
+
     /**
      * Quote Address ID.
      * @var string
