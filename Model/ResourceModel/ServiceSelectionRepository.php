@@ -17,181 +17,182 @@
  * PHP version 7
  *
  * @package   Dhl\Shipping\Model
- * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author    Max Melzer<max.melzer@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Shipping\Model\ResourceModel;
 
-use Dhl\Shipping\Api\Data\ServiceSelectionSearchResultsInterfaceFactory;
-use Dhl\Shipping\Model\ResourceModel\Quote\ServiceSelectionCollection;
-use Dhl\Shipping\Model\ResourceModel\Quote\ServiceSelectionCollectionFactory;
-use Dhl\Shipping\Model\ResourceModel\Quote\ServiceSelection as ServiceSelectionResource;
-use Dhl\Shipping\Model\Quote\ServiceSelection;
-use Dhl\Shipping\Model\Quote\ServiceSelectionFactory;
-use Magento\Framework\Api\SearchCriteriaInterface;
-use Magento\Framework\Api\SortOrder;
+use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
+use Magento\Framework\Api\Search\SearchResultInterfaceFactory;
+use Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelectionCollection as QuoteServiceSelectionCollection;
+use Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelectionCollectionFactory
+    as QuoteServiceSelectionCollectionFactory;
+use Dhl\Shipping\Model\Quote\ServiceSelectionFactory as QuoteServiceSelectionFactory;
+use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection as OrderServiceSelectionCollection;
+use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollectionFactory
+    as OrderServiceSelectionCollectionFactory;
+use Dhl\Shipping\Model\Order\ServiceSelection as OrderServiceSelection;
+use Dhl\Shipping\Model\Order\ServiceSelectionFactory as OrderServiceSelectionFactory;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Model\AbstractModel;
 
 /**
- * Repository for DHL Shipping Quote Address Extension
+ * Repository for DHL Shipping Service Selections stored with either the Quote oder Order Address
  *
  * @package  Dhl\Shipping\Model
- * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
+ * @author   Max Melzer<max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class ServiceSelectionRepository
 {
-    protected $resource;
+    /**
+     * @var QuoteServiceSelectionFactory
+     */
+    private $quoteServiceSelectionFactory;
 
-    protected $serviceSelectionFactory;
+    /**
+     * @var QuoteServiceSelectionCollectionFactory
+     */
+    private $quoteCollectionFactory;
 
-    protected $collectionFactory;
+    /**
+     * @var Quote\Address\ServiceSelection
+     */
+    private $quoteResource;
 
-    protected $searchResultsFactory;
+    /**
+     * @var OrderServiceSelectionFactory
+     */
+    private $orderServiceSelectionFactory;
 
-    protected $dataObjectHelper;
+    /**
+     * @var OrderServiceSelectionCollectionFactory
+     */
+    private $orderCollectionFactory;
 
-    protected $dataObjectProcessor;
+    /**
+     * @var Order\Address\ServiceSelection
+     */
+    private $orderResource;
 
-    protected $dataServiceSelectionFactory;
+    /**
+     * @var SearchResultInterfaceFactory
+     */
+    private $searchResultsFactory;
 
-    private $storeManager;
-
+    /**
+     * ServiceSelectionRepository constructor.
+     *
+     * @param QuoteServiceSelectionFactory $quoteServiceSelectionFactory
+     * @param QuoteServiceSelectionCollectionFactory $quoteCollectionFactory
+     * @param Quote\Address\ServiceSelection $quoteResource
+     * @param OrderServiceSelectionFactory $orderServiceSelectionFactory
+     * @param OrderServiceSelectionCollectionFactory $orderCollectionFactory
+     * @param Order\Address\ServiceSelection $orderResource
+     * @param SearchResultInterfaceFactory $searchResultsFactory
+     */
     public function __construct(
-        ServiceSelectionResource $resource,
-        ServiceSelectionFactory $serviceSelectionFactory,
-        ServiceSelectionCollectionFactory $collectionFactory,
-        ServiceSelectionSearchResultsInterfaceFactory $searchResultsFactory,
-        DataObjectHelper $dataObjectHelper,
-        DataObjectProcessor $dataObjectProcessor,
-        StoreManagerInterface $storeManager
+        QuoteServiceSelectionFactory $quoteServiceSelectionFactory,
+        QuoteServiceSelectionCollectionFactory $quoteCollectionFactory,
+        Quote\Address\ServiceSelection $quoteResource,
+        OrderServiceSelectionFactory $orderServiceSelectionFactory,
+        OrderServiceSelectionCollectionFactory $orderCollectionFactory,
+        Order\Address\ServiceSelection $orderResource,
+        SearchResultInterfaceFactory $searchResultsFactory
     ) {
-        $this->testFactory = $serviceSelectionFactory;
-        $this->collectionFactory = $collectionFactory;
-        $this->serviceSelectionFactory = $serviceSelectionFactory;
+        $this->quoteServiceSelectionFactory = $quoteServiceSelectionFactory;
+        $this->quoteCollectionFactory = $quoteCollectionFactory;
+        $this->quoteResource = $quoteResource;
+        $this->orderServiceSelectionFactory = $orderServiceSelectionFactory;
+        $this->orderCollectionFactory = $orderCollectionFactory;
+        $this->orderResource = $orderResource;
         $this->searchResultsFactory = $searchResultsFactory;
-        $this->dataObjectHelper = $dataObjectHelper;
-        $this->dataObjectProcessor = $dataObjectProcessor;
-        $this->storeManager = $storeManager;
     }
 
     /**
-     * @param ServiceSelection $serviceSelection
-     * @return ServiceSelection
+     * @param ServiceSelectionInterface|AbstractModel $serviceSelection
+     * @return ServiceSelectionInterface
      * @throws CouldNotSaveException
      */
-    public function save(ServiceSelection $serviceSelection) {
+    public function save(ServiceSelectionInterface $serviceSelection)
+    {
         try {
-            $serviceSelection->getResource()->save($serviceSelection);
+            if (get_class($serviceSelection) === OrderServiceSelection::class) {
+                $this->orderResource->save($serviceSelection);
+            } else {
+                $this->quoteResource->save($serviceSelection);
+            }
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__(
                 'Could not save the test: %1',
                 $exception->getMessage()
             ));
         }
+
         return $serviceSelection;
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $addressId
+     * @return QuoteServiceSelectionCollection
+     * @throws NoSuchEntityException
      */
-    public function getById($entityId)
+    public function getByQuoteAddressId($addressId)
     {
-        $serviceSelection = $this->serviceSelectionFactory->create();
-        $collection = $this->collectionFactory->create();
-        $serviceSelection = $collection->getResource()->load($serviceSelection, $entityId);
-        if (!$serviceSelection->getId()) {
-            throw new NoSuchEntityException(__('ServiceSelection with id "%1" does not exist.', $entityId));
+        $collection = $this->quoteCollectionFactory->create();
+        $collection->addFilter('parent_id', $addressId);
+        if (empty($collection)) {
+            throw new NoSuchEntityException(
+                __('ServiceSelection for quote address id "%1" does not exist.', $addressId)
+            );
         }
-        return $serviceSelection;
-    }
-
-    public function getByAddressId($quoteAddressId)
-    {
-        $collection = $this->collectionFactory->create();
-        $serviceSelection = $this->serviceSelectionFactory->create();
-        $collection->getResource()->load($serviceSelection, $quoteAddressId);
 
         return $collection;
     }
+
     /**
-     * {@inheritdoc}
+     * @param string $addressId
+     * @return OrderServiceSelectionCollection
+     * @throws NoSuchEntityException
      */
-    public function delete(ServiceSelection $serviceSelection) {
+    public function getByOrderAddressId($addressId)
+    {
+        $collection = $this->orderCollectionFactory->create();
+        $collection->addFilter('parent_id', $addressId);
+        if (empty($collection)) {
+            throw new NoSuchEntityException(
+                __('ServiceSelection for order address id "%1" does not exist.', $addressId)
+            );
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @param ServiceSelectionInterface|AbstractModel $serviceSelection
+     * @return bool
+     * @throws CouldNotDeleteException
+     */
+    public function delete(ServiceSelectionInterface $serviceSelection)
+    {
         try {
-            $serviceSelection->getResource()->delete($serviceSelection);
+            if (get_class($serviceSelection) === OrderServiceSelection::class) {
+                $this->orderResource->delete($serviceSelection);
+            } else {
+                $this->quoteResource->delete($serviceSelection);
+            }
         } catch (\Exception $exception) {
             throw new CouldNotDeleteException(__(
                 'Could not delete the ServiceSelection: %1',
                 $exception->getMessage()
             ));
         }
+
         return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function deleteById($serviceSelectionId)
-    {
-        return $this->delete($this->getById($serviceSelectionId));
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getList(SearchCriteriaInterface $searchCriteria) {
-        $collection = $this->collectionFactory->create();
-
-        $this->addFiltersToCollection($searchCriteria, $collection);
-        $this->addSortOrdersToCollection($searchCriteria, $collection);
-        $this->addPagingToCollection($searchCriteria, $collection);
-
-        $collection->load();
-
-        return $this->buildSearchResult($searchCriteria, $collection);
-    }
-
-    private function addFiltersToCollection(SearchCriteriaInterface $searchCriteria, ServiceSelectionCollection $collection)
-    {
-        foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
-            $fields = $conditions = [];
-            foreach ($filterGroup->getFilters() as $filter) {
-                $fields[] = $filter->getField();
-                $conditions[] = [$filter->getConditionType() => $filter->getValue()];
-            }
-            $collection->addFieldToFilter($fields, $conditions);
-        }
-    }
-
-    private function addSortOrdersToCollection(SearchCriteriaInterface $searchCriteria, ServiceSelectionCollection $collection)
-    {
-        foreach ((array) $searchCriteria->getSortOrders() as $sortOrder) {
-            $direction = $sortOrder->getDirection() == SortOrder::SORT_ASC ? 'asc' : 'desc';
-            $collection->addOrder($sortOrder->getField(), $direction);
-        }
-    }
-
-    private function addPagingToCollection(SearchCriteriaInterface $searchCriteria, ServiceSelectionCollection $collection)
-    {
-        $collection->setPageSize($searchCriteria->getPageSize());
-        $collection->setCurPage($searchCriteria->getCurrentPage());
-    }
-
-    private function buildSearchResult(SearchCriteriaInterface $searchCriteria, ServiceSelectionCollection $collection)
-    {
-        $searchResults = $this->searchResultsFactory->create();
-
-        $searchResults->setSearchCriteria($searchCriteria);
-        $searchResults->setItems($collection->getItems());
-        $searchResults->setTotalCount($collection->getSize());
-
-        return $searchResults;
     }
 }

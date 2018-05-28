@@ -50,7 +50,8 @@ class ShippingSetup
     const TABLE_QUOTE_ADDRESS = 'dhlshipping_quote_address';
     const TABLE_ORDER_ADDRESS = 'dhlshipping_order_address';
     const TABLE_LABEL_STATUS = 'dhlshipping_label_status';
-    const TABLE_SERVICE_SELECTION = 'dhlshipping_service_selection';
+    const TABLE_QUOTE_SERVICE_SELECTION = 'dhlshipping_quote_address_service_selection';
+    const TABLE_ORDER_SERVICE_SELECTION = 'dhlshipping_order_address_service_selection';
 
     /**
      * @param EavSetup $eavSetup
@@ -150,15 +151,15 @@ class ShippingSetup
      */
     public static function createLabelStatusTable(SchemaSetupInterface $setup)
     {
-        $table = $setup->getConnection()
+        $quoteTable = $setup->getConnection()
                        ->newTable($setup->getTable(self::TABLE_LABEL_STATUS));
-        $table->addColumn(
+        $quoteTable->addColumn(
             'entity_id',
             Table::TYPE_INTEGER,
             null,
             ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true]
         )->addColumn(
-            'order_id',
+            'parent_id',
             Table::TYPE_INTEGER,
             null,
             ['identity'  => false, 'unsigned'  => true, 'nullable'  => false],
@@ -172,25 +173,25 @@ class ShippingSetup
         )->addIndex(
             $setup->getIdxName(
                 $setup->getTable(self::TABLE_LABEL_STATUS),
-                'order_id',
+                'parent_id',
                 AdapterInterface::INDEX_TYPE_UNIQUE
             ),
-            'order_id',
+            'parent_id',
             ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
         )->addForeignKey(
             $setup->getFkName(
                 $setup->getTable(self::TABLE_LABEL_STATUS),
-                'order_id',
+                'parent_id',
                 $setup->getTable('sales_order'),
                 'entity_id'
             ),
-            'order_id',
+            'parent_id',
             $setup->getTable('sales_order'),
             'entity_id',
             Table::ACTION_CASCADE
         );
 
-        $setup->getConnection()->createTable($table);
+        $setup->getConnection()->createTable($quoteTable);
 
         $setup->getConnection()->addColumn(
             $setup->getTable('sales_order_grid'),
@@ -204,50 +205,82 @@ class ShippingSetup
     }
 
     /**
-     * Create table dhlshipping_label_status
+     * Create tables
+     *
+     * * dhlshipping_quote_address_service_selection and
+     * * dhlshipping_order_address_service_selection
+     *
+     * to store service selections during checkout.
      *
      * @param SchemaSetupInterface $setup
      * @throws \Zend_Db_Exception
      */
-    public static function createServiceSelectionTable(SchemaSetupInterface $setup)
+    public static function createServiceSelectionTables(SchemaSetupInterface $setup)
     {
-        $table = $setup->getConnection()
-            ->newTable($setup->getTable(self::TABLE_SERVICE_SELECTION));
-        $table->addColumn(
-            'entity_id',
-            Table::TYPE_INTEGER,
-            null,
-            ['unsigned' => true, 'nullable' => false, 'primary' => true]
-        )->addColumn(
-            'address_id',
-            Table::TYPE_INTEGER,
-            null,
-            ['unsigned' => true, 'nullable' => false]
-        )->addColumn(
-            'service_code',
-            Table::TYPE_TEXT,
-            null,
-            ['identity'  => false, 'unsigned'  => true, 'nullable'  => false],
-            'Service Name'
-        )->addColumn(
-            'service_value',
-            Table::TYPE_TEXT,
-            20,
-            ['default' => 0, 'unsigned' => true, 'nullable' => false],
-            'Service Value'
-        )->addForeignKey(
+        $columns = [
+            [
+                'name' => 'entity_id',
+                'type' => Table::TYPE_INTEGER,
+                'size' => null,
+                'options' => ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+            ],
+            [
+                'name' => 'parent_id',
+                'type' => Table::TYPE_INTEGER,
+                'size' => null,
+                'options' => ['unsigned' => true, 'nullable' => false]
+            ],
+            [
+                'name' => 'service_code',
+                'type' => Table::TYPE_TEXT,
+                'size' => null,
+                'options' => ['identity' => false, 'unsigned' => true, 'nullable' => false],
+            ],
+            [
+                'name' => 'service_value',
+                'type' => Table::TYPE_TEXT,
+                'size' => 20,
+                'options' => ['default' => 0, 'identity' => false, 'unsigned' => true, 'nullable' => false],
+            ],
+        ];
+
+        $quoteTable = $setup->getConnection()->newTable(
+            $setup->getTable(self::TABLE_QUOTE_SERVICE_SELECTION)
+        );
+        $orderTable = $setup->getConnection()->newTable(
+            $setup->getTable(self::TABLE_ORDER_SERVICE_SELECTION)
+        );
+        foreach ($columns as $column) {
+            $quoteTable->addColumn($column['name'], $column['type'], $column['size'], $column['options']);
+            $orderTable->addColumn($column['name'], $column['type'], $column['size'], $column['options']);
+        }
+        $quoteTable->addForeignKey(
             $setup->getFkName(
-                $setup->getTable(self::TABLE_SERVICE_SELECTION),
-                'address_id',
+                $setup->getTable(self::TABLE_QUOTE_SERVICE_SELECTION),
+                'parent_id',
                 $setup->getTable('quote_address'),
                 'address_id'
             ),
-            'address_id',
+            'parent_id',
             $setup->getTable('quote_address'),
             'address_id',
             Table::ACTION_CASCADE
         );
 
-        $setup->getConnection()->createTable($table);
+        $orderTable->addForeignKey(
+            $setup->getFkName(
+                $setup->getTable(self::TABLE_ORDER_SERVICE_SELECTION),
+                'parent_id',
+                $setup->getTable('sales_order_address'),
+                'entity_id'
+            ),
+            'parent_id',
+            $setup->getTable('sales_order_address'),
+            'entity_id',
+            Table::ACTION_CASCADE
+        );
+
+        $setup->getConnection()->createTable($quoteTable);
+        $setup->getConnection()->createTable($orderTable);
     }
 }

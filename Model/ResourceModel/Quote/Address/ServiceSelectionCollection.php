@@ -23,7 +23,7 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Model\ResourceModel\Quote;
+namespace Dhl\Shipping\Model\ResourceModel\Quote\Address;
 
 use Dhl\Shipping\Model\Quote\ServiceSelection;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
@@ -43,6 +43,6 @@ class ServiceSelectionCollection extends AbstractCollection
      */
     public function _construct()
     {
-        $this->_init(ServiceSelection::class, \Dhl\Shipping\Model\ResourceModel\Quote\ServiceSelection::class);
+        $this->_init(ServiceSelection::class, \Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelection::class);
     }
 }

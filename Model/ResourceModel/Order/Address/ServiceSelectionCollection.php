@@ -22,50 +22,27 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Quote;
 
-use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
-use Magento\Framework\Model\AbstractModel;
+namespace Dhl\Shipping\Model\ResourceModel\Order\Address;
+
+use Dhl\Shipping\Model\Quote\ServiceSelection;
+use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**
- * ShippingInfo
+ * Collection
  *
  * @package  Dhl\Shipping\Model
  * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServiceSelection extends AbstractModel implements ServiceSelectionInterface
+class ServiceSelectionCollection extends AbstractCollection
 {
     /**
      * @inheritdoc
      */
-    protected function _construct()
+    public function _construct()
     {
-        $this->_init(\Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelection::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function getParentId(): string
-    {
-        return $this->getData('parent_id');
-    }
-
-    /**
-     * @return String
-     */
-    public function getServiceCode(): string
-    {
-        return $this->getData('service_code');
-    }
-
-    /**
-     * @return bool|int|string
-     */
-    public function getServiceValue()
-    {
-        return $this->getData('service_value');
+        $this->_init(ServiceSelection::class, \Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelection::class);
     }
 }

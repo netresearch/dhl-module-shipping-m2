@@ -107,10 +107,5 @@ class InstallSchema implements InstallSchemaInterface
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
         );
         $installer->getConnection()->createTable($table);
-
-        /**
-         * Create table dhlshipping_label_status
-         */
-        ShippingSetup::createLabelStatusTable($setup);
     }
 }

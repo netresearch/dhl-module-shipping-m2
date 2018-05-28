@@ -22,50 +22,49 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Quote;
+namespace Dhl\Shipping\Model\ResourceModel\Quote\Address;
 
-use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
-use Magento\Framework\Model\AbstractModel;
+use Dhl\Shipping\Setup\ShippingSetup;
+use Magento\Framework\EntityManager\EntityManager;
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Magento\Framework\Model\ResourceModel\Db\Context;
 
 /**
- * ShippingInfo
+ * Resource Model for DHL Shipping Quote Address Extension
  *
  * @package  Dhl\Shipping\Model
  * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServiceSelection extends AbstractModel implements ServiceSelectionInterface
+class ServiceSelection extends AbstractDb
 {
     /**
-     * @inheritdoc
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    /**
+     * QuoteAddressExtension constructor.
+     * @param Context $context
+     * @param EntityManager $entityManager
+     * @param null $connectionName
+     */
+    public function __construct(
+        Context $context,
+        EntityManager $entityManager,
+        $connectionName = null
+    ) {
+        $this->entityManager = $entityManager;
+
+        parent::__construct($context, $connectionName);
+    }
+
+    /**
+     * Resource initialization.
      */
     protected function _construct()
     {
-        $this->_init(\Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelection::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function getParentId(): string
-    {
-        return $this->getData('parent_id');
-    }
-
-    /**
-     * @return String
-     */
-    public function getServiceCode(): string
-    {
-        return $this->getData('service_code');
-    }
-
-    /**
-     * @return bool|int|string
-     */
-    public function getServiceValue()
-    {
-        return $this->getData('service_value');
+        $this->_init(ShippingSetup::TABLE_QUOTE_SERVICE_SELECTION, 'entity_id');
     }
 }
