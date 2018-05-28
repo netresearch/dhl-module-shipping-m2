@@ -26,96 +26,82 @@ namespace Dhl\Shipping\Model\Quote;
 
 use Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface;
 use Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface;
-use Dhl\Shipping\Model\Config\ModuleConfig;
-use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
 use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;
-use Magento\Quote\Model\QuoteRepository;
 
 /**
- * Manage Checkout Services
+ * Manage Checkout Services. Only delegates to CartServiceManagement class.
  *
  * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class GuestCartServiceManagement implements GuestCartServiceManagementInterface
 {
     /**
-     * @var CheckoutServiceProvider
-     */
-    private $checkoutServiceProvider;
-
-    /**
      * @var QuoteIdMaskFactory
      */
     private $quoteIdMaskFactory;
 
     /**
-     * @var QuoteRepository
+     * @var CartServiceManagement
      */
-    private $quoteRepository;
+    private $cartServiceManagement;
 
     /**
-     * @var ModuleConfig
-     */
-    private $moduleConfig;
-
-    /**
-     * GuestCartCheckoutFieldManagement constructor.
-     * @param CheckoutServiceProvider $serviceProvider
-     * @param ModuleConfig $moduleConfig
+     * GuestCartServiceManagement constructor.
+     *
      * @param QuoteIdMaskFactory $quoteIdMaskFactory
-     * @param QuoteRepository $quoteRepository
+     * @param CartServiceManagement $cartServiceMngmt
      */
     public function __construct(
-        CheckoutServiceProvider $serviceProvider,
-        ModuleConfig $moduleConfig,
         QuoteIdMaskFactory $quoteIdMaskFactory,
-        QuoteRepository $quoteRepository
+        CartServiceManagement $cartServiceMngmt
     ) {
-        $this->checkoutServiceProvider = $serviceProvider;
-        $this->moduleConfig = $moduleConfig;
         $this->quoteIdMaskFactory = $quoteIdMaskFactory;
-        $this->quoteRepository = $quoteRepository;
+        $this->cartServiceManagement = $cartServiceMngmt;
     }
 
     /**
      * @param string $cartId
      * @param string $countryId
      * @param string $shippingMethod
-     * @return ServiceCollection|ServiceInterface[]
+     * @return array|\Dhl\Shipping\Api\Data\ServiceInterface[]|ServiceInterface[]|ServiceCollection
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getServices($cartId, $countryId, $shippingMethod)
     {
-        /** @var QuoteIdMask $quoteIdMask */
-        $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-        $quote = $this->quoteRepository->get($quoteIdMask->getData('quote_id'));
-        $dhlShippingMethod = $this->moduleConfig->getShippingMethods($quote->getStoreId());
-
-        if (!in_array($shippingMethod, $dhlShippingMethod)) {
-            return [];
-        }
-
-        $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
-
-        return $services;
+        return $this->cartServiceManagement->getServices(
+            $this->getQuoteId($cartId),
+            $countryId,
+            $shippingMethod
+        );
     }
 
     /**
      * @param string $cartId
      * @param string[] $serviceSelection
-     * @return void
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function save($cartId, $serviceSelection)
     {
+        $this->cartServiceManagement->save($this->getQuoteId($cartId), $serviceSelection);
+    }
+
+    /**
+     * @param $cartId
+     * @return int
+     */
+    private function getQuoteId($cartId)
+    {
         /** @var QuoteIdMask $quoteIdMask */
         $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-        $quote = $this->quoteRepository->get($quoteIdMask->getData('quote_id'));
-        $shippingAddressId = $quote->getShippingAddress()->getId();
 
-        $test = $serviceSelection;
+        return $quoteIdMask->getData('quote_id');
     }
 }

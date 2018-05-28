@@ -195,4 +195,30 @@ class ServiceSelectionRepository
 
         return true;
     }
+
+    /**
+     * @param string $addressId
+     * @throws CouldNotDeleteException
+     * @throws NoSuchEntityException
+     */
+    public function deleteByQuoteAddressId($addressId)
+    {
+        $items = $this->getByQuoteAddressId($addressId);
+        foreach ($items as $item) {
+            $this->delete($item);
+        }
+    }
+
+    /**
+     * @param string $addressId
+     * @throws CouldNotDeleteException
+     * @throws NoSuchEntityException
+     */
+    public function deleteByOrderAddressId($addressId)
+    {
+        $items = $this->getByOrderAddressId($addressId);
+        foreach ($items as $item) {
+            $this->delete($item);
+        }
+    }
 }

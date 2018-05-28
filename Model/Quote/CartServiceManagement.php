@@ -30,7 +30,6 @@ use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\QuoteRepository;
 
 /**
@@ -38,6 +37,7 @@ use Magento\Quote\Model\QuoteRepository;
  *
  * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -74,20 +74,20 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @param CheckoutServiceProvider $checkoutServiceProvider
      * @param QuoteRepository $quoteRepository
      * @param ModuleConfig $moduleConfig
-     * @param ServiceSelectionRepository $serviceSelectionRepository
+     * @param ServiceSelectionRepository $serviceSelectionRepo
      * @param ServiceSelectionFactory $serviceSelectionFactory
      */
     public function __construct(
         CheckoutServiceProvider $checkoutServiceProvider,
         QuoteRepository $quoteRepository,
         ModuleConfig $moduleConfig,
-        ServiceSelectionRepository $serviceSelectionRepository,
+        ServiceSelectionRepository $serviceSelectionRepo,
         ServiceSelectionFactory $serviceSelectionFactory
     ) {
         $this->checkoutServiceProvider = $checkoutServiceProvider;
         $this->quoteRepository = $quoteRepository;
         $this->moduleConfig = $moduleConfig;
-        $this->serviceSelectionRepository = $serviceSelectionRepository;
+        $this->serviceSelectionRepository = $serviceSelectionRepo;
         $this->serviceSelectionFactory = $serviceSelectionFactory;
     }
 
@@ -96,7 +96,7 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @param string $countryId
      * @param string $shippingMethod
      * @return array|\Dhl\Shipping\Api\Data\ServiceInterface[]|ServiceInterface[]|ServiceCollection
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException;
      */
     public function getServices($cartId, $countryId, $shippingMethod)
     {
@@ -112,18 +112,19 @@ class CartServiceManagement implements CartServiceManagementInterface
     }
 
     /**
-     * Save service selection with reference to a Quote Address ID.
+     * Persist service selection with reference to a Quote Address ID.
      *
      * @param int $cartId
      * @param string[] $serviceSelection
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException;
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function save($cartId, $serviceSelection)
     {
         $quote = $this->quoteRepository->get($cartId);
         $quoteAddressId = $quote->getShippingAddress()->getId();
-
+        $this->serviceSelectionRepository->deleteByQuoteAddressId($quoteAddressId);
         foreach ($serviceSelection as $code => $value) {
             $model = $this->serviceSelectionFactory->create();
             $model->setData([
