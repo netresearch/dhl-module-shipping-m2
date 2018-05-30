@@ -239,8 +239,7 @@ class ShipmentOrderProvider
             'ref',
             'returnRef',
             'shipmentDate',
-            $bankData,
-            ''
+            $bankData
         );
 
         return $shipmentDetails;

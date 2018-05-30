@@ -107,11 +107,12 @@ class CheckoutServiceProvider
     }
 
     /**
+     * Obtain simple serializable data structure.
+     *
      * @return \Closure
      */
     private function getTransformCallback()
     {
-        // obtain simple serializable data structure
         $transformFn = function (ServiceInterface $service) {
             // todo(nr): add further properties as needed
             return [
@@ -119,6 +120,7 @@ class CheckoutServiceProvider
                 'name' => $service->getName(),
                 'inputType' => $service->getInputType(),
                 'options' => $service->getOptions(),
+                'validation' => $service->getValidationRules()
             ];
         };
 

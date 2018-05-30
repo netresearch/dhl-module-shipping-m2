@@ -1,10 +1,7 @@
 define([
-    'Magento_Ui/js/form/element/abstract',
-    'mage/utils/wrapper',
-    'Magento_Checkout/js/action/set-shipping-information'
-], function (Component, wrapper) {
+    'Magento_Ui/js/form/element/abstract'
+], function (Component) {
     'use strict';
-
 
     return Component.extend({
         defaults: {

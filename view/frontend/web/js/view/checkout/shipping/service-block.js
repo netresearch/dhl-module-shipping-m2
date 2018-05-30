@@ -5,8 +5,9 @@ define([
     'ko',
     'Dhl_Shipping/js/action/get-services',
     'Magento_Checkout/js/model/quote',
-    'Dhl_Shipping/js/model/services'
-], function (_, UiCollection, layout, ko, serviceAction, quote, serviceModel) {
+    'Dhl_Shipping/js/model/services',
+    'Dhl_Shipping/js/model/service-validation-map'
+], function (_, UiCollection, layout, ko, serviceAction, quote, serviceModel, serviceValidationMap) {
 
     'use strict';
 
@@ -26,7 +27,8 @@ define([
 
     return UiCollection.extend({
         defaults: {
-            template: 'Dhl_Shipping/checkout/shipping/service-block'
+            template: 'Dhl_Shipping/checkout/shipping/service-block',
+            validateWholeGroup: false
         },
 
         initialize: function () {
@@ -53,15 +55,22 @@ define([
         },
 
         getServiceFieldLayout: function (service) {
+            var validation = {};
+            _.each(service.validation, function(value, rule) {
+                var validatorName = serviceValidationMap.getValidatorName(rule);
+                if (validatorName) {
+                    validation[validatorName] = value;
+                } else {
+                    console.warn('DHL service validation rule ' + validation + ' is not defined.');
+                }
+            });
+
             return {
                 parent: this.name,
                 component: 'Dhl_Shipping/js/view/checkout/shipping/service',
-                service: service
+                service: service,
+                validation: validation
             }
-        },
-
-        validateWholeGroup: function () {
-            return false;
         },
 
         hasServices: function () {

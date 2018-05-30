@@ -1,13 +1,20 @@
 define([
     'mage/utils/wrapper',
+    'Dhl_Shipping/js/action/validate-service-selection',
     'Dhl_Shipping/js/action/save-service-selection'
-], function (wrapper, saveServices) {
+], function (wrapper, validateServices, saveServices) {
     'use strict';
 
+    /**
+     * Intercept click on "Next" button in checkout
+     * to validate and save service input values.
+     */
     return function (setShippingInformationAction) {
         return wrapper.wrap(setShippingInformationAction, function (originalAction) {
-            saveServices();
-            return originalAction();
+            if (validateServices()) {
+                saveServices();
+                return originalAction();
+            }
         });
     }
 });
