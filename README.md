@@ -18,12 +18,12 @@ For more details on the API connections, see the [documentation](http://dhl.supp
 
 Requirements
 ------------
-* PHP >= 5.6.5
+
 * PHP >= 7.0.6
 
 Compatibility
 -------------
-* Magento >= 2.1.4
+* Magento >= 2.2.4
 
 Installation Instructions
 -------------------------
