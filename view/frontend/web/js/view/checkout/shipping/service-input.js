@@ -1,7 +1,8 @@
 define([
     'Magento_Ui/js/form/element/abstract',
-    'Dhl_Shipping/js/model/services'
-], function (Component, serviceModel) {
+    'Dhl_Shipping/js/model/services',
+    'Dhl_Shipping/js/model/service-validation-map'
+], function (Component, serviceModel, serviceValidationMap) {
     'use strict';
 
     return Component.extend({
@@ -30,11 +31,24 @@ define([
         },
 
         initFieldData: function () {
+            var validationData = {};
+            _.each(this.serviceInput.validationRules, function (value, rule) {
+                var validatorName = serviceValidationMap.getValidatorName(rule);
+                if (validatorName) {
+                    validationData[validatorName] = value;
+                } else {
+                    console.warn('DHL service validation rule ' + validation + ' is not defined.');
+                }
+            });
+
+            this.validation = validationData;
             this.template = 'ui/form/field';
             this.elementTmpl = this.getTemplateForType(this.serviceInput.inputType);
-            this.tooltipTpl = 'Dhl_Shipping/checkout/shipping/tooltip';
             this.label = this.description = this.serviceInput.label;
             this.placeholder = this.serviceInput.placeholder;
+            if (this.serviceInput.tooltip) {
+                this.tooltip = {description: this.serviceInput.tooltip};
+            }
             this.inputName = this.serviceInput.code;
             this.autocomplete = this.serviceInput.code;
         },

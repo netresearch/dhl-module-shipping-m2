@@ -2,8 +2,7 @@ define([
     'underscore',
     'uiCollection',
     'uiLayout',
-    'Dhl_Shipping/js/model/service-validation-map'
-], function (_, Component, layout, serviceValidationMap) {
+], function (_, Component, layout) {
     'use strict';
 
     return Component.extend({
@@ -22,22 +21,11 @@ define([
         },
 
         getServiceFieldLayout: function (serviceInput) {
-            var validation = {};
-            _.each(serviceInput.validationRules, function (value, rule) {
-                var validatorName = serviceValidationMap.getValidatorName(rule);
-                if (validatorName) {
-                    validation[validatorName] = value;
-                } else {
-                    console.warn('DHL service validation rule ' + validation + ' is not defined.');
-                }
-            });
-
             return {
                 parent: this.name,
                 component: 'Dhl_Shipping/js/view/checkout/shipping/service-input',
                 serviceInput: serviceInput,
                 service: this.service,
-                validation: validation
             }
         }
     });
