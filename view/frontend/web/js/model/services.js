@@ -16,7 +16,6 @@ define([
                 services[name] = {};
             }
             services[name][code] = value;
-            console.log(services);
         }
     };
 });

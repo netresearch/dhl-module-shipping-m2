@@ -30,7 +30,7 @@ use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
-use Magento\Framework\Api\AttributeInterface;
+use Magento\Framework\Escaper;
 use Magento\Quote\Model\QuoteRepository;
 
 /**
@@ -70,6 +70,11 @@ class CartServiceManagement implements CartServiceManagementInterface
     private $serviceSelectionFactory;
 
     /**
+     * @var Escaper
+     */
+    private $escaper;
+
+    /**
      * CartServiceManagement constructor.
      *
      * @param CheckoutServiceProvider $checkoutServiceProvider
@@ -77,19 +82,22 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @param ModuleConfig $moduleConfig
      * @param ServiceSelectionRepository $serviceSelectionRepo
      * @param ServiceSelectionFactory $serviceSelectionFactory
+     * @param Escaper $escaper
      */
     public function __construct(
         CheckoutServiceProvider $checkoutServiceProvider,
         QuoteRepository $quoteRepository,
         ModuleConfig $moduleConfig,
         ServiceSelectionRepository $serviceSelectionRepo,
-        ServiceSelectionFactory $serviceSelectionFactory
+        ServiceSelectionFactory $serviceSelectionFactory,
+        Escaper $escaper
     ) {
         $this->checkoutServiceProvider = $checkoutServiceProvider;
         $this->quoteRepository = $quoteRepository;
         $this->moduleConfig = $moduleConfig;
         $this->serviceSelectionRepository = $serviceSelectionRepo;
         $this->serviceSelectionFactory = $serviceSelectionFactory;
+        $this->escaper = $escaper;
     }
 
     /**
@@ -131,9 +139,22 @@ class CartServiceManagement implements CartServiceManagementInterface
             $model->setData([
                 'parent_id' => $quoteAddressId,
                 'service_code' => $service->getAttributeCode(),
-                'service_value' => $service->getValue(),
+                'service_value' => $this->getEscapedValues($service->getValue()),
             ]);
             $this->serviceSelectionRepository->save($model);
         }
+    }
+
+    /**
+     * HTML escape all values in service returned from frontend.
+     *
+     * @param array $values
+     * @return array
+     */
+    private function getEscapedValues(array $values): array
+    {
+        return array_map(function ($value) {
+            return $this->escaper->escapeHtml($value);
+        }, $values);
     }
 }
