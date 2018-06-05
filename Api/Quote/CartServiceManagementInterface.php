@@ -35,6 +35,7 @@ use Dhl\Shipping\Model\Service\ServiceCollection;
  * @api
  * @package  Dhl\Shipping\ApiCartServiceManagementInterface
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @author   Max Melzer <max.melzer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -50,7 +51,7 @@ interface CartServiceManagementInterface
 
     /**
      * @param int $cartId
-     * @param string[] $serviceSelection
+     * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
      * @return void
      */
     public function save($cartId, $serviceSelection);

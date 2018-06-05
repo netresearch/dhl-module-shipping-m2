@@ -199,13 +199,16 @@ class ServiceSelectionRepository
     /**
      * @param string $addressId
      * @throws CouldNotDeleteException
-     * @throws NoSuchEntityException
      */
     public function deleteByQuoteAddressId($addressId)
     {
-        $items = $this->getByQuoteAddressId($addressId);
-        foreach ($items as $item) {
-            $this->delete($item);
+        try {
+            $items = $this->getByQuoteAddressId($addressId);
+            foreach ($items as $item) {
+                $this->delete($item);
+            }
+        } catch (NoSuchEntityException $e){
+            // fail silently
         }
     }
 

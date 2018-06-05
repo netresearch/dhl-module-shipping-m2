@@ -62,7 +62,7 @@ class ServiceSelection extends AbstractModel implements ServiceSelectionInterfac
     }
 
     /**
-     * @return bool|int|string
+     * @return string[]
      */
     public function getServiceValue()
     {

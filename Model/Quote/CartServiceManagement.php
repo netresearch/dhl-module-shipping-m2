@@ -30,6 +30,7 @@ use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
+use Magento\Framework\Api\AttributeInterface;
 use Magento\Quote\Model\QuoteRepository;
 
 /**
@@ -115,7 +116,7 @@ class CartServiceManagement implements CartServiceManagementInterface
      * Persist service selection with reference to a Quote Address ID.
      *
      * @param int $cartId
-     * @param string[] $serviceSelection
+     * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
      * @throws \Magento\Framework\Exception\NoSuchEntityException;
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
@@ -125,12 +126,12 @@ class CartServiceManagement implements CartServiceManagementInterface
         $quote = $this->quoteRepository->get($cartId);
         $quoteAddressId = $quote->getShippingAddress()->getId();
         $this->serviceSelectionRepository->deleteByQuoteAddressId($quoteAddressId);
-        foreach ($serviceSelection as $code => $value) {
+        foreach ($serviceSelection as $service) {
             $model = $this->serviceSelectionFactory->create();
             $model->setData([
                 'parent_id' => $quoteAddressId,
-                'service_code' => $code,
-                'service_value' => $value,
+                'service_code' => $service->getAttributeCode(),
+                'service_value' => $service->getValue(),
             ]);
             $this->serviceSelectionRepository->save($model);
         }

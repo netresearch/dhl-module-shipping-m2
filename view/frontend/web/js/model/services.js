@@ -11,8 +11,12 @@ define([
             return services;
         },
 
-        addService:function (name, value) {
-            services[name] = value;
+        addService:function (name, code, value) {
+            if (services[name] == undefined) {
+                services[name] = {};
+            }
+            services[name][code] = value;
+            console.log(services);
         }
     };
 });

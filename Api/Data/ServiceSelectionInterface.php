@@ -44,7 +44,7 @@ interface ServiceSelectionInterface
     public function getServiceCode(): string;
 
     /**
-     * @return bool|int|string
+     * @return string[]
      */
     public function getServiceValue();
 }

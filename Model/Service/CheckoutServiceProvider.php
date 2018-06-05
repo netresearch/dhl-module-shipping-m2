@@ -28,6 +28,7 @@ use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
+use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 
 /**
@@ -56,25 +57,34 @@ class CheckoutServiceProvider
     private $routeValidator;
 
     /**
+     * @var ServiceHydrator
+     */
+    private $serviceHydrator;
+
+    /**
      * CheckoutServiceProvider constructor.
+     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param RouteValidatorInterface $routeValidator
+     * @param ServiceHydrator $serviceHydrator
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
-        RouteValidatorInterface $routeValidator
+        RouteValidatorInterface $routeValidator,
+        ServiceHydrator $serviceHydrator
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;
+        $this->serviceHydrator = $serviceHydrator;
     }
 
     /**
      * @param string $countryId
      * @param string $storeId
-     * @return ServiceCollection|ServiceInterface[]
+     * @return mixed[]
      */
     public function getServices($countryId, $storeId)
     {
@@ -93,38 +103,15 @@ class CheckoutServiceProvider
         );
 
         /** @var ServiceCollection $serviceCollection */
-        $serviceCollection = $serviceCollection
-            ->filter($checkoutFilter)
-            ->filter($routeFilter);
+        $serviceCollection = $serviceCollection->filter($checkoutFilter);
+        $serviceCollection = $serviceCollection->filter($routeFilter);
 
         $callback = $this->getSortCallback();
         $serviceCollection = $serviceCollection->sort($callback);
 
-        $callback = $this->getTransformCallback();
-        $services = $serviceCollection->map($callback);
+        $services = $serviceCollection->map([$this->serviceHydrator, 'extract']);
 
         return $services;
-    }
-
-    /**
-     * Obtain simple serializable data structure.
-     *
-     * @return \Closure
-     */
-    private function getTransformCallback()
-    {
-        $transformFn = function (ServiceInterface $service) {
-            // todo(nr): add further properties as needed
-            return [
-                'code' => $service->getCode(),
-                'name' => $service->getName(),
-                'inputType' => $service->getInputType(),
-                'options' => $service->getOptions(),
-                'validation' => $service->getValidationRules()
-            ];
-        };
-
-        return $transformFn;
     }
 
     /**

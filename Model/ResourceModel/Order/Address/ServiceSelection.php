@@ -25,9 +25,7 @@
 namespace Dhl\Shipping\Model\ResourceModel\Order\Address;
 
 use Dhl\Shipping\Setup\ShippingSetup;
-use Magento\Framework\EntityManager\EntityManager;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\Model\ResourceModel\Db\Context;
 
 /**
  * Resource Model for DHL Shipping Quote Address Extension
@@ -40,31 +38,38 @@ use Magento\Framework\Model\ResourceModel\Db\Context;
 class ServiceSelection extends AbstractDb
 {
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * QuoteAddressExtension constructor.
-     * @param Context $context
-     * @param EntityManager $entityManager
-     * @param null $connectionName
-     */
-    public function __construct(
-        Context $context,
-        EntityManager $entityManager,
-        $connectionName = null
-    ) {
-        $this->entityManager = $entityManager;
-
-        parent::__construct($context, $connectionName);
-    }
-
-    /**
      * Resource initialization.
      */
     protected function _construct()
     {
         $this->_init(ShippingSetup::TABLE_ORDER_SERVICE_SELECTION, 'entity_id');
+    }
+
+    /**
+     * JSON encode array property
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this|AbstractDb
+     */
+    protected function _beforeSave(\Magento\Framework\Model\AbstractModel $object)
+    {
+        $value = $object->getData('service_value');
+        $object->setData('service_value', json_encode($value));
+
+        return parent::_beforeSave($object);
+    }
+
+    /**
+     * JSON decode array property
+     *
+     * @param \Magento\Framework\Model\AbstractModel $object
+     * @return $this|AbstractDb
+     */
+    protected function _afterLoad(\Magento\Framework\Model\AbstractModel $object)
+    {
+        $value = $object->getData('service_value');
+        $object->setData('service_value', json_decode($value));
+
+        return parent::_afterLoad($object);
     }
 }
