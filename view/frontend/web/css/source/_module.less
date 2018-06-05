@@ -1,0 +1,33 @@
+.dhl-checkout-services-container {
+  border: 2px solid rgb(255, 204, 0);
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px !important;
+
+  .admin__field-option {
+    display: inline-block;
+    width: 16%;
+    max-width: 60px;
+    margin-right: .6666666%;
+
+
+    .admin__control-radio {
+      display: none
+    }
+    .admin__control-radio + .admin__field-label {
+      display: block;
+      text-align: center;
+      border-top: 10px solid #ccc;
+      background: #eee;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+    .admin__control-radio:disabled + .admin__field-label {
+      cursor: not-allowed;
+      color: #ccc;
+    }
+    .admin__control-radio:checked + .admin__field-label {
+      background: rgb(255, 204, 0);
+    }
+  }
+}
