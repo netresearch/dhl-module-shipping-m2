@@ -4,23 +4,23 @@ define([
     'uiLayout',
     'ko',
     'Dhl_Shipping/js/action/get-services',
-    'Magento_Checkout/js/model/quote',
-    'Dhl_Shipping/js/model/services'
-], function (_, UiCollection, layout, ko, serviceAction, quote, serviceModel) {
+    'Magento_Checkout/js/model/quote'
+], function (_, UiCollection, layout, ko, serviceAction, quote) {
 
     'use strict';
 
     var services = ko.observableArray([]);
 
+    var compatibility = [];
+
     quote.shippingMethod.subscribe(function () {
         var countryId = quote.shippingAddress().countryId;
         var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
         if (countryId && carrierCode) {
-            var callback = function (result) {
-                services(result);
-            };
-
-            serviceAction(countryId, carrierCode, callback);
+            serviceAction(countryId, carrierCode, function (result) {
+                services(result[0].services);
+                compatibility = result[0].compatibility;
+            });
         }
     });
 

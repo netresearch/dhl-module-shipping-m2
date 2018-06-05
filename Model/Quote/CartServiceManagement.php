@@ -30,6 +30,7 @@ use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
+use Magento\Framework\Api\AttributeInterface;
 use Magento\Framework\Escaper;
 use Magento\Quote\Model\QuoteRepository;
 
@@ -104,7 +105,7 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @param int $cartId
      * @param string $countryId
      * @param string $shippingMethod
-     * @return array|\Dhl\Shipping\Api\Data\ServiceInterface[]|ServiceInterface[]|ServiceCollection
+     * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException;
      */
     public function getServices($cartId, $countryId, $shippingMethod)
@@ -116,8 +117,12 @@ class CartServiceManagement implements CartServiceManagementInterface
             return [];
         }
         $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
+        $compatibility = $this->checkoutServiceProvider->getCompatibility($countryId, $quote->getStoreId());
 
-        return $services;
+        return [[
+            'services' => $services,
+            'compatibility' => $compatibility,
+        ]];
     }
 
     /**
@@ -143,6 +148,18 @@ class CartServiceManagement implements CartServiceManagementInterface
             ]);
             $this->serviceSelectionRepository->save($model);
         }
+    }
+
+    /**
+     * Validate a service selection's compatibility.
+     *
+     * @param AttributeInterface[] $serviceSelection
+     * @throws \Magento\Framework\Exception\ValidatorException
+     */
+    public function validate($serviceSelection)
+    {
+        throw new \Magento\Framework\Exception\ValidatorException(__('Service %1 and %2 can not be chosen together.'));
+        throw new \Magento\Framework\Exception\ValidatorException(__('Service %1 can only be chosen with service %2.'));
     }
 
     /**

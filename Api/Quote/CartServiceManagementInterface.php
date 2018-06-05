@@ -45,7 +45,7 @@ interface CartServiceManagementInterface
      * @param int $cartId
      * @param string $countryId
      * @param string $shippingMethod
-     * @return ServiceCollection|ServiceInterface[]
+     * @return array
      */
     public function getServices($cartId, $countryId, $shippingMethod);
 

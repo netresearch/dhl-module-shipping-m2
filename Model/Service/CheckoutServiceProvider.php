@@ -28,6 +28,7 @@ use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
+use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 
@@ -62,23 +63,41 @@ class CheckoutServiceProvider
     private $serviceHydrator;
 
     /**
+     * @var ServiceCompatibilityPool
+     */
+    private $compatibilityPool;
+
+    /**
      * CheckoutServiceProvider constructor.
      *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param RouteValidatorInterface $routeValidator
      * @param ServiceHydrator $serviceHydrator
+     * @param ServiceCompatibilityPool $compatibilityPool
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
         RouteValidatorInterface $routeValidator,
-        ServiceHydrator $serviceHydrator
+        ServiceHydrator $serviceHydrator,
+        ServiceCompatibilityPool $compatibilityPool
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;
         $this->serviceHydrator = $serviceHydrator;
+        $this->compatibilityPool = $compatibilityPool;
+    }
+
+    /**
+     * @param string $countryId
+     * @param string $storeId
+     * @return string[][]
+     */
+    public function getCompatibility($countryId, $storeId)
+    {
+        return $this->compatibilityPool->getRules($countryId, $storeId);
     }
 
     /**
