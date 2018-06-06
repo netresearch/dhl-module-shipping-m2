@@ -14,6 +14,11 @@ define([
             if (validateServices()) {
                 saveServices();
                 return originalAction();
+            } else {
+                // do nothing
+                return {
+                    'done': function () {}
+                }
             }
         });
     }

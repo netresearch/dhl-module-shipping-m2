@@ -31,6 +31,8 @@ use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollectionInterface;
+use function ZendTest\Server\Reflection\function1;
 
 /**
  * Load services for display in checkout
@@ -111,24 +113,13 @@ class CheckoutServiceProvider
         // todo(nr): merge config defaults with values from session or shipping info structure?
 
         $serviceCollection = $this->servicePool->getServices($presets);
+        $serviceCollection = $this->filterAvailableServices($countryId, $storeId, $serviceCollection);
 
-        // show only services available for customers
-        $checkoutFilter = CustomerSelectionFilter::create();
-        $routeFilter = RouteFilter::create(
-            $this->routeValidator,
-            $this->config->getShipperCountry($storeId),
-            $countryId,
-            $this->config->getEuCountryList($storeId)
-        );
+        $serviceCollection = $serviceCollection->sort($this->getSortCallback());
 
-        /** @var ServiceCollection $serviceCollection */
-        $serviceCollection = $serviceCollection->filter($checkoutFilter);
-        $serviceCollection = $serviceCollection->filter($routeFilter);
-
-        $callback = $this->getSortCallback();
-        $serviceCollection = $serviceCollection->sort($callback);
-
-        $services = $serviceCollection->map([$this->serviceHydrator, 'extract']);
+        $services = $serviceCollection->map(function ($service) {
+                return $this->serviceHydrator->extract($service);
+        });
 
         return $services;
     }
@@ -146,5 +137,26 @@ class CheckoutServiceProvider
         };
 
         return $sortFn;
+    }
+
+    /**
+     * @param string $countryId
+     * @param string $storeId
+     * @param ServiceCollection $serviceCollection
+     * @return ServiceCollection
+     */
+    private function filterAvailableServices($countryId, $storeId, $serviceCollection)
+    {
+        $checkoutFilter = CustomerSelectionFilter::create();
+        $routeFilter = RouteFilter::create(
+            $this->routeValidator,
+            $this->config->getShipperCountry($storeId),
+            $countryId,
+            $this->config->getEuCountryList($storeId)
+        );
+        $serviceCollection = $serviceCollection->filter($checkoutFilter);
+        $serviceCollection = $serviceCollection->filter($routeFilter);
+
+        return $serviceCollection;
     }
 }

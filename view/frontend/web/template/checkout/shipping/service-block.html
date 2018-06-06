@@ -6,13 +6,8 @@
         <!-- ko foreach: { data: elems, as: 'element' } -->
          <render if="hasTemplate()"></render>
         <!-- /ko -->
-
-        <!-- ko if: validateWholeGroup -->
-            <!-- ko  foreach: { data: elems, as: 'element' } -->
-                <!-- ko if: element.error() && element.visible() -->
-                    <label class="error" data-bind="attr: { for: uid }, text: element.error"></label>
-                <!-- /ko -->
-            <!-- /ko -->
+        <!-- ko if: error()-->
+            <label class="message error" data-bind="text: error"></label>
         <!-- /ko -->
     </fieldset>
 <!-- /ko -->

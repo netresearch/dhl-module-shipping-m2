@@ -24,9 +24,6 @@
  */
 namespace Dhl\Shipping\Api\Quote;
 
-use Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface;
-use Dhl\Shipping\Model\Service\ServiceCollection;
-
 /**
  * Interface GuestCartServiceManagementInterface
  *
@@ -44,13 +41,13 @@ interface GuestCartServiceManagementInterface
      * @param string $cartId
      * @param string $countryId
      * @param string $shippingMethod
-     * @return ServiceCollection|ServiceInterface[]
+     * @return \Dhl\Shipping\Api\Data\ServiceInformationInterface
      */
     public function getServices($cartId, $countryId, $shippingMethod);
 
     /**
      * @param string $cartId
-     * @param string[] $serviceSelection
+     * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
      * @return void
      */
     public function save($cartId, $serviceSelection);

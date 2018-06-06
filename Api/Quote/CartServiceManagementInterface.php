@@ -24,9 +24,6 @@
  */
 namespace Dhl\Shipping\Api\Quote;
 
-use Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface;
-use Dhl\Shipping\Model\Service\ServiceCollection;
-
 /**
  * Interface CartServiceManagementInterface
  *
@@ -45,7 +42,7 @@ interface CartServiceManagementInterface
      * @param int $cartId
      * @param string $countryId
      * @param string $shippingMethod
-     * @return array
+     * @return \Dhl\Shipping\Api\Data\ServiceInformationInterface
      */
     public function getServices($cartId, $countryId, $shippingMethod);
 

@@ -24,12 +24,12 @@
  */
 namespace Dhl\Shipping\Model\Quote;
 
-use Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface;
+use Dhl\Shipping\Api\Data\ServiceInformationInterface;
+use Dhl\Shipping\Api\Data\ServiceInformationInterfaceFactory;
 use Dhl\Shipping\Api\Quote\CartServiceManagementInterface;
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
-use Dhl\Shipping\Model\Service\ServiceCollection;
 use Magento\Framework\Api\AttributeInterface;
 use Magento\Framework\Escaper;
 use Magento\Quote\Model\QuoteRepository;
@@ -76,6 +76,11 @@ class CartServiceManagement implements CartServiceManagementInterface
     private $escaper;
 
     /**
+     * @var ServiceInformationInterfaceFactory
+     */
+    private $serviceInformationFactory;
+
+    /**
      * CartServiceManagement constructor.
      *
      * @param CheckoutServiceProvider $checkoutServiceProvider
@@ -84,6 +89,7 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @param ServiceSelectionRepository $serviceSelectionRepo
      * @param ServiceSelectionFactory $serviceSelectionFactory
      * @param Escaper $escaper
+     * @param ServiceInformationInterfaceFactory $serviceInformationFactory
      */
     public function __construct(
         CheckoutServiceProvider $checkoutServiceProvider,
@@ -91,7 +97,8 @@ class CartServiceManagement implements CartServiceManagementInterface
         ModuleConfig $moduleConfig,
         ServiceSelectionRepository $serviceSelectionRepo,
         ServiceSelectionFactory $serviceSelectionFactory,
-        Escaper $escaper
+        Escaper $escaper,
+        ServiceInformationInterfaceFactory $serviceInformationFactory
     ) {
         $this->checkoutServiceProvider = $checkoutServiceProvider;
         $this->quoteRepository = $quoteRepository;
@@ -99,13 +106,14 @@ class CartServiceManagement implements CartServiceManagementInterface
         $this->serviceSelectionRepository = $serviceSelectionRepo;
         $this->serviceSelectionFactory = $serviceSelectionFactory;
         $this->escaper = $escaper;
+        $this->serviceInformationFactory = $serviceInformationFactory;
     }
 
     /**
      * @param int $cartId
      * @param string $countryId
      * @param string $shippingMethod
-     * @return array
+     * @return ServiceInformationInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException;
      */
     public function getServices($cartId, $countryId, $shippingMethod)
@@ -113,16 +121,17 @@ class CartServiceManagement implements CartServiceManagementInterface
         $quote = $this->quoteRepository->get($cartId);
         $dhlShippingMethod = $this->moduleConfig->getShippingMethods($quote->getStoreId());
 
-        if (!in_array($shippingMethod, $dhlShippingMethod)) {
-            return [];
+        if (in_array($shippingMethod, $dhlShippingMethod)) {
+            $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
+            $compatibility = $this->checkoutServiceProvider->getCompatibility($countryId, $quote->getStoreId());
+        } else {
+            $services = $compatibility = [];
         }
-        $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
-        $compatibility = $this->checkoutServiceProvider->getCompatibility($countryId, $quote->getStoreId());
 
-        return [[
+        return $this->serviceInformationFactory->create(['data' => [
             'services' => $services,
             'compatibility' => $compatibility,
-        ]];
+        ]]);
     }
 
     /**

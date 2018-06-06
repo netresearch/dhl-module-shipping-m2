@@ -40,6 +40,7 @@
     <preference for="Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteAddressExtensionRepository" />
     <preference for="Dhl\Shipping\Api\Data\LabelStatusInterface" type="Dhl\Shipping\Model\Label\LabelStatus" />
     <preference for="Dhl\Shipping\Api\LabelStatusRepositoryInterface" type="\Dhl\Shipping\Model\LabelStatusRepository" />
+    <preference for="Dhl\Shipping\Api\Data\ServiceInformationInterface" type="\Dhl\Shipping\Model\Service\ServiceInformation" />
 
     <!-- library preferences -->
     <preference for="Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface" type="Dhl\Shipping\Service\ServiceSettings"/>

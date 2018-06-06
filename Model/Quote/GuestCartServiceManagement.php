@@ -24,9 +24,8 @@
  */
 namespace Dhl\Shipping\Model\Quote;
 
-use Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface;
+use Dhl\Shipping\Api\Data\ServiceInformationInterface;
 use Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface;
-use Dhl\Shipping\Model\Service\ServiceCollection;
 use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;
 
@@ -69,7 +68,7 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
      * @param string $cartId
      * @param string $countryId
      * @param string $shippingMethod
-     * @return array|\Dhl\Shipping\Api\Data\ServiceInterface[]|ServiceInterface[]|ServiceCollection
+     * @return ServiceInformationInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getServices($cartId, $countryId, $shippingMethod)
@@ -83,7 +82,7 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
 
     /**
      * @param string $cartId
-     * @param string[] $serviceSelection
+     * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException

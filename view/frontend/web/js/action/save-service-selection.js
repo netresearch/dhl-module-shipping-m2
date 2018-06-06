@@ -25,7 +25,7 @@ define([
         _.each(services.getServices(), function (value, key) {
             payload.serviceSelection.push(
                 {
-                    attributeCode: key,
+                    attribute_code: key,
                     value: value
                 }
             );
