@@ -46,7 +46,7 @@ define([
             });
 
             this.validation = validationData;
-            this.template = 'ui/form/field';
+            this.template = 'Dhl_Shipping/checkout/form/field';
             this.elementTmpl = this.getTemplateForType(this.serviceInput.inputType);
             this.label = this.description = this.serviceInput.label;
             this.placeholder = this.serviceInput.placeholder;
