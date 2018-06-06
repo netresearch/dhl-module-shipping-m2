@@ -20,11 +20,15 @@ define([
 
             this.value.subscribe(function (value) {
                 if (value) {
-                    var serviceName = this.service.code.toLowerCase();
                     serviceModel.addService(
-                        serviceName,
+                        this.service.code,
                         this.serviceInput.code,
                         value
+                    );
+                } else {
+                    serviceModel.removeService(
+                        this.service.code,
+                        this.serviceInput.code
                     );
                 }
             }.bind(this));
