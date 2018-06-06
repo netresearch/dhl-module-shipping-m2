@@ -19,7 +19,7 @@ define([
          */
         getValidatorName: function(rule) {
             if (rulesList.hasOwnProperty(rule)) {
-                return rulesList[rule];
+                return rule;
             }
             if (rulesMap.hasOwnProperty(rule)) {
                 return rulesMap[rule];
