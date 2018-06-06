@@ -12,6 +12,12 @@ define([
 
     return UiCollection.extend({
         defaults: {
+            dhlTitle: $t('DHL Preferred Delivery. Delivered just the way you want.'),
+            dhlLogoSrc: window.checkoutConfig.dhl_logo_image_url,
+            dhlMarketingStrings: [
+                $t('Thanks to the flexible recipient services of DHL Preferred Delivery, you decide when and where you want to receive your parcels.'),
+                $t('Please choose your preferred delivery options.'),
+            ],
             services: [],
             template: 'Dhl_Shipping/checkout/shipping/service-block',
             error: '',

@@ -109,7 +109,7 @@ class ServiceOptionProvider
             }
 
             $options[] = [
-                'label' => $dateModel->date("D d", $time),
+                'label' => $dateModel->date("D, d.", $time),
                 'value' => $dateModel->date("Y-m-d", $time),
                 'disabled' => $disabled
             ];
@@ -122,11 +122,11 @@ class ServiceOptionProvider
     {
         $options = [
             [
-                'label' => __('18–20'),
+                'label' => __('18:00–20:00'),
                 'value' => '18002000'
             ],
             [
-                'label' => __('19–21'),
+                'label' => __('19:00–21:00'),
                 'value' => '19002100'
             ]
         ];

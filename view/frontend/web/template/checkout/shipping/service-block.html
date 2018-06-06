@@ -1,10 +1,14 @@
 <!-- ko if: hasServices() -->
     <fieldset class="fieldset dhl-checkout-services-container">
+        <img data-bind="attr: {src: dhlLogoSrc}" width="150px" height="34px">
         <legend class="label">
-            <h3 data-bind="text: 'DHL Services'"></h3>
+            <h3 data-bind="text: dhlTitle"></h3>
         </legend>
+        <!-- ko foreach: { data: dhlMarketingStrings, as: 'text' } -->
+            <p data-bind="text: text"></p>
+        <!-- /ko -->
         <!-- ko foreach: { data: elems, as: 'element' } -->
-         <render if="hasTemplate()"></render>
+            <render if="hasTemplate()"></render>
         <!-- /ko -->
         <!-- ko if: error()-->
             <label class="message error" data-bind="text: error"></label>
