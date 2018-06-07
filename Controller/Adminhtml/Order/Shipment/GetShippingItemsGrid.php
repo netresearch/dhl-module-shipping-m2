@@ -30,6 +30,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Shipping\Controller\Adminhtml\Order\ShipmentLoader;
 
 /**
  * GetShippingItemsGrid
