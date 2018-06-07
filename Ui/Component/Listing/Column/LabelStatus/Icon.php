@@ -89,17 +89,17 @@ class Icon extends Column
                 if ($item[$fieldname] === null) {
                     $item[$fieldname] = $this->escaper->escapeHtml(__('Not available'));
                 } elseif ($item[$fieldname] === LabelStatus::CODE_PROCESSED) {
-                    $src = $this->assetRepo->getUrl('Dhl_Shipping::images/dhl_shipping/icon_complete.png');
+                    $src = $this->assetRepo->getUrl('Dhl_Shipping::images/icon_complete.png');
                     $alt = $this->escaper->escapeHtml(__('DHL Label Status (processed)'));
                     $title = $this->escaper->escapeHtml(__($item[$fieldname]));
                     $item[$fieldname] = sprintf($format, $src, $alt, $title);
                 } elseif ($item[$fieldname] === LabelStatus::CODE_FAILED) {
-                    $src = $this->assetRepo->getUrl('Dhl_Shipping::images/dhl_shipping/icon_failed.png');
+                    $src = $this->assetRepo->getUrl('Dhl_Shipping::images/icon_failed.png');
                     $alt = $this->escaper->escapeHtml(__('DHL Label Status (failed)'));
                     $title = $this->escaper->escapeHtml(__($item[$fieldname]));
                     $item[$fieldname] = sprintf($format, $src, $alt, $title);
                 } else {
-                    $src = $this->assetRepo->getUrl('Dhl_Shipping::images/dhl_shipping/icon_incomplete.png');
+                    $src = $this->assetRepo->getUrl('Dhl_Shipping::images/icon_incomplete.png');
                     $alt = $this->escaper->escapeHtml(__('DHL Label Status (pending)'));
                     $title = $this->escaper->escapeHtml(__($item[$fieldname]));
                     $item[$fieldname] = sprintf($format, $src, $alt, $title);

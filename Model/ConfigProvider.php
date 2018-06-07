@@ -52,10 +52,10 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
     /**
      * @return string[]
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         $config = [
-            'dhl_logo_image_url' => $this->assetRepo->getUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png')
+            'dhl_logo_image_url' => $this->assetRepo->getUrl('Dhl_Shipping::images/dhl_logo.png'),
         ];
 
         return $config;

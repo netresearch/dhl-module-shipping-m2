@@ -148,7 +148,7 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         $shippingInfo = $this->addressExtensionRepository->getShippingInfo($address->getEntityId());
 
         // SPLIT STREET
-        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/dhl_logo.png');
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_logo.png');
         $fieldset->addField(
             'shipping_info_street',
             'separator',
@@ -183,7 +183,7 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         ]);
 
         // PACKSTATION
-        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/icon-packStation.png');
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/icon-packStation.png');
         $fieldset->addField(
             'shipping_info_packstation',
             'separator',
@@ -210,7 +210,7 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         ]);
 
         // POST OFFICE
-        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/icon-postOffice.png');
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/icon-postOffice.png');
         $fieldset->addField(
             'shipping_info_postfiliale',
             'separator',
@@ -237,7 +237,7 @@ class Form extends \Magento\Sales\Block\Adminhtml\Order\Address\Form
         ]);
 
         // PARCEL SHOP
-        $src = $this->getViewFileUrl('Dhl_Shipping::images/dhl_shipping/icon-parcelShop.png');
+        $src = $this->getViewFileUrl('Dhl_Shipping::images/icon-parcelShop.png');
         $fieldset->addField(
             'shipping_info_parcel_shop',
             'separator',
