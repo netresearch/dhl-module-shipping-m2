@@ -25,8 +25,7 @@
 
 namespace Dhl\Shipping\Plugin\Adminhtml\Packaging;
 
-use Magento\Framework\Json\DecoderInterface;
-use Magento\Framework\Json\EncoderInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Shipping\Block\Adminhtml\Order\Packaging;
 
@@ -41,14 +40,9 @@ use Magento\Shipping\Block\Adminhtml\Order\Packaging;
 class PackagingPlugin
 {
     /**
-     * @var DecoderInterface
+     * @var SerializerInterface
      */
-    private $jsonDecoder;
-
-    /**
-     * @var EncoderInterface
-     */
-    private $jsonEncoder;
+    private $serializer;
 
     /**
      * @var UrlInterface
@@ -57,17 +51,14 @@ class PackagingPlugin
 
     /**
      * PackagingPlugin constructor.
-     * @param DecoderInterface $jsonDecoder
-     * @param EncoderInterface $jsonEncoder
+     * @param SerializerInterface $serializer
      * @param UrlInterface $urlBuilder
      */
     public function __construct(
-        DecoderInterface $jsonDecoder,
-        EncoderInterface $jsonEncoder,
+        SerializerInterface $serializer,
         UrlInterface $urlBuilder
     ) {
-        $this->jsonEncoder = $jsonEncoder;
-        $this->jsonDecoder = $jsonDecoder;
+        $this->serializer = $serializer;
         $this->urlBuilder = $urlBuilder;
     }
 
@@ -78,7 +69,7 @@ class PackagingPlugin
      */
     public function afterGetConfigDataJson(Packaging $subject, $result)
     {
-        $data = $this->jsonDecoder->decode($result);
+        $data = $this->serializer->unserialize($result);
         $urlParams = [
             'shipment_id' => $subject->getRequest()->getParam('shipment_id'),
             'order_id' => $subject->getRequest()->getParam('order_id'),
@@ -86,6 +77,6 @@ class PackagingPlugin
 
         $data['itemsGridUrl'] = $this->urlBuilder->getUrl('dhl/order_shipment/getShippingItemsGrid', $urlParams);
 
-        return $this->jsonEncoder->encode($data);
+        return $this->serializer->serialize($data);
     }
 }
