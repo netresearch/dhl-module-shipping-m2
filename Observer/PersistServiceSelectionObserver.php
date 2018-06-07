@@ -22,6 +22,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Model\Order\ServiceSelection;
@@ -29,7 +30,6 @@ use Dhl\Shipping\Model\Order\ServiceSelectionFactory;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 
 /**
@@ -76,9 +76,9 @@ class PersistServiceSelectionObserver implements ObserverInterface
     public function execute(EventObserver $observer): ObserverInterface
     {
         /** @var \Magento\Sales\Model\Order $order */
-        $order = $observer->getOrder();
+        $order = $observer->getDataByKey('order');
         /** @var Quote $quote */
-        $quote = $observer->getQuote();
+        $quote = $observer->getDataByKey('quote');
         if ($order->getIsVirtual()) {
             return $this;
         }
@@ -93,11 +93,13 @@ class PersistServiceSelectionObserver implements ObserverInterface
         foreach ($serviceSelection as $selection) {
             /** @var ServiceSelection $selection */
             $model = $this->serviceSelectionFactory->create();
-            $model->setData([
-                'parent_id' => $order->getShippingAddress()->getId(),
-                'service_code' => $selection->getServiceCode(),
-                'service_value' => $selection->getServiceValue(),
-            ]);
+            $model->setData(
+                [
+                    'parent_id' => $order->getShippingAddress()->getId(),
+                    'service_code' => $selection->getServiceCode(),
+                    'service_value' => $selection->getServiceValue(),
+                ]
+            );
             $this->serviceSelectionRepository->save($model);
         }
 

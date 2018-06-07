@@ -72,16 +72,15 @@ class Services extends Packaging
     public function getServices()
     {
         $shipment = $this->getShipment();
-        $serviceCollection = $this->serviceProvider->getServices($shipment);
 
-        return $serviceCollection;
+        return $this->serviceProvider->getServices($shipment);
     }
 
     /**
      * @param ServiceInterface $service
      * @return string
      */
-    public function getServiceHtml($service)
+    public function getServiceHtml($service): string
     {
         // set block template according to service input type
         $template = sprintf(

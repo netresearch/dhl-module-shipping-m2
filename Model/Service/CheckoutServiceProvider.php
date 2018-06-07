@@ -31,7 +31,6 @@ use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollectionInterface;
 use function ZendTest\Server\Reflection\function1;
 
 /**
@@ -97,7 +96,7 @@ class CheckoutServiceProvider
      * @param string $storeId
      * @return string[][]
      */
-    public function getCompatibility($countryId, $storeId)
+    public function getCompatibility($countryId, $storeId): array
     {
         return $this->compatibilityPool->getRules($countryId, $storeId);
     }
@@ -107,7 +106,7 @@ class CheckoutServiceProvider
      * @param string $storeId
      * @return mixed[]
      */
-    public function getServices($countryId, $storeId)
+    public function getServices($countryId, $storeId): array
     {
         $presets = $this->config->getServiceSettings($storeId);
         // todo(nr): merge config defaults with values from session or shipping info structure?
@@ -127,10 +126,10 @@ class CheckoutServiceProvider
     /**
      * @return \Closure
      */
-    private function getSortCallback()
+    private function getSortCallback(): callable
     {
         $sortFn = function (ServiceInterface $serviceA, ServiceInterface $serviceB) {
-            if ($serviceA->getSortOrder() == $serviceB->getSortOrder()) {
+            if ($serviceA->getSortOrder() === $serviceB->getSortOrder()) {
                 return 0;
             }
             return ($serviceA->getSortOrder() < $serviceB->getSortOrder()) ? -1 : 1;
@@ -145,7 +144,7 @@ class CheckoutServiceProvider
      * @param ServiceCollection $serviceCollection
      * @return ServiceCollection
      */
-    private function filterAvailableServices($countryId, $storeId, $serviceCollection)
+    private function filterAvailableServices($countryId, $storeId, $serviceCollection): ServiceCollection
     {
         $checkoutFilter = CustomerSelectionFilter::create();
         $routeFilter = RouteFilter::create(

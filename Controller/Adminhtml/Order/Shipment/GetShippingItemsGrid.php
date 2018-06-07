@@ -24,10 +24,12 @@
  */
 namespace Dhl\Shipping\Controller\Adminhtml\Order\Shipment;
 
+use Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging\Grid;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Shipping\Controller\Adminhtml\Order\ShipmentLoader;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * GetShippingItemsGrid
@@ -69,7 +71,8 @@ class GetShippingItemsGrid extends Action
     /**
      * Return grid with shipping items for Ajax request
      *
-     * @return ResponseInterface
+     * @return ResponseInterface|ResultInterface
+     * @throws LocalizedException
      */
     public function execute()
     {
@@ -81,7 +84,7 @@ class GetShippingItemsGrid extends Action
 
         return $this->getResponse()->setBody(
             $this->_view->getLayout()->createBlock(
-                'Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging\Grid'
+                Grid::class
             )->setIndex(
                 $this->getRequest()->getParam('index')
             )->toHtml()

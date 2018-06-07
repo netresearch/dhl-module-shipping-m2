@@ -119,7 +119,7 @@ class ServiceSelectionRepository
      * @return ServiceSelectionInterface
      * @throws CouldNotSaveException
      */
-    public function save(ServiceSelectionInterface $serviceSelection)
+    public function save(ServiceSelectionInterface $serviceSelection): ServiceSelectionInterface
     {
         try {
             if (get_class($serviceSelection) === OrderServiceSelection::class) {
@@ -142,11 +142,11 @@ class ServiceSelectionRepository
      * @return QuoteServiceSelectionCollection
      * @throws NoSuchEntityException
      */
-    public function getByQuoteAddressId($addressId)
+    public function getByQuoteAddressId($addressId): QuoteServiceSelectionCollection
     {
         $collection = $this->quoteCollectionFactory->create();
         $collection->addFilter('parent_id', $addressId);
-        if (empty($collection)) {
+        if ($collection->getSize() === 0) {
             throw new NoSuchEntityException(
                 __('ServiceSelection for quote address id "%1" does not exist.', $addressId)
             );
@@ -160,11 +160,11 @@ class ServiceSelectionRepository
      * @return OrderServiceSelectionCollection
      * @throws NoSuchEntityException
      */
-    public function getByOrderAddressId($addressId)
+    public function getByOrderAddressId($addressId): OrderServiceSelectionCollection
     {
         $collection = $this->orderCollectionFactory->create();
         $collection->addFilter('parent_id', $addressId);
-        if (empty($collection)) {
+        if ($collection->getSize() === 0) {
             throw new NoSuchEntityException(
                 __('ServiceSelection for order address id "%1" does not exist.', $addressId)
             );
@@ -178,7 +178,7 @@ class ServiceSelectionRepository
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function delete(ServiceSelectionInterface $serviceSelection)
+    public function delete(ServiceSelectionInterface $serviceSelection): bool
     {
         try {
             if (get_class($serviceSelection) === OrderServiceSelection::class) {
@@ -207,7 +207,7 @@ class ServiceSelectionRepository
             foreach ($items as $item) {
                 $this->delete($item);
             }
-        } catch (NoSuchEntityException $e){
+        } catch (NoSuchEntityException $e) {
             // fail silently
         }
     }

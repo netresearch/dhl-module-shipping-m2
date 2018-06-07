@@ -121,7 +121,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         $originCountryId = $this->moduleConfig->getShipperCountry($this->getShipment()->getStoreId());
         $destCountryId = $this->getShipment()->getShippingAddress()->getCountryId();
@@ -145,7 +145,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param int $productId
      * @return string
      */
-    public function getTariffNumber($productId)
+    public function getTariffNumber($productId): string
     {
         if (empty($this->tariffNumbers)) {
             /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
@@ -161,7 +161,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param int $productId
      * @return string
      */
-    public function getExportDescription($productId)
+    public function getExportDescription($productId): string
     {
         if (empty($this->exportDescriptions)) {
             /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
@@ -177,7 +177,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param int $productId
      * @return string
      */
-    public function getCountryOfManufacture($productId)
+    public function getCountryOfManufacture($productId): string
     {
         if (empty($this->countriesOfManufacture)) {
             /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
@@ -197,7 +197,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      *
      * @return array
      */
-    public function getCountries()
+    public function getCountries(): array
     {
         $countryCollection = $this->countryCollectionFactory->create();
         return $countryCollection->toOptionArray();
@@ -207,7 +207,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * @param int $productId
      * @return string
      */
-    public function getDangerousGoodsCategory($productId)
+    public function getDangerousGoodsCategory($productId): string
     {
         if (empty($this->dangerousGoodsCategories)) {
             $this->initItemAttributes();

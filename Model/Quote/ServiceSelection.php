@@ -64,7 +64,7 @@ class ServiceSelection extends AbstractModel implements ServiceSelectionInterfac
     /**
      * @return string[]
      */
-    public function getServiceValue()
+    public function getServiceValue(): array
     {
         return $this->getData('service_value');
     }

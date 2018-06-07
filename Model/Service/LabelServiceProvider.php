@@ -28,7 +28,6 @@ use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\SelectedFilter;
-use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Sales\Api\Data\ShipmentInterface;
 
 /**
@@ -52,11 +51,6 @@ class LabelServiceProvider
     private $config;
 
     /**
-     * @var RouteValidatorInterface
-     */
-    private $routeValidator;
-
-    /**
      * @var OrderAddressExtensionRepositoryInterface
      */
     private $addressExtensionRepository;
@@ -65,18 +59,15 @@ class LabelServiceProvider
      * PackagingServiceProvider constructor.
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
-     * @param RouteValidatorInterface $routeValidator
      * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
-        RouteValidatorInterface $routeValidator,
         OrderAddressExtensionRepositoryInterface $addressExtensionRepository
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
-        $this->routeValidator = $routeValidator;
         $this->addressExtensionRepository = $addressExtensionRepository;
     }
 
