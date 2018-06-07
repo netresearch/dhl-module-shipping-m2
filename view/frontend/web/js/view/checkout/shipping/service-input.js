@@ -1,8 +1,9 @@
 define([
     'Magento_Ui/js/form/element/abstract',
     'Dhl_Shipping/js/model/services',
-    'Dhl_Shipping/js/model/service-validation-map'
-], function (Component, serviceModel, serviceValidationMap) {
+    'Dhl_Shipping/js/model/service-validation-map',
+    'Dhl_Shipping/js/model/services'
+], function (Component, serviceModel, serviceValidationMap, serviceSelection) {
     'use strict';
 
     return Component.extend({
@@ -17,6 +18,14 @@ define([
         initialize: function() {
             this._super();
             this.initFieldData();
+
+            var serviceCode = this.service.code,
+                inputCode = this.serviceInput.code;
+            try {
+                this.value(serviceSelection.get()()[serviceCode][inputCode])
+            } catch (e) {
+                // no cached value found.
+            }
 
             this.value.subscribe(function (value) {
                 if (value) {

@@ -4,10 +4,10 @@ define([
     'uiLayout',
     'uiRegistry',
     'mage/translate',
-    'Dhl_Shipping/js/action/get-services',
-    'Dhl_Shipping/js/model/service-compatibility',
     'Magento_Checkout/js/model/quote',
-], function (_, UiCollection, layout, registry, $t, serviceAction, serviceCompatibility, quote) {
+    'Dhl_Shipping/js/action/get-services',
+    'Dhl_Shipping/js/model/service-definitions',
+], function (_, UiCollection, layout, registry, $t, quote, initServiceData, serviceDefinitions) {
     'use strict';
 
     return UiCollection.extend({
@@ -25,18 +25,7 @@ define([
 
         initialize: function () {
             this._super();
-
-            quote.shippingMethod.subscribe(function () {
-                var countryId = quote.shippingAddress().countryId;
-                var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
-                if (countryId && carrierCode) {
-                    serviceAction(countryId, carrierCode, function (result) {
-                        this.services(result.services);
-                        serviceCompatibility.setData(result.compatibility);
-                    }.bind(this));
-                }
-            }.bind(this));
-
+            this.services = serviceDefinitions.get();
             // add service components to layout
             this.services.subscribe(function (services) {
                 this.destroyChildren();
@@ -44,15 +33,20 @@ define([
                     return this.getServiceFieldLayout(service);
                 }, this);
                 layout(servicesLayout);
-                this.elems.extend({rateLimit: { timeout: 50, method: "notifyWhenChangesStop" }});
+                this.elems.extend({rateLimit: {timeout: 50, method: "notifyWhenChangesStop"}});
             }, this);
+
+            quote.shippingMethod.subscribe(function () {
+                var countryId = quote.shippingAddress().countryId;
+                var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
+                if (countryId && carrierCode) {
+                    initServiceData(countryId, carrierCode);
+                }
+            }.bind(this));
         },
 
         initObservable: function () {
-            this._super();
-            this.observe('services error');
-
-            return this;
+            return this._super().observe('error');
         },
 
         getServiceFieldLayout: function (service) {
@@ -66,7 +60,6 @@ define([
         hasServices: function () {
             return this.services().length > 0;
         },
-
 
         triggerValidationFail: function (rule) {
             var message = $t('Invalid service combination.');

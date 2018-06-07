@@ -7,14 +7,18 @@ define([
     'Magento_Customer/js/model/customer',
     'mage/storage',
     'Magento_Checkout/js/model/quote',
-    'Magento_Checkout/js/model/shipping-service'
-], function (urlBuilder, customer, storage, quote, shippingService) {
+    'Magento_Checkout/js/model/shipping-service',
+    'Dhl_Shipping/js/model/service-compatibility',
+    'Dhl_Shipping/js/model/service-definitions',
+    'Dhl_Shipping/js/model/storage',
+], function (urlBuilder, customer, request, quote, shippingService, serviceCompatibility, serviceDefinitions, storage) {
     'use strict';
 
-    return function (countryId, shippingMethod, successCallback) {
-
-        shippingService.isLoading(true);
-        var url, urlParams, serviceUrl, payload;
+    /**
+     * @return {string}
+     */
+    var buildRequestUrl = function () {
+        var url, urlParams;
         if (customer.isLoggedIn()) {
             url = '/carts/mine/dhl-services/get-services';
             urlParams = {};
@@ -25,20 +29,47 @@ define([
             };
         }
 
+        return urlBuilder.createUrl(url, urlParams);
+    };
 
-        payload = {countryId: countryId, shippingMethod: shippingMethod};
-        serviceUrl = urlBuilder.createUrl(url, urlParams);
+    /**
+     * Automatically update service definition and compatibility models with new data.
+     *
+     * @param {Object} data
+     */
+    var updateModels = function (data) {
+        serviceCompatibility.set(data.compatibility);
+        serviceDefinitions.set(data.services);
+    };
 
-        return storage.post(
+    /**
+     * Load service Definitions from server. Uses local storage to cache responses.
+     *
+     * @param {string} countryId
+     * @param {string} shippingMethod
+     */
+    return function (countryId, shippingMethod) {
+        var fromCache = storage.get(countryId + shippingMethod);
+        if (fromCache) {
+            updateModels(fromCache);
+            return;
+        }
+
+        var serviceUrl = buildRequestUrl();
+        var payload = {countryId: countryId, shippingMethod: shippingMethod};
+
+        shippingService.isLoading(true);
+        request.post(
             serviceUrl,
             JSON.stringify(payload)
         ).success(
             function (response) {
-                successCallback(response);
+                storage.set(response);
+                updateModels(response);
             }
         ).always(
             function () {
-                shippingService.isLoading(false);
+               shippingService.isLoading(false);
             }
         );
     };

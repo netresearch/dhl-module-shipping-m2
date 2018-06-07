@@ -7,15 +7,15 @@ define([], function () {
      *
      * @type {Array}
      */
-    var data = [];
+    var compatibility = [];
 
     return {
         getData: function() {
-            return data;
+            return compatibility;
         },
 
-        setData: function (compatibility) {
-            data = compatibility;
+        set: function (data) {
+            compatibility = data;
         }
     };
 });

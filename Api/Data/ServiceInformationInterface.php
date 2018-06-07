@@ -34,7 +34,7 @@ namespace Dhl\Shipping\Api\Data;
 interface ServiceInformationInterface
 {
     /**
-     * @return \Dhl\Shipping\Api\Data\ServiceSelectionInterface[]
+     * @return \Dhl\Shipping\Api\Data\ServiceInterface[];
      */
     public function getServices(): array;
 

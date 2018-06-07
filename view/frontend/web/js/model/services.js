@@ -1,28 +1,36 @@
 define([
-    'underscore'
-], function (_) {
+    'underscore',
+    'ko',
+    'Dhl_Shipping/js/model/storage'
+], function (_, ko, storage) {
     'use strict';
 
-    var services = {};
+    var services = storage.get('cachedServiceValues') ? ko.observable(storage.get('cachedServiceValues')) : ko.observable({});
 
     return {
 
-        getServices: function () {
+        get: function () {
             return services;
         },
 
         addService: function (name, code, value) {
-            if (services[name] == undefined) {
-                services[name] = {};
+            var workingCopy = services();
+            if (workingCopy[name] == undefined) {
+                workingCopy[name] = {};
             }
-            services[name][code] = value;
+            workingCopy[name][code] = value;
+            storage.set('cachedServiceValues', workingCopy);
+            services(workingCopy);
         },
 
         removeService: function (name, code) {
-            delete services[name][code];
-            if (_.isEmpty(services[name])) {
-                delete services[name];
+            var workingCopy = services();
+            delete workingCopy[name][code];
+            if (_.isEmpty(workingCopy[name])) {
+                delete workingCopy[name];
             }
+            storage.set('cachedServiceValues', workingCopy);
+            services(workingCopy);
         }
     };
 });

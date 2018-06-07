@@ -59,4 +59,21 @@
             <resource ref="anonymous"/>
         </resources>
     </route>
+
+    <route url="/V1/carts/mine/dhl-services/load-services" method="POST">
+        <service class="Dhl\Shipping\Api\Quote\CartServiceManagementInterface" method="load"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="cartId" force="true">%cart_id%</parameter>
+        </data>
+    </route>
+
+    <route url="/V1/guest-carts/:cartId/dhl-services/load-services" method="POST">
+        <service class="Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface" method="load"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 </routes>

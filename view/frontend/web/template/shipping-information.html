@@ -1,0 +1,42 @@
+<!--
+/**
+ * A modified version of core template module-checkout/view/frontend/web/template/shipping-information.html.
+ * Overwritten via mixin
+ */
+-->
+
+<!-- ko if: (isVisible()) -->
+<div class="shipping-information">
+    <div class="ship-to">
+        <div class="shipping-information-title">
+            <span data-bind="i18n: 'Ship To:'"></span>
+            <button class="action action-edit" data-bind="click: back">
+                <span data-bind="i18n: 'edit'"></span>
+            </button>
+        </div>
+        <div class="shipping-information-content">
+            <!-- ko foreach: getRegion('ship-to') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+    </div>
+    <div class="ship-via">
+        <div class="shipping-information-title">
+            <span data-bind="i18n: 'Shipping Method:'"></span>
+            <button class="action action-edit" data-bind="click: backToShippingMethod">
+                <span data-bind="i18n: 'edit'"></span>
+            </button>
+        </div>
+        <div class="shipping-information-content">
+            <span class="value" data-bind="text: getShippingMethodTitle()"></span>
+            <div data-bind="if: hasServiceInfo()">
+                <h4>DHL Services</h4>
+                <small data-bind="foreach: serviceInfo">
+                    <strong data-bind="text: $parent.getServiceName($data)"></strong>:
+                    <span data-bind="text: $parent.getFormattedServiceValue($data)"></span><br/>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ko-->

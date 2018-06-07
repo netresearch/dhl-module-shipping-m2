@@ -4,32 +4,21 @@ define([
     'Magento_Customer/js/model/customer',
     'mage/storage',
     'Magento_Checkout/js/model/quote',
-    'Dhl_Shipping/js/model/services'
-], function (_, urlBuilder, customer, storage, quote, serviceSelection) {
+], function (_, urlBuilder, customer, storage, quote) {
     'use strict';
 
     return function () {
 
         var url, urlParams, serviceUrl, payload;
         if (customer.isLoggedIn()) {
-            url = '/carts/mine/dhl-services/save-services';
+            url = '/carts/mine/dhl-services/load-services';
             urlParams = {};
         } else {
-            url = '/guest-carts/:cartId/dhl-services/save-services';
+            url = '/guest-carts/:cartId/dhl-services/load-services';
             urlParams = {
                 cartId: quote.getQuoteId()
             };
         }
-
-        payload = {serviceSelection: []};
-        _.each(serviceSelection.get()(), function (value, key) {
-            payload.serviceSelection.push(
-                {
-                    attribute_code: key,
-                    value: value
-                }
-            );
-        });
 
         serviceUrl = urlBuilder.createUrl(url, urlParams);
         return storage.post(

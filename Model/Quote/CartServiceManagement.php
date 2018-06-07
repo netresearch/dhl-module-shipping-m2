@@ -26,12 +26,14 @@ namespace Dhl\Shipping\Model\Quote;
 
 use Dhl\Shipping\Api\Data\ServiceInformationInterface;
 use Dhl\Shipping\Api\Data\ServiceInformationInterfaceFactory;
+use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\Quote\CartServiceManagementInterface;
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
 use Magento\Framework\Api\AttributeInterface;
 use Magento\Framework\Escaper;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\QuoteRepository;
 
 /**
@@ -160,9 +162,27 @@ class CartServiceManagement implements CartServiceManagementInterface
     }
 
     /**
+     * Load a service selection by cart ID.
+     *
+     * @param string $cartId
+     * @return ServiceSelectionInterface[]
+     */
+    public function load($cartId)
+    {
+        try {
+            $quote = $this->quoteRepository->get($cartId);
+            $quoteAddressId = $quote->getShippingAddress()->getId();
+
+            return $this->serviceSelectionRepository->getByQuoteAddressId($quoteAddressId)->getItems();
+        } catch (NoSuchEntityException $e) {
+            return [];
+        }
+    }
+
+    /**
      * Validate a service selection's compatibility.
      *
-     * @param AttributeInterface[] $serviceSelection
+     * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
      * @throws \Magento\Framework\Exception\ValidatorException
      */
     public function validate($serviceSelection)

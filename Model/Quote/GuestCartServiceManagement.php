@@ -25,6 +25,7 @@
 namespace Dhl\Shipping\Model\Quote;
 
 use Dhl\Shipping\Api\Data\ServiceInformationInterface;
+use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface;
 use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;
@@ -90,6 +91,17 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
     public function save($cartId, $serviceSelection)
     {
         $this->cartServiceManagement->save($this->getQuoteId($cartId), $serviceSelection);
+    }
+
+    /**
+     * Load a service selection by cart ID.
+     *
+     * @param string $cartId
+     * @return ServiceSelectionInterface[]
+     */
+    public function load($cartId)
+    {
+        return $this->cartServiceManagement->load($this->getQuoteId($cartId));
     }
 
     /**

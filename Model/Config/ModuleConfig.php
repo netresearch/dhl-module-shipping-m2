@@ -360,7 +360,7 @@ class ModuleConfig implements ModuleConfigInterface
             $store
         );
         $parcelAnnouncementConfig = $this->serviceSettingsFactory->create([
-            ServiceSettingsInterface::NAME => 'Parcel announcement',
+            ServiceSettingsInterface::NAME => 'Parcel Announcement',
             ServiceSettingsInterface::IS_ENABLED => $parcelAnnouncementEnabled,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
