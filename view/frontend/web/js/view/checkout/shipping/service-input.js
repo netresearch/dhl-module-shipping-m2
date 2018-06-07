@@ -41,7 +41,7 @@ define([
                 if (validatorName) {
                     validationData[validatorName] = value;
                 } else {
-                    console.warn('DHL service validation rule ' + validation + ' is not defined.');
+                    console.warn('DHL service validation rule ' + rule + ' is not defined.');
                 }
             });
 

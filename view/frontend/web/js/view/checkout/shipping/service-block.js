@@ -6,7 +6,7 @@ define([
     'mage/translate',
     'Dhl_Shipping/js/action/get-services',
     'Dhl_Shipping/js/model/service-compatibility',
-    'Magento_Checkout/js/model/quote'
+    'Magento_Checkout/js/model/quote',
 ], function (_, UiCollection, layout, registry, $t, serviceAction, serviceCompatibility, quote) {
     'use strict';
 
