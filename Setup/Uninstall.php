@@ -26,8 +26,8 @@
 namespace Dhl\Shipping\Setup;
 
 use Dhl\Shipping\Model\Attribute\Backend\ExportDescription;
-use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
+use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
@@ -69,7 +69,8 @@ class Uninstall implements UninstallInterface
     ) {
         $this->deleteShippingAddressTable($schemaSetup);
         $this->removeConfigurations($schemaSetup);
-
+        $this->deleteServiceSelectionTables($schemaSetup);
+        $this->deleteStatusTableAndColumn($schemaSetup);
         $this->deleteAttributes($this->eavSetup);
     }
 
@@ -110,6 +111,29 @@ class Uninstall implements UninstallInterface
         $uninstaller->removeAttribute(
             \Magento\Catalog\Model\Product::ENTITY,
             ExportDescription::CODE
+        );
+    }
+
+    /**
+     * @param SchemaSetupInterface $uninstaller
+     * @return void
+     */
+    private function deleteServiceSelectionTables($uninstaller)
+    {
+        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_ORDER_SERVICE_SELECTION);
+        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_QUOTE_SERVICE_SELECTION);
+    }
+
+    /**
+     * @param SchemaSetupInterface $uninstaller
+     * @return void
+     */
+    private function deleteStatusTableAndColumn($uninstaller)
+    {
+        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_LABEL_STATUS);
+        $uninstaller->getConnection()->dropColumn(
+            $uninstaller->getTable('sales_order_grid'),
+            'dhlshipping_label_status'
         );
     }
 }
