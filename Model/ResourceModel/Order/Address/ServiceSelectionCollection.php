@@ -45,4 +45,18 @@ class ServiceSelectionCollection extends AbstractCollection
     {
         $this->_init(ServiceSelection::class, \Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelection::class);
     }
+
+    /**
+     * Decode service_value of items
+     *
+     * @return $this
+     */
+    protected function _afterLoad()
+    {
+        /** @var ServiceSelection $item */
+        foreach ($this->_items as $item) {
+            $this->getResource()->unserializeFields($item);
+        }
+        return parent::_afterLoad();
+    }
 }

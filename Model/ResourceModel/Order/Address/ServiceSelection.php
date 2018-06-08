@@ -37,39 +37,19 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  */
 class ServiceSelection extends AbstractDb
 {
+    protected $_serializableFields = [
+        'service_value' => [
+            [],
+            [],
+            true,
+        ],
+    ];
+
     /**
      * Resource initialization.
      */
     protected function _construct()
     {
         $this->_init(ShippingSetup::TABLE_ORDER_SERVICE_SELECTION, 'entity_id');
-    }
-
-    /**
-     * JSON encode array property
-     *
-     * @param \Magento\Framework\Model\AbstractModel $object
-     * @return $this|AbstractDb
-     */
-    protected function _beforeSave(\Magento\Framework\Model\AbstractModel $object)
-    {
-        $value = $object->getData('service_value');
-        $object->setData('service_value', json_encode($value));
-
-        return parent::_beforeSave($object);
-    }
-
-    /**
-     * JSON decode array property
-     *
-     * @param \Magento\Framework\Model\AbstractModel $object
-     * @return $this|AbstractDb
-     */
-    protected function _afterLoad(\Magento\Framework\Model\AbstractModel $object)
-    {
-        $value = $object->getData('service_value');
-        $object->setData('service_value', json_decode($value));
-
-        return parent::_afterLoad($object);
     }
 }

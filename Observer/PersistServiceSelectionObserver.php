@@ -30,6 +30,7 @@ use Dhl\Shipping\Model\Order\ServiceSelectionFactory;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 
 /**
@@ -86,7 +87,6 @@ class PersistServiceSelectionObserver implements ObserverInterface
         try {
             $quoteAddressId = $quote->getShippingAddress()->getId();
             $serviceSelection = $this->serviceSelectionRepository->getByQuoteAddressId($quoteAddressId);
-            $this->serviceSelectionRepository->deleteByOrderAddressId($order->getShippigAddressId());
         } catch (\Exception $e) {
             return $this;
         }
@@ -95,7 +95,7 @@ class PersistServiceSelectionObserver implements ObserverInterface
             $model = $this->serviceSelectionFactory->create();
             $model->setData(
                 [
-                    'parent_id' => $order->getShippingAddress()->getId(),
+                    'parent_id' => $order->getShippingAddressId(),
                     'service_code' => $selection->getServiceCode(),
                     'service_value' => $selection->getServiceValue(),
                 ]
