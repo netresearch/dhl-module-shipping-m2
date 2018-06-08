@@ -26,7 +26,6 @@ define([
                 }.bind(this));
             }, this);
 
-
             return this;
         },
 
@@ -78,7 +77,7 @@ define([
                 } else if (inputValue === false) {
                     result = $t('No');
                 }
-                if (definitions.length > 0) {
+                if (definitions().length > 0) {
                     var matchingDefinition = _.find(definitions(), function (item) {
                         return item.code === serviceCode;
                     });
@@ -96,7 +95,6 @@ define([
             });
 
             return results.join(' ');
-
         },
     };
 

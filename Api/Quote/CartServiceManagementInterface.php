@@ -52,12 +52,4 @@ interface CartServiceManagementInterface
      * @return void
      */
     public function save($cartId, $serviceSelection);
-
-    /**
-     * Load a service selection by cart ID.
-     *
-     * @param string $cartId
-     * @return \Dhl\Shipping\Api\Data\ServiceSelectionInterface[]
-     */
-    public function load($cartId);
 }

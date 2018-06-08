@@ -11,7 +11,8 @@ define([
     'Dhl_Shipping/js/model/service-compatibility',
     'Dhl_Shipping/js/model/service-definitions',
     'Dhl_Shipping/js/model/storage',
-], function (urlBuilder, customer, request, quote, shippingService, serviceCompatibility, serviceDefinitions, storage) {
+], function (urlBuilder, customer, request, quote, shippingService,
+             serviceCompatibility, serviceDefinitions, storage) {
     'use strict';
 
     /**
@@ -55,8 +56,8 @@ define([
             return;
         }
 
-        var serviceUrl = buildRequestUrl();
-        var payload = {countryId: countryId, shippingMethod: shippingMethod};
+        var serviceUrl = buildRequestUrl(),
+            payload = {countryId: countryId, shippingMethod: shippingMethod};
 
         shippingService.isLoading(true);
         request.post(
@@ -64,7 +65,7 @@ define([
             JSON.stringify(payload)
         ).success(
             function (response) {
-                storage.set(response);
+                storage.set(countryId + shippingMethod, response);
                 updateModels(response);
             }
         ).always(

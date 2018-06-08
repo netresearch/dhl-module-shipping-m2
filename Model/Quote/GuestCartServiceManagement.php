@@ -94,17 +94,6 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
     }
 
     /**
-     * Load a service selection by cart ID.
-     *
-     * @param string $cartId
-     * @return ServiceSelectionInterface[]
-     */
-    public function load($cartId)
-    {
-        return $this->cartServiceManagement->load($this->getQuoteId($cartId));
-    }
-
-    /**
      * @param $cartId
      * @return int
      */

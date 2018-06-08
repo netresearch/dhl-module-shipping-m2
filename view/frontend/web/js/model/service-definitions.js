@@ -1,8 +1,9 @@
 define([
     'ko',
-    'Magento_Checkout/js/model/quote',
-], function (ko, quote) {
+], function (ko) {
     'use strict';
+
+    var services = ko.observable({});
 
     /**
      * Holds list of definitions for checkout services.
@@ -10,16 +11,8 @@ define([
      *
      * @type {Object}
      */
-    debugger;
-
     return {
         get: function () {
-            if (!services) {
-                var countryId = quote.shippingAddress().countryId,
-                    carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code,
-                    services = storage.get(countryId + carrierCode) ? ko.observable(storage.get(countryId + carrierCode)) : ko.observable({});
-                console.log(services());
-            }
             return services;
         },
 

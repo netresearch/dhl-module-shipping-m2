@@ -7,14 +7,14 @@ define([
     return function (validator) {
 
         var isOnBlacklist = function(value, blacklist) {
-            return undefined !== _.find(blacklist, function (blacklistItem) {
-                return value.toLowerCase().indexOf(blacklistItem) !== -1;
-            })
-        };
-        var packingStationWords = [
-            'paketbox', 'packstation', 'postfach', 'postfiliale', 'filiale', 'paketkasten', 'dhlpaketstation',
-            'parcelshop', 'pakcstation', 'paackstation', 'pakstation', 'backstation', 'bakstation', 'wunschfiliale', 'deutsche post'];
-        var specialChars = ['<','>','\\n','\\r','\\','\'','"',';','+'];
+                return undefined !== _.find(blacklist, function (blacklistItem) {
+                    return value.toLowerCase().indexOf(blacklistItem) !== -1;
+                })
+            },
+            packingStationWords = [
+                'paketbox', 'packstation', 'postfach', 'postfiliale', 'filiale', 'paketkasten', 'dhlpaketstation',
+                'parcelshop', 'pakcstation', 'paackstation', 'pakstation', 'backstation', 'bakstation', 'wunschfiliale', 'deutsche post'],
+            specialChars = ['<','>','\\n','\\r','\\','\'','"',';','+'];
 
         validator.addRule(
             'dhl_filter_packing_station',

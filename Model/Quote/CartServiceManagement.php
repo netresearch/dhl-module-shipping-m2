@@ -162,24 +162,6 @@ class CartServiceManagement implements CartServiceManagementInterface
     }
 
     /**
-     * Load a service selection by cart ID.
-     *
-     * @param string $cartId
-     * @return ServiceSelectionInterface[]
-     */
-    public function load($cartId)
-    {
-        try {
-            $quote = $this->quoteRepository->get($cartId);
-            $quoteAddressId = $quote->getShippingAddress()->getId();
-
-            return $this->serviceSelectionRepository->getByQuoteAddressId($quoteAddressId)->getItems();
-        } catch (NoSuchEntityException $e) {
-            return [];
-        }
-    }
-
-    /**
      * Validate a service selection's compatibility.
      *
      * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
