@@ -16,7 +16,6 @@
         "magento/module-cron": "^100.2.2",
         "magento/module-customer": "^101.0.4",
         "magento/module-directory": "^100.2.3",
-        "magento/module-dhl": "^100.2.1",
         "magento/module-eav": "^101.0.3",
         "magento/module-payment": "^100.2.2",
         "magento/module-quote": "^101.0.3",
