@@ -191,7 +191,7 @@ class ModuleConfig implements ModuleConfigInterface
     {
         $configuredMethods = $this->getShippingMethods($store);
         foreach ($configuredMethods as $method) {
-            if (strpos($shippingMethod, $method)) {
+            if (strpos($shippingMethod, $method) !== false) {
                 return true;
             }
         }
