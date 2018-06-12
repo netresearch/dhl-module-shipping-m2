@@ -7,22 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased] - 2018-XX-XX
 
 ### Added
-
+- Define custom Export Descriptions via product attribute
+- Support for third party shipping methods with dynamic method codes
+- Configuration of default products per available route
+- Mass action and cron autocreation for cross border shipping
 ### Changed
-
+- Updated DHL product names and codes
+- Reordered configuration fields to make dependencies clearer
 ### Deprecated
 
 ### Removed
-
+- Removed support for Magento 2.1
 ### Fixed
-
+- Shipping product options for DE->AT route
+- Packaging popup not respecting config defaults for preselects
 ### Security
-
-## [0.9.0] - 2018-XX-XX
-
-### Added
-
-- Define custom Export Descriptions via product attribute
 
 ## [0.8.1] - 2018-05-24
 
