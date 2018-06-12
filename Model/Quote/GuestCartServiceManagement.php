@@ -25,7 +25,6 @@
 namespace Dhl\Shipping\Model\Quote;
 
 use Dhl\Shipping\Api\Data\ServiceInformationInterface;
-use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface;
 use Magento\Quote\Model\QuoteIdMask;
 use Magento\Quote\Model\QuoteIdMaskFactory;

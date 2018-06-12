@@ -34,6 +34,7 @@
     <preference for="Dhl\Shipping\Model\Config\ServiceConfigInterface" type="Dhl\Shipping\Model\Config\ServiceConfig" />
     <preference for="Dhl\Shipping\Webservice\GatewayInterface" type="Dhl\Shipping\Webservice\Gateway" />
 
+    <preference for="Dhl\Shipping\Api\ServiceSelectionRepositoryInterface" type="\Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository" />
     <preference for="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderAddressExtension" />
     <preference for="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteAddressExtension" />
     <preference for="Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderAddressExtensionRepository" />

@@ -25,6 +25,8 @@
     /** @var \Magento\Backend\Block\Template $block */
     /** @var \Dhl\Shipping\Api\Data\ServiceInterface $service */
     $service = $block->getData('service');
+    /** @var \Dhl\Shipping\Api\Data\Service\ServiceInputInterface $input */
+    $input = $block->getData('input');
     $code = $service->getCode();
     $name = __($service->getName());
 ?>
@@ -45,7 +47,7 @@
 <dd class="service-select <?php /* @noEscape */ echo $code ?> dd-select">
     <select name="service_setting[<?php /* @noEscape */ echo $code ?>]" class="admin__control-select"
             data-module="dhl_shipping" data-name="service_<?php /* @noEscape */ echo $code ?>">
-        <?php foreach ($service->getOptions() as $value => $label) : ?>
+        <?php foreach ($input->getOptions() as $value => $label) : ?>
             <option <?php if ($service->getSelectedValue() === $value) : ?>selected="selected"<?php endif; ?>
                     value="<?php echo $block->escapeHtmlAttr($value) ?>"><?php echo $block->escapeHtml(__($label)) ?></option>
         <?php endforeach; ?>

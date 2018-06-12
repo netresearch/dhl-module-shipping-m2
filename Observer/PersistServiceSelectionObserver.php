@@ -30,7 +30,6 @@ use Dhl\Shipping\Model\Order\ServiceSelectionFactory;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
 
 /**

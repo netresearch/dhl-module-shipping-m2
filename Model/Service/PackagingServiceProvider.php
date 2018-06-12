@@ -22,10 +22,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
-use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\MerchantSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
@@ -58,27 +58,19 @@ class PackagingServiceProvider
     private $routeValidator;
 
     /**
-     * @var OrderAddressExtensionRepositoryInterface
-     */
-    private $addressExtensionRepository;
-
-    /**
      * PackagingServiceProvider constructor.
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param RouteValidatorInterface $routeValidator
-     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
-        RouteValidatorInterface $routeValidator,
-        OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+        RouteValidatorInterface $routeValidator
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;
-        $this->addressExtensionRepository = $addressExtensionRepository;
     }
 
     /**
@@ -88,12 +80,6 @@ class PackagingServiceProvider
     public function getServices(ShipmentInterface $shipment)
     {
         $presets = $this->config->getServiceSettings($shipment->getStoreId());
-
-        $shippingAddress = $shipment->getShippingAddress();
-
-        //todo(nr): add service selection from db
-        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($shippingAddress->getId());
-        $shippingInfo->getServices();
 
         $serviceCollection = $this->servicePool->getServices($presets);
 

@@ -26,14 +26,11 @@ namespace Dhl\Shipping\Model\Quote;
 
 use Dhl\Shipping\Api\Data\ServiceInformationInterface;
 use Dhl\Shipping\Api\Data\ServiceInformationInterfaceFactory;
-use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\Quote\CartServiceManagementInterface;
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\CheckoutServiceProvider;
-use Magento\Framework\Api\AttributeInterface;
 use Magento\Framework\Escaper;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\QuoteRepository;
 
 /**
@@ -159,18 +156,6 @@ class CartServiceManagement implements CartServiceManagementInterface
             ]);
             $this->serviceSelectionRepository->save($model);
         }
-    }
-
-    /**
-     * Validate a service selection's compatibility.
-     *
-     * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
-     * @throws \Magento\Framework\Exception\ValidatorException
-     */
-    public function validate($serviceSelection)
-    {
-        throw new \Magento\Framework\Exception\ValidatorException(__('Service %1 and %2 can not be chosen together.'));
-        throw new \Magento\Framework\Exception\ValidatorException(__('Service %1 can only be chosen with service %2.'));
     }
 
     /**
