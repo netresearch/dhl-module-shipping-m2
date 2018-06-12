@@ -70,6 +70,9 @@ define([
      * @return {bool}
      */
     return function () {
-        return !(!validateCompatibility() || !validateValues());
+
+        var compatibilityValid = validateCompatibility();
+        var valuesValid = validateValues();
+        return compatibilityValid && valuesValid;
     };
 });

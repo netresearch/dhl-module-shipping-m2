@@ -17,7 +17,8 @@ define([
             } else {
                 // do nothing
                 return {
-                    'done': function () {}
+                    'done': function () {
+                    }
                 }
             }
         });

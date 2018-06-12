@@ -2,13 +2,13 @@ var config = {
     config: {
         mixins: {
             'Magento_Checkout/js/action/set-shipping-information': {
-                'Dhl_Shipping/js/action/set-shipping-information-mixin': true
+                'Dhl_Shipping/js/mixins/set-shipping-information': true
             },
             'Magento_Ui/js/lib/validation/validator': {
-                'Dhl_Shipping/js/validator-mixin': true
+                'Dhl_Shipping/js/mixins/validator': true
             },
             'Magento_Checkout/js/view/shipping-information': {
-                'Dhl_Shipping/js/view/shipping-information-mixin': true
+                'Dhl_Shipping/js/mixins/shipping-information': true
             }
         }
     }
