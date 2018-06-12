@@ -118,19 +118,23 @@ class CartServiceManagement implements CartServiceManagementInterface
     public function getServices($cartId, $countryId, $shippingMethod)
     {
         $quote = $this->quoteRepository->get($cartId);
-        $dhlShippingMethod = $this->moduleConfig->getShippingMethods($quote->getStoreId());
+        $canProcess = $this->moduleConfig->canProcessMethod($shippingMethod, $quote->getStoreId());
 
-        if (in_array($shippingMethod, $dhlShippingMethod)) {
+        if ($canProcess) {
             $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
             $compatibility = $this->checkoutServiceProvider->getCompatibility($countryId, $quote->getStoreId());
         } else {
             $services = $compatibility = [];
         }
 
-        return $this->serviceInformationFactory->create(['data' => [
-            'services' => $services,
-            'compatibility' => $compatibility,
-        ]]);
+        return $this->serviceInformationFactory->create(
+            [
+                'data' => [
+                    'services' => $services,
+                    'compatibility' => $compatibility,
+                ],
+            ]
+        );
     }
 
     /**
@@ -149,11 +153,13 @@ class CartServiceManagement implements CartServiceManagementInterface
         $this->serviceSelectionRepository->deleteByQuoteAddressId($quoteAddressId);
         foreach ($serviceSelection as $service) {
             $model = $this->serviceSelectionFactory->create();
-            $model->setData([
-                'parent_id' => $quoteAddressId,
-                'service_code' => $service->getAttributeCode(),
-                'service_value' => $this->getEscapedValues($service->getValue()),
-            ]);
+            $model->setData(
+                [
+                    'parent_id' => $quoteAddressId,
+                    'service_code' => $service->getAttributeCode(),
+                    'service_value' => $this->getEscapedValues($service->getValue()),
+                ]
+            );
             $this->serviceSelectionRepository->save($model);
         }
     }
