@@ -13,5 +13,9 @@ define([
         set: function (key, value) {
             storage.set(key, value);
         },
+
+        clear: function () {
+            storage.removeAll();
+        }
     };
 });

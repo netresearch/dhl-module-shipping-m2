@@ -9,6 +9,9 @@ var config = {
             },
             'Magento_Checkout/js/view/shipping-information': {
                 'Dhl_Shipping/js/mixins/shipping-information': true
+            },
+            'Magento_Checkout/js/action/place-order': {
+                'Dhl_Shipping/js/mixins/place-order': true
             }
         }
     }
