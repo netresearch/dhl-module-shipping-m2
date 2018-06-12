@@ -189,7 +189,14 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function canProcessMethod($shippingMethod, $store = null)
     {
-        return in_array($shippingMethod, $this->getShippingMethods($store));
+        $configuredMethods = $this->getShippingMethods($store);
+        foreach ($configuredMethods as $method) {
+            if (strpos($shippingMethod, $method)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
