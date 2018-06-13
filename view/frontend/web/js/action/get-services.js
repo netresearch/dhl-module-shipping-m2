@@ -11,8 +11,16 @@ define([
     'Dhl_Shipping/js/model/service-compatibility',
     'Dhl_Shipping/js/model/service-definitions',
     'Dhl_Shipping/js/model/storage',
-], function (urlBuilder, customer, request, quote, shippingService,
-             serviceCompatibility, serviceDefinitions, storage) {
+], function (
+    urlBuilder,
+    customer,
+    request,
+    quote,
+    shippingService,
+    serviceCompatibility,
+    serviceDefinitions,
+    storage
+) {
     'use strict';
 
     /**

@@ -17,7 +17,7 @@ define([
          * @param {string} rule
          * @return {string|boolean}
          */
-        getValidatorName: function(rule) {
+        getValidatorName: function (rule) {
             if (rulesList.hasOwnProperty(rule)) {
                 return rule;
             }

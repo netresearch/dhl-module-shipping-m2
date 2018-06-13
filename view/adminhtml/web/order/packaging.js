@@ -368,7 +368,7 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
         *
         * @param HTMLElement obj
         */
-        updateExportDescription: function(obj) {
+        updateExportDescription: function (obj) {
             var itemSeparator = ' ';
             var packageBlock = $(obj).up('[id^="package_block"]');
             var packagePrepare = packageBlock.select('[data-role=package-items]')[0];

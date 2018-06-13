@@ -10,7 +10,7 @@ define([], function () {
     var compatibility = [];
 
     return {
-        getData: function() {
+        getData: function () {
             return compatibility;
         },
 

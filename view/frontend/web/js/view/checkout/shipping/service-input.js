@@ -15,7 +15,7 @@ define([
             lastValue: '',
         },
 
-        initialize: function() {
+        initialize: function () {
             this._super();
             this.initFieldData();
 
