@@ -26,22 +26,7 @@
     /** @var \Dhl\Shipping\Api\Data\ServiceInterface $service */
     $service = $block->getData('service');
     $code = $service->getCode();
-    $name = __($service->getName());
 ?>
-<dt class="service-<?php /* @noEscape */ echo $code; ?>">
-    <label class="checkbox-label">
-        <input
-                data-module="dhl_shipping"
-                data-name="service_<?php /* @noEscape */ echo $code ?>"
-                type="checkbox"
-                name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-            <?php echo $service->isSelected() ? "checked" : ""; ?>
-        />
-        <i class="custom-checkbox"></i>
-        <?php echo $block->escapeHtml($name) ?>
-    </label>
-</dt>
 <dd class="service-select <?php /* @noEscape */ echo $code ?> dd-select">
     <?php /* TODO(nr): RADIO BUTTONS */ ?>
     &lt; radio buttons &gt;

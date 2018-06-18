@@ -83,7 +83,11 @@ class ServiceOptionProvider
         $this->timezoneFactory = $timezoneFactory;
     }
 
-    public function getPreferredDayOptions()
+    /**
+     * @return string[]
+     * @throws \ReflectionException
+     */
+    public function getPreferredDayOptions(): array
     {
         $options = [];
         $daysToCalculate = 5;
@@ -118,7 +122,10 @@ class ServiceOptionProvider
         return $options;
     }
 
-    public function getPreferredTimeOptions()
+    /**
+     * @return string[]
+     */
+    public function getPreferredTimeOptions(): array
     {
         $options = [
             [
@@ -134,11 +141,20 @@ class ServiceOptionProvider
         return $options;
     }
 
-    public function getVisualCheckOfAgeOptions()
+    /**
+     * @return string[]
+     */
+    public function getVisualCheckOfAgeOptions(): array
     {
         return [
-            VisualCheckOfAgeOptions::OPTION_A16 => VisualCheckOfAgeOptions::OPTION_A16,
-            VisualCheckOfAgeOptions::OPTION_A18 => VisualCheckOfAgeOptions::OPTION_A18
+            [
+                'label' => VisualCheckOfAgeOptions::OPTION_A16,
+                'value' => VisualCheckOfAgeOptions::OPTION_A16,
+            ],
+            [
+                'label' => VisualCheckOfAgeOptions::OPTION_A18,
+                'value' => VisualCheckOfAgeOptions::OPTION_A18,
+            ],
         ];
     }
 }

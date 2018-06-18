@@ -25,22 +25,18 @@
     /** @var \Magento\Backend\Block\Template $block */
     /** @var \Dhl\Shipping\Api\Data\ServiceInterface $service */
     $service = $block->getData('service');
-    $code = $service->getCode();
-    $name = __($service->getName());
 ?>
-<dt class="service-<?php /* @noEscape */ echo $code; ?>">
+<dt class="service-<?php /* @noEscape */ echo $service->getCode(); ?>">
     <label class="checkbox-label">
         <input
-            data-module="dhl_shipping"
-            data-name="service_<?php /* @noEscape */ echo $code ?>"
-            type="checkbox"
-            name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-            value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-            <?php echo $service->isSelected() ? "checked" : ""; ?>
+                data-module="dhl_shipping"
+                data-name="service_<?php /* @noEscape */ echo $service->getCode() ?>"
+                type="checkbox"
+                name="shipment_service[<?php /* @noEscape */ echo $service->getCode() ?>]"
+                value="<?php /* @noEscape */ echo $service->getCode() ?>" class="checkbox"
+            <?php echo $service->isSelected() ? 'checked' : ''; ?>
         />
         <i class="custom-checkbox"></i>
-        <?php echo $block->escapeHtml($name) ?>
+        <?php echo $block->escapeHtml(__($service->getName())) ?>
     </label>
 </dt>
-<dd class="service-<?php /* @noEscape */ echo $code ?>">
-</dd>

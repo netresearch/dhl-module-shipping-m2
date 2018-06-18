@@ -108,12 +108,18 @@ class Services extends Packaging
     public function getServiceHtml($service): string
     {
         $html = '';
+
         /** @var ServiceInputInterface $input */
         foreach ($service->getInputs() as $input) {
-            // set block template according to service input type
+            if (in_array($input->getInputType(), ['date', 'time'])) {
+                $inputType = 'select';
+            } else {
+                $inputType = $input->getInputType();
+            }
+            /** Set block template according to service input type */
             $template = sprintf(
                 'Dhl_Shipping::order/packaging/popup_service_%s.phtml',
-                $input->getInputType()
+                $inputType
             );
 
             /** @var \Magento\Backend\Block\Template $serviceBlock */
@@ -123,6 +129,7 @@ class Services extends Packaging
             $serviceBlock->setData('input', $input);
             $html .= $serviceBlock->toHtml();
         }
+
         return $html;
     }
 }

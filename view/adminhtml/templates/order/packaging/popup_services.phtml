@@ -26,10 +26,16 @@
     $services = $block->getServices();
 ?>
 
-<?php if (!empty($services) && !empty($services->getArrayCopy())) : ?>
+<?php if ($services->count() > 0) : ?>
     <dl>
+        <h3><?php echo __('DHL Shipping Services'); ?></h3>
+        <div class="dhl-service-block-container">
         <?php foreach ($services as $service) : ?>
-            <?php echo /* @noEscape */ $block->getServiceHtml($service) ?>
+            <div class="dhl-service-block">
+                <h4><?php echo $block->escapeHtml(__($service->getName())) ?></h4>
+                <?php echo /* @noEscape */ $block->getServiceHtml($service) ?>
+            </div>
         <?php endforeach; ?>
+        </div>
     </dl>
 <?php endif; ?>

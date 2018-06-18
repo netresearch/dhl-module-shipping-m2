@@ -22,28 +22,12 @@
  */
 ?>
 <?php
-    /** @var \Magento\Backend\Block\Template $block */
-    /** @var \Dhl\Shipping\Api\Data\ServiceInterface $service */
-    $service = $block->getData('service');
-    $code = $service->getCode();
-    $name = __($service->getName());
+/** @var \Dhl\Shipping\Api\Data\ServiceInterface $service */
+$service = $block->getData('service');
+/** @var \Dhl\Shipping\Api\Data\Service\ServiceInputInterface $input */
+$input = $block->getData('input');
 ?>
-<dt class="service-<?php /* @noEscape */ echo $code; ?>">
-    <label class="checkbox-label">
-        <input
-                data-module="dhl_shipping"
-                data-name="service_<?php /* @noEscape */ echo $code ?>"
-                type="checkbox"
-                name="shipment_service[<?php /* @noEscape */ echo $code ?>]"
-                value="<?php /* @noEscape */ echo $code ?>" class="checkbox"
-            <?php echo $service->isSelected() ? "checked" : ""; ?>
-        />
-        <i class="custom-checkbox"></i>
-        <?php echo $block->escapeHtml($name) ?>
-    </label>
-</dt>
-<?php foreach ($service->getInputValues() as $key => $value) : ?>
-    <dd class="service-select <?php /* @noEscape */ echo $code . $key ?> dd-select">
-        <input value="<?php /* @noEscape */ echo $value; ?>">
-    </dd>
-<?php endforeach; ?>
+<dd class="service-select <?php /* @noEscape */ echo $service->getCode() . $input->getCode(); ?> dd-select">
+    <input value="<?php /* @noEscape */ echo $input->getValue(); ?>"
+           class="input-text admin__control-text">
+</dd>

@@ -85,7 +85,6 @@ class PackagingServiceProvider
     /**
      * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
      * @return ServiceCollection|ServiceInterface[]
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getServices(ShipmentInterface $shipment)
     {
@@ -134,6 +133,7 @@ class PackagingServiceProvider
                     /** @var ServiceInterface $service */
                     $service = $serviceCollection->offsetGet($selection->getServiceCode());
                     $service->setInputValues($selection->getServiceValue());
+                    $service->setSelected(true);
                 }
             }
         } catch (NoSuchEntityException $e) {
