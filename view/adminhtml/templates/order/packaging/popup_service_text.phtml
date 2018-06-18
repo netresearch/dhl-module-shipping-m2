@@ -42,7 +42,8 @@
         <?php echo $block->escapeHtml($name) ?>
     </label>
 </dt>
-<dd class="service-select <?php /* @noEscape */ echo $code ?> dd-select">
-    <?php /* TODO(nr): INPUT TYPE TEXT */ ?>
-    &lt; text input &gt;
-</dd>
+<?php foreach ($service->getInputValues() as $key => $value) : ?>
+    <dd class="service-select <?php /* @noEscape */ echo $code . $key ?> dd-select">
+        <input value="<?php /* @noEscape */ echo $value; ?>">
+    </dd>
+<?php endforeach; ?>

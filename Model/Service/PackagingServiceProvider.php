@@ -26,11 +26,15 @@
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
+use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
+use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\MerchantSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Model\Order\Shipment;
 
 /**
  * Load services for packaging popup
@@ -58,24 +62,30 @@ class PackagingServiceProvider
     private $routeValidator;
 
     /**
+     * @var ServiceSelectionRepositoryInterface
+     */
+    private $serviceSelectionRepo;
+
+    /**
      * PackagingServiceProvider constructor.
+     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param RouteValidatorInterface $routeValidator
+     * @param ServiceSelectionRepositoryInterface $serviceSelectionRepo
      */
-    public function __construct(
-        ServicePool $servicePool,
-        ModuleConfigInterface $config,
-        RouteValidatorInterface $routeValidator
-    ) {
+    public function __construct(ServicePool $servicePool, ModuleConfigInterface $config, RouteValidatorInterface $routeValidator, ServiceSelectionRepositoryInterface $serviceSelectionRepo)
+    {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;
+        $this->serviceSelectionRepo = $serviceSelectionRepo;
     }
 
     /**
      * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
      * @return ServiceCollection|ServiceInterface[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getServices(ShipmentInterface $shipment)
     {
@@ -95,6 +105,40 @@ class PackagingServiceProvider
         $serviceCollection = $serviceCollection
             ->filter($adminFilter)
             ->filter($routeFilter);
+
+        $serviceCollection = $this->augmentWithServiceSelection($serviceCollection, $shipment);
+
+        return $serviceCollection;
+    }
+
+    /**
+     * Put values from matching ServiceSelection into Service objects
+     *
+     * @param ServiceCollection $serviceCollection
+     * @param ShipmentInterface $shipment
+     * @return ServiceCollection
+     */
+    private function augmentWithServiceSelection(
+        ServiceCollection $serviceCollection,
+        ShipmentInterface $shipment
+    ): ServiceCollection
+    {
+        try {
+            /** @var ServiceSelectionInterface[] $serviceSelections */
+            $serviceSelections = $this->serviceSelectionRepo
+                ->getByOrderAddressId($shipment->getOrder()->getShippingAddressId())
+                ->getItems();
+
+            foreach ($serviceSelections as $selection) {
+                if ($serviceCollection->offsetExists($selection->getServiceCode())) {
+                    /** @var ServiceInterface $service */
+                    $service = $serviceCollection->offsetGet($selection->getServiceCode());
+                    $service->setInputValues($selection->getServiceValue());
+                }
+            }
+        } catch (NoSuchEntityException $e) {
+            // do nothing
+        }
 
         return $serviceCollection;
     }

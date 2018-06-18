@@ -240,7 +240,7 @@ class ShippingSetup
                 'name' => 'service_value',
                 'type' => Table::TYPE_TEXT,
                 'size' => null,
-                'options' => ['default' => 0, 'identity' => false, 'unsigned' => true, 'nullable' => false],
+                'options' => ['identity' => false, 'unsigned' => true, 'nullable' => false],
             ],
         ];
 

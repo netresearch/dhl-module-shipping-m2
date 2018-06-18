@@ -104,12 +104,12 @@ class CheckoutServiceProvider
     /**
      * @param string $countryId
      * @param string $storeId
-     * @return mixed[]
+     * @param int|null $orderID
+     * @return array
      */
-    public function getServices($countryId, $storeId): array
+    public function getServices($countryId, $storeId, $orderID = null): array
     {
         $presets = $this->config->getServiceSettings($storeId);
-        // todo(nr): merge config defaults with values from session or shipping info structure?
 
         $serviceCollection = $this->servicePool->getServices($presets);
         $serviceCollection = $this->filterAvailableServices($countryId, $storeId, $serviceCollection);

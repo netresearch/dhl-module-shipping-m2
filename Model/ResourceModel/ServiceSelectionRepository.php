@@ -25,16 +25,14 @@
 namespace Dhl\Shipping\Model\ResourceModel;
 
 use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
-use Magento\Framework\Api\Search\SearchResultInterfaceFactory;
+use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelectionCollection as QuoteServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelectionCollectionFactory
     as QuoteServiceSelectionCollectionFactory;
-use Dhl\Shipping\Model\Quote\ServiceSelectionFactory as QuoteServiceSelectionFactory;
 use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection as OrderServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollectionFactory
     as OrderServiceSelectionCollectionFactory;
 use Dhl\Shipping\Model\Order\ServiceSelection as OrderServiceSelection;
-use Dhl\Shipping\Model\Order\ServiceSelectionFactory as OrderServiceSelectionFactory;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -48,13 +46,8 @@ use Magento\Framework\Model\AbstractModel;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServiceSelectionRepository
+class ServiceSelectionRepository implements ServiceSelectionRepositoryInterface
 {
-    /**
-     * @var QuoteServiceSelectionFactory
-     */
-    private $quoteServiceSelectionFactory;
-
     /**
      * @var QuoteServiceSelectionCollectionFactory
      */
@@ -64,11 +57,6 @@ class ServiceSelectionRepository
      * @var Quote\Address\ServiceSelection
      */
     private $quoteResource;
-
-    /**
-     * @var OrderServiceSelectionFactory
-     */
-    private $orderServiceSelectionFactory;
 
     /**
      * @var OrderServiceSelectionCollectionFactory
@@ -81,37 +69,23 @@ class ServiceSelectionRepository
     private $orderResource;
 
     /**
-     * @var SearchResultInterfaceFactory
-     */
-    private $searchResultsFactory;
-
-    /**
      * ServiceSelectionRepository constructor.
      *
-     * @param QuoteServiceSelectionFactory $quoteServiceSelectionFactory
      * @param QuoteServiceSelectionCollectionFactory $quoteCollectionFactory
      * @param Quote\Address\ServiceSelection $quoteResource
-     * @param OrderServiceSelectionFactory $orderServiceSelectionFactory
      * @param OrderServiceSelectionCollectionFactory $orderCollectionFactory
      * @param Order\Address\ServiceSelection $orderResource
-     * @param SearchResultInterfaceFactory $searchResultsFactory
      */
     public function __construct(
-        QuoteServiceSelectionFactory $quoteServiceSelectionFactory,
         QuoteServiceSelectionCollectionFactory $quoteCollectionFactory,
         Quote\Address\ServiceSelection $quoteResource,
-        OrderServiceSelectionFactory $orderServiceSelectionFactory,
         OrderServiceSelectionCollectionFactory $orderCollectionFactory,
-        Order\Address\ServiceSelection $orderResource,
-        SearchResultInterfaceFactory $searchResultsFactory
+        Order\Address\ServiceSelection $orderResource
     ) {
-        $this->quoteServiceSelectionFactory = $quoteServiceSelectionFactory;
         $this->quoteCollectionFactory = $quoteCollectionFactory;
         $this->quoteResource = $quoteResource;
-        $this->orderServiceSelectionFactory = $orderServiceSelectionFactory;
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->orderResource = $orderResource;
-        $this->searchResultsFactory = $searchResultsFactory;
     }
 
     /**

@@ -27,8 +27,10 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
 use Dhl\Shipping\Api\Data\Service\ServiceInputInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
+use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\PackagingServiceProvider;
+use Dhl\Shipping\Model\Service\ServiceCollection;
 use Magento\Shipping\Block\Adminhtml\Order\Packaging;
 
 /**
@@ -79,9 +81,9 @@ class Services extends Packaging
     }
 
     /**
-     * @return \Dhl\Shipping\Model\Service\ServiceCollection
+     * @return ServiceCollection
      */
-    public function getServices()
+    public function getServices(): ServiceCollection
     {
         $shipment = $this->getShipment();
 
@@ -89,9 +91,10 @@ class Services extends Packaging
     }
 
     /**
-     * @return ServiceSelectionCollectionInterface
+     * @return ServiceSelectionCollection
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getServiceSelection()
+    public function getServiceSelection(): ServiceSelectionCollection
     {
         $shipment = $this->getShipment();
 
