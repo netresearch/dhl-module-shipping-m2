@@ -596,9 +596,7 @@ class AppDataMapper implements AppDataMapperInterface
 
         $serviceCode = AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE;
         if (isset($servicesData[$serviceCode])) {
-            $this->serviceCollection->addService($serviceCode, [
-                'type' => $servicesData[$serviceCode]
-            ]);
+            $this->serviceCollection->addService($serviceCode, $servicesData[$serviceCode]);
         }
 
         return $this->serviceCollection;
