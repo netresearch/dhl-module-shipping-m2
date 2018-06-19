@@ -29,8 +29,8 @@ $termsDefaultValue = $block->getTermsOfTradeDefault();
 $addtionalFee = $block->getAdditionalFeeDefault();
 $placeOfCommital = $block->getPlaceOfCommitalDefault();
 
-$addtionalFeeDefaultValue = isset($addtionalFee) ? $addtionalFee : 0;
-$placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
+$addtionalFeeDefaultValue = $addtionalFee ?? 0;
+$placeOfCommitalDefaultValue = $placeOfCommital ?? '';
 ?>
 <table cellspacing="0" class="data-table admin__control-table">
     <thead>
@@ -49,14 +49,14 @@ $placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
     <tbody>
         <tr>
             <td>
-                <select data-module="dhl_shipping" data-name="dhl_customs_terms_of_trade"
+                <select data-module="dhl_shipping"
+                        data-customs_code="terms_of_trade"
+                        data-name="dhl_customs_terms_of_trade"
                         title="<?= $block->escapeHtmlAttr(__('Terms of Trade')) ?>"
                         class="input-select admin__control-select">
                     <?php foreach ($termOptions as $option) : ?>
                         <option value="<?= $block->escapeHtmlAttr($option['value']) ?>"
-                        <?php if ($option['value'] == $termsDefaultValue) : ?>
-                            selected="selected"
-                        <?php endif; ?> >
+                            <?= $option['value'] == $termsDefaultValue ? 'selected' : ''; ?>
                             <?= $block->escapeHtml($option['value']) ?>
                         </option>
                     <?php endforeach; ?>
@@ -64,9 +64,12 @@ $placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
             </td>
             <td>
                 <div class="admin__control-addon">
-                    <input data-module="dhl_shipping" data-name="dhl_customs_additional_fee" type="text"
-                           value="<?= $block->escapeHtmlAttr($addtionalFeeDefaultValue) ?>"
-                           class="input-text admin__control-text required-entry validate-number"/>
+                    <input data-module="dhl_shipping"
+                           type="text"
+                           data-customs_code="additional_fee"
+                           data-name="dhl_customs_additional_fee"
+                           class="input-text admin__control-text required-entry validate-number"
+                           value="<?= $block->escapeHtmlAttr($addtionalFeeDefaultValue) ?>"/>
                     <span class="admin__addon-suffix">
                         <span class="customs-value-currency">
                             <?= $block->escapeHtml($block->getCustomValueCurrencyCode()) ?>
@@ -75,24 +78,39 @@ $placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
                 </div>
             </td>
             <td>
-                <input data-module="dhl_shipping" data-name="dhl_customs_place_of_commital" type="text"
+                <input data-module="dhl_shipping"
+                       type="text"
+                       data-customs_code="place_of_commital"
+                       data-name="dhl_customs_place_of_commital"
                        class="input-text admin__control-text required-entry validate-length maximum-length-35"
                        maxlength="35"
                        value="<?= $block->escapeHtmlAttr($placeOfCommitalDefaultValue) ?>"
                 />
             </td>
             <td>
-                <input data-module="dhl_shipping" data-name="dhl_customs_permit_number" type="text"
-                       class="input-text admin__control-text  validate-length maximum-length-10" maxlength="10" />
+                <input data-module="dhl_shipping"
+                       type="text"
+                       data-customs_code="permit_number"
+                       data-name="dhl_customs_permit_number"
+                       class="input-text admin__control-text validate-length maximum-length-10"
+                       maxlength="10" />
             </td>
             <td>
-                <input data-module="dhl_shipping" data-name="dhl_customs_attestation_number" type="text"
-                       class="input-text admin__control-text validate-length maximum-length-35" maxlength="35" />
+                <input data-module="dhl_shipping"
+                       type="text"
+                       data-customs_code="attestation_number"
+                       data-name="dhl_customs_attestation_number"
+                       class="input-text admin__control-text validate-length maximum-length-35"
+                       maxlength="35" />
             </td>
             <td>
                 <div class="field choice admin__field admin__field-option field-notification text-center">
-                    <input data-module="dhl_shipping" data-name="dhl_customs_export_notification" type="checkbox"
-                       class="admin__control-checkbox" id="export_notification" />
+                    <input data-module="dhl_shipping"
+                           type="checkbox"
+                           data-customs_code="export_notification"
+                           data-name="dhl_customs_export_notification"
+                           class="admin__control-checkbox"
+                           id="export_notification" />
                     <label class="admin__field-label" for="export_notification"></label>
                 </div>
             </td>

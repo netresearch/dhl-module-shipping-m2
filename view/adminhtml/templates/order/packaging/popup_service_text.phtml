@@ -29,5 +29,8 @@ $input = $block->getData('input');
 ?>
 <dd class="service-select <?php /* @noEscape */ echo $service->getCode() . $input->getCode(); ?> dd-select">
     <input value="<?php /* @noEscape */ echo $input->getValue(); ?>"
-           class="input-text admin__control-text">
+           class="input-text admin__control-text"
+           data-module="dhl_shipping"
+           data-service_code="<?php /* @noEscape */ echo $service->getCode() ?>"
+           data-input_code="<?php /* @noEscape */ echo $input->getCode() ?>">
 </dd>

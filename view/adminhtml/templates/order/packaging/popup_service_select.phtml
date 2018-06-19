@@ -27,11 +27,12 @@
     $service = $block->getData('service');
     /** @var \Dhl\Shipping\Api\Data\Service\ServiceInputInterface $input */
     $input = $block->getData('input');
-    $code = $service->getCode();
 ?>
-<dd class="service-select <?php /* @noEscape */ echo $code ?> dd-select">
-    <select name="service_setting[<?php /* @noEscape */ echo $code ?>]" class="admin__control-select"
-            data-module="dhl_shipping" data-name="service_<?php /* @noEscape */ echo $code ?>">
+<dd class="service-select <?php /* @noEscape */ echo $service->getCode() ?> dd-select">
+    <select class="admin__control-select"
+            data-module="dhl_shipping"
+            data-service_code="<?php /* @noEscape */ echo $service->getCode() ?>"
+            data-input_code="<?php /* @noEscape */ echo $input->getCode() ?>">
         <option disabled
                 <?php echo $input->getValue() ? '' : 'selected'; ?> >
             <?php echo __('Please select'); ?>

@@ -22,7 +22,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-define(["prototype", "Magento_Shipping/order/packaging"], function () {
+define(["underscore", "prototype", "Magento_Shipping/order/packaging"], function (_) {
 
     window.Packaging = Class.create(Packaging, {
         dhlShipping: {"items": [], "params": []},
@@ -283,8 +283,6 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
                 packagePrepareGrid.update();
             }
 
-
-
             // show/hide disable/enable
             packagePrepare.hide();
             packageBlock.select('[data-action=package-save-items]')[0].hide();
@@ -363,60 +361,59 @@ define(["prototype", "Magento_Shipping/order/packaging"], function () {
         },
 
         /**
+         * Add service and customs Information to this.dhlShipping.params.
+         * The format seems strange but is useful for transmission to paramsCreateLabelRequest.
+         *
          * @param {string} packageId
          * @param {jQuery} pack
          */
         collectDhlPackageParams: function (packageId, pack) {
             this.dhlShipping.params[packageId] = {};
             pack.select('div[data-name="dhl_shipping_package_info"] [data-module^=dhl_shipping]').each(function (element) {
-                var fieldName = element.dataset.name;
-                // add service information to our shipping params
-                if (fieldName.match('service')) {
+                var customsCode = element.dataset.customs_code,
+                    serviceCode = element.dataset.service_code,
+                    serviceInputCode = element.dataset.input_code,
+                    inputValue;
+
+                if (serviceCode && serviceInputCode) {
+                    // Collect service information
                     if (element.type.match('checkbox') && element.checked) {
-                        this.dhlShipping.params[packageId][fieldName] = element.checked;
+                        inputValue = element.checked;
+                    } else if (element.type.match('select')) {
+                        inputValue = element.options[element.selectedIndex].value
+                    } else {
+                        inputValue = element.value;
                     }
-
-                    if (element.type.match('select') && Object.keys(this.dhlShipping.params[packageId]).indexOf(fieldName) != -1) {
-                        this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
-                    }
-                }
-
-                if (fieldName.match('dhl_customs')) {
+                    this.dhlShipping.params[packageId]['[services]['+serviceCode+']['+serviceInputCode+']'] = inputValue;
+                } else if (customsCode) {
+                    // Collect customs information
                     if (element.type.match('checkbox') && element.checked) {
-                        this.dhlShipping.params[packageId][fieldName] = element.checked;
+                         inputValue = element.checked;
+                    } else if (element.type.match('select')) {
+                        inputValue = element.options[element.selectedIndex].value
+                    } else {
+                        inputValue = element.value
                     }
-
-                    if (element.type.match('select')) {
-                        this.dhlShipping.params[packageId][fieldName] = element.options[element.selectedIndex].value
-                    }
-
-                    if (element.type.match('text')) {
-                        this.dhlShipping.params[packageId][fieldName] = element.value
-                    }
+                    this.dhlShipping.params[packageId]['[customs]['+customsCode+']'] = inputValue
                 }
-
             }.bind(this));
         },
 
         /**
+         * Transmit DHL package params for services and customs
+         * from this.dhlShipping.params to paramsCreateLabelRequest.
+         *
          * @param {string} packageId
          */
         addDhlPackageParams: function (packageId) {
-            var index;
             _.forEach(this.dhlShipping.params[packageId], function (value, key) {
-                if (key.match('service')) {
-                    index = key.replace("service_", "");
-                    this.paramsCreateLabelRequest['packages[' + packageId + '][params][services][' + index + ']'] = value;
-                }
-
-                if (key.match('dhl_customs')) {
-                    index = key.replace("dhl_customs_", "");
-                    this.paramsCreateLabelRequest['packages[' + packageId + '][params][customs][' + index + ']'] = value;
-                }
+                this.paramsCreateLabelRequest['packages[' + packageId + '][params]' + key] = value;
             }.bind(this));
         },
 
         /**
+         * Disable every input from DHL.
+         *
          * @param {jQuery} item
          */
         disableDhlInputs: function (item) {
