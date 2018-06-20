@@ -60,8 +60,8 @@ define([
     return function (countryId, shippingMethod) {
         var fromCache = storage.get(countryId + shippingMethod);
         if (fromCache) {
-            updateModels(fromCache);
-            return;
+            //updateModels(fromCache);
+            //return;
         }
 
         var serviceUrl = buildRequestUrl(),

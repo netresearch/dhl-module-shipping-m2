@@ -88,7 +88,8 @@ class PackagingServiceProvider
      */
     public function getServices(ShipmentInterface $shipment)
     {
-        $presets = $this->config->getServiceSettings($shipment->getStoreId());
+        $addressId = $shipment->getOrder()->getShippingAddress()->getId();
+        $presets = $this->config->getServiceSettings($addressId, $shipment->getStoreId());
 
         $serviceCollection = $this->servicePool->getServices($presets);
 
@@ -100,46 +101,11 @@ class PackagingServiceProvider
             $shipment->getShippingAddress()->getCountryId(),
             $this->config->getEuCountryList($shipment->getStoreId())
         );
-
         $serviceCollection = $serviceCollection
             ->filter($adminFilter)
             ->filter($routeFilter);
 
-        $serviceCollection = $this->augmentWithServiceSelection($serviceCollection, $shipment);
-
         return $serviceCollection;
     }
 
-    /**
-     * Put values from matching ServiceSelection into Service objects
-     *
-     * @param ServiceCollection $serviceCollection
-     * @param ShipmentInterface $shipment
-     * @return ServiceCollection
-     */
-    private function augmentWithServiceSelection(
-        ServiceCollection $serviceCollection,
-        ShipmentInterface $shipment
-    ): ServiceCollection
-    {
-        try {
-            /** @var ServiceSelectionInterface[] $serviceSelections */
-            $serviceSelections = $this->serviceSelectionRepo
-                ->getByOrderAddressId($shipment->getOrder()->getShippingAddressId())
-                ->getItems();
-
-            foreach ($serviceSelections as $selection) {
-                if ($serviceCollection->offsetExists($selection->getServiceCode())) {
-                    /** @var ServiceInterface $service */
-                    $service = $serviceCollection->offsetGet($selection->getServiceCode());
-                    $service->setInputValues($selection->getServiceValue());
-                    $service->setSelected(true);
-                }
-            }
-        } catch (NoSuchEntityException $e) {
-            // do nothing
-        }
-
-        return $serviceCollection;
-    }
 }

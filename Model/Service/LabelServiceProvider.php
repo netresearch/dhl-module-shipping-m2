@@ -72,8 +72,9 @@ class LabelServiceProvider
     }
 
     /**
-     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
-     * @return ServiceCollection|ServiceInterface[]
+     * @param ShipmentInterface $shipment
+     * @return ServiceInterface[]|ServiceCollection|static
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getServices(ShipmentInterface $shipment)
     {

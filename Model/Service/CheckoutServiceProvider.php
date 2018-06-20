@@ -110,7 +110,6 @@ class CheckoutServiceProvider
     public function getServices($countryId, $storeId, $orderID = null): array
     {
         $presets = $this->config->getServiceSettings($storeId);
-
         $serviceCollection = $this->servicePool->getServices($presets);
         $serviceCollection = $this->filterAvailableServices($countryId, $storeId, $serviceCollection);
 

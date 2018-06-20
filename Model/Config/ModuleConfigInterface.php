@@ -161,10 +161,11 @@ interface ModuleConfigInterface
     /**
      * Get initialization settings for services, e.g. default values
      *
+     * @param mixed $orderAddressId
      * @param mixed $store
      * @return \Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface[]
      */
-    public function getServiceSettings($store = null);
+    public function getServiceSettings($orderAddressId = null, $store = null);
 
     /**
      * Get allowed order statuses for automatic shipment creation
