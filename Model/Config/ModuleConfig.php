@@ -27,9 +27,6 @@
 namespace Dhl\Shipping\Model\Config;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
-use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
-use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Service\ServiceOptionProvider;
 use Dhl\Shipping\Service\Bcs\BulkyGoods;
 use Dhl\Shipping\Service\Bcs\Cod;
@@ -44,7 +41,6 @@ use Dhl\Shipping\Service\Bcs\ReturnShipment;
 use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 use \Magento\Shipping\Model\Config as ShippingConfig;
 use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;
 
@@ -58,7 +54,6 @@ use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;
  */
 class ModuleConfig implements ModuleConfigInterface
 {
-
     /**
      * @var ConfigAccessorInterface
      */
@@ -75,19 +70,9 @@ class ModuleConfig implements ModuleConfigInterface
     private $shippingProducts;
 
     /**
-     * @var ServiceSettingsInterfaceFactory
-     */
-    private $serviceSettingsFactory;
-
-    /**
      * @var ServiceOptionProvider
      */
     private $serviceOptionProvider;
-
-    /**
-     * @var ServiceSelectionRepositoryInterface
-     */
-    private $serviceSelectionRepo;
 
     /**
      * ModuleConfig constructor.
@@ -95,24 +80,18 @@ class ModuleConfig implements ModuleConfigInterface
      * @param ConfigAccessorInterface $configAccessor
      * @param RoutesInterface $routeConfig
      * @param ShippingProductsInterface $shippingProducts
-     * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      * @param ServiceOptionProvider $serviceOptionProvider
-     * @param ServiceSelectionRepositoryInterface $serviceSelectionRepo
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         RoutesInterface $routeConfig,
         ShippingProductsInterface $shippingProducts,
-        ServiceSettingsInterfaceFactory $serviceSettingsFactory,
-        ServiceOptionProvider $serviceOptionProvider,
-        ServiceSelectionRepositoryInterface $serviceSelectionRepo
+        ServiceOptionProvider $serviceOptionProvider
     ) {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
         $this->shippingProducts = $shippingProducts;
-        $this->serviceSettingsFactory = $serviceSettingsFactory;
         $this->serviceOptionProvider = $serviceOptionProvider;
-        $this->serviceSelectionRepo = $serviceSelectionRepo;
     }
 
     /**
@@ -271,7 +250,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function canProcessShipping($shippingMethod, $destCountryId, $store = null)
+    public function canProcessShipping($shippingMethod, $destCountryId, $store = null): bool
     {
         return $this->canProcessMethod($shippingMethod, $store) && $this->canProcessRoute($destCountryId, $store);
     }
@@ -283,7 +262,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function isCodPaymentMethod($paymentMethod, $store = null)
+    public function isCodPaymentMethod($paymentMethod, $store = null): bool
     {
         return in_array($paymentMethod, $this->getCodPaymentMethods($store));
     }
@@ -294,7 +273,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param $storeId
      * @return array
      */
-    public function getEuCountries($storeId)
+    public function getEuCountries($storeId): array
     {
         $euCountries = explode(
             ',',
@@ -312,7 +291,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param int|null $storeId
      * @return bool
      */
-    public function isCrossBorderRoute($destinationCountryId, $storeId = null)
+    public function isCrossBorderRoute($destinationCountryId, $storeId = null): bool
     {
         return $this->routeConfig->isCrossBorderRoute(
             $this->getShipperCountry($storeId),
@@ -322,12 +301,11 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
-     * @param string|null $orderAddressId
      * @param string|null $store
-     * @return array|ServiceSettingsInterface[]
+     * @return array
      * @throws \ReflectionException
      */
-    public function getServiceSettings($orderAddressId = null, $store = null)
+    public function getServiceSettings($store = null): array
     {
         $bulkyGoodsConfig = [
             ServiceSettingsInterface::NAME => 'Bulky Goods', // display name
@@ -478,7 +456,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::SORT_ORDER => 150,
         ];
 
-        $settings = [
+        return [
             BulkyGoods::CODE => $bulkyGoodsConfig,
             Cod::CODE => $codConfig,
             Insurance::CODE => $insuranceConfig,
@@ -491,34 +469,6 @@ class ModuleConfig implements ModuleConfigInterface
             ReturnShipment::CODE => $returnShipmentConfig,
             VisualCheckOfAge::CODE => $visualCheckOfAgeConfig,
         ];
-
-        /**
-         * Add service values from serviceSelection objects
-         */
-        if ($orderAddressId !== null) {
-            try {
-                /** @var ServiceSelectionInterface[] $serviceSelections */
-                $serviceSelections = $this->serviceSelectionRepo
-                    ->getByOrderAddressId($orderAddressId)
-                    ->getItems();
-
-                foreach ($serviceSelections as $selection) {
-                    if ($settings[$selection->getServiceCode()]) {
-                        $settings[$selection->getServiceCode()][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
-                        $settings[$selection->getServiceCode()][ServiceSettingsInterface::IS_SELECTED] = true;
-                    }
-                }
-            } catch (NoSuchEntityException $e) {
-                // do nothing
-            }
-        }
-
-        return array_map(
-            function ($config) {
-                return $this->serviceSettingsFactory->create($config);
-            },
-            $settings
-        );
     }
 
     /**

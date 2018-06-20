@@ -25,13 +25,14 @@
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
-use function ZendTest\Server\Reflection\function1;
 
 /**
  * Load services for display in checkout
@@ -69,6 +70,11 @@ class CheckoutServiceProvider
     private $compatibilityPool;
 
     /**
+     * @var ServiceSettingsInterfaceFactory
+     */
+    private $serviceSettingsFactory;
+
+    /**
      * CheckoutServiceProvider constructor.
      *
      * @param ServicePool $servicePool
@@ -76,19 +82,23 @@ class CheckoutServiceProvider
      * @param RouteValidatorInterface $routeValidator
      * @param ServiceHydrator $serviceHydrator
      * @param ServiceCompatibilityPool $compatibilityPool
+     * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
         RouteValidatorInterface $routeValidator,
         ServiceHydrator $serviceHydrator,
-        ServiceCompatibilityPool $compatibilityPool
-    ) {
+        ServiceCompatibilityPool $compatibilityPool,
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory
+    )
+    {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;
         $this->serviceHydrator = $serviceHydrator;
         $this->compatibilityPool = $compatibilityPool;
+        $this->serviceSettingsFactory = $serviceSettingsFactory;
     }
 
     /**
@@ -109,17 +119,38 @@ class CheckoutServiceProvider
      */
     public function getServices($countryId, $storeId, $orderID = null): array
     {
-        $presets = $this->config->getServiceSettings($storeId);
+        $presets = $this->prepareServiceSettings($storeId);
+
         $serviceCollection = $this->servicePool->getServices($presets);
+
         $serviceCollection = $this->filterAvailableServices($countryId, $storeId, $serviceCollection);
 
         $serviceCollection = $serviceCollection->sort($this->getSortCallback());
 
         $services = $serviceCollection->map(function ($service) {
-                return $this->serviceHydrator->extract($service);
+            return $this->serviceHydrator->extract($service);
         });
 
         return $services;
+    }
+
+    /**
+     * Take a settings array, enrich it with additional data and
+     * turn it into ServiceSettingsInterface[].
+     *
+     * @param string $storeId
+     * @return ServiceSettingsInterface[]
+     */
+    private function prepareServiceSettings(string $storeId): array
+    {
+        $settings = $this->config->getServiceSettings($storeId);
+
+        return array_map(
+            function ($config) {
+                return $this->serviceSettingsFactory->create($config);
+            },
+            $settings
+        );
     }
 
     /**

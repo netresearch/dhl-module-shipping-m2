@@ -24,8 +24,9 @@
  */
 namespace Dhl\Shipping\Model\Service;
 
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
-use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\SelectedFilter;
 use Magento\Sales\Api\Data\ShipmentInterface;
@@ -51,40 +52,35 @@ class LabelServiceProvider
     private $config;
 
     /**
-     * @var OrderAddressExtensionRepositoryInterface
+     * @var ServiceSettingsInterfaceFactory
      */
-    private $addressExtensionRepository;
+    private $serviceSettingsFactory;
 
     /**
-     * PackagingServiceProvider constructor.
+     * LabelServiceProvider constructor.
+     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
-     * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+     * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
-        OrderAddressExtensionRepositoryInterface $addressExtensionRepository
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
-        $this->addressExtensionRepository = $addressExtensionRepository;
+        $this->serviceSettingsFactory = $serviceSettingsFactory;
     }
+
 
     /**
      * @param ShipmentInterface $shipment
-     * @return ServiceInterface[]|ServiceCollection|static
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return ServiceInterface[]|ServiceCollection
      */
-    public function getServices(ShipmentInterface $shipment)
+    public function getServices(array $servicesData, ShipmentInterface $shipment)
     {
-        $presets = $this->config->getServiceSettings($shipment->getStoreId());
-
-        $shippingAddress = $shipment->getShippingAddress();
-
-        // todo(nr): load defaults from shipping info data structure
-        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($shippingAddress->getId());
-        $shippingInfo->getServices();
+        $presets = $this->prepareServiceSettings($servicesData, $shipment->getStoreId());
 
         $serviceCollection = $this->servicePool->getServices($presets);
 
@@ -93,5 +89,32 @@ class LabelServiceProvider
         $serviceCollection = $serviceCollection->filter($filter);
 
         return $serviceCollection;
+    }
+
+    /**
+     * Take a settings array, enrich it with additional data and
+     * turn it into ServiceSettingsInterface[].
+     *
+     * @param string $storeId
+     * @param string[][] $serviceData
+     * @return ServiceSettingsInterface[]
+     */
+    private function prepareServiceSettings(array $serviceData, string $storeId): array
+    {
+        $settings = $this->config->getServiceSettings($storeId);
+
+        foreach ($serviceData as $serviceCode => $serviceValues) {
+            if ($settings[$serviceCode]) {
+                $settings[$serviceCode][ServiceSettingsInterface::PROPERTIES] = $serviceValues;
+                $settings[$serviceCode][ServiceSettingsInterface::IS_SELECTED] = true;
+            }
+        }
+
+        return array_map(
+            function ($config) {
+                return $this->serviceSettingsFactory->create($config);
+            },
+            $settings
+        );
     }
 }

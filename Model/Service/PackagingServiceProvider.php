@@ -25,6 +25,8 @@
 
 namespace Dhl\Shipping\Model\Service;
 
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
@@ -34,7 +36,6 @@ use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\ShipmentInterface;
-use Magento\Sales\Model\Order\Shipment;
 
 /**
  * Load services for packaging popup
@@ -67,20 +68,33 @@ class PackagingServiceProvider
     private $serviceSelectionRepo;
 
     /**
+     * @var ServiceSettingsInterfaceFactory
+     */
+    private $serviceSettingsFactory;
+
+    /**
      * PackagingServiceProvider constructor.
      *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param RouteValidatorInterface $routeValidator
      * @param ServiceSelectionRepositoryInterface $serviceSelectionRepo
+     * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      */
-    public function __construct(ServicePool $servicePool, ModuleConfigInterface $config, RouteValidatorInterface $routeValidator, ServiceSelectionRepositoryInterface $serviceSelectionRepo)
-    {
+    public function __construct(
+        ServicePool $servicePool,
+        ModuleConfigInterface $config,
+        RouteValidatorInterface $routeValidator,
+        ServiceSelectionRepositoryInterface $serviceSelectionRepo,
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory
+    ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;
         $this->serviceSelectionRepo = $serviceSelectionRepo;
+        $this->serviceSettingsFactory = $serviceSettingsFactory;
     }
+
 
     /**
      * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
@@ -88,8 +102,9 @@ class PackagingServiceProvider
      */
     public function getServices(ShipmentInterface $shipment)
     {
-        $addressId = $shipment->getOrder()->getShippingAddress()->getId();
-        $presets = $this->config->getServiceSettings($addressId, $shipment->getStoreId());
+        $orderAddressId = $shipment->getOrder()->getShippingAddress()->getId();
+
+        $presets = $this->prepareServiceSettings($orderAddressId, $shipment->getStoreId());
 
         $serviceCollection = $this->servicePool->getServices($presets);
 
@@ -108,4 +123,42 @@ class PackagingServiceProvider
         return $serviceCollection;
     }
 
+    /**
+     * Take a settings array, enrich it with additional data and
+     * turn it into ServiceSettingsInterface[].
+     *
+     * @param string $storeId
+     * @param string $orderAddressId
+     * @return ServiceSettingsInterface[]
+     */
+    private function prepareServiceSettings(string $orderAddressId, string $storeId): array
+    {
+        $settings = $this->config->getServiceSettings($storeId);
+
+        /**
+         * Add service values from serviceSelection objects
+         */
+        try {
+            /** @var ServiceSelectionInterface[] $serviceSelections */
+            $serviceSelections = $this->serviceSelectionRepo
+                ->getByOrderAddressId($orderAddressId)
+                ->getItems();
+
+            foreach ($serviceSelections as $selection) {
+                if ($settings[$selection->getServiceCode()]) {
+                    $settings[$selection->getServiceCode()][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
+                    $settings[$selection->getServiceCode()][ServiceSettingsInterface::IS_SELECTED] = true;
+                }
+            }
+        } catch (NoSuchEntityException $e) {
+            // do nothing
+        }
+
+        return array_map(
+            function ($config) {
+                return $this->serviceSettingsFactory->create($config);
+            },
+            $settings
+        );
+    }
 }

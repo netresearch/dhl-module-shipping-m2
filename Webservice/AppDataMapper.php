@@ -25,17 +25,21 @@
 
 namespace Dhl\Shipping\Webservice;
 
+use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\ShippingInfoInterface;
 use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Config\BcsConfigInterface;
 use Dhl\Shipping\Config\GlConfigInterface;
-use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Service\LabelServiceProvider;
+use Dhl\Shipping\Model\Service\ServiceCollection;
+use Dhl\Shipping\Service\Bcs\PrintOnlyIfCodeable;
 use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\GlShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Dhl\Shipping\Util\StreetSplitterInterface;
 use Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterfaceFactory;
@@ -44,8 +48,6 @@ use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Pos
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterfaceFactory;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
@@ -53,7 +55,6 @@ use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInte
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
@@ -86,11 +87,6 @@ class AppDataMapper implements AppDataMapperInterface
      * @var GlConfigInterface
      */
     private $glConfig;
-
-    /**
-     * @var ModuleConfigInterface
-     */
-    private $moduleConfig;
 
     /**
      * @var ShippingProductsInterface|BcsShippingProductsInterface|GlShippingProductsInterface
@@ -158,11 +154,6 @@ class AppDataMapper implements AppDataMapperInterface
     private $returnReceiverFactory;
 
     /**
-     * @var CustomsDetails\CustomsDetailsInterfaceFactory
-     */
-    private $customsDetailsFactory;
-
-    /**
      * @var WeightInterfaceFactory
      */
     private $packageWeightFactory;
@@ -188,16 +179,6 @@ class AppDataMapper implements AppDataMapperInterface
     private $packageItemFactory;
 
     /**
-     * @var Service\ServiceCollectionInterfaceFactory
-     */
-    private $serviceCollectionFactory;
-
-    /**
-     * @var CustomsDetails\ExportTypeInterfaceFactory
-     */
-    private $exportTypeInterfaceFactory;
-
-    /**
      * @var ShipmentOrderInterfaceFactory
      */
     private $shipmentOrderFactory;
@@ -207,21 +188,17 @@ class AppDataMapper implements AppDataMapperInterface
      */
     private $requestValidator;
 
-    /** @var  ExportPositionFactory */
-    private $exportPositionFactory;
-
     /**
-     * @var ServiceCollection
+     * @var LabelServiceProvider
      */
-    private $serviceCollection;
+    private $labelServiceProvider;
 
     /**
      * AppDataMapper constructor.
      *
      * @param BcsConfigInterface $bcsConfig
      * @param GlConfigInterface $glConfig
-     * @param ModuleConfigInterface $moduleConfig
-     * @param ShippingProductsInterface $shippingProducts
+     * @param BcsShippingProductsInterface|GlShippingProductsInterface|ShippingProductsInterface $shippingProducts
      * @param StreetSplitterInterface $streetSplitter
      * @param OrderAddressExtensionRepositoryInterface $addressExtensionRepository
      * @param BankDataInterfaceFactory $bankDataFactory
@@ -234,22 +211,18 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipperInterfaceFactory $shipperFactory
      * @param ReceiverInterfaceFactory $receiverFactory
      * @param ReturnReceiverInterfaceFactory $returnReceiverFactory
-     * @param CustomsDetails\CustomsDetailsInterfaceFactory $customsDetailsFactory
-     * @param CustomsDetails\ExportTypeInterfaceFactory $exportTypeInterfaceFactory
      * @param WeightInterfaceFactory $packageWeightFactory
      * @param DimensionsInterfaceFactory $packageDimensionsFactory
-     * @param MonetaryValueInterfaceFactory $packageValueFactory
+     * @param MonetaryValueInterfaceFactory $monetaryValueFactory
      * @param PackageInterfaceFactory $packageFactory
-     * @param Service\ServiceCollectionInterfaceFactory $serviceCollectionFactory
+     * @param PackageItemInterfaceFactory $packageItemFactory
      * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
      * @param RequestValidatorInterface $requestValidator
-     * @param ExportPositionFactory $exportPositionFactory
-     * @param PackageItemInterfaceFactory $packageItemInterfaceFactory
+     * @param LabelServiceProvider $labelServiceProvider
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
         GlConfigInterface $glConfig,
-        ModuleConfigInterface $moduleConfig,
         ShippingProductsInterface $shippingProducts,
         StreetSplitterInterface $streetSplitter,
         OrderAddressExtensionRepositoryInterface $addressExtensionRepository,
@@ -263,46 +236,40 @@ class AppDataMapper implements AppDataMapperInterface
         ShipperInterfaceFactory $shipperFactory,
         ReceiverInterfaceFactory $receiverFactory,
         ReturnReceiverInterfaceFactory $returnReceiverFactory,
-        CustomsDetails\CustomsDetailsInterfaceFactory $customsDetailsFactory,
-        CustomsDetails\ExportTypeInterfaceFactory $exportTypeInterfaceFactory,
         WeightInterfaceFactory $packageWeightFactory,
         DimensionsInterfaceFactory $packageDimensionsFactory,
-        MonetaryValueInterfaceFactory $packageValueFactory,
+        MonetaryValueInterfaceFactory $monetaryValueFactory,
         PackageInterfaceFactory $packageFactory,
-        Service\ServiceCollectionInterfaceFactory $serviceCollectionFactory,
+        PackageItemInterfaceFactory $packageItemFactory,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
         RequestValidatorInterface $requestValidator,
-        ExportPositionFactory $exportPositionFactory,
-        PackageItemInterfaceFactory $packageItemInterfaceFactory
+        LabelServiceProvider $labelServiceProvider
     ) {
-        $this->bcsConfig                    = $bcsConfig;
-        $this->glConfig                     = $glConfig;
-        $this->moduleConfig                 = $moduleConfig;
-        $this->shippingProducts             = $shippingProducts;
-        $this->streetSplitter               = $streetSplitter;
-        $this->addressExtensionRepository   = $addressExtensionRepository;
-        $this->bankDataFactory              = $bankDataFactory;
-        $this->shipmentDetailsFactory       = $shipmentDetailsFactory;
-        $this->identityFactory              = $identityFactory;
-        $this->addressFactory               = $addressFactory;
-        $this->packstationFactory           = $packstationFactory;
-        $this->postfilialeFactory           = $postfilialeFactory;
-        $this->parcelShopFactory            = $parcelShopFactory;
-        $this->shipperFactory               = $shipperFactory;
-        $this->receiverFactory              = $receiverFactory;
-        $this->returnReceiverFactory        = $returnReceiverFactory;
-        $this->customsDetailsFactory        = $customsDetailsFactory;
-        $this->exportTypeInterfaceFactory   = $exportTypeInterfaceFactory;
-        $this->packageWeightFactory         = $packageWeightFactory;
-        $this->packageDimensionsFactory     = $packageDimensionsFactory;
-        $this->monetaryValueFactory         = $packageValueFactory;
-        $this->packageFactory               = $packageFactory;
-        $this->serviceCollectionFactory     = $serviceCollectionFactory;
-        $this->shipmentOrderFactory         = $shipmentOrderFactory;
-        $this->requestValidator             = $requestValidator;
-        $this->exportPositionFactory        = $exportPositionFactory;
-        $this->packageItemFactory           = $packageItemInterfaceFactory;
+        $this->bcsConfig = $bcsConfig;
+        $this->glConfig = $glConfig;
+        $this->shippingProducts = $shippingProducts;
+        $this->streetSplitter = $streetSplitter;
+        $this->addressExtensionRepository = $addressExtensionRepository;
+        $this->bankDataFactory = $bankDataFactory;
+        $this->shipmentDetailsFactory = $shipmentDetailsFactory;
+        $this->addressFactory = $addressFactory;
+        $this->packstationFactory = $packstationFactory;
+        $this->postfilialeFactory = $postfilialeFactory;
+        $this->parcelShopFactory = $parcelShopFactory;
+        $this->identityFactory = $identityFactory;
+        $this->shipperFactory = $shipperFactory;
+        $this->receiverFactory = $receiverFactory;
+        $this->returnReceiverFactory = $returnReceiverFactory;
+        $this->packageWeightFactory = $packageWeightFactory;
+        $this->packageDimensionsFactory = $packageDimensionsFactory;
+        $this->monetaryValueFactory = $monetaryValueFactory;
+        $this->packageFactory = $packageFactory;
+        $this->packageItemFactory = $packageItemFactory;
+        $this->shipmentOrderFactory = $shipmentOrderFactory;
+        $this->requestValidator = $requestValidator;
+        $this->labelServiceProvider = $labelServiceProvider;
     }
+
 
     /**
      * Calculate total value of order
@@ -324,10 +291,11 @@ class AppDataMapper implements AppDataMapperInterface
 
     /**
      * @param ShipmentRequest $request
+     * @param bool $printOnlyIfCodeable
      *
      * @return ShipmentDetailsInterface
      */
-    private function getShipmentDetails(ShipmentRequest $request)
+    private function getShipmentDetails(ShipmentRequest $request, bool $printOnlyIfCodeable): ShipmentDetailsInterface
     {
         $storeId  = $request->getOrderShipment()->getStoreId();
         $bankData = $this->bankDataFactory->create([
@@ -349,12 +317,8 @@ class AppDataMapper implements AppDataMapperInterface
         $billingNumber = $this->shippingProducts->getBillingNumber($productCode, $ekp, $participations);
         $returnBillingNumber = $this->shippingProducts->getReturnBillingNumber($productCode, $ekp, $participations);
 
-        //get printOnlyIfCodeAble
-        $printOnlyIfCodeAble = $this->serviceCollection
-            ->getService(AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE);
-
         $shipmentDetails = $this->shipmentDetailsFactory->create([
-            'isPrintOnlyIfCodeable'       => $printOnlyIfCodeAble ? $printOnlyIfCodeAble->isActive() : false,
+            'isPrintOnlyIfCodeable'       => $printOnlyIfCodeable,
             'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
             'product'                     => $productCode,
             'accountNumber'               => $billingNumber,
@@ -550,56 +514,38 @@ class AppDataMapper implements AppDataMapperInterface
     /**
      * @param ShipmentRequest $request
      *
-     * @return Service\ServiceCollectionInterface
+     * @return ServiceInterface[]|ServiceCollection
      */
     private function getServices(ShipmentRequest $request)
     {
-        $paymentMethod = $request->getOrderShipment()->getOrder()->getPayment()->getMethod();
-        if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
-            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_COD, [
-                'codAmount' => $this->getOrderValue($request),
-                'addFee' => true,
-            ]);
-        }
-
         $packageParams = $request->getData('package_params');
         $servicesData  = $packageParams->getData('services') ?: [];
 
-        $serviceCode = AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS;
-        if (isset($servicesData[$serviceCode])) {
-            $this->serviceCollection->addService($serviceCode);
-        }
+        $services = $this->labelServiceProvider->getServices($servicesData, $request->getOrderShipment());
 
-        $serviceCode = AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT;
-        if (isset($servicesData[$serviceCode])) {
-            $this->serviceCollection->addService($serviceCode, [
-                'emailAddress' => $request->getData('recipient_email'),
-            ]);
-        }
+//        $paymentMethod = $request->getOrderShipment()->getOrder()->getPayment()->getMethod();
+//        if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
+//            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_COD, [
+//                'codAmount' => $this->getOrderValue($request),
+//                'addFee' => true,
+//            ]);
+//        }
 
-        $serviceCode = AbstractServiceFactory::SERVICE_CODE_INSURANCE;
-        if (isset($servicesData[$serviceCode])) {
-            $this->serviceCollection->addService($serviceCode, [
-                'insuranceAmount' => $this->getOrderValue($request)
-            ]);
-        }
+//        $serviceCode = AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT;
+//        if (isset($servicesData[$serviceCode])) {
+//            $this->serviceCollection->addService($serviceCode, [
+//                'emailAddress' => $request->getData('recipient_email'),
+//            ]);
+//        }
+//
+//        $serviceCode = AbstractServiceFactory::SERVICE_CODE_INSURANCE;
+//        if (isset($servicesData[$serviceCode])) {
+//            $this->serviceCollection->addService($serviceCode, [
+//                'insuranceAmount' => $this->getOrderValue($request)
+//            ]);
+//        }
 
-        $serviceCode = AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT;
-        if (isset($servicesData[$serviceCode])) {
-            $this->serviceCollection->addService($serviceCode);
-        }
-
-        $serviceCode = AbstractServiceFactory::SERVICE_CODE_PRINT_ONLY_IF_CODEABLE;
-        if (isset($servicesData[$serviceCode])) {
-            $this->serviceCollection->addService($serviceCode);
-        }
-
-        $serviceCode = AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE;
-        if (isset($servicesData[$serviceCode])) {
-            $this->serviceCollection->addService($serviceCode, $servicesData[$serviceCode]);
-        }
-
-        return $this->serviceCollection;
+        return $services;
     }
 
     /**
@@ -743,12 +689,17 @@ class AppDataMapper implements AppDataMapperInterface
      * @return ShipmentOrderInterface
      * @throws CreateShipmentValidationException
      */
-    public function mapShipmentRequest($request, $sequenceNumber)
+    public function mapShipmentRequest($request, $sequenceNumber): ShipmentOrderInterface
     {
-        $this->serviceCollection = $this->serviceCollectionFactory->create();
-
         $services        = $this->getServices($request);
-        $shipmentDetails = $this->getShipmentDetails($request);
+        $printOnlyIfCodeable = false;
+        foreach ($services as $service) {
+            if ($service->getCode() === PrintOnlyIfCodeable::CODE) {
+                $printOnlyIfCodeable = $service->isSelected();
+                break;
+            }
+        }
+        $shipmentDetails = $this->getShipmentDetails($request, $printOnlyIfCodeable);
         $shipper         = $this->getShipper($request);
         $receiver        = $this->getReceiver($request);
         $returnReceiver  = $this->getReturnReceiver($request);

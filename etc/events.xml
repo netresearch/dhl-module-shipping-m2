@@ -49,4 +49,7 @@
     <event name="dhlshipping_label_create_after">
         <observer name="shipping_update_label_status" instance="Dhl\Shipping\Observer\UpdateLabelStatusObserver" />
     </event>
+    <event name="controller_action_predispatch_adminhtml_order_shipment_save">
+        <observer name="shipping_save_shipment" instance="Dhl\Shipping\Observer\PersistShipmentServiceSelectionObserver" />
+    </event>
 </config>

@@ -138,7 +138,7 @@ interface ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function canProcessShipping($shippingMethod, $destCountryId, $store = null);
+    public function canProcessShipping($shippingMethod, $destCountryId, $store = null): bool;
 
     /**
      * Check if the given payment method is cash on delivery.
@@ -147,7 +147,15 @@ interface ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function isCodPaymentMethod($paymentMethod, $store = null);
+    public function isCodPaymentMethod($paymentMethod, $store = null): bool;
+
+    /**
+     * Get Eu Countries.
+     *
+     * @param $storeId
+     * @return array
+     */
+    public function getEuCountries($storeId): array;
 
     /**
      * Checks if the route is crossing borders for given store configuration
@@ -156,16 +164,15 @@ interface ModuleConfigInterface
      * @param int|null $storeId
      * @return bool
      */
-    public function isCrossBorderRoute($destinationCountryId, $storeId = null);
+    public function isCrossBorderRoute($destinationCountryId, $storeId = null): bool;
 
     /**
      * Get initialization settings for services, e.g. default values
      *
-     * @param mixed $orderAddressId
      * @param mixed $store
      * @return \Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface[]
      */
-    public function getServiceSettings($orderAddressId = null, $store = null);
+    public function getServiceSettings($store = null): array;
 
     /**
      * Get allowed order statuses for automatic shipment creation

@@ -377,24 +377,28 @@ define(["underscore", "prototype", "Magento_Shipping/order/packaging"], function
 
                 if (serviceCode && serviceInputCode) {
                     // Collect service information
-                    if (element.type.match('checkbox') && element.checked) {
+                    if (element.type.match('checkbox')) {
                         inputValue = element.checked;
                     } else if (element.type.match('select')) {
                         inputValue = element.options[element.selectedIndex].value
                     } else {
                         inputValue = element.value;
                     }
-                    this.dhlShipping.params[packageId]['[services]['+serviceCode+']['+serviceInputCode+']'] = inputValue;
+                    if (inputValue) {
+                        this.dhlShipping.params[packageId]['[services]['+serviceCode+']['+serviceInputCode+']'] = inputValue;
+                    }
                 } else if (customsCode) {
                     // Collect customs information
-                    if (element.type.match('checkbox') && element.checked) {
+                    if (element.type.match('checkbox')) {
                          inputValue = element.checked;
                     } else if (element.type.match('select')) {
                         inputValue = element.options[element.selectedIndex].value
                     } else {
                         inputValue = element.value
                     }
-                    this.dhlShipping.params[packageId]['[customs]['+customsCode+']'] = inputValue
+                    if (inputValue) {
+                        this.dhlShipping.params[packageId]['[customs]['+customsCode+']'] = inputValue
+                    }
                 }
             }.bind(this));
         },
