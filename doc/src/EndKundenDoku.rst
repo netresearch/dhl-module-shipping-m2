@@ -269,7 +269,7 @@ Dieser Abschnitt wird bei Nutzung der *eCommerce Global Label API* nicht angezei
 da hier kein Nachnahmeversand möglich ist.
 
 Einstellungen für die Massenerstellung von Versandetiketten
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In diesem Konfigurationsbereich legen Sie die Standardwerte für Sendungen fest, die
 automatisch (per Cronjob) oder über die Massenaktion_ erstellt werden.
@@ -611,7 +611,7 @@ Im Fehlerfall sehen Sie die entsprechende Meldung in den Bestellkommentaren.
 Übersicht über offene und erstellte Sendungen
 ---------------------------------------------
 
-Unter "Verkäufe → Bestellungen" finden Sie eine Spalte "DHL Label Status".
+Unter *Verkäufe → Bestellungen* finden Sie eine Spalte *DHL Label Status*.
 Dort wird der aktuelle Zustand Ihrer DHL-Sendungen abgebildet.
 
 .. image:: images/de/label_status.png
@@ -624,7 +624,7 @@ Die Symbole haben folgende Bedeutung:
 
 Bei Sendungen, die nicht mit DHL Shipping verarbeitet werden können, wird kein Logo angezeigt.
 
-Über die Funktion "Filter" in der Bestellübersicht lassen sich Bestellungen nach den verschiedenen Labelstati filtern.
+Über die Funktion *Filter* in der Bestellübersicht lassen sich Bestellungen nach den verschiedenen Labelstati filtern.
 
 .. raw:: pdf
 

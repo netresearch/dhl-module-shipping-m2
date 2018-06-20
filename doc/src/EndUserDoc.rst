@@ -268,7 +268,7 @@ When using the *eCommerce Global Label API*, the service Cash On Delivery is
 currently not available.
 
 Bulk Shipping Label Creation Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In this section, the default values are configured for shipments that are created
 automatically (Cronjob) or via the `Mass action`_.
@@ -279,7 +279,7 @@ different values can be configured.
 Please also note the configuration of customs information in the product attributes, see
 section `International shipments`_.
 
-Furthermore, in this configuration section, the default values for additional DHL services must be defined.
+Furthermore, in this configuration section, the default values for additional DHL services can be defined.
 
 - *Print only if codeable*: If this is enabled, only shipments with perfectly
   valid addresses will be accepted by DHL. Otherwise, DHL will reject the shipment
@@ -313,7 +313,7 @@ In this section you can configure the label size, page size, and layout.
 
 
 Automatic Shipping Label Creation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The section *Automatic Shipment Creation* lets you choose if shipments should be
 created and package labels retrieved automatically.
@@ -445,7 +445,7 @@ Everything else is the same as described in the section `National shipments`_.
 
 .. admonition:: About configurable products
 
-   For **configurable* products, the aforementioned attributes must be set directly in the configurable
+   For **configurable** products, the aforementioned attributes must be set directly in the configurable
    product, **not** in the associated simple products.
 
 .. raw:: pdf
@@ -474,7 +474,8 @@ The preselection of the services depends on the default values from the general
 Mass action
 ~~~~~~~~~~~
 
-Shipments and labels can also be created using a mass action in the orders grid:
+Shipments and labels can also be created using the mass action *Create Shipping Labels* in
+the order grid:
 
 * Sales → Orders → Mass action *Create Shipping Labels*
 
@@ -492,7 +493,7 @@ and the default values in the configuration (see `International shipments`_), if
    The dropdown contains two very similar entries: *Print shipping labels* and *Create shipping labels*.
    Make sure to use the correct entry!
 
-   The function *Print shipping labels* only allows re-printing **existing** shipping labels.
+   The function *Print shipping labels* only allows printing **existing** shipping labels.
 
 .. raw:: pdf
 
@@ -598,7 +599,7 @@ Error messages will be shown in the order comments.
 Shipment Overview
 -----------------
 
-In the order grid at "Sales → Orders" you will find a column "DHL Label Status".
+In the order grid at *Sales → Orders* you will find a column *DHL Label Status*.
 It displays the current status of your DHL shipments.
 
 .. image:: images/en/label_status.png
@@ -607,12 +608,12 @@ It displays the current status of your DHL shipments.
 The symbols have the following meaning:
 
 - *colored DHL logo*: The DHL shipment was successfully created
-- *grey DHL logo*: The DHL shipment was not yet created or the order was only partially shipped
+- *grey DHL logo*: The DHL shipment was not yet created, or the order was only partially shipped
 - *crossed-out DHL logo*: There was an error during the last attempt to create a DHL shipment
 
-Shipments that can not be processed by DHL Shipping will not display a logo in the DHL Label Status column.
+Shipments that cannot be processed by DHL Shipping will not display a logo in the DHL Label Status column.
 
-You can filter orders by DHL label status using the "Filters" function above the order grid.
+You can filter orders by DHL label status using the *Filters* function above the order grid.
 
 .. raw:: pdf
 
