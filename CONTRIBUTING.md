@@ -21,7 +21,3 @@ When reporting bugs, please include the following information with your descript
 * Magento® version
 * Module version
 * Log files, if applicable
-* EKP (DHL account number)
-
-A more elaborate contribution procedure (including GitHub issues and pull 
-request workflows) will be established in the future.
