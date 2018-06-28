@@ -97,7 +97,7 @@ class PackagingServiceProvider
 
 
     /**
-     * @param ShipmentInterface|\Magento\Sales\Model\Order\Shipment $shipment
+     * @param ShipmentInterface|Shipment $shipment
      * @return ServiceCollection|ServiceInterface[]
      */
     public function getServices(ShipmentInterface $shipment)

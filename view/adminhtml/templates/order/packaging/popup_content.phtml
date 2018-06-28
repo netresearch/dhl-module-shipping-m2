@@ -29,8 +29,8 @@
     $configDefaultEct = $block->getDefaultExportContentType();
     $configDefaultEctExplanation = $block->getDefaultExportContentTypeExplanation();
 
-    $exportContenttype = isset($configDefaultEct) ? $configDefaultEct : '';
-    $exportContenttypeExplanation = isset($configDefaultEctExplanation) ? $configDefaultEctExplanation : '';
+    $exportContentType = $configDefaultEct ?? '';
+    $exportContentTypeExplanation =  $configDefaultEctExplanation ?? '';
 
 ?>
 <div id="packaging_window">
@@ -165,14 +165,13 @@
                                     class="options-units-weight measures admin__control-select"
                                     onchange="packaging.changeMeasures(this);">
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::POUND) ?>"
-                                        <?php if(!$isMetric): ?>selected="selected" <?php endif;?> >
+                                    <?= $isMetric ? '' : 'selected="selected"' ?>>
                                     <?= $block->escapeHtml(__('lb')) ?>
                                 </option>
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::KILOGRAM) ?>"
-                                        <?php if($isMetric): ?>selected="selected" <?php endif; ?>>
+                                    <?= $isMetric ? 'selected="selected"' : '' ?>>
                                     <?= $block->escapeHtml(__('kg')) ?>
                                 </option>
-
                             </select>
                             <span class="admin__addon-prefix"></span>
                         </div>
@@ -254,10 +253,10 @@
                         <td>
                             <input name="content_type_other"
                                    type="text"
-                                    <?php if ($exportContenttype == 'OTHER') : ?>
+                                    <?php if ($exportContentType == 'OTHER') : ?>
                                         class="input-text admin__control-text options-content-type"
-                                        <?php if ($exportContenttypeExplanation) : ?>
-                                        value="<?= $block->escapeHtmlAttr($exportContenttypeExplanation) ?>"
+                                        <?php if ($exportContentTypeExplanation) : ?>
+                                        value="<?= $block->escapeHtmlAttr($exportContentTypeExplanation) ?>"
                                         <?php endif; ?>
                                     <?php else : ?>
                                         class="input-text admin__control-text options-content-type disabled"

@@ -114,10 +114,9 @@ class CheckoutServiceProvider
     /**
      * @param string $countryId
      * @param string $storeId
-     * @param int|null $orderID
      * @return array
      */
-    public function getServices($countryId, $storeId, $orderID = null): array
+    public function getServices($countryId, $storeId): array
     {
         $presets = $this->prepareServiceSettings($storeId);
 

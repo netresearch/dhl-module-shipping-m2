@@ -291,11 +291,11 @@ define(["underscore", "prototype", "Magento_Shipping/order/packaging"], function
         },
 
         /**
-        * Search items in package for exportDescriptions.
-        * Update the Export Description textarea of the package block with values.
-        *
-        * @param {HTMLElement} obj
-        */
+         * Search items in package for exportDescriptions.
+         * Update the Export Description textarea of the package block with values.
+         *
+         * @param {HTMLElement} obj
+         */
         updateDhlExportDescription: function (obj) {
             var itemSeparator = ' ';
             var packageBlock = $(obj).up('[id^="package_block"]');
@@ -319,9 +319,9 @@ define(["underscore", "prototype", "Magento_Shipping/order/packaging"], function
                 var itemExportDescription = item.select('[data-name=export_description]')[0].value;
                 if (itemExportDescription) {
                     descriptions.push(itemExportDescription);
-              }
+                }
             });
-            var textAreaValue = descriptions.join(itemSeparator).substring(0,50);
+            var textAreaValue = descriptions.join(itemSeparator).substring(0, 50);
 
             descriptionTextarea.setValue(textAreaValue);
         },
@@ -385,19 +385,20 @@ define(["underscore", "prototype", "Magento_Shipping/order/packaging"], function
                         inputValue = element.value;
                     }
                     if (inputValue) {
-                        this.dhlShipping.params[packageId]['[services]['+serviceCode+']['+serviceInputCode+']'] = inputValue;
+                        this.dhlShipping.params[packageId]['[services][' + serviceCode + '][' + serviceInputCode + ']'] = inputValue;
                     }
                 } else if (customsCode) {
                     // Collect customs information
                     if (element.type.match('checkbox')) {
-                         inputValue = element.checked;
+                        inputValue = element.checked;
+
                     } else if (element.type.match('select')) {
                         inputValue = element.options[element.selectedIndex].value
                     } else {
                         inputValue = element.value
                     }
                     if (inputValue) {
-                        this.dhlShipping.params[packageId]['[customs]['+customsCode+']'] = inputValue
+                        this.dhlShipping.params[packageId]['[customs][' + customsCode + ']'] = inputValue
                     }
                 }
             }.bind(this));
