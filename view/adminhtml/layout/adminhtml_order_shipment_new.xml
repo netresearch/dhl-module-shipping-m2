@@ -31,10 +31,10 @@
     <body>
         <referenceBlock name="shipment_packaging">
             <block class="Dhl\Shipping\Block\Adminhtml\Order\Shipment\Packaging" name="dhl_shipping_packaging_content"
-                   template="Dhl_Shipping::order/packaging/popup_content.phtml">
+                   template="Dhl_Shipping::order/packaging/popup/content.phtml">
                 <block class="Dhl\Shipping\Block\Adminhtml\Order\Shipment\Customs" name="dhl_shipment_packaging_export_documents"/>
                 <block class="Dhl\Shipping\Block\Adminhtml\Order\Shipment\Services" name="dhl_shipment_packaging_services"
-                       template="Dhl_Shipping::order/packaging/popup_services.phtml">
+                       template="Dhl_Shipping::order/packaging/popup/services.phtml">
                     <block class="Magento\Backend\Block\Template" name="dhl_shipment_packaging_service"/>
                 </block>
             </block>

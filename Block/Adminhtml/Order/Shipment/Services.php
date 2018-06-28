@@ -118,7 +118,7 @@ class Services extends Packaging
             }
             /** Set block template according to service input type */
             $template = sprintf(
-                'Dhl_Shipping::order/packaging/popup_service_%s.phtml',
+                'Dhl_Shipping::order/packaging/popup/service/%s.phtml',
                 $inputType
             );
 

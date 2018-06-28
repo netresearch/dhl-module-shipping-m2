@@ -46,9 +46,9 @@ use Magento\Sales\Model\Order\Shipment\ItemFactory;
  */
 class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 {
-    const BCS_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_bcs.phtml';
+    const BCS_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid/bcs.phtml';
 
-    const GL_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid_gl.phtml';
+    const GL_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid/gl.phtml';
 
     const STANDARD_TEMPLATE = 'Magento_Shipping::order/packaging/grid.phtml';
 

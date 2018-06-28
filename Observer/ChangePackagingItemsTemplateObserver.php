@@ -108,9 +108,9 @@ class ChangePackagingItemsTemplateObserver implements ObserverInterface
 
         $originCountryId = $this->config->getShipperCountry($shipment->getStoreId());
         if (in_array($originCountryId, ['DE', 'AT'])) {
-            $block->setTemplate('Dhl_Shipping::order/packaging/grid_bcs.phtml');
+            $block->setTemplate('Dhl_Shipping::order/packaging/grid/bcs.phtml');
         } else {
-            $block->setTemplate('Dhl_Shipping::order/packaging/grid_gl.phtml');
+            $block->setTemplate('Dhl_Shipping::order/packaging/grid/gl.phtml');
         }
 
         $block->setData('viewModel', $this->viewModel);

@@ -43,9 +43,9 @@ use Magento\Backend\Block\Template\Context;
  */
 class Customs extends Template
 {
-    const BCS_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_bcs.phtml';
+    const BCS_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup/customs/bcs.phtml';
 
-    const GL_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup_customs_gl.phtml';
+    const GL_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup/customs/gl.phtml';
 
     /**
      * @var ModuleConfigInterface
