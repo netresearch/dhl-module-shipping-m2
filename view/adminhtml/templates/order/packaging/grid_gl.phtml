@@ -121,7 +121,7 @@ $viewModel = $block->getData('viewModel');
                         <?php $tariffNumber = $_orderItem->getProduct()->getData('dhl_tariff_number'); ?>
                         <input data-module="dhl_shipping" data-name="tariff_number"
                                type="text"
-                               class="input-text admin__control-text required-entry validate-length maximum-length-10"
+                               class="input-text admin__control-text validate-length maximum-length-10"
                                minlength="4" maxlength="10"
                                title="<?= $block->escapeHtmlAttr(__('Tariff Number')) ?>"
                                value="<?= $block->escapeHtmlAttr($tariffNumber); ?>"
