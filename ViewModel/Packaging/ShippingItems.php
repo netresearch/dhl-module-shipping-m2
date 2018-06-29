@@ -61,4 +61,16 @@ class ShippingItems implements ArgumentInterface
         $countryCollection = $this->countryCollectionFactory->create();
         return $countryCollection->toOptionArray();
     }
+
+    /**
+     * @param \Magento\Sales\Model\Order\Item $orderItem
+     * @return mixed
+     */
+    public function getExportDescription($orderItem)
+    {
+        return $orderItem->getProduct()->getData('dhl_export_description') ?
+            $orderItem->getProduct()->getData('dhl_export_description') :
+            $orderItem->getProduct()->getData('name');
+    }
+
 }

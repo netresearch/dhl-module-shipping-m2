@@ -128,7 +128,7 @@ $viewModel = $block->getData('viewModel');
                         />
                     </td>
                     <td>
-                        <?php $exportDescription = $_orderItem->getProduct()->getData('dhl_export_description'); ?>
+                        <?php $exportDescription = $viewModel->getExportDescription($_orderItem) ?>
                         <input data-module="dhl_shipping"
                                data-name="export_description"
                                type="text"
