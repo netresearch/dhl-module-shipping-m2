@@ -34,7 +34,7 @@ $termDefaultValue = $block->getTermsOfTradeDefault();
         <tr>
             <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Terms of Trade')) ?></span></th>
             <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Dangerous Goods Category')) ?></span></th>
-            <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Export Description')) ?></span></th>
+            <th class="no-link"><span class="nobr"><?= $block->escapeHtml(__('Package Description')) ?></span></th>
         </tr>
     </thead>
     <tbody>
@@ -67,7 +67,7 @@ $termDefaultValue = $block->getTermsOfTradeDefault();
                 <textarea maxlength="50" cols="50"
                           data-module="dhl_shipping"
                           data-name="dhl_customs_export_description"
-                          title="<?= $block->escapeHtmlAttr(__('Export Description')) ?>"
+                          title="<?= $block->escapeHtmlAttr(__('Package Description')) ?>"
                           class="admin__control-textarea"></textarea>
             </td>
         </tr>

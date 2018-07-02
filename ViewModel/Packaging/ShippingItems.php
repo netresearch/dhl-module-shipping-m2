@@ -64,12 +64,11 @@ class ShippingItems implements ArgumentInterface
 
     /**
      * @param \Magento\Sales\Model\Order\Item $orderItem
-     * @return mixed
+     * @return string
      */
     public function getExportDescription($orderItem)
     {
-        return $orderItem->getProduct()->getData('dhl_export_description') ?
-            $orderItem->getProduct()->getData('dhl_export_description') :
+        return $orderItem->getProduct()->getData('dhl_export_description') ?:
             $orderItem->getProduct()->getData('name');
     }
 
