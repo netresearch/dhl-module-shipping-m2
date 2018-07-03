@@ -239,6 +239,7 @@
                 <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="166" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Parcel announcement</label>
                     <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
+                    <comment><![CDATA[Please note that you need to mention the data transmission in your privacy policy for GDPR compliance.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type">bcs</field>

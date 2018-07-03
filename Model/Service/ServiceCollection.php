@@ -25,6 +25,7 @@
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
+use Dhl\Shipping\Api\ServiceCollectionInterface;
 
 /**
  * ServiceCollection
@@ -34,7 +35,7 @@ use Dhl\Shipping\Api\Data\ServiceInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServiceCollection extends \ArrayIterator
+class ServiceCollection extends \ArrayIterator implements ServiceCollectionInterface
 {
     /**
      * @param ServiceInterface[] $services

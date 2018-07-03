@@ -28,6 +28,7 @@ namespace Dhl\Shipping\Webservice;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\ShippingInfoInterface;
 use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
+use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Config\BcsConfigInterface;
 use Dhl\Shipping\Config\GlConfigInterface;
 use Dhl\Shipping\Model\Service\LabelServiceProvider;
@@ -278,7 +279,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipmentRequest $request
      * @return MonetaryValueInterface
      */
-    public function getOrderValue(ShipmentRequest $request)
+    private function getOrderValue(ShipmentRequest $request)
     {
         $shipmentValue = $request->getOrderShipment()->getOrder()->getBaseGrandTotal();
         $declaredValue = $this->monetaryValueFactory->create([
@@ -306,9 +307,6 @@ class AppDataMapper implements AppDataMapperInterface
             'notes'            => $this->bcsConfig->getBankDataNote($storeId),
             'accountReference' => $this->bcsConfig->getBankDataAccountReference($storeId),
         ]);
-
-        $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
-        $qtyShipped = $request->getOrderShipment()->getTotalQty();
         $productCode = $request->getData('packaging_type');
 
         $ekp = $this->bcsConfig->getAccountEkp($storeId);
@@ -317,21 +315,23 @@ class AppDataMapper implements AppDataMapperInterface
         $billingNumber = $this->shippingProducts->getBillingNumber($productCode, $ekp, $participations);
         $returnBillingNumber = $this->shippingProducts->getReturnBillingNumber($productCode, $ekp, $participations);
 
-        $shipmentDetails = $this->shipmentDetailsFactory->create([
-            'isPrintOnlyIfCodeable'       => $printOnlyIfCodeable,
-            'isPartialShipment'           => ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1),
-            'product'                     => $productCode,
-            'accountNumber'               => $billingNumber,
-            'returnShipmentAccountNumber' => $returnBillingNumber,
-            'pickupAccountNumber'         => $this->glConfig->getPickupAccountNumber($storeId),
-            'distributionCenter'          => $this->glConfig->getDistributionCenter($storeId),
-            'customerPrefix'              => $this->glConfig->getCustomerPrefix($storeId),
-            'consignmentNumber'           => $this->glConfig->getConsignmentNumber($storeId),
-            'reference'                   => $request->getOrderShipment()->getOrder()->getIncrementId(),
-            'returnShipmentReference'     => $request->getOrderShipment()->getOrder()->getIncrementId(),
-            'shipmentDate'                => date("Y-m-d"),
-            'bankData'                    => $bankData,
-        ]);
+        $shipmentDetails = $this->shipmentDetailsFactory->create(
+            [
+                'isPrintOnlyIfCodeable' => $printOnlyIfCodeable,
+                'isPartialShipment' => $this->isPartialShipment($request),
+                'product' => $productCode,
+                'accountNumber' => $billingNumber,
+                'returnShipmentAccountNumber' => $returnBillingNumber,
+                'pickupAccountNumber' => $this->glConfig->getPickupAccountNumber($storeId),
+                'distributionCenter' => $this->glConfig->getDistributionCenter($storeId),
+                'customerPrefix' => $this->glConfig->getCustomerPrefix($storeId),
+                'consignmentNumber' => $this->glConfig->getConsignmentNumber($storeId),
+                'reference' => $request->getOrderShipment()->getOrder()->getIncrementId(),
+                'returnShipmentReference' => $request->getOrderShipment()->getOrder()->getIncrementId(),
+                'shipmentDate' => date("Y-m-d"),
+                'bankData' => $bankData,
+            ]
+        );
 
         return $shipmentDetails;
     }
@@ -521,29 +521,16 @@ class AppDataMapper implements AppDataMapperInterface
         $packageParams = $request->getData('package_params');
         $servicesData  = $packageParams->getData('services') ?: [];
 
+
+
+        if(isset($servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE])){
+            $servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE] = [
+                ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $this->getOrderValue($request),
+                ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $request->getData('base_currency_code')
+            ];
+        }
+
         $services = $this->labelServiceProvider->getServices($servicesData, $request->getOrderShipment());
-
-//        $paymentMethod = $request->getOrderShipment()->getOrder()->getPayment()->getMethod();
-//        if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
-//            $this->serviceCollection->addService(AbstractServiceFactory::SERVICE_CODE_COD, [
-//                'codAmount' => $this->getOrderValue($request),
-//                'addFee' => true,
-//            ]);
-//        }
-
-//        $serviceCode = AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT;
-//        if (isset($servicesData[$serviceCode])) {
-//            $this->serviceCollection->addService($serviceCode, [
-//                'emailAddress' => $request->getData('recipient_email'),
-//            ]);
-//        }
-//
-//        $serviceCode = AbstractServiceFactory::SERVICE_CODE_INSURANCE;
-//        if (isset($servicesData[$serviceCode])) {
-//            $this->serviceCollection->addService($serviceCode, [
-//                'insuranceAmount' => $this->getOrderValue($request)
-//            ]);
-//        }
 
         return $services;
     }
@@ -717,5 +704,16 @@ class AppDataMapper implements AppDataMapperInterface
 
         $shipmentOrder = $this->requestValidator->validateShipmentOrder($shipmentOrder);
         return $shipmentOrder;
+    }
+
+    /**
+     * @param ShipmentRequest $request
+     * @return bool
+     */
+    private function isPartialShipment(ShipmentRequest $request): bool
+    {
+        $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
+        $qtyShipped = $request->getOrderShipment()->getTotalQty();
+        return ($qtyOrdered != $qtyShipped) || (count($request->getData('packages')) > 1);
     }
 }

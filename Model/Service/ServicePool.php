@@ -24,6 +24,7 @@
  */
 namespace Dhl\Shipping\Model\Service;
 
+use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Api\ServiceProviderInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
@@ -41,7 +42,7 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServicePool
+class ServicePool implements ServicePoolInterface
 {
     /**
      * @var ModuleConfigInterface

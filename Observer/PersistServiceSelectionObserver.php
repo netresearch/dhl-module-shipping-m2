@@ -25,9 +25,12 @@
 
 namespace Dhl\Shipping\Observer;
 
+use Dhl\Shipping\Api\ServicePoolInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Order\ServiceSelection;
 use Dhl\Shipping\Model\Order\ServiceSelectionFactory;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
+use Dhl\Shipping\Service\AbstractService;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Quote\Model\Quote;
@@ -53,17 +56,24 @@ class PersistServiceSelectionObserver implements ObserverInterface
     private $serviceSelectionFactory;
 
     /**
+     * @var ModuleConfigInterface
+     */
+    private $moduleConfig;
+
+    /**
      * PersistServiceSelectionObserver constructor.
-     *
-     * @param ServiceSelectionRepository $serviceSelectionRepo
+     * @param ServiceSelectionRepository $serviceSelectionRepository
      * @param ServiceSelectionFactory $serviceSelectionFactory
+     * @param ModuleConfigInterface $moduleConfig
      */
     public function __construct(
-        ServiceSelectionRepository $serviceSelectionRepo,
-        ServiceSelectionFactory $serviceSelectionFactory
+        ServiceSelectionRepository $serviceSelectionRepository,
+        ServiceSelectionFactory $serviceSelectionFactory,
+        ModuleConfigInterface $moduleConfig
     ) {
-        $this->serviceSelectionRepository = $serviceSelectionRepo;
+        $this->serviceSelectionRepository = $serviceSelectionRepository;
         $this->serviceSelectionFactory = $serviceSelectionFactory;
+        $this->moduleConfig = $moduleConfig;
     }
 
     /**
@@ -86,6 +96,22 @@ class PersistServiceSelectionObserver implements ObserverInterface
         try {
             $quoteAddressId = $quote->getShippingAddress()->getId();
             $serviceSelection = $this->serviceSelectionRepository->getByQuoteAddressId($quoteAddressId);
+            $paymentMethod = $order->getPayment()->getMethod();
+            if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
+                $codService = $this->serviceSelectionFactory->create();
+                $codValues = [
+                    ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $order->getBaseGrandTotal(),
+                    ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $order->getBaseCurrencyCode(),
+                ];
+                $codService->setData(
+                    [
+                        'parent_id' => $order->getShippingAddressId(),
+                        'service_code' => ServicePoolInterface::SERVICE_COD_CODE,
+                        'service_value' => json_encode($codValues),
+                    ]
+                );
+                $serviceSelection->addItem($codService);
+            }
         } catch (\Exception $e) {
             return $this;
         }

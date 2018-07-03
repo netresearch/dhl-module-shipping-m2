@@ -22,13 +22,16 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
+use Dhl\Shipping\Api\Data\ServiceInterface;
+use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Service\Filter\SelectedFilter;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 
 /**
@@ -57,22 +60,28 @@ class LabelServiceProvider
     private $serviceSettingsFactory;
 
     /**
+     * @var ServiceSelectionRepositoryInterface
+     */
+    private $serviceSelectionRepository;
+
+    /**
      * LabelServiceProvider constructor.
-     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
+     * @param ServiceSelectionRepositoryInterface $serviceSelectionRepository
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
-        ServiceSettingsInterfaceFactory $serviceSettingsFactory
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory,
+        ServiceSelectionRepositoryInterface $serviceSelectionRepository
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
+        $this->serviceSelectionRepository = $serviceSelectionRepository;
     }
-
 
     /**
      * @param ShipmentInterface $shipment
@@ -80,13 +89,15 @@ class LabelServiceProvider
      */
     public function getServices(array $servicesData, ShipmentInterface $shipment)
     {
-        $presets = $this->prepareServiceSettings($servicesData, $shipment->getStoreId());
+        $orderAddressId = $shipment->getOrder()->getShippingAddress()->getId();
+        $storeId = $shipment->getStoreId();
+        $presets = $this->prepareServiceSettings($orderAddressId, $servicesData, $storeId);
 
         $serviceCollection = $this->servicePool->getServices($presets);
 
         // return only services selected by customer or merchant
-        $filter = SelectedFilter::create();
-        $serviceCollection = $serviceCollection->filter($filter);
+        $selectedFilter = SelectedFilter::create();
+        $serviceCollection = $serviceCollection->filter($selectedFilter);
 
         return $serviceCollection;
     }
@@ -99,10 +110,24 @@ class LabelServiceProvider
      * @param string[][] $serviceData
      * @return ServiceSettingsInterface[]
      */
-    private function prepareServiceSettings(array $serviceData, string $storeId): array
+    private function prepareServiceSettings($orderAddressId, array $serviceData, string $storeId): array
     {
         $settings = $this->config->getServiceSettings($storeId);
+        try {
+            $serviceSelections = $this->serviceSelectionRepository
+                ->getByOrderAddressId($orderAddressId)
+                ->getItems();
 
+            foreach ($serviceSelections as $selection) {
+                if ($settings[$selection->getServiceCode()]) {
+                    $settings[$selection->getServiceCode(
+                    )][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
+                    $settings[$selection->getServiceCode()][ServiceSettingsInterface::IS_SELECTED] = true;
+                }
+            }
+        } catch (NoSuchEntityException $e) {
+            // do nothing
+        }
         foreach ($serviceData as $serviceCode => $serviceValues) {
             if ($settings[$serviceCode]) {
                 $settings[$serviceCode][ServiceSettingsInterface::PROPERTIES] = $serviceValues;

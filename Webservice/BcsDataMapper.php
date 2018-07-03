@@ -22,8 +22,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Webservice;
 
+use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
+use Dhl\Shipping\Service\Bcs\ReturnShipment;
 use Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
@@ -86,21 +89,12 @@ class BcsDataMapper implements BcsDataMapperInterface
         $bankData->setAccountreference($shipmentDetails->getBankData()->getAccountReference());
         $shipmentDetailsType->setBankData($bankData);
 
-        // add services that are not part of the service type
-        if ($notificationService = $shipmentOrder->getServices()->getService(
-            AbstractServiceFactory::SERVICE_CODE_PARCEL_ANNOUNCEMENT
-        )) {
-            $notificationType = $this->getNotifications($notificationService);
-            $shipmentDetailsType->setNotification($notificationType);
-        }
-
-        if ($returnShipmentService = $shipmentOrder->getServices()->getService(
-            AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT
-        )) {
+        if (array_key_exists(ReturnShipment::CODE, $shipmentOrder->getServices())) {
             $shipmentDetailsType->setReturnShipmentAccountNumber(
                 $shipmentOrder->getShipmentDetails()->getReturnShipmentAccountNumber()
             );
         }
+
 
         return $shipmentDetailsType;
     }
@@ -111,6 +105,7 @@ class BcsDataMapper implements BcsDataMapperInterface
      */
     private function getServices(Service\ServiceCollectionInterface $services)
     {
+        //@TODO(PSI): find a more elegant way
         $serviceType = new BcsApi\ShipmentService();
 
         /** @var \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Cod $codService */
@@ -154,16 +149,6 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param Service\ParcelAnnouncement $service
-     * @return BcsApi\ShipmentNotificationType
-     */
-    private function getNotifications(Service\ParcelAnnouncement $service)
-    {
-        $notificationType = new BcsApi\ShipmentNotificationType($service->getEmailAddress());
-        return $notificationType;
-    }
-
-    /**
      * @param Contact\ShipperInterface $shipper
      * @return BcsApi\ShipperType
      */
@@ -199,11 +184,12 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param Contact\ReceiverInterface $receiver
+     * @param ShipmentOrderInterface $shipmentOrder
      * @return BcsApi\ReceiverType
      */
-    private function getReceiver(Contact\ReceiverInterface $receiver)
+    private function getReceiver(ShipmentOrderInterface $shipmentOrder)
     {
+        $receiver = $shipmentOrder->getReceiver();
         if ($receiver->getPackstation()) {
             $countryType = new BcsApi\CountryType($receiver->getPackstation()->getCountryCode());
             $countryType->setCountry($receiver->getPackstation()->getCountry());
@@ -282,8 +268,10 @@ class BcsDataMapper implements BcsDataMapperInterface
         // receiver communication
         $communicationType = new BcsApi\CommunicationType();
         $communicationType->setContactPerson($receiver->getContactPerson());
-        $communicationType->setEmail($receiver->getEmail());
-        $communicationType->setPhone($receiver->getPhone());
+        if (array_key_exists(ParcelAnnouncement::CODE, $shipmentOrder->getServices())) {
+            $communicationType->setEmail($receiver->getEmail());
+            $communicationType->setPhone($receiver->getPhone());
+        }
 
         $receiverType = new BcsApi\ReceiverType(
             $receiver->getName(),
@@ -349,7 +337,7 @@ class BcsDataMapper implements BcsDataMapperInterface
                         ->getValue('EUR')
             );
 
-    //        $exportDocumentType->setInvoiceNumber($package->getInvoiceNumber());
+            //        $exportDocumentType->setInvoiceNumber($package->getInvoiceNumber());
             $exportDocumentType->setExportTypeDescription($package->getExportTypeDescription());
             $exportDocumentType->setTermsOfTrade($package->getTermsOfTrade());
             $exportDocumentType->setPermitNumber($package->getPermitNumber());
@@ -396,7 +384,7 @@ class BcsDataMapper implements BcsDataMapperInterface
 
         // shipper, receiver, return receiver
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
-        $receiverType = $this->getReceiver($shipmentOrder->getReceiver());
+        $receiverType = $this->getReceiver($shipmentOrder);
         if ($returnShipmentService = $shipmentOrder->getServices()->getService(
             AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT
         )) {

@@ -25,6 +25,8 @@
 
 namespace Dhl\Shipping\Webservice;
 
+use Dhl\Shipping\Service\Gla\Cod;
+use Dhl\Shipping\Service\Gla\Insurance;
 use Dhl\Shipping\Webservice\RequestType;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
@@ -95,11 +97,20 @@ class GlDataMapper implements GlDataMapperInterface
         }
 
         /** @var \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Cod $codService */
-        $codService = $services->getService(AbstractServiceFactory::SERVICE_CODE_COD);
-        if ($codService) {
-            $codAmount = $codService->getCodAmount()->getValue($currencyCode);
+        if (array_key_exists(Cod::CODE, $services)) {
+            /** @var Cod $codService */
+            $codService = $services[Cod::CODE];
+            $codAmount = $codService->getAmount();
         } else {
             $codAmount = null;
+        }
+
+        if(array_key_exists(Insurance::CODE, $services)){
+            /** @var Insurance $insuranceService */
+            $insuranceService = $services[Insurance::CODE];
+            $insuredAmount = $insuranceService->getAmount();
+        } else {
+            $insuredAmount = null;
         }
 
         $packageDetailsType = new PackageDetailsRequestType(
@@ -119,7 +130,7 @@ class GlDataMapper implements GlDataMapperInterface
             $package->getDimensions()->getLength($package->getDimensions()->getUnitOfMeasurement()),
             $package->getDimensions()->getWidth($package->getDimensions()->getUnitOfMeasurement()),
             $package->getTermsOfTrade(),
-            null,
+            $insuredAmount,
             null,
             $package->getExportDescription(),
             $sequenceNumber,

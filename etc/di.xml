@@ -24,91 +24,93 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- module preferences -->
-    <preference for="Dhl\Shipping\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\AutoCreate\LabelGenerator" />
-    <preference for="Dhl\Shipping\AutoCreate\OrderProviderInterface" type="Dhl\Shipping\AutoCreate\OrderProvider" />
-    <preference for="Dhl\Shipping\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\AutoCreate\RequestBuilder" />
-    <preference for="Dhl\Shipping\Config\BcsConfigInterface" type="Dhl\Shipping\Model\Config\BcsConfig" />
-    <preference for="Dhl\Shipping\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig" />
-    <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor" />
-    <preference for="Dhl\Shipping\Model\Config\ModuleConfigInterface" type="Dhl\Shipping\Model\Config\ModuleConfig" />
-    <preference for="Dhl\Shipping\Model\Config\ServiceConfigInterface" type="Dhl\Shipping\Model\Config\ServiceConfig" />
-    <preference for="Dhl\Shipping\Webservice\GatewayInterface" type="Dhl\Shipping\Webservice\Gateway" />
+    <preference for="Dhl\Shipping\AutoCreate\LabelGeneratorInterface" type="Dhl\Shipping\AutoCreate\LabelGenerator"/>
+    <preference for="Dhl\Shipping\AutoCreate\OrderProviderInterface" type="Dhl\Shipping\AutoCreate\OrderProvider"/>
+    <preference for="Dhl\Shipping\AutoCreate\RequestBuilderInterface" type="Dhl\Shipping\AutoCreate\RequestBuilder"/>
+    <preference for="Dhl\Shipping\Config\BcsConfigInterface" type="Dhl\Shipping\Model\Config\BcsConfig"/>
+    <preference for="Dhl\Shipping\Config\GlConfigInterface" type="Dhl\Shipping\Model\Config\GlConfig"/>
+    <preference for="Dhl\Shipping\Model\Config\ConfigAccessorInterface" type="Dhl\Shipping\Model\Config\ConfigAccessor"/>
+    <preference for="Dhl\Shipping\Model\Config\ModuleConfigInterface" type="Dhl\Shipping\Model\Config\ModuleConfig"/>
+    <preference for="Dhl\Shipping\Model\Config\ServiceConfigInterface" type="Dhl\Shipping\Model\Config\ServiceConfig"/>
+    <preference for="Dhl\Shipping\Webservice\GatewayInterface" type="Dhl\Shipping\Webservice\Gateway"/>
 
-    <preference for="Dhl\Shipping\Api\ServiceSelectionRepositoryInterface" type="\Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository" />
-    <preference for="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderAddressExtension" />
-    <preference for="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteAddressExtension" />
-    <preference for="Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderAddressExtensionRepository" />
-    <preference for="Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteAddressExtensionRepository" />
-    <preference for="Dhl\Shipping\Api\Data\LabelStatusInterface" type="Dhl\Shipping\Model\Label\LabelStatus" />
-    <preference for="Dhl\Shipping\Api\LabelStatusRepositoryInterface" type="\Dhl\Shipping\Model\LabelStatusRepository" />
-    <preference for="Dhl\Shipping\Api\Data\ServiceInformationInterface" type="\Dhl\Shipping\Model\Service\ServiceInformation" />
+    <preference for="Dhl\Shipping\Api\ServiceSelectionRepositoryInterface" type="\Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository"/>
+    <preference for="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\OrderAddressExtension"/>
+    <preference for="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" type="Dhl\Shipping\Model\ShippingInfo\QuoteAddressExtension"/>
+    <preference for="Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\OrderAddressExtensionRepository"/>
+    <preference for="Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface" type="Dhl\Shipping\Model\ResourceModel\ShippingInfo\QuoteAddressExtensionRepository"/>
+    <preference for="Dhl\Shipping\Api\Data\LabelStatusInterface" type="Dhl\Shipping\Model\Label\LabelStatus"/>
+    <preference for="Dhl\Shipping\Api\LabelStatusRepositoryInterface" type="\Dhl\Shipping\Model\LabelStatusRepository"/>
+    <preference for="Dhl\Shipping\Api\Data\ServiceInformationInterface" type="\Dhl\Shipping\Model\Service\ServiceInformation"/>
+    <preference for="Dhl\Shipping\Api\ServicePoolInterface" type="Dhl\Shipping\Model\Service\ServicePool"/>
 
     <!-- library preferences -->
     <preference for="Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface" type="Dhl\Shipping\Service\ServiceSettings"/>
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ReceiverInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\AddressInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Address" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\ContactInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Contact" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\PackstationInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Packstation" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\ParcelShopInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\ParcelShop" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\PostfilialeInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Postfiliale" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface" type="Dhl\Shipping\Model\ShippingInfo\Service" />
-    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Service\ServicePropertyInterface" type="Dhl\Shipping\Model\ShippingInfo\Service\ServiceProperty" />
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ReceiverInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\AddressInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Address"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\ContactInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Contact"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\PackstationInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Packstation"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\ParcelShopInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\ParcelShop"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\PostfilialeInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Postfiliale"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ServiceInterface" type="Dhl\Shipping\Model\ShippingInfo\Service"/>
+    <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Service\ServicePropertyInterface" type="Dhl\Shipping\Model\ShippingInfo\Service\ServiceProperty"/>
+    <preference for="Dhl\Shipping\Api\ServiceCollectionInterface" type="Dhl\Shipping\Model\Service\ServiceCollection"/>
 
-    <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Dimensions" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValue" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Weight" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Address" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCard" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Packstation" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShopInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShop" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PostfilialeInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Postfiliale" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Receiver" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiver" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Shipper" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetails" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankData" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollectionInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\CustomsDetailsInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\CustomsDetails" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportTypeInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportType" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPosition" />
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Dimensions"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValue"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterface" type="Dhl\Shipping\Webservice\RequestType\Generic\Package\Weight"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Address"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCard"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Packstation"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShopInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ParcelShop"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PostfilialeInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Postfiliale"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Receiver"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiverInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReturnReceiver"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ShipperInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\Shipper"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetails"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankData"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollectionInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\CustomsDetailsInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\CustomsDetails"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportTypeInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportType"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPositionInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\CustomsDetails\ExportPosition"/>
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface" type="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItem"/>
 
-    <preference for="Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseInterface" type="Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection" />
-    <preference for="Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseInterface" type="Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection" />
-    <preference for="Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatusInterface" type="Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatus" />
-    <preference for="Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatusInterface" type="Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatus" />
-    <preference for="Dhl\Shipping\Webservice\ResponseType\CreateShipment\LabelInterface" type="Dhl\Shipping\Webservice\ResponseType\CreateShipment\Label" />
+    <preference for="Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseInterface" type="Dhl\Shipping\Webservice\ResponseType\CreateShipmentResponseCollection"/>
+    <preference for="Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseInterface" type="Dhl\Shipping\Webservice\ResponseType\DeleteShipmentResponseCollection"/>
+    <preference for="Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatusInterface" type="Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatus"/>
+    <preference for="Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatusInterface" type="Dhl\Shipping\Webservice\ResponseType\Generic\ItemStatus"/>
+    <preference for="Dhl\Shipping\Webservice\ResponseType\CreateShipment\LabelInterface" type="Dhl\Shipping\Webservice\ResponseType\CreateShipment\Label"/>
 
     <preference for="Dhl\Shipping\Util\Serializer\Reflection\PropertyHandlerInterface" type="Dhl\Shipping\Util\Serializer\Reflection\PropertyHandler"/>
     <preference for="Dhl\Shipping\Util\Serializer\Reflection\ReflectionInterface" type="Dhl\Shipping\Util\Serializer\Reflection"/>
     <preference for="Dhl\Shipping\Util\Serializer\Reflection\TypeHandlerInterface" type="Dhl\Shipping\Util\Serializer\TypeHandler"/>
-    <preference for="Dhl\Shipping\Util\Serializer\SerializerInterface" type="Dhl\Shipping\Util\Serializer\Json" />
+    <preference for="Dhl\Shipping\Util\Serializer\SerializerInterface" type="Dhl\Shipping\Util\Serializer\Json"/>
 
-    <preference for="Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface" type="Dhl\Shipping\Util\ShippingProducts\ShippingProducts" />
-    <preference for="Dhl\Shipping\Util\ShippingRoutes\RoutesInterface" type="Dhl\Shipping\Util\ShippingRoutes\Routes" />
-    <preference for="Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface" type="Dhl\Shipping\Util\ShippingRoutes\RouteValidator" />
-    <preference for="Dhl\Shipping\Util\StreetSplitterInterface" type="Dhl\Shipping\Util\StreetSplitter" />
-    <preference for="Dhl\Shipping\Util\ExportTypeInterface" type="Dhl\Shipping\Util\ExportType" />
+    <preference for="Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface" type="Dhl\Shipping\Util\ShippingProducts\ShippingProducts"/>
+    <preference for="Dhl\Shipping\Util\ShippingRoutes\RoutesInterface" type="Dhl\Shipping\Util\ShippingRoutes\Routes"/>
+    <preference for="Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface" type="Dhl\Shipping\Util\ShippingRoutes\RouteValidator"/>
+    <preference for="Dhl\Shipping\Util\StreetSplitterInterface" type="Dhl\Shipping\Util\StreetSplitter"/>
+    <preference for="Dhl\Shipping\Util\ExportTypeInterface" type="Dhl\Shipping\Util\ExportType"/>
 
-    <preference for="Dhl\Shipping\Webservice\UnitConverterInterface" type="Dhl\Shipping\Webservice\UnitConverter" />
-    <preference for="Dhl\Shipping\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Shipping\Webservice\Adapter\BcsAdapter" />
-    <preference for="Dhl\Shipping\Webservice\Adapter\GlAdapterInterface" type="Dhl\Shipping\Webservice\Adapter\GlAdapter" />
-    <preference for="Dhl\Shipping\Webservice\Client\BcsSoapClientInterface" type="Dhl\Shipping\Webservice\Client\BcsSoapClient" />
-    <preference for="Dhl\Shipping\Webservice\Client\GlRestClientInterface" type="Dhl\Shipping\Webservice\Client\GlRestClient" />
-    <preference for="Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface" type="Dhl\Shipping\Webservice\AppDataMapper" />
-    <preference for="Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface" type="Dhl\Shipping\Webservice\BcsDataMapper" />
-    <preference for="Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface" type="Dhl\Shipping\Webservice\GlDataMapper" />
-    <preference for="Dhl\Shipping\Webservice\RequestValidatorInterface" type="Dhl\Shipping\Webservice\RequestValidator" />
-    <preference for="Dhl\Shipping\Webservice\ResponseParser\BcsResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\BcsResponseParser" />
-    <preference for="Dhl\Shipping\Webservice\ResponseParser\GlResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\GlResponseParser" />
+    <preference for="Dhl\Shipping\Webservice\UnitConverterInterface" type="Dhl\Shipping\Webservice\UnitConverter"/>
+    <preference for="Dhl\Shipping\Webservice\Adapter\BcsAdapterInterface" type="Dhl\Shipping\Webservice\Adapter\BcsAdapter"/>
+    <preference for="Dhl\Shipping\Webservice\Adapter\GlAdapterInterface" type="Dhl\Shipping\Webservice\Adapter\GlAdapter"/>
+    <preference for="Dhl\Shipping\Webservice\Client\BcsSoapClientInterface" type="Dhl\Shipping\Webservice\Client\BcsSoapClient"/>
+    <preference for="Dhl\Shipping\Webservice\Client\GlRestClientInterface" type="Dhl\Shipping\Webservice\Client\GlRestClient"/>
+    <preference for="Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface" type="Dhl\Shipping\Webservice\AppDataMapper"/>
+    <preference for="Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface" type="Dhl\Shipping\Webservice\BcsDataMapper"/>
+    <preference for="Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface" type="Dhl\Shipping\Webservice\GlDataMapper"/>
+    <preference for="Dhl\Shipping\Webservice\RequestValidatorInterface" type="Dhl\Shipping\Webservice\RequestValidator"/>
+    <preference for="Dhl\Shipping\Webservice\ResponseParser\BcsResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\BcsResponseParser"/>
+    <preference for="Dhl\Shipping\Webservice\ResponseParser\GlResponseParserInterface" type="Dhl\Shipping\Webservice\ResponseParser\GlResponseParser"/>
 
-    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory" type="Dhl\Shipping\Webservice\RequestServiceFactory" />
+    <preference for="Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory" type="Dhl\Shipping\Webservice\RequestServiceFactory"/>
 
-    <preference for="\Dhl\Shipping\Api\Quote\CartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\CartServiceManagement" />
-    <preference for="\Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\GuestCartServiceManagement" />
+    <preference for="\Dhl\Shipping\Api\Quote\CartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\CartServiceManagement"/>
+    <preference for="\Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\GuestCartServiceManagement"/>
 
     <!-- third party library adapter -->
     <virtualType name="Dhl\Shipping\Http\VirtualClient" type="Zend\Http\Client"/>
@@ -149,7 +151,7 @@
 
     <!-- plugins -->
     <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">
-        <plugin name="logWsApiCalls" type="Dhl\Shipping\Plugin\AdapterChainPlugin" />
+        <plugin name="logWsApiCalls" type="Dhl\Shipping\Plugin\AdapterChainPlugin"/>
     </type>
 
     <!-- passing arguments -->
@@ -163,6 +165,7 @@
         <arguments>
             <argument name="serviceProviders" xsi:type="array">
                 <item name="bcsServiceProvider" xsi:type="object">Dhl\Shipping\Service\Bcs\BcsServiceProvider</item>
+                <item name="glaServiceProvider" xsi:type="object">Dhl\Shipping\Service\Gla\GlaServiceProvider</item>
             </argument>
         </arguments>
     </type>
