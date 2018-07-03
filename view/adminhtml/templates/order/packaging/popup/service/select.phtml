@@ -28,19 +28,18 @@
     /** @var \Dhl\Shipping\Api\Data\Service\ServiceInputInterface $input */
     $input = $block->getData('input');
 ?>
-<dd class="service-select <?php /* @noEscape */ echo $service->getCode() ?> dd-select">
+<dd class="service-select <?= /* @noEscape */ $service->getCode() ?> dd-select">
     <select class="admin__control-select"
             data-module="dhl_shipping"
-            data-service_code="<?php /* @noEscape */ echo $service->getCode() ?>"
-            data-input_code="<?php /* @noEscape */ echo $input->getCode() ?>">
-        <option disabled
-                <?php echo $input->getValue() ? '' : 'selected'; ?> >
-            <?php echo __('Please select'); ?>
+            data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
+            data-input_code="<?= /* @noEscape */ $input->getCode() ?>">
+        <option <?= $input->getValue() ? '' : 'selected'; ?> value="">
+            <?= __('Please select'); ?>
         </option>
         <?php foreach ($input->getOptions() as $option) : ?>
-            <option <?php echo $input->getValue() === $option['value'] ? 'selected' : ''; ?>
-                    value="<?php echo $block->escapeHtmlAttr($option['value']) ?>">
-                <?php echo $block->escapeHtml(__($option['label'])) ?>
+            <option <?= /* @noEscape */ $input->getValue() === $option['value'] ? 'selected' : ''; ?>
+                    value="<?= $block->escapeHtmlAttr($option['value']) ?>">
+                <?= $block->escapeHtml(__($option['label'])) ?>
             </option>
         <?php endforeach; ?>
     </select>

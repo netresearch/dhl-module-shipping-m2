@@ -27,10 +27,10 @@ $service = $block->getData('service');
 /** @var \Dhl\Shipping\Api\Data\Service\ServiceInputInterface $input */
 $input = $block->getData('input');
 ?>
-<dd class="service-select <?php /* @noEscape */ echo $service->getCode() . $input->getCode(); ?> dd-select">
-    <input value="<?php /* @noEscape */ echo $input->getValue(); ?>"
+<dd class="service-select <?= /* @noEscape */ $service->getCode() . $input->getCode(); ?> dd-select">
+    <input value="<?= /* @noEscape */ $input->getValue(); ?>"
            class="input-text admin__control-text"
            data-module="dhl_shipping"
-           data-service_code="<?php /* @noEscape */ echo $service->getCode() ?>"
-           data-input_code="<?php /* @noEscape */ echo $input->getCode() ?>">
+           data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
+           data-input_code="<?= /* @noEscape */ $input->getCode() ?>">
 </dd>

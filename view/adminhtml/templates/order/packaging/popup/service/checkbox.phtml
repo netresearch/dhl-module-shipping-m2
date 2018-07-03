@@ -27,18 +27,18 @@
     $service = $block->getData('service');
     $input = $block->getData('input');
 ?>
-<dt class="service-<?php /* @noEscape */ echo $service->getCode(); ?>">
+<dt class="service-<?= /* @noEscape */ $service->getCode(); ?>">
     <label class="checkbox-label">
         <input
                 type="checkbox"
                 class="checkbox"
                 data-module="dhl_shipping"
-                data-service_code="<?php /* @noEscape */ echo $service->getCode() ?>"
-                data-input_code="<?php /* @noEscape */ echo $input->getCode() ?>"
-                value="<?php /* @noEscape */ echo $service->getCode() ?>"
-                <?php echo $service->isSelected() ? 'checked' : ''; ?>
+                data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
+                data-input_code="<?= /* @noEscape */ $input->getCode() ?>"
+                value="<?= /* @noEscape */ $service->getCode() ?>"
+                <?= /* @noEscape */ $service->isSelected() ? 'checked' : ''; ?>
         />
         <i class="custom-checkbox"></i>
-        <?php echo $block->escapeHtml(__($service->getName())) ?>
+        <?= $block->escapeHtml(__($service->getName())) ?>
     </label>
 </dt>
