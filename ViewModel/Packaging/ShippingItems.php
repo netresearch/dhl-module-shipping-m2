@@ -68,8 +68,9 @@ class ShippingItems implements ArgumentInterface
      */
     public function getExportDescription($orderItem)
     {
-        return $orderItem->getProduct()->getData('dhl_export_description') ?:
-            $orderItem->getProduct()->getData('name');
-    }
+        $exportDescription = $orderItem->getProduct()->getData('dhl_export_description')
+            ?: $orderItem->getProduct()->getData('name');
 
+        return substr($exportDescription, 0, 50);
+    }
 }

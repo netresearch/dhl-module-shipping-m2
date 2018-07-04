@@ -634,7 +634,7 @@ class AppDataMapper implements AppDataMapperInterface
             $packageItem = $this->packageItemFactory->create([
                 'qty' => $itemObject->getData('qty'),
                 'customsValue' => $itemCustomsValue,
-                'customsItemDescription' => $itemObject->getData('customs_item_description'),
+                'customsItemDescription' => substr($itemObject->getData('customs_item_description'), 0, 50),
                 'price' => $itemPrice,
                 'name' => $itemObject->getData('name'),
                 'weight' => $itemWeight,

@@ -198,8 +198,8 @@ class GlDataMapper implements GlDataMapperInterface
             if ($packageItem->getCustomsItemDescription()) {
                 $itemDetails = new CustomsDetailsRequestType(
                     $packageItem->getCustomsItemDescription(),
-                    $packageItem->getCustomsItemDescription(),
-                    $packageItem->getCustomsItemDescription(),
+                    '',
+                    '',
                     $packageItem->getItemOriginCountry(),
                     $packageItem->getTariffNumber(),
                     (int)$packageItem->getQty(),

@@ -314,8 +314,8 @@ class RequestBuilder implements RequestBuilderInterface
                 $itemData['item_origin_country'] = $shipperCountry;
                 $itemData['customsDetails'] = [
                     'itemDescription' => $itemData['name'],
-                    'descriptionExport' => $itemData['name'],
-                    'descriptionImport' => $itemData['name'],
+                    'descriptionExport' => '',
+                    'descriptionImport' => '',
                     'countryOfOrgin' => $itemData['item_origin_country'],
                     'hsCode' => $itemData['tariff_number'],
                     'packageQuantitiy' => $itemData['qty'],
@@ -381,10 +381,11 @@ class RequestBuilder implements RequestBuilderInterface
             }
 
             foreach ($orderItemIds as $itemId => $productId) {
-                $package['items'][$itemId]['customs_item_description'] =
-                    isset($productData[$productId]['dhl_export_description']) ?
-                        $productData[$productId]['dhl_export_description'] :
-                        $package['items'][$itemId]['name'];
+                $package['items'][$itemId]['customs_item_description'] = $package['items'][$itemId]['name'];
+
+                if (!isset($productData[$productId]['dhl_export_description'])) {
+                    $productData[$productId]['dhl_export_description'] = $package['items'][$itemId]['name'];
+                }
 
                 $package['items'][$itemId]['tariff_number'] =
                     isset($productData[$productId]['dhl_tariff_number']) ?
