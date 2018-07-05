@@ -358,19 +358,13 @@
 
 
 
-
-
-
-
-
-
                 <!-- Cash on Delivery Settings -->
                 <field id="fields_bank_data" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1"
                         showInStore="0">
                     <label>Cash on Delivery Settings</label>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
-                        <field id="api_type">bcs</field>
+                        <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                     <comment>Configure the use of Cash on Delivery payments.</comment>
                 </field>
@@ -381,7 +375,7 @@
                     <comment>Selected payment methods will be treated as CoD methods during shipment order creation.</comment>
                     <source_model>Dhl\Shipping\Model\Payment\Config\Source\Allmethods</source_model>
                     <depends>
-                        <field id="api_type">bcs</field>
+                        <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
 
@@ -454,11 +448,6 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-
-
-
-
 
 
                 <!-- General Automatic Shipment Creation Settings -->
