@@ -169,13 +169,13 @@ class ModuleConfig implements ModuleConfigInterface
      * shipping product in case multiple products apply to the current route.
      *
      * @param string $recipientCountry
-     * @param string $storeId
+     * @param mixed $store
      * @return string
      */
-    public function getDefaultProduct($recipientCountry, $storeId = null)
+    public function getDefaultProduct($recipientCountry, $store = null)
     {
         $defaultProducts = json_decode(
-            $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PRODUCTS, $storeId),
+            $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_PRODUCTS, $store),
             true
         );
         if (isset($defaultProducts[$recipientCountry])) {

@@ -344,7 +344,6 @@ class RequestBuilder implements RequestBuilderInterface
             'data' => [
                 'country_shipper' => $shipperCountry,
                 'country_recipient' => $destCountryId,
-                'storeId' => $storeId
             ]
         ]);
 
