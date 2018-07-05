@@ -27,6 +27,7 @@
 namespace Dhl\Shipping\Model\Config;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Model\Service\ServiceOptionProvider;
 use Dhl\Shipping\Service\Bcs\BulkyGoods;
 use Dhl\Shipping\Service\Bcs\Cod;
@@ -334,7 +335,7 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::NAME => 'Additional Insurance',
             ServiceSettingsInterface::IS_ENABLED => true,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => false,
+            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
                 'carriers/dhlshipping/shipment_service_' . strtolower(Insurance::CODE),
                 $store
@@ -458,8 +459,8 @@ class ModuleConfig implements ModuleConfigInterface
 
         return [
             BulkyGoods::CODE => $bulkyGoodsConfig,
-            Cod::CODE => $codConfig,
-            Insurance::CODE => $insuranceConfig,
+            ServicePoolInterface::SERVICE_COD_CODE => $codConfig,
+            ServicePoolInterface::SERVICE_INSURANCE_CODE => $insuranceConfig,
             ParcelAnnouncement::CODE => $parcelAnnouncementConfig,
             PreferredDay::CODE => $preferredDayConfig,
             PreferredLocation::CODE => $preferredLocationConfig,

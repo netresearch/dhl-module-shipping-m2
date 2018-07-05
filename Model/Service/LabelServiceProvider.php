@@ -28,9 +28,12 @@ namespace Dhl\Shipping\Model\Service;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\Data\ServiceInterface;
+use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\Filter\SelectedFilter;
+use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\ShipmentInterface;
 
@@ -65,22 +68,30 @@ class LabelServiceProvider
     private $serviceSelectionRepository;
 
     /**
+     * @var RouteValidatorInterface
+     */
+    private $routeValidator;
+
+    /**
      * LabelServiceProvider constructor.
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      * @param ServiceSelectionRepositoryInterface $serviceSelectionRepository
+     * @param RouteValidatorInterface $routeValidator
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory,
-        ServiceSelectionRepositoryInterface $serviceSelectionRepository
+        ServiceSelectionRepositoryInterface $serviceSelectionRepository,
+        RouteValidatorInterface $routeValidator
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
         $this->serviceSelectionRepository = $serviceSelectionRepository;
+        $this->routeValidator = $routeValidator;
     }
 
     /**
@@ -95,9 +106,17 @@ class LabelServiceProvider
 
         $serviceCollection = $this->servicePool->getServices($presets);
 
+        $routeFilter = RouteFilter::create(
+            $this->routeValidator,
+            $this->config->getShipperCountry($shipment->getStoreId()),
+            $shipment->getShippingAddress()->getCountryId(),
+            $this->config->getEuCountryList($shipment->getStoreId())
+        );
         // return only services selected by customer or merchant
         $selectedFilter = SelectedFilter::create();
-        $serviceCollection = $serviceCollection->filter($selectedFilter);
+
+        $serviceCollection = $serviceCollection->filter($routeFilter)
+                                               ->filter($selectedFilter);
 
         return $serviceCollection;
     }
@@ -113,26 +132,35 @@ class LabelServiceProvider
     private function prepareServiceSettings($orderAddressId, array $serviceData, string $storeId): array
     {
         $settings = $this->config->getServiceSettings($storeId);
+        $orderServices = [];
         try {
             $serviceSelections = $this->serviceSelectionRepository
                 ->getByOrderAddressId($orderAddressId)
                 ->getItems();
 
-            foreach ($serviceSelections as $selection) {
-                if ($settings[$selection->getServiceCode()]) {
-                    $settings[$selection->getServiceCode(
-                    )][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
-                    $settings[$selection->getServiceCode()][ServiceSettingsInterface::IS_SELECTED] = true;
-                }
-            }
+            $orderServices = array_reduce(
+                $serviceSelections,
+                function ($carry, $selection) {
+                    /** @var ServiceSelectionInterface $selection */
+                    $carry[$selection->getServiceCode()] = $selection->getServiceValue();
+                    return $carry;
+                },
+                []
+            );
         } catch (NoSuchEntityException $e) {
             // do nothing
         }
+
+        $serviceData = array_merge($orderServices, $serviceData);
+        $inactiveServices = array_diff_key($settings, $serviceData);
         foreach ($serviceData as $serviceCode => $serviceValues) {
             if ($settings[$serviceCode]) {
                 $settings[$serviceCode][ServiceSettingsInterface::PROPERTIES] = $serviceValues;
                 $settings[$serviceCode][ServiceSettingsInterface::IS_SELECTED] = true;
             }
+        }
+        foreach (array_keys($inactiveServices) as $serviceCode) {
+            $settings[$serviceCode][ServiceSettingsInterface::IS_SELECTED] = false;
         }
 
         return array_map(

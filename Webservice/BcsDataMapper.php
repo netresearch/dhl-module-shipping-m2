@@ -25,13 +25,17 @@
 
 namespace Dhl\Shipping\Webservice;
 
+use Dhl\Shipping\Api\ServiceCollectionInterface;
+use Dhl\Shipping\Service\Bcs\BulkyGoods;
+use Dhl\Shipping\Service\Bcs\Cod;
+use Dhl\Shipping\Service\Bcs\Insurance;
 use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
 use Dhl\Shipping\Service\Bcs\ReturnShipment;
+use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
@@ -100,47 +104,46 @@ class BcsDataMapper implements BcsDataMapperInterface
     }
 
     /**
-     * @param Service\ServiceCollectionInterface $services
+     * @param ServiceCollectionInterface $services
      * @return BcsApi\ShipmentService
      */
-    private function getServices(Service\ServiceCollectionInterface $services)
+    private function getServices(ServiceCollectionInterface $services)
     {
         //@TODO(PSI): find a more elegant way
         $serviceType = new BcsApi\ShipmentService();
 
-        /** @var \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\Cod $codService */
-        $codService = $services->getService(AbstractServiceFactory::SERVICE_CODE_COD);
-        if ($codService) {
+        if (array_key_exists(Cod::CODE, $services)) {
+            /** @var Cod $codService */
+            $codService = $services[Cod::CODE];
             $codConfig = new BcsApi\ServiceconfigurationCashOnDelivery(
                 true,
-                $codService->addFee(),
-                round($codService->getCodAmount()->getValue('EUR'), 2)
+                $codService->isAddFee(),
+                round($codService->getAmount(), 2)
             );
             $serviceType->setCashOnDelivery($codConfig);
         };
-        $bulkyGoodsService = $services->getService(AbstractServiceFactory::SERVICE_CODE_BULKY_GOODS);
-        if ($bulkyGoodsService) {
+        if (array_key_exists(BulkyGoods::CODE, $services)) {
             $bulkyGoodsConfig = new BcsApi\Serviceconfiguration(
                 true
             );
             $serviceType->setBulkyGoods($bulkyGoodsConfig);
         }
-        /** @var Service\Insurance $insuranceService */
-        $insuranceService = $services->getService(AbstractServiceFactory::SERVICE_CODE_INSURANCE);
-        if ($insuranceService) {
+        if (array_key_exists(Insurance::CODE, $services)) {
+            /** @var Insurance $insuranceService */
+            $insuranceService = $services[Insurance::CODE];
             $insuranceConfig = new BcsApi\ServiceconfigurationAdditionalInsurance(
                 true,
-                round($insuranceService->getInsuranceAmount()->getValue('EUR'), 2)
+                round($insuranceService->getAmount(), 2)
             );
             $serviceType->setAdditionalInsurance($insuranceConfig);
         }
 
-        /** @var Service\VisualCheckOfAge $visualCheckOfAgeService */
-        $visualCheckOfAgeService = $services->getService(AbstractServiceFactory::SERVICE_CODE_VISUAL_CHECK_OF_AGE);
-        if ($visualCheckOfAgeService) {
+        if (array_key_exists(VisualCheckOfAge::CODE, $services)) {
+            /** @var VisualCheckOfAge $ageCheckService */
+            $ageCheckService = $services[VisualCheckOfAge::CODE];
             $visualCheckOfAgeConfig = new BcsApi\ServiceconfigurationVisualAgeCheck(
                 true,
-                $visualCheckOfAgeService->getType()
+                $ageCheckService->getAge()
             );
             $serviceType->setVisualCheckOfAge($visualCheckOfAgeConfig);
         }
@@ -385,9 +388,7 @@ class BcsDataMapper implements BcsDataMapperInterface
         // shipper, receiver, return receiver
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
         $receiverType = $this->getReceiver($shipmentOrder);
-        if ($returnShipmentService = $shipmentOrder->getServices()->getService(
-            AbstractServiceFactory::SERVICE_CODE_RETURN_SHIPMENT
-        )) {
+        if(array_key_exists(ReturnShipment::CODE, $shipmentOrder->getServices())){
             $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
         } else {
             $returnReceiverType = null;
