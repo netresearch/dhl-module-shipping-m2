@@ -97,10 +97,10 @@ interface ModuleConfigInterface
      * shipping product in case multiple products apply to the current route.
      *
      * @param mixed $recipientCountry
-     * @param mixed $storeId
+     * @param mixed $store
      * @return string
      */
-    public function getDefaultProduct($recipientCountry, $storeId = null);
+    public function getDefaultProduct($recipientCountry, $store = null);
 
     /**
      * Obtain shipper country from shipping origin configuration.

@@ -126,4 +126,31 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         $storeId = $this->getShipment()->getStoreId();
         return $this->moduleConfig->getDefaultExportContentTypeExplanation($storeId);
     }
+
+    /**
+     * @return array
+     */
+    public function getContainers()
+    {
+        $order = $this->getShipment()->getOrder();
+        $storeId = $this->getShipment()->getStoreId();
+        $address = $order->getShippingAddress();
+        $carrier = $this->_carrierFactory->create($order->getShippingMethod(true)->getCarrierCode(), $storeId);
+        $countryShipper = $this->_scopeConfig->getValue(
+            \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_COUNTRY_ID,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+        if ($carrier) {
+            $params = new \Magento\Framework\DataObject(
+                [
+                    'method' => $order->getShippingMethod(true)->getMethod(),
+                    'country_shipper' => $countryShipper,
+                    'country_recipient' => $address->getCountryId(),
+                ]
+            );
+            return $carrier->getContainerTypes($params);
+        }
+        return [];
+    }
 }
