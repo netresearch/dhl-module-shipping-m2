@@ -441,7 +441,8 @@ Dabei gilt:
   werden.
 
 Die **Produktbeschreibung** (DHL Export Description) und **Zolltarifnummer** (Tariff number) werden
-aus den gleichnamigen **Produkt-Attributen** übernommen.
+aus den gleichnamigen **Produkt-Attributen** übernommen. Ist die Produktbeschreibung nicht gepflegt,
+wird der Produktname hierfür benutzt.
 
 Weitere Angaben (z.B. Handelsklauseln) können in der Konfiguration unter *Standardwerte für
 automatische Sendungserstellung* vorgenommen werden.
@@ -679,6 +680,17 @@ wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
 .. raw:: pdf
 
    PageBreak
+
+Zusätzliche Produkt-Attribute
+=============================
+
+Das Modul führt zwei neue Produkt-Attribute, **Produktbeschreibung** (DHL Export Description) und
+**Zolltarifnummer** (Tariff number) ein, welche für
+`Internationale Sendungen`_ notwendig sind.
+
+Zu beachten ist die maximale Länge von:
+ * 50 Zeichen für die Produktbeschreibung
+ * 10 Zeichen für die Zolltarifnummer
 
 Modul deinstallieren
 ====================
