@@ -434,6 +434,7 @@ In particular:
    the product export description are needed.
 
 The **export description** and the **tariff number** are taken from the respective **product attributes**.
+If the export description is not maintained, the product name will be used for it.
 
 Additional values (e.g. Terms Of Trade) can be set in the configuration section `Automatic Shipment Creation Default Values`_,
 e.g. for shipments with non-default values.
@@ -663,6 +664,16 @@ process is the same as described in `Creating a shipment`_.
 .. raw:: pdf
 
    PageBreak
+
+Additional Product-Attributes
+=============================
+
+The module introduces two additional product attributes. The **DHL Export Description** and the
+**Tariff number**, which are used for `International shipments`_.
+
+Please note the max-length of:
+ * 50 characters for DHL Export Description
+ * 10 character for Tariff Number
 
 Uninstalling the module
 =======================
