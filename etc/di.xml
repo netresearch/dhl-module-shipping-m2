@@ -220,4 +220,10 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <type name="Dhl\Shipping\Observer\DisableCodPaymentObserver">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 </config>

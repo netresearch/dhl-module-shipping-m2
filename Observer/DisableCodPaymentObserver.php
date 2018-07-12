@@ -23,10 +23,15 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Observer;
 
+use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
+use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Util\ShippingProducts\ShippingProducts;
+use Dhl\Shipping\Model\Service\ServiceCollection;
+use Dhl\Shipping\Service\Filter\RouteFilter;
+use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -48,30 +53,46 @@ class DisableCodPaymentObserver implements ObserverInterface
     private $config;
 
     /**
-     * @var CheckoutSession
+     * @var SessionManagerInterface|CheckoutSession
      */
     private $checkoutSession;
 
     /**
-     * @var ShippingProducts
+     * @var ServicePoolInterface
      */
-    private $shippingProducts;
+    private $servicePool;
+
+    /**
+     * @var RouteValidatorInterface
+     */
+    private $routeValidator;
+
+    /**
+     * @var ServiceSettingsInterfaceFactory
+     */
+    private $serviceSettingsFactory;
 
     /**
      * DisableCodPaymentObserver constructor.
      *
      * @param ModuleConfigInterface $config
      * @param SessionManagerInterface $checkoutSession
-     * @param ShippingProducts $shippingProducts
+     * @param ServicePoolInterface $servicePool
+     * @param RouteValidatorInterface $routeValidator
+     * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      */
     public function __construct(
         ModuleConfigInterface $config,
         SessionManagerInterface $checkoutSession,
-        ShippingProducts $shippingProducts
+        ServicePoolInterface $servicePool,
+        RouteValidatorInterface $routeValidator,
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
-        $this->shippingProducts = $shippingProducts;
+        $this->servicePool = $servicePool;
+        $this->routeValidator = $routeValidator;
+        $this->serviceSettingsFactory = $serviceSettingsFactory;
     }
 
     /**
@@ -102,7 +123,7 @@ class DisableCodPaymentObserver implements ObserverInterface
 
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
         $recipientCountry = $quote->getShippingAddress()->getCountryId();
-        $paymentMethod  = $methodInstance->getCode();
+        $paymentMethod = $methodInstance->getCode();
 
         if (!$this->config->canProcessShipping($shippingMethod, $recipientCountry, $quote->getStoreId())) {
             // shipping with dhl not applicable
@@ -117,23 +138,27 @@ class DisableCodPaymentObserver implements ObserverInterface
         $shipperCountry = $this->config->getShipperCountry($quote->getStoreId());
         $euCountries = $this->config->getEuCountryList();
 
-        // find all applicable product codes for the current route
-        $routeProductCodes = $this->shippingProducts->getApplicableCodes(
-            $shipperCountry,
-            $recipientCountry,
-            $euCountries
-        );
-
-        // define all product codes that do not allow COD
-        $nonCodCodes = [
-            ShippingProducts::CODE_CONNECT,
-            ShippingProducts::CODE_INTERNATIONAL,
-            ShippingProducts::CODE_PAKET_INTERNATIONAL,
+        // fetch all COD services
+        $codServiceSettings = [
+            ServicePoolInterface::SERVICE_COD_CODE =>
+                $this->config->getServiceSettings(
+                    $quote->getStoreId()
+                )[ServicePoolInterface::SERVICE_COD_CODE],
         ];
+        $codServiceSettings = array_map(
+            function ($config) {
+                return $this->serviceSettingsFactory->create($config);
+            },
+            $codServiceSettings
+        );
+        /** @var ServiceCollection $codServices */
+        $codServices = $this->servicePool->getServices($codServiceSettings);
+        // filter cod services by route
+        $routeFilter = RouteFilter::create($this->routeValidator, $shipperCountry, $recipientCountry, $euCountries);
+        $codServices = $codServices->filter($routeFilter);
 
-        // check if there are product codes left that support COD for the current route
-        $routeCodCodes = array_diff($routeProductCodes, $nonCodCodes);
-        $canShipWithCod = !empty($routeCodCodes);
+        // if there is no cod service left, we can not use the cod payment method
+        $canShipWithCod = !empty($codServices);
 
         $checkResult->setData('is_available', $canShipWithCod);
     }

@@ -26,7 +26,7 @@
     <default>
         <modules>
             <Dhl_Shipping>
-                <version>0.9.1</version>
+                <version>0.10.0</version>
             </Dhl_Shipping>
         </modules>
         <carriers>
@@ -78,12 +78,8 @@
                 <service_preferredneighbour_enabled>1</service_preferredneighbour_enabled>
                 <service_parcelannouncement_enabled>1</service_parcelannouncement_enabled>
                 <service_preferredday_enabled>1</service_preferredday_enabled>
-                <service_preferredday_handling_fee>1.80</service_preferredday_handling_fee>
-                <service_preferredday_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredday_handling_fee_text>
                 <service_cutoff_time>13,00,00</service_cutoff_time>
                 <service_preferredtime_enabled>1</service_preferredtime_enabled>
-                <service_preferredtime_handling_fee>4.80</service_preferredtime_handling_fee>
-                <service_preferredtime_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredtime_handling_fee_text>
             </dhlshipping>
         </carriers>
     </default>

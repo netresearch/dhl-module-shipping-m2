@@ -342,6 +342,12 @@ class ModuleConfig implements ModuleConfigInterface
             ),
             ServiceSettingsInterface::OPTIONS => [],
             ServiceSettingsInterface::SORT_ORDER => 120,
+            ServiceSettingsInterface::PROPERTIES => [
+                Insurance::PROPERTY_CURRENCY_CODE => $this->configAccessor->getConfigValue(
+                    'currency/options/base',
+                    $store
+                ),
+            ],
         ];
         $parcelAnnouncementEnabled = (bool) $this->configAccessor->getConfigValue(
             'carriers/dhlshipping/service_' . strtolower(ParcelAnnouncement::CODE) . '_enabled',
