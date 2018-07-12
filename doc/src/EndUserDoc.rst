@@ -311,7 +311,6 @@ eCommerce Global API Shipping Settings
 
 In this section you can configure the label size, page size, and layout.
 
-
 Automatic Shipping Label Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -326,6 +325,21 @@ Also, you can choose whether or not an email will be be sent to the customer whe
 shipment has been created. This refers to the |mage| shipment confirmation email,
 not the parcel announcement from DHL.
 
+Additional Product-Attributes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The module introduces the new product attributes **DHL Export Description** and
+**Tariff number** which can be used for international shipments.
+
+These atrributes allow storing the customs information in the system, so the data
+doesn't have to be entered manually for every shipment.
+
+**Please note the maximum length of:**
+
+ * 50 characters for DHL Export Description
+ * 10 character for Tariff Number
+
+Also note the section `International shipments`_.
 
 Workflow and features
 =====================
@@ -433,14 +447,14 @@ In particular:
    country, at least the Terms Of Trade (Incoterms), the Customs Tariff Number (HS Code), and
    the product export description are needed.
 
-The **export description** and the **tariff number** are taken from the respective **product attributes**.
-If the export description is not maintained, the product name will be used for it.
+The **export description** and the **tariff number** are taken from the respective **product
+attributes**, see also `Additional Product-Attributes`_. If the export description is not set,
+the product name will be used instead.
 
-Additional values (e.g. Terms Of Trade) can be set in the configuration section `Automatic Shipment Creation Default Values`_,
-e.g. for shipments with non-default values.
+The default values (e.g. Terms Of Trade) can be set in the module configuration.
 
 Alternatively, you can enter the information by hand in the popup when creating the shipment,
-e.g. for cases with different, non-default information.
+e.g. for special cases with different, non-default information.
 
 Everything else is the same as described in the section `National shipments`_.
 
@@ -509,6 +523,9 @@ of the Admin Panel:
 * Sales → Orders → Mass action *Print shipping labels*
 * Sales → Shipments → Mass action *Print shipping labels*
 * Detail page of a shipment → Button *Print shipping label*
+
+This does not trigger the transmission to DHL, but only opens the labels again that
+already exist. To transmit shipments to DHL, please use the `Mass action`_.
 
 .. admonition:: Note
 
@@ -664,16 +681,6 @@ process is the same as described in `Creating a shipment`_.
 .. raw:: pdf
 
    PageBreak
-
-Additional Product-Attributes
-=============================
-
-The module introduces two additional product attributes. The **DHL Export Description** and the
-**Tariff number**, which are used for `International shipments`_.
-
-Please note the max-length of:
- * 50 characters for DHL Export Description
- * 10 character for Tariff Number
 
 Uninstalling the module
 =======================
