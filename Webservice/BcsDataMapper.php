@@ -36,7 +36,6 @@ use Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use Dhl\Shipping\Webservice\RequestType\GetVersionRequestInterface;
 use Dhl\Shipping\Webservice\Schema\Bcs as BcsApi;
@@ -98,7 +97,6 @@ class BcsDataMapper implements BcsDataMapperInterface
                 $shipmentOrder->getShipmentDetails()->getReturnShipmentAccountNumber()
             );
         }
-
 
         return $shipmentDetailsType;
     }
@@ -183,6 +181,7 @@ class BcsDataMapper implements BcsDataMapperInterface
         $communicationType->setPhone($shipper->getPhone());
 
         $shipperType = new BcsApi\ShipperType($nameType, $addressType, $communicationType);
+
         return $shipperType;
     }
 
@@ -284,6 +283,7 @@ class BcsDataMapper implements BcsDataMapperInterface
             $parcelShopType,
             $communicationType
         );
+
         return $receiverType;
     }
 
@@ -320,6 +320,7 @@ class BcsDataMapper implements BcsDataMapperInterface
         $communicationType->setPhone($returnReceiver->getPhone());
 
         $shipperType = new BcsApi\ShipperType($nameType, $addressType, $communicationType);
+
         return $shipperType;
     }
 
@@ -367,6 +368,7 @@ class BcsDataMapper implements BcsDataMapperInterface
 
             $exportDocumentType->setExportDocPosition($exportDocPositions);
         }
+
         return $exportDocumentType;
     }
 
@@ -388,7 +390,7 @@ class BcsDataMapper implements BcsDataMapperInterface
         // shipper, receiver, return receiver
         $shipperType = $this->getShipper($shipmentOrder->getShipper());
         $receiverType = $this->getReceiver($shipmentOrder);
-        if(array_key_exists(ReturnShipment::CODE, $shipmentOrder->getServices())){
+        if (array_key_exists(ReturnShipment::CODE, $shipmentOrder->getServices())) {
             $returnReceiverType = $this->getReturnReceiver($shipmentOrder->getReturnReceiver());
         } else {
             $returnReceiverType = null;

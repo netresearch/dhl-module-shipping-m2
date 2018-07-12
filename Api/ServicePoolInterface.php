@@ -28,7 +28,6 @@ use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Service\ServiceCollection;
 
-
 /**
  * Central hub for all shipping services, e.g.
  * - Additional Insurance

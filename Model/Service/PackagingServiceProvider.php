@@ -95,7 +95,6 @@ class PackagingServiceProvider
         $this->serviceSettingsFactory = $serviceSettingsFactory;
     }
 
-
     /**
      * @param ShipmentInterface|Shipment $shipment
      * @return ServiceCollection|ServiceInterface[]
@@ -120,7 +119,20 @@ class PackagingServiceProvider
             ->filter($adminFilter)
             ->filter($routeFilter);
 
-        return $serviceCollection;
+        /**
+         * @param ServiceInterface $a
+         * @param ServiceInterface $b
+         * @return int
+         */
+        $sortFunction = function ($a, $b): int {
+            if ($a->getSortOrder() === $b->getSortOrder()) {
+                return 0;
+            }
+
+            return $a->getSortOrder() > $b->getSortOrder() ? 1 : -1;
+        };
+
+        return $serviceCollection->sort($sortFunction);
     }
 
     /**
@@ -146,7 +158,8 @@ class PackagingServiceProvider
 
             foreach ($serviceSelections as $selection) {
                 if ($settings[$selection->getServiceCode()]) {
-                    $settings[$selection->getServiceCode()][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
+                    $settings[$selection->getServiceCode(
+                    )][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
                     $settings[$selection->getServiceCode()][ServiceSettingsInterface::IS_SELECTED] = true;
                 }
             }

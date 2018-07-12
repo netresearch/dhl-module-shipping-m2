@@ -105,7 +105,7 @@ class GlDataMapper implements GlDataMapperInterface
             $codAmount = null;
         }
 
-        if(array_key_exists(Insurance::CODE, $services)){
+        if (array_key_exists(Insurance::CODE, $services)) {
             /** @var Insurance $insuranceService */
             $insuranceService = $services[Insurance::CODE];
             $insuredAmount = $insuranceService->getAmount();

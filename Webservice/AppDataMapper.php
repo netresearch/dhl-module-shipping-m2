@@ -523,7 +523,7 @@ class AppDataMapper implements AppDataMapperInterface
 
 
 
-        if(isset($servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE])){
+        if (isset($servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE])) {
             $servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE] = [
                 ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $this->getOrderValue($request),
                 ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $request->getData('base_currency_code')

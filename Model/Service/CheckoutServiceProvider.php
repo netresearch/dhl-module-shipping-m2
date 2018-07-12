@@ -91,8 +91,8 @@ class CheckoutServiceProvider
         ServiceHydrator $serviceHydrator,
         ServiceCompatibilityPool $compatibilityPool,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory
-    )
-    {
+    ) {
+    
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;

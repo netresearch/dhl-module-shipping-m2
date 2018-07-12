@@ -22,6 +22,7 @@
  * @license   https://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      https://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\ViewModel\Packaging;
 
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
@@ -44,6 +45,7 @@ class ShippingItems implements ArgumentInterface
 
     /**
      * ShippingItems constructor.
+     *
      * @param CountryCollectionFactory $countryCollectionFactory
      */
     public function __construct(CountryCollectionFactory $countryCollectionFactory)
@@ -59,6 +61,7 @@ class ShippingItems implements ArgumentInterface
     public function getCountries()
     {
         $countryCollection = $this->countryCollectionFactory->create();
+
         return $countryCollection->toOptionArray();
     }
 
@@ -68,9 +71,7 @@ class ShippingItems implements ArgumentInterface
      */
     public function getExportDescription($orderItem)
     {
-        $exportDescription = $orderItem->getProduct()->getData('dhl_export_description')
+        return $orderItem->getProduct()->getData('dhl_export_description')
             ?: $orderItem->getProduct()->getData('name');
-
-        return substr($exportDescription, 0, 50);
     }
 }

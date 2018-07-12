@@ -253,20 +253,6 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredday_handling_fee" translate="label" type="text" sortOrder="168" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Additional charge for your preferred day</label>
-                    <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
-                    <comment>Use . as decimal separator.</comment>
-                    <validate>validate-not-negative-number required-entry</validate>
-                </field>
-                <field id="service_preferredday_handling_fee_text" translate="label" type="textarea" sortOrder="169" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Preferred day handling fee text</label>
-                    <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
-                    <depends>
-                        <field id="service_preferredday_enabled">1</field>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
                 <field id="service_cutoff_time" translate="label" type="time" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cut off time</label>
                     <tooltip>Orders placed after the cut-off time will not be shipped the same day.</tooltip>
@@ -281,24 +267,6 @@
                     <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <field id="service_preferredtime_handling_fee" translate="label" type="text" sortOrder="172" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Additional charge for your preferred time</label>
-                    <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
-                    <comment>Use . as decimal separator.</comment>
-                    <validate>validate-not-negative-number required-entry</validate>
-                    <depends>
-                        <field id="service_preferredtime_enabled">1</field>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-                <field id="service_preferredtime_handling_fee_text" translate="label" type="textarea" sortOrder="173" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Preferred time handling fee text</label>
-                    <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
-                    <depends>
-                        <field id="service_preferredtime_enabled">1</field>
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
