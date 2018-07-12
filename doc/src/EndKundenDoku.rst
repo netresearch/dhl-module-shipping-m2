@@ -330,6 +330,22 @@ Außerdem legen Sie hier fest, ob eine E-Mail an den Käufer gesendet werden sol
 wenn der Lieferschein angelegt wurde. Hierbei handelt es sich um die
 Versandbestätigung von |mage|, nicht um die Paketankündigung von DHL.
 
+Zusätzliche Produkt-Attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Das Modul führt die neuen Produkt-Attribute **Produktbeschreibung** (DHL Export Description)
+und **Zolltarifnummer** (Tariff number) ein, welche für internationale Sendungen nutzbar
+sind.
+
+Diese Attribute können verwendet werden, um Zollinformationen fest im System zu hinterlegen,
+sodas diese nicht bei jeder Sendung von Hand eingetragen werden müssen.
+
+Zu beachten ist die maximale Länge von:
+ * 50 Zeichen für die Produktbeschreibung
+ * 10 Zeichen für die Zolltarifnummer
+
+Beachten Sie auch die Hinweise im Abschnitt `Internationale Sendungen`_.
+
 .. raw:: pdf
 
    PageBreak
@@ -441,11 +457,11 @@ Dabei gilt:
   werden.
 
 Die **Produktbeschreibung** (DHL Export Description) und **Zolltarifnummer** (Tariff number) werden
-aus den gleichnamigen **Produkt-Attributen** übernommen. Ist die Produktbeschreibung nicht gepflegt,
-wird der Produktname hierfür benutzt.
+aus den gleichnamigen **Produkt-Attributen** übernommen, siehe auch
+`Zusätzliche Produkt-Attribute`_. Wenn die Produktbeschreibung nicht gepflegt, ist wird stattdessen
+der Produktname hierfür benutzt.
 
-Weitere Angaben (z.B. Handelsklauseln) können in der Konfiguration unter *Standardwerte für
-automatische Sendungserstellung* vorgenommen werden.
+Standardwerte (z.B. Handelsklauseln) können in der Konfiguration des Moduls gesetzt werden.
 
 Alternativ können die Angaben auch von Hand in das Popup zur Sendungserstellung eingegeben werden,
 z.B. für Sonderfälle, die von den Standardwerten abweichen.
@@ -520,6 +536,10 @@ eingesehen werden:
 * Verkäufe → Bestellungen → Massenaktion *Paketaufkleber drucken*
 * Verkäufe → Lieferscheine → Massenaktion *Paketaufkleber drucken*
 * Detail-Ansicht eines Lieferscheins → Button *Paketaufkleber drucken*
+
+Hierdurch wird keine Übertragung an DHL durchgeführt, sondern lediglich die bereits
+vorliegenden Label nochmal ausgegeben. Um die Übertragung auszuführen, nutzen Sie
+stattdessen die `Massenaktion`_.
 
 .. admonition:: Hinweis
 
@@ -680,17 +700,6 @@ wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
 .. raw:: pdf
 
    PageBreak
-
-Zusätzliche Produkt-Attribute
-=============================
-
-Das Modul führt zwei neue Produkt-Attribute, **Produktbeschreibung** (DHL Export Description) und
-**Zolltarifnummer** (Tariff number) ein, welche für
-`Internationale Sendungen`_ notwendig sind.
-
-Zu beachten ist die maximale Länge von:
- * 50 Zeichen für die Produktbeschreibung
- * 10 Zeichen für die Zolltarifnummer
 
 Modul deinstallieren
 ====================
