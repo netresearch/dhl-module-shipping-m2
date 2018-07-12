@@ -105,6 +105,7 @@ To clean up the database, run the following commands:
     DROP TABLE `dhlshipping_order_address`;
     DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_dangerous_goods_category';
     DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_tariff_number';
+    DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_export_description';
     DELETE FROM `core_config_data` WHERE `path` LIKE 'carriers/dhlshipping/%';
     DELETE FROM `setup_module` WHERE `module` = 'Dhl_Shipping';
 
