@@ -74,6 +74,7 @@ class LabelServiceProvider
 
     /**
      * LabelServiceProvider constructor.
+     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
@@ -138,11 +139,24 @@ class LabelServiceProvider
                 ->getByOrderAddressId($orderAddressId)
                 ->getItems();
 
+            $serviceSelections = array_filter(
+                $serviceSelections,
+                function (ServiceSelectionInterface $service) use ($serviceData, $settings) {
+                    if ($settings[$service->getServiceCode()][ServiceSettingsInterface::IS_MERCHANT_SERVICE] === true
+                        && !array_key_exists($service->getServiceCode(), $serviceData)) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            );
+
             $orderServices = array_reduce(
                 $serviceSelections,
                 function ($carry, $selection) {
                     /** @var ServiceSelectionInterface $selection */
                     $carry[$selection->getServiceCode()] = $selection->getServiceValue();
+
                     return $carry;
                 },
                 []

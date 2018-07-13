@@ -20,12 +20,15 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\AutoCreate;
 
+use Dhl\Shipping\Api\Data\Service\ServiceInputInterface;
+use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Helper\ProductData as Helper;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Config\ServiceConfigInterface;
+use Dhl\Shipping\Model\Service\PackagingServiceProvider;
 use Dhl\Shipping\Service\Filter\SelectedFilter;
 use Dhl\Shipping\Util\ExportType;
 use Magento\Directory\Helper\Data;
@@ -60,9 +63,9 @@ class RequestBuilder implements RequestBuilderInterface
     private $moduleConfig;
 
     /**
-     * @var ServiceConfigInterface
+     * @var PackagingServiceProvider
      */
-    private $serviceConfig;
+    private $serviceProvider;
 
     /**
      * @var RequestFactory
@@ -101,33 +104,37 @@ class RequestBuilder implements RequestBuilderInterface
 
     /**
      * RequestBuilder constructor.
+     *
      * @param ModuleConfigInterface $moduleConfig
-     * @param ServiceConfigInterface $serviceConfig
+     * @param PackagingServiceProvider $serviceProvider
      * @param RequestFactory $shipmentRequestFactory
      * @param ScopeConfigInterface $scopeConfig
      * @param RegionFactory $regionFactory
      * @param DataObjectFactory $dataObjectFactory
-     * @param Helper $helper
      * @param CarrierFactory $carrierFactory
+     * @param Helper $helper
+     * @param mixed[] $data
      */
     public function __construct(
         ModuleConfigInterface $moduleConfig,
-        ServiceConfigInterface $serviceConfig,
+        PackagingServiceProvider $serviceProvider,
         RequestFactory $shipmentRequestFactory,
         ScopeConfigInterface $scopeConfig,
         RegionFactory $regionFactory,
         DataObjectFactory $dataObjectFactory,
+        CarrierFactory $carrierFactory,
         Helper $helper,
-        CarrierFactory $carrierFactory
+        array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
-        $this->serviceConfig = $serviceConfig;
+        $this->serviceProvider = $serviceProvider;
         $this->shipmentRequestFactory = $shipmentRequestFactory;
         $this->scopeConfig = $scopeConfig;
         $this->regionFactory = $regionFactory;
         $this->dataObjectFactory = $dataObjectFactory;
         $this->carrierFactory = $carrierFactory;
         $this->helper = $helper;
+        $this->data = $data;
     }
 
     /**
@@ -168,6 +175,7 @@ class RequestBuilder implements RequestBuilderInterface
         $this->preparePackageData($shipmentRequest);
 
         $this->data = [];
+
         return $shipmentRequest;
     }
 
@@ -309,7 +317,7 @@ class RequestBuilder implements RequestBuilderInterface
                         'customs_item_description',
                         'item_origin_country',
                         'tariff_number',
-                        'sku'
+                        'sku',
                     ]
                 );
                 $itemData['customs_value'] = $itemData['price'];
@@ -322,7 +330,7 @@ class RequestBuilder implements RequestBuilderInterface
                     'hsCode' => $itemData['tariff_number'],
                     'packageQuantitiy' => $itemData['qty'],
                     'itemValue' => $itemData['customs_value'],
-                    'skuNumer' => $itemData['sku']
+                    'skuNumer' => $itemData['sku'],
                 ];
                 $itemData['customs_item_description'] = $itemData['name'];
             } else {
@@ -342,20 +350,16 @@ class RequestBuilder implements RequestBuilderInterface
 
         $carrier = $this->carrierFactory->create($carrierCode, $storeId);
 
-        $params = $this->dataObjectFactory->create([
-            'data' => [
-                'country_shipper' => $shipperCountry,
-                'country_recipient' => $destCountryId,
+        $params = $this->dataObjectFactory->create(
+            [
+                'data' => [
+                    'country_shipper' => $shipperCountry,
+                    'country_recipient' => $destCountryId,
+                ],
             ]
-        ]);
+        );
 
         $container = current(array_keys($carrier->getContainerTypes($params)));
-
-        //fixme(nr): load services via \Dhl\Shipping\Model\Service\ServicePool
-        $enabledFilter = SelectedFilter::create();
-        $serviceCollection = $this->serviceConfig
-            ->getServices($storeId)
-            ->filter($enabledFilter);
 
         $weightUnit = $this->scopeConfig->getValue(
             Data::XML_PATH_WEIGHT_UNIT,
@@ -390,8 +394,10 @@ class RequestBuilder implements RequestBuilderInterface
                 }
 
                 $package['items'][$itemId]['tariff_number'] =
-                    isset($productData[$productId]['dhl_tariff_number']) ?
-                        $productData[$productId]['dhl_tariff_number'] :
+                    isset($productData[$productId]['dhl_tariff_number'])
+                        ?
+                        $productData[$productId]['dhl_tariff_number']
+                        :
                         '';
             }
             $exportDescription = '';
@@ -424,7 +430,7 @@ class RequestBuilder implements RequestBuilderInterface
         $package['params']['dimension_units'] = $dimensionUnit;
         $package['params']['content_type'] = isset($contentType) ? $contentType : '';
         $package['params']['content_type_other'] = isset($contentTypeOther) ? $contentTypeOther : '';
-        $package['params']['services'] = $serviceCollection->getConfiguration();
+        $package['params']['services'] = $this->getServiceSelection($shipmentRequest);
 
         if (isset($customsParams)) {
             $package['params']['customs'] = $customsParams;
@@ -443,5 +449,40 @@ class RequestBuilder implements RequestBuilderInterface
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * @param Request $shipmentRequest
+     * @return string[]
+     */
+    private function getServiceSelection(Request $shipmentRequest): array
+    {
+        $enabledFilter = SelectedFilter::create();
+
+        $serviceCollection = $this->serviceProvider
+            ->getServices($shipmentRequest->getOrderShipment())
+            ->filter($enabledFilter);
+        $serviceSelection = array_reduce(
+            $serviceCollection->getArrayCopy(),
+            function ($carry, $service) {
+                /** @var ServiceInterface $service */
+                $values = array_reduce(
+                    $service->getInputs(),
+                    function ($carry, $input) {
+                        /** @var ServiceInputInterface $input */
+                        $carry[$input->getCode()] = $input->getValue();
+
+                        return $carry;
+                    },
+                    []
+                );
+                $carry[$service->getCode()] = $values;
+
+                return $carry;
+            },
+            []
+        );
+
+        return $serviceSelection;
     }
 }

@@ -30,6 +30,10 @@ use Dhl\Shipping\Service\Bcs\BulkyGoods;
 use Dhl\Shipping\Service\Bcs\Cod;
 use Dhl\Shipping\Service\Bcs\Insurance;
 use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
+use Dhl\Shipping\Service\Bcs\PreferredDay;
+use Dhl\Shipping\Service\Bcs\PreferredLocation;
+use Dhl\Shipping\Service\Bcs\PreferredNeighbour;
+use Dhl\Shipping\Service\Bcs\PreferredTime;
 use Dhl\Shipping\Service\Bcs\ReturnShipment;
 use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Webservice\RequestMapper\BcsDataMapperInterface;
@@ -144,6 +148,42 @@ class BcsDataMapper implements BcsDataMapperInterface
                 $ageCheckService->getAge()
             );
             $serviceType->setVisualCheckOfAge($visualCheckOfAgeConfig);
+        }
+        if (array_key_exists(PreferredTime::CODE, $services)) {
+            /** @var PreferredTime $preferredTimeService */
+            $preferredTimeService = $services[PreferredTime::CODE];
+            $preferredTimeConfig = new BcsApi\ServiceconfigurationDeliveryTimeframe(
+                true,
+                $preferredTimeService->getTime()
+            );
+            $serviceType->setPreferredTime($preferredTimeConfig);
+        }
+        if (array_key_exists(PreferredDay::CODE, $services)) {
+            /** @var PreferredDay $preferredDayService */
+            $preferredDayService = $services[PreferredDay::CODE];
+            $preferredDayConfig = new BcsApi\ServiceconfigurationDateOfDelivery(
+                true,
+                $preferredDayService->getDate()
+            );
+            $serviceType->setDayOfDelivery($preferredDayConfig);
+        }
+        if (array_key_exists(PreferredNeighbour::CODE, $services)) {
+            /** @var PreferredNeighbour $preferredNeighbour */
+            $preferredNeighbour = $services[PreferredNeighbour::CODE];
+            $preferredNeighbourConfig = new BcsApi\ServiceconfigurationDetails(
+                true,
+                $preferredNeighbour->getDetails()
+            );
+            $serviceType->setPreferredNeighbour($preferredNeighbourConfig);
+        }
+        if (array_key_exists(PreferredLocation::CODE, $services)) {
+            /** @var PreferredLocation $preferredLocation */
+            $preferredLocation = $services[PreferredLocation::CODE];
+            $preferredLocationConfig = new BcsApi\ServiceconfigurationDetails(
+                true,
+                $preferredLocation->getDetails()
+            );
+            $serviceType->setPreferredLocation($preferredLocationConfig);
         }
 
         return $serviceType;
@@ -272,7 +312,6 @@ class BcsDataMapper implements BcsDataMapperInterface
         $communicationType->setContactPerson($receiver->getContactPerson());
         if (array_key_exists(ParcelAnnouncement::CODE, $shipmentOrder->getServices())) {
             $communicationType->setEmail($receiver->getEmail());
-            $communicationType->setPhone($receiver->getPhone());
         }
 
         $receiverType = new BcsApi\ReceiverType(
