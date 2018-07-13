@@ -1,6 +1,6 @@
 <?php
 /**
- * ${MODULE_LONG}
+ * Dhl Shipping
  *
  * NOTICE OF LICENSE
  *
@@ -14,8 +14,9 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @category  ${MODULE}
- * @package   ${NAMESPACE}
+ * PHP version 7
+ *
+ * @package   Dhl\Shipping\Api
  * @author    Paul Siedler <paul.siedler@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
