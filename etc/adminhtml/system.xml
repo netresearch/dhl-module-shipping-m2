@@ -403,7 +403,8 @@
                 <!-- General Automatic Shipment Creation Settings -->
                 <field id="fields_automatic_shipping_general" translate="label" sortOrder="290" showInDefault="1"
                        showInStore="1" showInWebsite="1">
-                    <label>Shipping label creation settings for bulk action</label>
+                    <label>Default shipping label creation settings</label>
+                    <comment>Used for prefilling fields in manual label creation and for bulk actions.</comment>
                     <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
                     <depends>
                         <field id="api_type" separator=",">bcs,gla</field>
