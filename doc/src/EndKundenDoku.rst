@@ -338,7 +338,7 @@ und **Zolltarifnummer** (Tariff number) ein, welche für internationale Sendunge
 sind.
 
 Diese Attribute können verwendet werden, um Zollinformationen fest im System zu hinterlegen,
-sodas diese nicht bei jeder Sendung von Hand eingetragen werden müssen.
+so dass diese nicht bei jeder Sendung von Hand eingetragen werden müssen.
 
 Zu beachten ist die maximale Länge von:
  * 50 Zeichen für die Produktbeschreibung
