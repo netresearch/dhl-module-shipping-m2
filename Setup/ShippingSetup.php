@@ -108,7 +108,7 @@ class ShippingSetup
             [
                 'group' => '',
                 'type' => 'varchar',
-                'label' => 'DHL Export Description',
+                'label' => 'DHL Item Description',
                 'input' => 'text',
                 'required' => false,
                 'sort_order' => 50,
@@ -201,6 +201,27 @@ class ShippingSetup
                 'length' => 10,
                 'comment' => 'DHL Shipping Label Status'
             ]
+        );
+    }
+
+    /**
+     * Rename DHL Export Description label
+     *
+     * @param EavSetup $eavSetup
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public static function updateExportDescriptionAttribute(EavSetup $eavSetup)
+    {
+        $entityId = $eavSetup->getEntityTypeId(\Magento\Catalog\Model\Product::ENTITY);
+        $id = $eavSetup->getAttributeId(
+            (int) $entityId,
+            \Dhl\Shipping\Model\Attribute\Backend\ExportDescription::CODE
+        );
+        $eavSetup->updateAttribute(
+            $entityId,
+            $id,
+            'frontend_label',
+            'DHL Item Description'
         );
     }
 }
