@@ -49,7 +49,7 @@ $viewModel = $block->getData('viewModel');
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Country of Origin')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Dangerous Goods Category')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Tariff Number (hs Code)')) ?></th>
-                    <th class="data-grid-th"><?= $block->escapeHtml(__('Export Description')) ?></th>
+                    <th class="data-grid-th"><?= $block->escapeHtml(__('DHL Item Description')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Weight')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Customs Value')) ?></th>
                     <th class="data-grid-th"><?= $block->escapeHtml(__('Qty Ordered')) ?></th>
@@ -134,7 +134,7 @@ $viewModel = $block->getData('viewModel');
                                type="text"
                                class="input-text admin__control-text validate-length maximum-length-50"
                                maxlength="50"
-                               title="<?= $block->escapeHtmlAttr(__('Export Description')) ?>"
+                               title="<?= $block->escapeHtmlAttr(__('DHL Item Description')) ?>"
                                value="<?= $block->escapeHtmlAttr($exportDescription); ?>"/>
                     </td>
 

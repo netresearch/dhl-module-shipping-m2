@@ -95,5 +95,8 @@ class UpgradeData implements UpgradeDataInterface
         if (version_compare($context->getVersion(), '0.9.0', '<')) {
             ShippingSetup::addExportDescriptionAttribute($eavSetup);
         }
+        if (version_compare($context->getVersion(), '0.9.1', '<')) {
+            ShippingSetup::updateExportDescriptionAttribute($eavSetup);
+        }
     }
 }
