@@ -1,12 +1,12 @@
 {
     "name": "dhl/module-shipping-m2",
-    "version": "0.8.1",
+    "version": "0.9.0",
     "license": "OSL-3.0",
     "type": "magento2-module",
     "description": "DHL business customer shipping extension for Magento",
     "require": {
         "php": "7.0.2|7.0.4|~7.0.6|~7.1.0",
-        "dhl/lib-shipping-mx": "~0.8",
+        "dhl/lib-shipping-mx": "~0.9",
         "magento/framework": "^101.0.4",
         "magento/module-backend": "^100.2.4",
         "magento/module-catalog": "^102.0.4",
