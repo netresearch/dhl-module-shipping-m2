@@ -277,17 +277,12 @@ class AppDataMapper implements AppDataMapperInterface
      * FIXME(nr): handle partial shipments
      *
      * @param ShipmentRequest $request
-     * @return MonetaryValueInterface
+     *
+     * @return float
      */
     private function getOrderValue(ShipmentRequest $request)
     {
-        $shipmentValue = $request->getOrderShipment()->getOrder()->getBaseGrandTotal();
-        $declaredValue = $this->monetaryValueFactory->create([
-            'value' => $shipmentValue,
-            'currencyCode' => $request->getData('base_currency_code'),
-        ]);
-
-        return $declaredValue;
+        return $request->getOrderShipment()->getOrder()->getBaseGrandTotal();
     }
 
     /**
@@ -520,8 +515,6 @@ class AppDataMapper implements AppDataMapperInterface
     {
         $packageParams = $request->getData('package_params');
         $servicesData  = $packageParams->getData('services') ?: [];
-
-
 
         if (isset($servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE])) {
             $servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE] = [

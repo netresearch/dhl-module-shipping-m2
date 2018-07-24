@@ -25,16 +25,15 @@
 
 namespace Dhl\Shipping\Webservice;
 
+use Dhl\Shipping\Api\ServiceCollectionInterface;
 use Dhl\Shipping\Service\Gla\Cod;
 use Dhl\Shipping\Service\Gla\Insurance;
+use Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface;
 use Dhl\Shipping\Webservice\RequestType;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollectionInterface;
+use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
-use Dhl\Shipping\Webservice\RequestMapper\GlDataMapperInterface;
 use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\ConsigneeAddressRequestType;
 use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\CustomsDetailsRequestType;
 use Dhl\Shipping\Webservice\Schema\Gla\Request\Type\PackageDetailsRequestType;
