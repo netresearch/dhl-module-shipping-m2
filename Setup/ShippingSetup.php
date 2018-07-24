@@ -203,25 +203,4 @@ class ShippingSetup
             ]
         );
     }
-
-    /**
-     * Rename DHL Export Description label
-     *
-     * @param EavSetup $eavSetup
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public static function updateExportDescriptionAttribute(EavSetup $eavSetup)
-    {
-        $entityId = $eavSetup->getEntityTypeId(\Magento\Catalog\Model\Product::ENTITY);
-        $id = $eavSetup->getAttributeId(
-            (int) $entityId,
-            \Dhl\Shipping\Model\Attribute\Backend\ExportDescription::CODE
-        );
-        $eavSetup->updateAttribute(
-            $entityId,
-            $id,
-            'frontend_label',
-            'DHL Item Description'
-        );
-    }
 }

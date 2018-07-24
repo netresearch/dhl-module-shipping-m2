@@ -4,24 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2018-XX-XX
+## 0.9.0 - 2018-07-24
 
 ### Added
 - Define custom Export Descriptions via product attribute
 - Support for third party shipping methods with dynamic method codes
 - Configuration of default products per available route
 - Mass action and cron autocreation for cross border shipping
+- Dhl Label Status on sales order grid 
+- Tarif number validation on packaging popup
+- added field for DHL export description
+- more clear error message for not supported shipping origin config
+
 ### Changed
 - Updated DHL product names and codes
 - Reordered configuration fields to make dependencies clearer
-### Deprecated
 
 ### Removed
 - Removed support for Magento 2.1
+
 ### Fixed
 - Shipping product options for DE->AT route
 - Packaging popup not respecting config defaults for preselects
-### Security
+
 
 ## [0.8.1] - 2018-05-24
 
@@ -47,6 +52,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Now displaying separate tracking link for Global Shipping API labels
 - Reworked product attribute uninstaller
 
-[Unreleased]: https://git.netresearch.de/dhl/module-shipping-m2/compare/1.8.1...develop
 [0.9.0]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.8.1...0.9.0
 [0.8.1]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.8.0...0.8.1
+[Unreleased]

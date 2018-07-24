@@ -6,7 +6,7 @@ shipping API or the DHL eCommerce Global Label API into the order processing wor
 
 Facts
 -----
-* version: 0.8.1
+* version: 0.9.0
 
 Description
 -----------
