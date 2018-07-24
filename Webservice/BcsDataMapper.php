@@ -165,7 +165,7 @@ class BcsDataMapper implements BcsDataMapperInterface
                 true,
                 $preferredDayService->getDate()
             );
-            $serviceType->setDayOfDelivery($preferredDayConfig);
+            $serviceType->setPreferredDay($preferredDayConfig);
         }
         if (array_key_exists(PreferredNeighbour::CODE, $services)) {
             /** @var PreferredNeighbour $preferredNeighbour */

@@ -28,6 +28,7 @@ namespace Dhl\Shipping\Cron;
 use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\CreateShipment;
 use Magento\Cron\Model\Schedule;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
  * Cron entry point for automatic shipment creation and label retrieval
@@ -52,28 +53,37 @@ class AutoCreate
     private $createShipment;
 
     /**
+     * @var ConsoleOutput
+     */
+    private $output;
+
+    /**
      * AutoCreate constructor.
      *
      * @param OrderProviderInterface $orderProvider
-     * @param CreateShipment $createShipment
+     * @param CreateShipment         $createShipment
+     * @param ConsoleOutput        $output
      */
     public function __construct(
         OrderProviderInterface $orderProvider,
-        CreateShipment $createShipment
+        CreateShipment $createShipment,
+        ConsoleOutput $output
     ) {
-        $this->orderProvider = $orderProvider;
+        $this->orderProvider  = $orderProvider;
         $this->createShipment = $createShipment;
+        $this->output         = $output;
     }
 
     /**
      * Queries for orders that could be automatically shipped and processes them via the corresponding API
      *
      * @param Schedule $schedule
+     *
      * @return void
      */
     public function run(Schedule $schedule)
     {
-        $failedShipments = [];
+        $failedShipments  = [];
         $createdShipments = [];
 
         /** @var \Magento\Sales\Model\Order $order */
@@ -88,5 +98,16 @@ class AutoCreate
 
         $scheduleMessage = sprintf(self::MESSAGE_TEMPLATE, count($createdShipments), count($failedShipments));
         $schedule->setMessages($scheduleMessage);
+        if (!empty($failedShipments)) {
+            $this->output->writeln("---The Cron job of DHL AutoCreate contained erroneous orders---");
+        }
+        foreach ($failedShipments as $orderId => $failedShipmentMessage) {
+            $this->output->writeln(
+                sprintf('Order with IncrementId: %s had the following error: %s', $orderId, $failedShipmentMessage)
+            );
+        }
+        if (!empty($failedShipments)) {
+            $this->output->writeln("---------------------------------------------------------------");
+        }
     }
 }

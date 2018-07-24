@@ -151,15 +151,15 @@ class ShippingSetup
      */
     public static function createLabelStatusTable(SchemaSetupInterface $setup)
     {
-        $quoteTable = $setup->getConnection()
+        $table = $setup->getConnection()
                        ->newTable($setup->getTable(self::TABLE_LABEL_STATUS));
-        $quoteTable->addColumn(
+        $table->addColumn(
             'entity_id',
             Table::TYPE_INTEGER,
             null,
             ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true]
         )->addColumn(
-            'parent_id',
+            'order_id',
             Table::TYPE_INTEGER,
             null,
             ['identity'  => false, 'unsigned'  => true, 'nullable'  => false],
@@ -173,25 +173,25 @@ class ShippingSetup
         )->addIndex(
             $setup->getIdxName(
                 $setup->getTable(self::TABLE_LABEL_STATUS),
-                'parent_id',
+                'order_id',
                 AdapterInterface::INDEX_TYPE_UNIQUE
             ),
-            'parent_id',
+            'order_id',
             ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
         )->addForeignKey(
             $setup->getFkName(
                 $setup->getTable(self::TABLE_LABEL_STATUS),
-                'parent_id',
+                'order_id',
                 $setup->getTable('sales_order'),
                 'entity_id'
             ),
-            'parent_id',
+            'order_id',
             $setup->getTable('sales_order'),
             'entity_id',
             Table::ACTION_CASCADE
         );
 
-        $setup->getConnection()->createTable($quoteTable);
+        $setup->getConnection()->createTable($table);
 
         $setup->getConnection()->addColumn(
             $setup->getTable('sales_order_grid'),
