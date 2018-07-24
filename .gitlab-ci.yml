@@ -36,6 +36,7 @@ package-build:
   stage: build
   only:
   - master
+  - /^(release|hotfix)-.*$/
   script:
   - rst2pdf -v -b 1
             -o doc/${MODULE_NAME}_Documentation.pdf
@@ -58,6 +59,7 @@ package-validate:
   stage: validate
   only:
   - master
+  - /^(release|hotfix)-.*$/
   script:
   - m2eval ${MODULE_NAME}-${MODULE_VERSION}.zip
   dependencies:
