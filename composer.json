@@ -21,8 +21,8 @@
         "magento/module-quote": "^101.0.3",
         "magento/module-sales": "^101.0.3",
         "magento/module-shipping": "^100.2.4",
-        "magento/module-store": "100.2.3",
-        "magento/module-ui": "101.0.4",
+        "magento/module-store": "^100.2.3",
+        "magento/module-ui": "^101.0.4",
         "magento/zendframework1": "~1.13.0"
     },
     "require-dev": {
