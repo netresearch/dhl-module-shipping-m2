@@ -55,7 +55,7 @@ The following requirements must be met for a smooth operation of the module.
 
 The following |mage2| versions are supported:
 
-- Community Edition 2.1.4 or higher
+- Community Edition 2.2.4 or higher
 
 PHP
 ---
