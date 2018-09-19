@@ -51,7 +51,7 @@ Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Mod
 
 Folgende |mage2|-Versionen werden vom Modul unterstützt:
 
-- Community Edition 2.1.4 oder höher
+- Community Edition 2.2.4 oder höher
 
 PHP
 ---
