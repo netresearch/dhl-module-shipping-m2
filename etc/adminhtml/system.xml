@@ -345,19 +345,6 @@
                     </depends>
                 </field>
 
-
-                <!-- BCS Shipping Settings -->
-                <field id="fields_shipping_bcs" translate="label" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Business Customer Shipping Settings</label>
-                    <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Heading</frontend_model>
-                    <depends>
-                        <field id="api_type">bcs</field>
-                    </depends>
-                </field>
-
-
-
-
                 <!-- Cash on Delivery Settings -->
                 <field id="fields_bank_data" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1"
                         showInStore="0">
