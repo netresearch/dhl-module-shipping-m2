@@ -2,8 +2,10 @@ define([
     'Magento_Ui/js/form/element/abstract',
     'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/model/service-validation-map',
-    'Dhl_Shipping/js/model/services'
-], function (Component, serviceModel, serviceValidationMap, serviceSelection) {
+    'Dhl_Shipping/js/model/services',
+    'Dhl_Shipping/js/action/validate-service-selection',
+    'Dhl_Shipping/js/action/enforce-service-compatibility'
+], function (Component, serviceModel, serviceValidationMap, serviceSelection, validateServices, enforceCompatibility) {
     'use strict';
 
     return Component.extend({
@@ -40,6 +42,8 @@ define([
                         this.serviceInput.code
                     );
                 }
+                enforceCompatibility();
+                validateServices();
             }.bind(this));
         },
 
@@ -64,6 +68,7 @@ define([
             }
             this.inputName = this.serviceInput.code;
             this.autocomplete = this.serviceInput.code;
+            this.serviceCode =  this.service.code;
         },
 
         getTemplateForType: function (type) {
