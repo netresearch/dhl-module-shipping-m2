@@ -3,9 +3,9 @@ define([
     'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/model/service-validation-map',
     'Dhl_Shipping/js/model/services',
-    'Dhl_Shipping/js/action/validate-service-selection',
-    'Dhl_Shipping/js/action/enforce-service-compatibility'
-], function (Component, serviceModel, serviceValidationMap, serviceSelection, validateServices, enforceCompatibility) {
+    'Dhl_Shipping/js/action/validate-service-compatibility',
+    'Dhl_Shipping/js/action/enforce-service-compatibility',
+], function (Component, serviceModel, serviceValidationMap, serviceSelection, validateCompatibility, enforceCompatibility) {
     'use strict';
 
     return Component.extend({
@@ -14,6 +14,7 @@ define([
             autocomplete: '',
             serviceInput: {},
             service: {},
+            serviceCode: '',
             lastValue: '',
         },
 
@@ -43,7 +44,7 @@ define([
                     );
                 }
                 enforceCompatibility();
-                validateServices();
+                validateCompatibility();
             }.bind(this));
         },
 
@@ -68,7 +69,7 @@ define([
             }
             this.inputName = this.serviceInput.code;
             this.autocomplete = this.serviceInput.code;
-            this.serviceCode =  this.service.code;
+            this.serviceCode = this.service.code;
         },
 
         getTemplateForType: function (type) {

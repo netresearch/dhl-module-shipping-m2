@@ -3,18 +3,18 @@ define([
     'uiRegistry',
     'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/model/service-compatibility',
-], function (_, registy, serviceSelection, serviceCompatibility) {
+], function (_, registry, serviceSelection, serviceCompatibility) {
     'use strict';
 
     /**
-     * Check for unavailable service combinations and trigger validation events for Service Block.
+     * Check for unavailable service combinations and trigger field disable events for Service Block.
      *
      * @return {boolean}
      */
     return function () {
         var compatibilityInfo = serviceCompatibility.getData(),
             selectedServiceCodes = [],
-            serviceBlock = registy.get({component: 'Dhl_Shipping/js/view/checkout/shipping/service-block'});
+            serviceBlock = registry.get({component: 'Dhl_Shipping/js/view/checkout/shipping/service-block'});
 
         for (var service in serviceSelection.get()()) {
             selectedServiceCodes.push(service)
@@ -22,10 +22,10 @@ define([
 
         _.each(compatibilityInfo, function (compatibility) {
             if (compatibility.type === 'exclusive') {
-                var serv = _.intersection(compatibility.subject, selectedServiceCodes);
-                if (serv.length > 0) {
-                    var serviceToBeDisabled = _.difference(compatibility.subject, serv);
-                    serviceToBeDisabled.map(function (serviceCode) {
+                var servicesWithCompatibilityData = _.intersection(compatibility.subject, selectedServiceCodes);
+                if (servicesWithCompatibilityData.length > 0) {
+                    var servicesToBeDisabled = _.difference(compatibility.subject, servicesWithCompatibilityData);
+                    servicesToBeDisabled.map(function (serviceCode) {
                         serviceBlock.triggerDisableInput(serviceCode);
                     });
                 } else {

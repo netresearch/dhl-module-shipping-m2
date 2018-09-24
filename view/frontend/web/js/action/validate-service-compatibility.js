@@ -3,7 +3,7 @@ define([
     'uiRegistry',
     'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/model/service-compatibility',
-], function (_, registy, serviceSelection, serviceCompatibility) {
+], function (_, registry, serviceSelection, serviceCompatibility) {
     'use strict';
 
     /**
@@ -15,7 +15,7 @@ define([
         var compatibilityInfo = serviceCompatibility.getData(),
             result = true,
             selectedServiceCodes = [],
-            serviceBlock = registy.get({component: 'Dhl_Shipping/js/view/checkout/shipping/service-block'});
+            serviceBlock = registry.get({component: 'Dhl_Shipping/js/view/checkout/shipping/service-block'});
 
         for (var service in serviceSelection.get()()) {
             selectedServiceCodes.push(service)

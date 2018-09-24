@@ -1,9 +1,8 @@
 define([
     'underscore',
     'uiRegistry',
-    'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/action/validate-service-compatibility',
-], function (_, registy, serviceSelection, validateServiceCompatibility) {
+], function (_, registry, validateServiceCompatibility) {
     'use strict';
 
 
@@ -14,7 +13,7 @@ define([
      * @return {boolean}
      */
     var validateValues = function () {
-        var inputs = registy.filter({component: 'Dhl_Shipping/js/view/checkout/shipping/service-input'}),
+        var inputs = registry.filter({component: 'Dhl_Shipping/js/view/checkout/shipping/service-input'}),
             result = true;
 
         _.each(inputs, function (input) {
@@ -34,9 +33,9 @@ define([
      * @return {bool}
      */
     return function () {
-
         var compatibilityValid = validateServiceCompatibility();
         var valuesValid = validateValues();
+
         return compatibilityValid && valuesValid;
     };
 });
