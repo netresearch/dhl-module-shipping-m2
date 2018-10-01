@@ -28,11 +28,14 @@ use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Service\Filter\InStockFilter;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
 
 /**
  * Load services for display in checkout
@@ -75,6 +78,16 @@ class CheckoutServiceProvider
     private $serviceSettingsFactory;
 
     /**
+     * @var CheckoutSession
+     */
+    private $checkoutSession;
+
+    /**
+     * @var StockRegistryInterface
+     */
+    private $stockRegistry;
+
+    /**
      * CheckoutServiceProvider constructor.
      *
      * @param ServicePool $servicePool
@@ -83,6 +96,8 @@ class CheckoutServiceProvider
      * @param ServiceHydrator $serviceHydrator
      * @param ServiceCompatibilityPool $compatibilityPool
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
+     * @param CheckoutSession $checkoutSession
+     * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
         ServicePool $servicePool,
@@ -90,15 +105,18 @@ class CheckoutServiceProvider
         RouteValidatorInterface $routeValidator,
         ServiceHydrator $serviceHydrator,
         ServiceCompatibilityPool $compatibilityPool,
-        ServiceSettingsInterfaceFactory $serviceSettingsFactory
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory,
+        CheckoutSession $checkoutSession,
+        StockRegistryInterface $stockRegistry
     ) {
-    
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->routeValidator = $routeValidator;
         $this->serviceHydrator = $serviceHydrator;
         $this->compatibilityPool = $compatibilityPool;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
+        $this->checkoutSession = $checkoutSession;
+        $this->stockRegistry = $stockRegistry;
     }
 
     /**
@@ -119,11 +137,8 @@ class CheckoutServiceProvider
     public function getServices($countryId, $storeId): array
     {
         $presets = $this->prepareServiceSettings($storeId);
-
         $serviceCollection = $this->servicePool->getServices($presets);
-
         $serviceCollection = $this->filterAvailableServices($countryId, $storeId, $serviceCollection);
-
         $serviceCollection = $serviceCollection->sort($this->getSortCallback());
 
         $services = $serviceCollection->map(function ($service) {
@@ -182,8 +197,13 @@ class CheckoutServiceProvider
             $countryId,
             $this->config->getEuCountryList($storeId)
         );
+
+        $cartItems = $this->checkoutSession->getQuote()->getItems();
+        $inStockFilter = InStockFilter::create($cartItems, $this->stockRegistry);
+
         $serviceCollection = $serviceCollection->filter($checkoutFilter);
         $serviceCollection = $serviceCollection->filter($routeFilter);
+        $serviceCollection = $serviceCollection->filter($inStockFilter);
 
         return $serviceCollection;
     }
