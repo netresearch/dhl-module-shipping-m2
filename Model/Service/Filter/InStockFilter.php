@@ -79,17 +79,20 @@ class InStockFilter implements FilterInterface
             return true;
         }
 
+        $notInStock = false;
         foreach ($this->cartItems as $cartItem) {
-            /** @var \Magento\Catalog\Model\Product $product */
-            $product = $cartItem->getProduct();
-            $stockQty = $this->stockRegistry
-                ->getStockItem($product->getId(), $product->getStoreId())
-                ->getQty();
+            $stockItem = $this->stockRegistry->getStockItem(
+                $cartItem->getProduct()->getId(),
+                $cartItem->getProduct()->getStoreId()
+            );
 
-            if ($stockQty < 0.1) {
-                return false;
+            if ($stockItem->getQty() < $cartItem->getQty()) {
+                $notInStock = true;
+                break;
             }
         }
+
+        return $notInStock ? false : true;
     }
 
     /**
