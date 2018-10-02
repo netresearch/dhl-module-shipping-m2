@@ -28,9 +28,10 @@ use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
 use Dhl\Shipping\Service\Filter\FilterInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Quote\Api\Data\CartItemInterface;
 
 /**
- * Check if the service is available for customers to select and enabled via config.
+ * Check if items are in stock and filter services accordingly.
  *
  * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
@@ -39,14 +40,13 @@ use Magento\CatalogInventory\Api\StockRegistryInterface;
  */
 class InStockFilter implements FilterInterface
 {
-
     /**
      * @var array
      */
     private $servicesToCheck =[PreferredDay::CODE];
 
     /**
-     * @var \Magento\Quote\Api\Data\CartItemInterface[]
+     * @var CartItemInterface[]
      */
     private $cartItems = [];
 
@@ -58,7 +58,7 @@ class InStockFilter implements FilterInterface
     /**
      * InStockFilter constructor.
      * @param StockRegistryInterface $stockRegistry
-     * @param \Magento\Quote\Api\Data\CartItemInterface[] $cartItems
+     * @param CartItemInterface[] $cartItems
      */
     public function __construct(
         StockRegistryInterface $stockRegistry,
@@ -96,7 +96,7 @@ class InStockFilter implements FilterInterface
     }
 
     /**
-     * @param \Magento\Quote\Api\Data\CartItemInterface[] $cartItems
+     * @param CartItemInterface[] $cartItems
      * @param StockRegistryInterface $stockRegistry
      * @return \Closure
      */

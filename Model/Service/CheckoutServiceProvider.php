@@ -34,8 +34,9 @@ use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
-use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\Session\SessionManagerInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Checkout\Model\Session as CheckoutSession;
 
 /**
  * Load services for display in checkout
@@ -78,7 +79,7 @@ class CheckoutServiceProvider
     private $serviceSettingsFactory;
 
     /**
-     * @var CheckoutSession
+     * @var SessionManagerInterface|CheckoutSession
      */
     private $checkoutSession;
 
@@ -96,7 +97,7 @@ class CheckoutServiceProvider
      * @param ServiceHydrator $serviceHydrator
      * @param ServiceCompatibilityPool $compatibilityPool
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
-     * @param CheckoutSession $checkoutSession
+     * @param SessionManagerInterface $checkoutSession
      * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
@@ -106,7 +107,7 @@ class CheckoutServiceProvider
         ServiceHydrator $serviceHydrator,
         ServiceCompatibilityPool $compatibilityPool,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory,
-        CheckoutSession $checkoutSession,
+        SessionManagerInterface $checkoutSession,
         StockRegistryInterface $stockRegistry
     ) {
         $this->servicePool = $servicePool;
