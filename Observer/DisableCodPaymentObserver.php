@@ -28,13 +28,16 @@ namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\ServicePoolInterface;
+use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Service\ServiceCollection;
+use Dhl\Shipping\Service\Filter\CodServiceFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Session\SessionManagerInterface;
 
 /**
@@ -42,6 +45,7 @@ use Magento\Framework\Session\SessionManagerInterface;
  *
  * @package  Dhl\Shipping\Observer
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -73,6 +77,11 @@ class DisableCodPaymentObserver implements ObserverInterface
     private $serviceSettingsFactory;
 
     /**
+     * @var ServiceSelectionRepositoryInterface
+     */
+    private $serviceSelectionRepository;
+
+    /**
      * DisableCodPaymentObserver constructor.
      *
      * @param ModuleConfigInterface $config
@@ -80,19 +89,22 @@ class DisableCodPaymentObserver implements ObserverInterface
      * @param ServicePoolInterface $servicePool
      * @param RouteValidatorInterface $routeValidator
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
+     * @param ServiceSelectionRepositoryInterface $serviceSelectionRepository
      */
     public function __construct(
         ModuleConfigInterface $config,
         SessionManagerInterface $checkoutSession,
         ServicePoolInterface $servicePool,
         RouteValidatorInterface $routeValidator,
-        ServiceSettingsInterfaceFactory $serviceSettingsFactory
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory,
+        ServiceSelectionRepositoryInterface $serviceSelectionRepository
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
         $this->servicePool = $servicePool;
         $this->routeValidator = $routeValidator;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
+        $this->serviceSelectionRepository = $serviceSelectionRepository;
     }
 
     /**
@@ -135,6 +147,16 @@ class DisableCodPaymentObserver implements ObserverInterface
             return;
         }
 
+        $canShipWithCod = $this->filterCodService($quote, $recipientCountry);
+        $checkResult->setData('is_available', $canShipWithCod);
+    }
+
+    /**
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool
+     */
+    private function filterCodService(\Magento\Quote\Model\Quote $quote, $recipientCountry)
+    {
         $shipperCountry = $this->config->getShipperCountry($quote->getStoreId());
         $euCountries = $this->config->getEuCountryList();
 
@@ -153,13 +175,22 @@ class DisableCodPaymentObserver implements ObserverInterface
         );
         /** @var ServiceCollection $codServices */
         $codServices = $this->servicePool->getServices($codServiceSettings);
+
         // filter cod services by route
         $routeFilter = RouteFilter::create($this->routeValidator, $shipperCountry, $recipientCountry, $euCountries);
         $codServices = $codServices->filter($routeFilter);
 
-        // if there is no cod service left, we can not use the cod payment method
-        $canShipWithCod = !empty($codServices);
+        try {
+            $selectedServices = $this->serviceSelectionRepository
+                ->getByQuoteAddressId($quote->getShippingAddress()->getId());
+            $selectedServices = $selectedServices->getItems();
+        } catch (NoSuchEntityException $e) {
+            $selectedServices = [];
+        }
 
-        $checkResult->setData('is_available', $canShipWithCod);
+        $codServiceFilter = CodServiceFilter::create($selectedServices);
+        $codServices = $codServices->filter($codServiceFilter);
+
+        return $codServices->count() > 0;
     }
 }
