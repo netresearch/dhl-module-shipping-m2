@@ -123,10 +123,11 @@
                                     class="options-units-dimensions measures admin__control-select"
                                     onchange="packaging.changeMeasures(this);">
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::INCH) ?>"
-                                        selected="selected" >
+                                        <?php if(!$isMetric): ?>selected="selected" <?php endif;?> >
                                     <?= $block->escapeHtml(__('in')) ?>
                                 </option>
-                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>" >
+                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>"
+                                        <?php if($isMetric): ?>selected="selected" <?php endif; ?>>
                                     <?= $block->escapeHtml(__('cm')) ?>
                                 </option>
 
@@ -165,10 +166,11 @@
                                     class="options-units-weight measures admin__control-select"
                                     onchange="packaging.changeMeasures(this);">
                                 <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::POUND) ?>"
-                                        selected="selected">
+                                        <?php if(!$isMetric): ?>selected="selected" <?php endif;?> >
                                     <?= $block->escapeHtml(__('lb')) ?>
                                 </option>
-                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::KILOGRAM) ?>" >
+                                <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Weight::KILOGRAM) ?>"
+                                        <?php if($isMetric): ?>selected="selected" <?php endif; ?>>
                                     <?= $block->escapeHtml(__('kg')) ?>
                                 </option>
 
@@ -196,10 +198,11 @@
                                 class="options-units-dimensions measures admin__control-select"
                                 onchange="packaging.changeMeasures(this);">
                             <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::INCH) ?>"
-                                    selected="selected" >
+                                    <?php if(!$isMetric): ?>selected="selected" <?php endif;?> >
                                 <?= $block->escapeHtml(__('in')) ?>
                             </option>
-                            <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>">
+                            <option value="<?= $block->escapeHtmlAttr(Zend_Measure_Length::CENTIMETER) ?>"
+                                <?php if($isMetric): ?>selected="selected" <?php endif; ?> >
                                 <?= $block->escapeHtml(__('cm')) ?>
                             </option>
                         </select>
