@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.9.1 - 2018-10-08
+
+### Fixed
+- packaging popup not recognizing config settings for weight/length units
+- unused config section removed
+- wrong version numbers in documentation
+
 ## 0.9.0 - 2018-07-24
 
 ### Added
@@ -52,6 +59,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Now displaying separate tracking link for Global Shipping API labels
 - Reworked product attribute uninstaller
 
+[0.9.1]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.9.0...0.9.1
 [0.9.0]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.8.1...0.9.0
 [0.8.1]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.8.0...0.8.1
-[Unreleased]
