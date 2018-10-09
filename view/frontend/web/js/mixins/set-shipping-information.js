@@ -12,8 +12,7 @@ define([
     return function (setShippingInformationAction) {
         return wrapper.wrap(setShippingInformationAction, function (originalAction) {
             if (validateServices()) {
-                saveServices();
-                return originalAction();
+                return saveServices().done(originalAction);
             } else {
                 // do nothing
                 return {
