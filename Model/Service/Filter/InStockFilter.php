@@ -22,11 +22,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Service\Filter;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
 use Dhl\Shipping\Service\Filter\FilterInterface;
+use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
 
@@ -43,10 +45,10 @@ class InStockFilter implements FilterInterface
     /**
      * @var array
      */
-    private $servicesToCheck =[PreferredDay::CODE];
+    private $servicesToCheck = [PreferredDay::CODE];
 
     /**
-     * @var CartItemInterface[]
+     * @var CartItemInterface[]|ItemInterface[]
      */
     private $cartItems = [];
 
@@ -57,8 +59,9 @@ class InStockFilter implements FilterInterface
 
     /**
      * InStockFilter constructor.
+     *
      * @param StockRegistryInterface $stockRegistry
-     * @param CartItemInterface[] $cartItems
+     * @param CartItemInterface[]|ItemInterface[] $cartItems
      */
     public function __construct(
         StockRegistryInterface $stockRegistry,
@@ -74,12 +77,10 @@ class InStockFilter implements FilterInterface
      */
     public function isAllowed(ServiceInterface $service)
     {
-        $serviceCode = $service->getCode();
-        if (!in_array($serviceCode, $this->servicesToCheck)) {
+        if (!in_array($service->getCode(), $this->servicesToCheck, true)) {
             return true;
         }
-
-        $notInStock = false;
+        $inStock = true;
         foreach ($this->cartItems as $cartItem) {
             $stockItem = $this->stockRegistry->getStockItem(
                 $cartItem->getProduct()->getId(),
@@ -87,16 +88,16 @@ class InStockFilter implements FilterInterface
             );
 
             if ($stockItem->getQty() < $cartItem->getQty()) {
-                $notInStock = true;
+                $inStock = false;
                 break;
             }
         }
 
-        return $notInStock ? false : true;
+        return $inStock;
     }
 
     /**
-     * @param CartItemInterface[] $cartItems
+     * @param CartItemInterface[]|ItemInterface[] $cartItems
      * @param StockRegistryInterface $stockRegistry
      * @return \Closure
      */
@@ -104,6 +105,7 @@ class InStockFilter implements FilterInterface
     {
         return function (ServiceInterface $service) use ($cartItems, $stockRegistry) {
             $filter = new static($stockRegistry, $cartItems);
+
             return $filter->isAllowed($service);
         };
     }

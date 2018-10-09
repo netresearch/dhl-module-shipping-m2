@@ -22,11 +22,12 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Service;
 
-use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
+use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Service\Filter\InStockFilter;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
@@ -34,9 +35,9 @@ use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
-use Magento\Framework\Session\SessionManagerInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\Session\SessionManagerInterface;
 
 /**
  * Load services for display in checkout
@@ -142,9 +143,11 @@ class CheckoutServiceProvider
         $serviceCollection = $this->filterAvailableServices($countryId, $storeId, $serviceCollection);
         $serviceCollection = $serviceCollection->sort($this->getSortCallback());
 
-        $services = $serviceCollection->map(function ($service) {
-            return $this->serviceHydrator->extract($service);
-        });
+        $services = $serviceCollection->map(
+            function ($service) {
+                return $this->serviceHydrator->extract($service);
+            }
+        );
 
         return $services;
     }
@@ -177,6 +180,7 @@ class CheckoutServiceProvider
             if ($serviceA->getSortOrder() === $serviceB->getSortOrder()) {
                 return 0;
             }
+
             return ($serviceA->getSortOrder() < $serviceB->getSortOrder()) ? -1 : 1;
         };
 
