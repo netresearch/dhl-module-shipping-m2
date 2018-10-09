@@ -21,11 +21,14 @@ define([
             services: [],
             template: 'Dhl_Shipping/checkout/shipping/service-block',
             error: '',
+            currentCarrierCode: '',
+            currentCountryId: '',
         },
 
         initialize: function () {
             this._super();
             this.services = serviceDefinitions.get();
+
             // add service components to layout
             this.services.subscribe(function (services) {
                 this.destroyChildren();
@@ -39,7 +42,11 @@ define([
             quote.shippingMethod.subscribe(function () {
                 var countryId = quote.shippingAddress().countryId;
                 var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
-                if (countryId && carrierCode) {
+                if (countryId && carrierCode &&
+                    (this.currentCountryId !== countryId || this.currentCarrierCode !== carrierCode)
+                ) {
+                    this.currentCountryId = countryId;
+                    this.currentCarrierCode = carrierCode;
                     initServiceData(countryId, carrierCode);
                 }
             }.bind(this));
