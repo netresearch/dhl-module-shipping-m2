@@ -23,28 +23,27 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Model\Config;
 
-use Dhl\Shipping\Service;
+namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-/**
- * ServiceConfig
- *
- * @deprecated
- *
- * @package  Dhl\Shipping\Model
- * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
- * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link     http://www.netresearch.de/
- */
-interface ServiceConfigInterface
+class DropOffDays
 {
     /**
-     * Load all DHL additional service models.
+     * Options getter
      *
-     * @param mixed $store
-     *
-     * @return Service\ServiceCollection
+     * @return array
      */
-    public function getServices($store = null);
+    public function toOptionArray()
+    {
+        $days = [
+            '1' => __('Mon'),
+            '2' => __('Tue'),
+            '3' => __('Wed'),
+            '4' => __('Thu'),
+            '5' => __('Fri'),
+            '6' => __('Sat')
+        ];
+
+        return $days;
+    }
 }

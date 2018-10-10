@@ -262,6 +262,15 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
+
+                <field id="service_drop_off_days" translate="label" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1"
+                       type="Dhl\Shipping\Model\Data\Form\Element\Checkboxset">
+                    <label>Days excluded from drop-off</label>
+                    <comment>On the working days checked, there is no transfer of parcels to DHL (in addition to sundays and public holidays). This information influences the first displayed preferred day in the frontend.</comment>
+                    <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DropOffDays</source_model>
+                </field>
+
+
                 <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="171" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Preferred time</label>
                     <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
