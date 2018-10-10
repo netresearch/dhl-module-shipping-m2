@@ -24,11 +24,14 @@
  */
 namespace Dhl\Shipping\Model\Service;
 
+use Dhl\ParcelManagement\Model\AvailableServicesMap;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge as VisualCheckOfAgeOptions;
 use Dhl\Shipping\Model\Config\ConfigAccessor;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Locale\ResolverInterfaceFactory;
 use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterfaceFactory;
+use Magento\Framework\Session\SessionManagerInterface;
 use Yasumi\Yasumi;
 
 /**
@@ -65,6 +68,16 @@ class ServiceOptionProvider
     private $timezoneFactory;
 
     /**
+     * @var null|AvailableServicesMap
+     */
+    private $serviceResponse = null;
+
+    /**
+     * @var SessionManagerInterface|CheckoutSession
+     */
+    private $checkoutSession;
+
+    /**
      * ServiceOptionProvider constructor.
      * @param DateTimeFactory $dateTimeFactory
      * @param ConfigAccessor $configAccessor
@@ -75,12 +88,14 @@ class ServiceOptionProvider
         DateTimeFactory $dateTimeFactory,
         ConfigAccessor $configAccessor,
         ResolverInterfaceFactory $resolverFactory,
-        TimezoneInterfaceFactory $timezoneFactory
+        TimezoneInterfaceFactory $timezoneFactory,
+        SessionManagerInterface $checkoutSession
     ) {
         $this->dateTimeFactory = $dateTimeFactory;
         $this->configAccessor = $configAccessor;
         $this->localeResolverFactory = $resolverFactory;
         $this->timezoneFactory = $timezoneFactory;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
@@ -156,5 +171,14 @@ class ServiceOptionProvider
                 'value' => VisualCheckOfAgeOptions::OPTION_A18,
             ],
         ];
+    }
+
+    /**
+     * @return string
+     */
+    private function getZipCode()
+    {
+        $quote = $this->checkoutSession->getQuote();
+        return $quote->getShippingAddress()->getPostcode();
     }
 }

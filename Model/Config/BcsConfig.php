@@ -440,4 +440,18 @@ class BcsConfig implements BcsConfigInterface
     {
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_SHIPPER_CONTACT_DISPATCHINFO, $store);
     }
+
+    /**
+     * Get ParcelManagement API Endpoint
+     * @return string
+     */
+    public function getParcelManagementEndpoint($store = null)
+    {
+        if ($this->moduleConfig->isSandboxModeEnabled($store)) {
+            return $this->configAccessor
+                ->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT, $store);
+        }
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT, $store);
+    }
 }
