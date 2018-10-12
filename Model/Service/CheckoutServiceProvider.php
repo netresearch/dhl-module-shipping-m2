@@ -60,6 +60,11 @@ class CheckoutServiceProvider
     private $config;
 
     /**
+     * @var ServiceConfig
+     */
+    private $serviceConfig;
+
+    /**
      * @var RouteValidatorInterface
      */
     private $routeValidator;
@@ -109,7 +114,8 @@ class CheckoutServiceProvider
         ServiceCompatibilityPool $compatibilityPool,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory,
         SessionManagerInterface $checkoutSession,
-        StockRegistryInterface $stockRegistry
+        StockRegistryInterface $stockRegistry,
+        ServiceConfig $serviceConfig
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
@@ -119,6 +125,7 @@ class CheckoutServiceProvider
         $this->serviceSettingsFactory = $serviceSettingsFactory;
         $this->checkoutSession = $checkoutSession;
         $this->stockRegistry = $stockRegistry;
+        $this->serviceConfig = $serviceConfig;
     }
 
     /**
@@ -161,7 +168,7 @@ class CheckoutServiceProvider
      */
     private function prepareServiceSettings(string $storeId): array
     {
-        $settings = $this->config->getServiceSettings($storeId);
+        $settings = $this->serviceConfig->getServiceSettings($storeId);
 
         return array_map(
             function ($config) {

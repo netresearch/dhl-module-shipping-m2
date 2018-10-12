@@ -80,6 +80,9 @@
                 <service_preferredday_enabled>1</service_preferredday_enabled>
                 <service_cutoff_time>13,00,00</service_cutoff_time>
                 <service_preferredtime_enabled>1</service_preferredtime_enabled>
+                <parcelmanagement_endpoint>https://cig.dhl.de/services/production/rest</parcelmanagement_endpoint>
+                <parcelmanagement_sandbox_endpoint>https://cig.dhl.de/services/sandbox/rest</parcelmanagement_sandbox_endpoint>
+
             </dhlshipping>
         </carriers>
     </default>

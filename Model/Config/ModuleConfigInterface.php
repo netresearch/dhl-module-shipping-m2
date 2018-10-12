@@ -167,14 +167,6 @@ interface ModuleConfigInterface
     public function isCrossBorderRoute($destinationCountryId, $storeId = null): bool;
 
     /**
-     * Get initialization settings for services, e.g. default values
-     *
-     * @param mixed $store
-     * @return \Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface[]
-     */
-    public function getServiceSettings($store = null): array;
-
-    /**
      * Get allowed order statuses for automatic shipment creation
      *
      * @param mixed $store

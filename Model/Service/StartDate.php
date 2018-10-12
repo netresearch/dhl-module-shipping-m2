@@ -32,11 +32,11 @@ class StartDate
     }
 
     /**
-     * @param string $date
-     * @param string $cutOffTime
-     * @param string $noDropOffDays
+     * @param $date
+     * @param $cutOffTime
+     * @param $noDropOffDays
      * @return string
-     * @throws \ReflectionException
+     * @throws \Exception
      */
     public function getStartDate($date, $cutOffTime, $noDropOffDays)
     {
@@ -71,13 +71,13 @@ class StartDate
      */
     private function isAvailable($date, $noDropOffDays)
     {
-        $locale     = $this->localeResolverFactory->create()->getLocale();
+        $locale = $this->localeResolverFactory->create()->getLocale();
         $dateModel = $this->dateTimeFactory->create();
-        $year       = $dateModel->date('Y');
+        $year = $dateModel->date('Y');
         $holidayProvider = Yasumi::create('Germany', $year, $locale);
-        $weekday = (int) $dateModel->gmtDate('w', $date);
+        $weekday = (int)$dateModel->gmtDate('w', $date);
         $isSunday = $weekday === 0;
-        $isHoliday = $holidayProvider->isHoliday($date);
+        $isHoliday = $holidayProvider->isHoliday(new \DateTime($date));
         $isDropoffDay = $this->isDropOffDay($weekday, $noDropOffDays);
 
         return !$isSunday && !$isHoliday && $isDropoffDay;

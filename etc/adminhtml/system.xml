@@ -24,13 +24,6 @@
                     </depends>
                 </field>
 
-
-
-
-
-
-
-
                 <!-- General Settings -->
                 <field id="fields_general" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>General Settings</label>
@@ -67,17 +60,6 @@
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-
-
-
-
-
-
-
-
-
-
-
 
                 <!-- Account Data Business Customer Shipping -->
                 <field id="fields_account_bcs" translate="label comment" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -127,13 +109,6 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-
-
-
-
-
-
 
                 <!-- Account Data eCommerce Global API -->
                 <field id="fields_account_gla" translate="label comment" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -186,14 +161,6 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <comment>This is a hash value which will be provided by DHL.</comment>
                 </field>
-
-
-
-
-
-
-
-
 
                 <!-- General Shipping Settings -->
                 <field id="fields_shipping_general" translate="label" sortOrder="161" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -279,9 +246,6 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-
-
-
 
                 <!-- eCommerce Global API Shipping Settings -->
                 <field id="fields_shipping_gla" translate="label" sortOrder="180" showInDefault="1" showInWebsite="0" showInStore="0">
@@ -541,14 +505,6 @@
                     </depends>
                 </field>
 
-
-
-
-
-
-
-
-
                 <!-- Automatic Shipment Creation -->
                 <field id="dhlversenden_fields_shipment_autocreate" translate="label" type="select" sortOrder="540" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Shipping label creation settings for cron action</label>
@@ -585,13 +541,6 @@
                         <field id="api_type" separator=",">bcs,gla</field>
                     </depends>
                 </field>
-
-
-
-
-
-
-
 
             </group>
         </section>

@@ -41,8 +41,8 @@ use Dhl\Shipping\Service\Bcs\ReturnShipment;
 use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
-use \Magento\Shipping\Model\Config as ShippingConfig;
 use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;
+use Magento\Shipping\Model\Config as ShippingConfig;
 
 /**
  * ModuleConfig
@@ -70,28 +70,20 @@ class ModuleConfig implements ModuleConfigInterface
     private $shippingProducts;
 
     /**
-     * @var ServiceOptionProvider
-     */
-    private $serviceOptionProvider;
-
-    /**
      * ModuleConfig constructor.
      *
      * @param ConfigAccessorInterface $configAccessor
      * @param RoutesInterface $routeConfig
      * @param ShippingProductsInterface $shippingProducts
-     * @param ServiceOptionProvider $serviceOptionProvider
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         RoutesInterface $routeConfig,
-        ShippingProductsInterface $shippingProducts,
-        ServiceOptionProvider $serviceOptionProvider
+        ShippingProductsInterface $shippingProducts
     ) {
         $this->configAccessor = $configAccessor;
         $this->routeConfig = $routeConfig;
         $this->shippingProducts = $shippingProducts;
-        $this->serviceOptionProvider = $serviceOptionProvider;
     }
 
     /**

@@ -26,7 +26,10 @@
 
 namespace Dhl\Shipping\Model\Adminhtml\System\Config\Source;
 
-class DropOffDays
+
+use Magento\Framework\Option\ArrayInterface;
+
+class DropOffDays implements ArrayInterface
 {
     /**
      * Options getter
