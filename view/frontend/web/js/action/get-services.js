@@ -60,15 +60,15 @@ define([
      * @param {string} countryId
      * @param {string} shippingMethod
      */
-    return function (countryId, shippingMethod) {
-        var fromCache = storage.get(countryId + shippingMethod);
+    return function (countryId, shippingMethod, postalCode) {
+        var fromCache = storage.get(countryId + shippingMethod + postalCode);
         if (fromCache) {
             //updateModels(fromCache);
             //return;
         }
 
         var serviceUrl = buildRequestUrl(),
-            payload = {countryId: countryId, shippingMethod: shippingMethod};
+            payload = {countryId: countryId, shippingMethod: shippingMethod, postalCode:postalCode};
 
         shippingService.isLoading(true);
         request.post(
@@ -76,7 +76,7 @@ define([
             JSON.stringify(payload)
         ).success(
             function (response) {
-                storage.set(countryId + shippingMethod, response);
+                storage.set(countryId + shippingMethod + postalCode, response);
                 updateModels(response);
             }
         ).always(

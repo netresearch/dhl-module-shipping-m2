@@ -9,6 +9,9 @@ use Dhl\Shipping\Model\Config\BcsConfig;
 
 class ParcelManagement
 {
+
+    const API_KEY_IDENTIFIER = 'DPDHL-User-Authentication-Token';
+
     /**
      * @var CheckoutApi
      */
@@ -35,31 +38,30 @@ class ParcelManagement
 
     /**
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
-     * @param string $consumerZip Postal code
+     * @param string $postalCode
      * @return array
      * @throws ApiException
      */
-    public function getPreferredDayOptions($dropOff, $consumerZip)
+    public function getPreferredDayOptions($dropOff, $postalCode)
     {
         //@Todo: use cached response if any
-        $checkoutServices = $this->getCheckoutServices($dropOff, $consumerZip);
+        $checkoutServices = $this->getCheckoutServices($dropOff, $postalCode);
+        $validDays = $checkoutServices->getPreferredDay()->getValidDays();
 
-        $options = $checkoutServices->getPreferredDay()->getValidDays();
-
-        return $options;
+        return $validDays;
     }
 
 
     /**
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
-     * @param string $consumerZip Postal code
-     * @return array
+     * @param string $postalCode
+     * @return \Dhl\ParcelManagement\Model\Timeframe[]
      * @throws ApiException
      */
-    public function getPreferredTimeOptions($dropOff, $consumerZip)
+    public function getPreferredTimeOptions($dropOff, $postalCode)
     {
         //@Todo: use cached response if any
-        $checkoutServices = $this->getCheckoutServices($dropOff,$consumerZip);
+        $checkoutServices = $this->getCheckoutServices($dropOff, $postalCode);
 
         return $checkoutServices->getPreferredTime()->getTimeframes();
     }
@@ -67,23 +69,26 @@ class ParcelManagement
 
     /**
      * @param \DateTime $date
-     * @param string $zip
+     * @param string $postalCode
      * @return \Dhl\ParcelManagement\Model\AvailableServicesMap
      * @throws \Dhl\ParcelManagement\ApiException
      */
-    public function getCheckoutServices($date, $zip)
+    public function getCheckoutServices($date, $postalCode)
     {
         $ekp = $this->bcsConfig->getAccountEkp();
         $userName = $this->bcsConfig->getAuthUsername();
-        $passWd   = $this->bcsConfig->getAuthPassword();
+        $passWd = $this->bcsConfig->getAuthPassword();
         $pmApiEndpoint = $this->bcsConfig->getParcelManagementEndpoint();
+        $apiKey = base64_encode($this->bcsConfig->getAccountUser() . ':' . $this->bcsConfig->getAccountSignature());
 
         $this->checkoutApi->getConfig()
             ->setUsername($userName)
             ->setPassword($passWd)
-            ->setHost($pmApiEndpoint);
+            ->setHost($pmApiEndpoint)
+            ->setApiKey(self::API_KEY_IDENTIFIER, $apiKey);
 
-        $response = $this->checkoutApi->checkoutRecipientZipAvailableServicesGet($ekp, $zip, $date);
+
+        $response = $this->checkoutApi->checkoutRecipientZipAvailableServicesGet($ekp, $postalCode, $date);
 
         return $response;
     }

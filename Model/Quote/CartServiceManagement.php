@@ -115,13 +115,13 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @return ServiceInformationInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException;
      */
-    public function getServices($cartId, $countryId, $shippingMethod)
+    public function getServices($cartId, $countryId, $shippingMethod, $postalCode)
     {
         $quote = $this->quoteRepository->get($cartId);
         $canProcess = $this->moduleConfig->canProcessMethod($shippingMethod, $quote->getStoreId());
 
         if ($canProcess) {
-            $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId());
+            $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId(), $postalCode);
             $compatibility = $this->checkoutServiceProvider->getCompatibility($countryId, $quote->getStoreId());
         } else {
             $services = $compatibility = [];

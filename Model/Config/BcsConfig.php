@@ -447,13 +447,11 @@ class BcsConfig implements BcsConfigInterface
      */
     public function getParcelManagementEndpoint($store = null)
     {
+
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            return $this->configAccessor
-                ->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT, $store);
+            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT, $store);
         }
 
-        //todo: fix endpoint getter !
-        return 'https://cig.dhl.de/services/production/rest';
-//        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT, $store);
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT, $store);
     }
 }

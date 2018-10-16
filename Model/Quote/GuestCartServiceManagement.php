@@ -68,15 +68,17 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
      * @param string $cartId
      * @param string $countryId
      * @param string $shippingMethod
+     * @param string $postalCode
      * @return ServiceInformationInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getServices($cartId, $countryId, $shippingMethod)
+    public function getServices($cartId, $countryId, $shippingMethod, $postalCode)
     {
         return $this->cartServiceManagement->getServices(
             $this->getQuoteId($cartId),
             $countryId,
-            $shippingMethod
+            $shippingMethod,
+            $postalCode
         );
     }
 

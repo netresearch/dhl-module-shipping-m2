@@ -30,6 +30,7 @@ use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Service\Filter\InStockFilter;
+use Dhl\Shipping\Model\Service\Option\CompositeOptionProvider;
 use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
@@ -95,38 +96,47 @@ class CheckoutServiceProvider
     private $stockRegistry;
 
     /**
+     * @var CompositeOptionProvider
+     */
+    private $compositeOptionProvider;
+
+    /**
      * CheckoutServiceProvider constructor.
-     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
+     * @param ServiceConfig $serviceConfig
      * @param RouteValidatorInterface $routeValidator
      * @param ServiceHydrator $serviceHydrator
      * @param ServiceCompatibilityPool $compatibilityPool
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
-     * @param SessionManagerInterface $checkoutSession
+     * @param CheckoutSession|SessionManagerInterface $checkoutSession
      * @param StockRegistryInterface $stockRegistry
+     * @param CompositeOptionProvider $compositeOptionProvider
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
+        ServiceConfig $serviceConfig,
         RouteValidatorInterface $routeValidator,
         ServiceHydrator $serviceHydrator,
         ServiceCompatibilityPool $compatibilityPool,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory,
-        SessionManagerInterface $checkoutSession,
+        $checkoutSession,
         StockRegistryInterface $stockRegistry,
-        ServiceConfig $serviceConfig
-    ) {
+        CompositeOptionProvider $compositeOptionProvider
+    ){
         $this->servicePool = $servicePool;
         $this->config = $config;
+        $this->serviceConfig = $serviceConfig;
         $this->routeValidator = $routeValidator;
         $this->serviceHydrator = $serviceHydrator;
         $this->compatibilityPool = $compatibilityPool;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
         $this->checkoutSession = $checkoutSession;
         $this->stockRegistry = $stockRegistry;
-        $this->serviceConfig = $serviceConfig;
+        $this->compositeOptionProvider = $compositeOptionProvider;
     }
+
 
     /**
      * @param string $countryId
@@ -141,11 +151,12 @@ class CheckoutServiceProvider
     /**
      * @param string $countryId
      * @param string $storeId
+     * @param string $postalCode
      * @return array
      */
-    public function getServices($countryId, $storeId): array
+    public function getServices($countryId, $storeId, $postalCode): array
     {
-        $presets = $this->prepareServiceSettings($storeId);
+        $presets = $this->prepareServiceSettings($storeId, $postalCode);
         $serviceCollection = $this->servicePool->getServices($presets);
         $serviceCollection = $this->filterAvailableServices($countryId, $storeId, $serviceCollection);
         $serviceCollection = $serviceCollection->sort($this->getSortCallback());
@@ -157,25 +168,6 @@ class CheckoutServiceProvider
         );
 
         return $services;
-    }
-
-    /**
-     * Take a settings array, enrich it with additional data and
-     * turn it into ServiceSettingsInterface[].
-     *
-     * @param string $storeId
-     * @return ServiceSettingsInterface[]
-     */
-    private function prepareServiceSettings(string $storeId): array
-    {
-        $settings = $this->serviceConfig->getServiceSettings($storeId);
-
-        return array_map(
-            function ($config) {
-                return $this->serviceSettingsFactory->create($config);
-            },
-            $settings
-        );
     }
 
     /**
@@ -192,6 +184,28 @@ class CheckoutServiceProvider
         };
 
         return $sortFn;
+    }
+
+    /**
+     * Take a settings array, enrich it with additional data and
+     * turn it into ServiceSettingsInterface[].
+     *
+     * @param string $storeId
+     * @param string $postalCode
+     * @return ServiceSettingsInterface[]
+     */
+    private function prepareServiceSettings(string $storeId, string $postalCode): array
+    {
+        $settings = $this->serviceConfig->getServiceSettings($storeId);
+        $this->compositeOptionProvider->enhanceServicesWithOptions($settings, ['postalCode' => $postalCode]);
+
+
+        return array_map(
+            function ($config) {
+                return $this->serviceSettingsFactory->create($config);
+            },
+            $settings
+        );
     }
 
     /**

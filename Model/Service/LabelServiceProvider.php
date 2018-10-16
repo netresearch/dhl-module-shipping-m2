@@ -73,6 +73,11 @@ class LabelServiceProvider
     private $routeValidator;
 
     /**
+     * @var ServiceConfig
+     */
+    private $serviceConfig;
+
+    /**
      * LabelServiceProvider constructor.
      *
      * @param ServicePool $servicePool
@@ -86,13 +91,15 @@ class LabelServiceProvider
         ModuleConfigInterface $config,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory,
         ServiceSelectionRepositoryInterface $serviceSelectionRepository,
-        RouteValidatorInterface $routeValidator
+        RouteValidatorInterface $routeValidator,
+        ServiceConfig $serviceConfig
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
         $this->serviceSelectionRepository = $serviceSelectionRepository;
         $this->routeValidator = $routeValidator;
+        $this->serviceConfig = $serviceConfig;
     }
 
     /**
@@ -132,7 +139,7 @@ class LabelServiceProvider
      */
     private function prepareServiceSettings($orderAddressId, array $serviceData, string $storeId): array
     {
-        $settings = $this->config->getServiceSettings($storeId);
+        $settings = $this->serviceConfig->getServiceSettings($storeId);
         $orderServices = [];
         try {
             $serviceSelections = $this->serviceSelectionRepository

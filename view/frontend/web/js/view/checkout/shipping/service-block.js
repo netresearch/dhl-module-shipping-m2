@@ -21,6 +21,7 @@ define([
             error: '',
             currentCarrierCode: '',
             currentCountryId: '',
+            currentPostalCode: ''
         },
 
         initialize: function () {
@@ -40,12 +41,19 @@ define([
             quote.shippingMethod.subscribe(function () {
                 var countryId = quote.shippingAddress().countryId;
                 var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
-                if (countryId && carrierCode &&
-                    (this.currentCountryId !== countryId || this.currentCarrierCode !== carrierCode)
-                ) {
-                    this.currentCountryId = countryId;
-                    this.currentCarrierCode = carrierCode;
-                    initServiceData(countryId, carrierCode);
+                var postalCode = quote.shippingAddress().postcode;
+
+                if (countryId && carrierCode && postalCode) {
+                    if ((countryId !== this.currentCountryId)
+                       || (carrierCode !== this.currentCarrierCode)
+                       || (postalCode !== this.currentPostalCode)
+                    ) {
+                        this.currentCountryId = countryId;
+                        this.currentCarrierCode = carrierCode;
+                        this.currentPostalCode = postalCode;
+
+                        initServiceData(countryId, carrierCode, postalCode);
+                    }
                 }
             }.bind(this));
         },

@@ -42,9 +42,10 @@ interface CartServiceManagementInterface
      * @param int $cartId
      * @param string $countryId
      * @param string $shippingMethod
+     * @param string $postalCode
      * @return \Dhl\Shipping\Api\Data\ServiceInformationInterface
      */
-    public function getServices($cartId, $countryId, $shippingMethod);
+    public function getServices($cartId, $countryId, $shippingMethod, $postalCode);
 
     /**
      * @param int $cartId

@@ -19,8 +19,6 @@ use Dhl\Shipping\Service\Bcs\ReturnShipment;
 use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Webservice\ParcelManagement;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Framework\Session\SessionManagerInterface;
-use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
 
 class ServiceConfig
 {
@@ -30,36 +28,16 @@ class ServiceConfig
     private $configAccessor;
 
     /**
-     * @var ParcelManagement
-     */
-    private $parcelManagement;
-
-    /**
-     * @var CheckoutSession
-     */
-    private $checkoutSession;
-
-    /**
-     * @var DateTimeFactory
-     */
-    private $dateTimeFactory;
-
-    /**
      * @var ServiceConfigInterface
      */
     private $serviceConfig;
 
-    /**
-     * @var StartDate
-     */
-    private $startDateModel;
 
     /**
      * ServiceConfig constructor.
      * @param ParcelManagement $parcelManagement
      * @param ConfigAccessorInterface $configAccessor
      * @param CheckoutSession $checkoutSession
-     * @param DateTimeFactory $dateTimeFactory
      * @param ServiceConfigInterface $serviceConfig
      * @param StartDate $startDate
      */
@@ -67,14 +45,12 @@ class ServiceConfig
         ParcelManagement $parcelManagement,
         ConfigAccessorInterface $configAccessor,
         CheckoutSession $checkoutSession,
-        DateTimeFactory $dateTimeFactory,
         ServiceConfigInterface $serviceConfig,
         StartDate $startDate
     ) {
         $this->parcelManagement = $parcelManagement;
         $this->configAccessor = $configAccessor;
         $this->checkoutSession = $checkoutSession;
-        $this->dateTimeFactory = $dateTimeFactory;
         $this->serviceConfig = $serviceConfig;
         $this->startDateModel = $startDate;
     }
@@ -97,7 +73,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 10,
-            ServiceSettingsInterface::OPTIONS => $this->getPreferredDayOptions()
+            ServiceSettingsInterface::OPTIONS => []
         ];
 
         $bulkyGoodsConfig = [
@@ -195,7 +171,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 20,
-            ServiceSettingsInterface::OPTIONS => $this->getPreferredTimeOptions()
+            ServiceSettingsInterface::OPTIONS => []
         ];
 
         $printOnlyIfCodeableConfig = [
@@ -234,7 +210,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => (bool) $visualCheckOfAgeDefault,
-            ServiceSettingsInterface::OPTIONS => $this->getVisualCheckOfAgeOptions(),
+            ServiceSettingsInterface::OPTIONS => [],
             ServiceSettingsInterface::PROPERTIES => [
                 VisualCheckOfAge::PROPERTY_AGE => $visualCheckOfAgeDefault,
             ],
@@ -258,37 +234,27 @@ class ServiceConfig
     }
 
     /**
+     * @param string $postalCode
      * @return string[]
      */
-    private function getPreferredTimeOptions(): array
+    public function getPreferredTimeOptions($postalCode): array
     {
         try {
             $startDate = $this->getStartDate();
-            $zipCode = $this->getZipCode();
             // options from the api
-            $options = $this->parcelManagement->getPreferredDayOptions($startDate, $zipCode);
+            $timeFrames = $this->parcelManagement->getPreferredTimeOptions($startDate, $postalCode);
         } catch (\Exception $e) {
-            $options = [];
+            $timeFrames = [];
         }
 
-        return $options;
-    }
-
-    /**
-     * @return array
-     */
-    private function getPreferredDayOptions()
-    {
-        try {
-            $startDate = $this->getStartDate();
-            $zipCode = $this->getZipCode();
-            // options from the api
-            $options = $this->parcelManagement->getPreferredDayOptions($startDate, $zipCode);
-        } catch (\Exception $e) {
-            $options = [];
+        $options = [];
+        foreach ($timeFrames as $timeFrame) {
+            $options[] = [
+                'label' =>  $timeFrame->getStart() . '-' . $timeFrame->getEnd(),
+                'value' => str_replace(':', '', $timeFrame->getStart() . $timeFrame->getEnd())
+            ];
         }
 
-        //@Todo: prepare options structure as needed in service settings
         return $options;
     }
 
@@ -309,36 +275,5 @@ class ServiceConfig
         ];
     }
 
-    /**
-     * @return \DateTime
-     * @throws \Exception
-     */
-    private function getStartDate()
-    {
-        $storeId = $this->checkoutSession->getQuote()->getStoreId();
-        $dateModel = $this->dateTimeFactory->create();
-        $noDropOffDays = $this->serviceConfig->getExcludedDropOffDays($storeId);
-        $cutOffTime = $this->serviceConfig->getCutOffTime($storeId);
-        $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
-        $currentDate = $dateModel->gmtDate("Y-m-d H:i:s");
-        $startDate = $this->startDateModel->getStartdate($currentDate, $cutOffTime, $noDropOffDays);
 
-
-        return new \DateTime($startDate);
-    }
-
-    /**
-     * @return string
-     */
-    private function getZipCode()
-    {
-
-        return '04229';
-
-
-        //@todo fix getting postlcode -
-        $quote = $this->checkoutSession->getQuote();
-        $shippingAddress = $quote->getShippingAddress();
-        return $shippingAddress->getPostcode();
-    }
 }
