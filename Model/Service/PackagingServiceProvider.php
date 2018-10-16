@@ -31,6 +31,7 @@ use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Service\Option\CompositeOptionProvider;
 use Dhl\Shipping\Service\Filter\MerchantSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
@@ -58,6 +59,11 @@ class PackagingServiceProvider
     private $config;
 
     /**
+     * @var ServiceConfig
+     */
+    private $serviceConfig;
+
+    /**
      * @var RouteValidatorInterface
      */
     private $routeValidator;
@@ -73,27 +79,38 @@ class PackagingServiceProvider
     private $serviceSettingsFactory;
 
     /**
+     * @var CompositeOptionProvider
+     */
+    private $compositeOptionProvider;
+
+    /**
      * PackagingServiceProvider constructor.
-     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
+     * @param ServiceConfig $serviceConfig
      * @param RouteValidatorInterface $routeValidator
      * @param ServiceSelectionRepositoryInterface $serviceSelectionRepo
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
+     * @param CompositeOptionProvider $compositeOptionProvider
      */
     public function __construct(
         ServicePool $servicePool,
         ModuleConfigInterface $config,
+        ServiceConfig $serviceConfig,
         RouteValidatorInterface $routeValidator,
         ServiceSelectionRepositoryInterface $serviceSelectionRepo,
-        ServiceSettingsInterfaceFactory $serviceSettingsFactory
+        ServiceSettingsInterfaceFactory $serviceSettingsFactory,
+        CompositeOptionProvider $compositeOptionProvider
     ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
+        $this->serviceConfig = $serviceConfig;
         $this->routeValidator = $routeValidator;
         $this->serviceSelectionRepo = $serviceSelectionRepo;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
+        $this->compositeOptionProvider = $compositeOptionProvider;
     }
+
 
     /**
      * @param ShipmentInterface|Shipment $shipment
@@ -145,7 +162,8 @@ class PackagingServiceProvider
      */
     private function prepareServiceSettings(string $orderAddressId, string $storeId): array
     {
-        $settings = $this->config->getServiceSettings($storeId);
+        $settings = $this->serviceConfig->getServiceSettings($storeId);
+        $settings = $this->compositeOptionProvider->enhanceServicesWithOptions($settings, []);
 
         /**
          * Add service values from serviceSelection objects

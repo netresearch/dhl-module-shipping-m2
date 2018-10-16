@@ -121,10 +121,10 @@ class CheckoutServiceProvider
         ServiceHydrator $serviceHydrator,
         ServiceCompatibilityPool $compatibilityPool,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory,
-        $checkoutSession,
+        SessionManagerInterface $checkoutSession,
         StockRegistryInterface $stockRegistry,
         CompositeOptionProvider $compositeOptionProvider
-    ){
+    ) {
         $this->servicePool = $servicePool;
         $this->config = $config;
         $this->serviceConfig = $serviceConfig;
@@ -197,7 +197,7 @@ class CheckoutServiceProvider
     private function prepareServiceSettings(string $storeId, string $postalCode): array
     {
         $settings = $this->serviceConfig->getServiceSettings($storeId);
-        $this->compositeOptionProvider->enhanceServicesWithOptions($settings, ['postalCode' => $postalCode]);
+        $settings = $this->compositeOptionProvider->enhanceServicesWithOptions($settings, ['postalCode' => $postalCode]);
 
 
         return array_map(

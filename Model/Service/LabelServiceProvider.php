@@ -79,12 +79,12 @@ class LabelServiceProvider
 
     /**
      * LabelServiceProvider constructor.
-     *
      * @param ServicePool $servicePool
      * @param ModuleConfigInterface $config
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
      * @param ServiceSelectionRepositoryInterface $serviceSelectionRepository
      * @param RouteValidatorInterface $routeValidator
+     * @param ServiceConfig $serviceConfig
      */
     public function __construct(
         ServicePool $servicePool,
@@ -101,6 +101,7 @@ class LabelServiceProvider
         $this->routeValidator = $routeValidator;
         $this->serviceConfig = $serviceConfig;
     }
+
 
     /**
      * @param ShipmentInterface $shipment

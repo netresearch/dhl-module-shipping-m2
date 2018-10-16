@@ -141,6 +141,12 @@
         </arguments>
     </type>
 
+    <type name="Dhl\Shipping\Model\Service\PackagingServiceProvider">
+        <arguments>
+            <argument name="compositeOptionProvider" xsi:type="object">Dhl\Shipping\Model\Service\Virtual\PackagingOptionProvider</argument>
+        </arguments>
+    </type>
+
     <!-- observer -->
     <type name="Dhl\Shipping\Observer\DisableCodPaymentObserver">
         <arguments>
@@ -196,6 +202,12 @@
             <argument name="providers" xsi:type="array">
                 <item name="preferredDay" xsi:type="object">Dhl\Shipping\Model\Service\Option\PreferredDayOptionProvider</item>
                 <item name="preferredTime" xsi:type="object">Dhl\Shipping\Model\Service\Option\PreferredTimeOptionProvider</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Dhl\Shipping\Model\Service\Virtual\PackagingOptionProvider" type="Dhl\Shipping\Model\Service\Option\CompositeOptionProvider">
+        <arguments>
+            <argument name="providers" xsi:type="array">
                 <item name="visualCheckOfAge" xsi:type="object">Dhl\Shipping\Model\Service\Option\VisualCheckOfAgeOptionProvider</item>
             </argument>
         </arguments>
