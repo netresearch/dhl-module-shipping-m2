@@ -63,13 +63,16 @@ class DefaultProduct extends Field
         parent::__construct($context, $data);
     }
 
-    public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    /**
+     * @param AbstractElement $element
+     * @return string
+     */
+    public function render(AbstractElement $element)
     {
         $comment = $element->getData('comment');
         if ($comment) {
             $comment = "<p class='note'>$comment</p>";
         }
-        $htmlId = $element->getHtmlId();
 
         $html = '<td class="label"><label for="' .
             $element->getHtmlId() . '"><span' .
@@ -79,26 +82,26 @@ class DefaultProduct extends Field
         $html .=
             sprintf('<td class="value">'.
                     '<fieldset class="dhlshipping_default_product">%s</fieldset>'.
-                    ' %s</td>', $this->renderChildren($element), $comment);
+                    ' %s</td>', $this->renderChildFields($element), $comment);
 
         return $this->_decorateRowHtml($element, $html);
     }
 
     /**
-     * Decorate field row html
-     *
-     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
-     * @param string                                               $html
-     *
+     * @param AbstractElement $element
+     * @param string $html
      * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function _decorateRowHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element, $html)
+    protected function _decorateRowHtml(AbstractElement $element, $html)
     {
         return '<tr id="row_' . $element->getHtmlId() . '">' . $html . '</tr>';
     }
 
-    private function renderChildren(AbstractElement $element)
+    /**
+     * @param AbstractElement $element
+     * @return string
+     */
+    private function renderChildFields(AbstractElement $element)
     {
         $configValue = $element->getValue();
 
@@ -110,7 +113,6 @@ class DefaultProduct extends Field
 
             $count = count($options);
             if ($count > 1) {
-                $type = 'select';
                 $config = [
                     'name' => 'groups[dhlshipping][fields][default_shipping_products][' . $key . ']',
                     'label' => __('Ship to ') . $key,
@@ -119,9 +121,7 @@ class DefaultProduct extends Field
                     'value' => isset($configValue[$key]) ? $configValue[$key] : ''
                 ];
                 $html .= $this->renderSelect('default_product_' . $key, $config);
-                #$element->addField('default_product_' . $key, $type, $config);
             } elseif ($count === 1) {
-                $type = 'text';
                 $config = [
                     'name' => 'groups[dhlshipping][fields][default_shipping_products][' . $key . ']',
                     'label' => __('Ship to ') . $key,
@@ -131,41 +131,61 @@ class DefaultProduct extends Field
                         $this->shippingProducts->getProductName($configValue[$key]) : $options[0]['label']
                 ];
                 $html .= $this->renderTextInput('default_product_' . $key, $config);
-                #$element->addField('default_product_' . $key, $type, $config);
             }
         }
-        #$element->addClass('dhlshipping_default_product');
 
         return $html;
     }
 
-    private function renderTextInput($elemId, $config)
+    /**
+     * @param string $elemId
+     * @param string[] $config
+     * @return string
+     */
+    private function renderTextInput($elemId, array $config)
     {
         $readonly = $config['readonly'] ? 'readonly' : '';
-        $html = '<div>';
-        $html .= '<label for="'.$elemId.'">'.$config['label'].'</label>';
-        $html .= '<input type="text" '.
+        $html = '<div class="admin__field field field-'.$elemId.'">';
+        $html .= '<label for="'.$elemId.'" class="label admin__field-label">'.$config['label'].'</label>';
+        $html .= '<div class="admin__field-control control"><input type="text" '.
             'name="'.$config['name'].'" '.
             'value="'.$config['value'].'" '.
-            $readonly. '>';
+            'class="input-text admin__control-text"'.
+            'title="'.$config['title'].'"'.
+            $readonly. '></div>';
         $html .= '</div>';
         return $html;
     }
-    private function renderSelect($elemId, $config)
+
+    /**
+     * @param $elemId
+     * @param string[] $config
+     * @return string
+     */
+    private function renderSelect($elemId, array $config)
     {
-        $html = $html = '<div>';
-        $html .= '<label for="'.$elemId.'">'.$config['label'].'</label>';
-        $html .= '<select id="'.$elemId.'">'.$this->getOptions($config['values']) . '</select>';
-        $html .= '</div>';
+        $fieldValue = !empty($config['value']) ? $config['value'] : false;
+        $html = $html = '<div class="admin__field field field-'.$elemId.'">';
+        $html .= '<label for="'.$elemId.'" class="label admin__field-label">'.$config['label'].'</label>';
+        $html .= '<div class="admin__field-control control">';
+        $html .= '<select id="'.$elemId.'" name="'.$config['name'].'" title="'.$config['title'].'">'.
+            $this->getOptionsHtml($config['values'], $fieldValue) . '</select>';
+        $html .= '</div></div>';
 
         return $html;
     }
 
-    private function getOptions($options)
+    /**
+     * @param string[] $options
+     * @param bool $fieldValue
+     * @return string
+     */
+    private function getOptionsHtml(array $options, $fieldValue = false)
     {
         $html ='';
         foreach ($options as $option) {
-            $html .= '<option value="'.$option['value'].'">'.$option['label'].'</option>';
+            $selected = (isset($fieldValue) && $option['value'] === $fieldValue) ? 'selected="selected"' : '';
+            $html .= '<option value="'.$option['value'].'" '.$selected.'>'.$option['label'].'</option>';
         }
         return $html;
     }
