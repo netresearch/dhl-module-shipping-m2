@@ -54,24 +54,60 @@ class DefaultProduct extends Field
      * @param ShippingProductsInterface $shippingProducts
      * @param array $data
      */
-    public function __construct(Context $context, ShippingProductsInterface $shippingProducts, array $data = [])
-    {
+    public function __construct(
+        Context $context,
+        ShippingProductsInterface $shippingProducts,
+        array $data = []
+    ) {
         $this->shippingProducts = $shippingProducts;
         parent::__construct($context, $data);
     }
 
+    public function render(\Magento\Framework\Data\Form\Element\AbstractElement $element)
+    {
+        $comment = $element->getData('comment');
+        if ($comment) {
+            $comment = "<p class='note'>$comment</p>";
+        }
+        $htmlId = $element->getHtmlId();
+
+        $html = '<td class="label"><label for="' .
+            $element->getHtmlId() . '"><span' .
+            $this->_renderScopeLabel($element) . '>' .
+            $element->getLabel() .
+            '</span></label></td>';
+        $html .=
+            sprintf('<td class="value">'.
+                    '<fieldset class="dhlshipping_default_product">%s</fieldset>'.
+                    ' %s</td>', $this->renderChildren($element), $comment);
+
+        return $this->_decorateRowHtml($element, $html);
+    }
+
     /**
-     * @param AbstractElement $element
+     * Decorate field row html
+     *
+     * @param \Magento\Framework\Data\Form\Element\AbstractElement $element
+     * @param string                                               $html
+     *
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function render(AbstractElement $element)
+    protected function _decorateRowHtml(\Magento\Framework\Data\Form\Element\AbstractElement $element, $html)
+    {
+        return '<tr id="row_' . $element->getHtmlId() . '">' . $html . '</tr>';
+    }
+
+    private function renderChildren(AbstractElement $element)
     {
         $configValue = $element->getValue();
 
         $routes = $this->getAvailableOptions();
+        $html = '';
         foreach ($routes as $key => $value) {
+            $element->removeField('default_product_' . $key);
             $options = $this->getProductNames($value);
+
             $count = count($options);
             if ($count > 1) {
                 $type = 'select';
@@ -82,7 +118,8 @@ class DefaultProduct extends Field
                     'values' => $options,
                     'value' => isset($configValue[$key]) ? $configValue[$key] : ''
                 ];
-                $element->addField('default_product_' . $key, $type, $config);
+                $html .= $this->renderSelect('default_product_' . $key, $config);
+                #$element->addField('default_product_' . $key, $type, $config);
             } elseif ($count === 1) {
                 $type = 'text';
                 $config = [
@@ -93,14 +130,45 @@ class DefaultProduct extends Field
                     'value' => isset($configValue[$key]) ?
                         $this->shippingProducts->getProductName($configValue[$key]) : $options[0]['label']
                 ];
-                $element->addField('default_product_' . $key, $type, $config);
+                $html .= $this->renderTextInput('default_product_' . $key, $config);
+                #$element->addField('default_product_' . $key, $type, $config);
             }
         }
-        $element->addClass('dhlshipping_default_product');
+        #$element->addClass('dhlshipping_default_product');
 
-        return parent::render($element);
+        return $html;
     }
 
+    private function renderTextInput($elemId, $config)
+    {
+        $readonly = $config['readonly'] ? 'readonly' : '';
+        $html = '<div>';
+        $html .= '<label for="'.$elemId.'">'.$config['label'].'</label>';
+        $html .= '<input type="text" '.
+            'name="'.$config['name'].'" '.
+            'value="'.$config['value'].'" '.
+            $readonly. '>';
+        $html .= '</div>';
+        return $html;
+    }
+    private function renderSelect($elemId, $config)
+    {
+        $html = $html = '<div>';
+        $html .= '<label for="'.$elemId.'">'.$config['label'].'</label>';
+        $html .= '<select id="'.$elemId.'">'.$this->getOptions($config['values']) . '</select>';
+        $html .= '</div>';
+
+        return $html;
+    }
+
+    private function getOptions($options)
+    {
+        $html ='';
+        foreach ($options as $option) {
+            $html .= '<option value="'.$option['value'].'">'.$option['label'].'</option>';
+        }
+        return $html;
+    }
     /**
      * @return mixed
      */
