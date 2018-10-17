@@ -197,8 +197,11 @@ class CheckoutServiceProvider
     private function prepareServiceSettings(string $storeId, string $postalCode): array
     {
         $settings = $this->serviceConfig->getServiceSettings($storeId);
-        $settings = $this->compositeOptionProvider->enhanceServicesWithOptions($settings, ['postalCode' => $postalCode]);
-
+        $args = [
+            'storeId' => $storeId,
+            'postalCode' => $postalCode,
+        ];
+        $settings = $this->compositeOptionProvider->enhanceServicesWithOptions($settings, $args);
 
         return array_map(
             function ($config) {

@@ -162,6 +162,7 @@ class PackagingServiceProvider
      */
     private function prepareServiceSettings(string $orderAddressId, string $storeId): array
     {
+        //@todo(nr) add (selected?) pref. day & time options
         $settings = $this->serviceConfig->getServiceSettings($storeId);
         $settings = $this->compositeOptionProvider->enhanceServicesWithOptions($settings, []);
 

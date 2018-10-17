@@ -1,12 +1,32 @@
 <?php
-
+/**
+ * Dhl Shipping
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 7
+ *
+ * @package   Dhl\Shipping\Model
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @copyright 2018 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\ServicePoolInterface;
-use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge as VisualCheckOfAgeOptions;
 use Dhl\Shipping\Model\Config\ConfigAccessorInterface;
-use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Service\Bcs\BulkyGoods;
 use Dhl\Shipping\Service\Bcs\Insurance;
 use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
@@ -17,9 +37,14 @@ use Dhl\Shipping\Service\Bcs\PreferredTime;
 use Dhl\Shipping\Service\Bcs\PrintOnlyIfCodeable;
 use Dhl\Shipping\Service\Bcs\ReturnShipment;
 use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
-use Dhl\Shipping\Webservice\ParcelManagement;
-use Magento\Checkout\Model\Session as CheckoutSession;
 
+/**
+ *
+ * @package  Dhl\Shipping\Model
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class ServiceConfig
 {
     /**
@@ -28,31 +53,12 @@ class ServiceConfig
     private $configAccessor;
 
     /**
-     * @var ServiceConfigInterface
-     */
-    private $serviceConfig;
-
-
-    /**
      * ServiceConfig constructor.
-     * @param ParcelManagement $parcelManagement
      * @param ConfigAccessorInterface $configAccessor
-     * @param CheckoutSession $checkoutSession
-     * @param ServiceConfigInterface $serviceConfig
-     * @param StartDate $startDate
      */
-    public function __construct(
-        ParcelManagement $parcelManagement,
-        ConfigAccessorInterface $configAccessor,
-        CheckoutSession $checkoutSession,
-        ServiceConfigInterface $serviceConfig,
-        StartDate $startDate
-    ) {
-        $this->parcelManagement = $parcelManagement;
+    public function __construct(ConfigAccessorInterface $configAccessor)
+    {
         $this->configAccessor = $configAccessor;
-        $this->checkoutSession = $checkoutSession;
-        $this->serviceConfig = $serviceConfig;
-        $this->startDateModel = $startDate;
     }
 
     /**
@@ -230,50 +236,5 @@ class ServiceConfig
             ReturnShipment::CODE => $returnShipmentConfig,
             VisualCheckOfAge::CODE => $visualCheckOfAgeConfig,
         ];
-
     }
-
-    /**
-     * @param string $postalCode
-     * @return string[]
-     */
-    public function getPreferredTimeOptions($postalCode): array
-    {
-        try {
-            $startDate = $this->getStartDate();
-            // options from the api
-            $timeFrames = $this->parcelManagement->getPreferredTimeOptions($startDate, $postalCode);
-        } catch (\Exception $e) {
-            $timeFrames = [];
-        }
-
-        $options = [];
-        foreach ($timeFrames as $timeFrame) {
-            $options[] = [
-                'label' =>  $timeFrame->getStart() . '-' . $timeFrame->getEnd(),
-                'value' => str_replace(':', '', $timeFrame->getStart() . $timeFrame->getEnd())
-            ];
-        }
-
-        return $options;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getVisualCheckOfAgeOptions(): array
-    {
-        return [
-            [
-                'label' => VisualCheckOfAgeOptions::OPTION_A16,
-                'value' => VisualCheckOfAgeOptions::OPTION_A16,
-            ],
-            [
-                'label' => VisualCheckOfAgeOptions::OPTION_A18,
-                'value' => VisualCheckOfAgeOptions::OPTION_A18,
-            ],
-        ];
-    }
-
-
 }

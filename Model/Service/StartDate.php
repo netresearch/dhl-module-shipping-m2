@@ -1,13 +1,47 @@
 <?php
-
+/**
+ * Dhl Shipping
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 7
+ *
+ * @package   Dhl\Shipping\Model
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @copyright 2018 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
 namespace Dhl\Shipping\Model\Service;
 
+use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Magento\Framework\Locale\ResolverInterfaceFactory;
 use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
 use Yasumi\Yasumi;
 
+/**
+ *
+ * @package  Dhl\Shipping\Model
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class StartDate
 {
+    const TIME_FORMAT = 'Y-m-d H:i:s';
+
+    const SUNDAY_WEEKDAY_VALUE = '0';
+
     /**
      * @var DateTimeFactory
      */
@@ -19,90 +53,99 @@ class StartDate
     private $localeResolverFactory;
 
     /**
+     * @var ServiceConfigInterface
+     */
+    private $serviceConfig;
+
+    /**
      * StartDate constructor.
      * @param DateTimeFactory $dateTimeFactory
      * @param ResolverInterfaceFactory $localeResolverFactory
+     * @param ServiceConfigInterface $serviceConfig
      */
     public function __construct(
         DateTimeFactory $dateTimeFactory,
-        ResolverInterfaceFactory $localeResolverFactory
+        ResolverInterfaceFactory $localeResolverFactory,
+        ServiceConfigInterface $serviceConfig
     ) {
         $this->dateTimeFactory = $dateTimeFactory;
         $this->localeResolverFactory = $localeResolverFactory;
+        $this->serviceConfig = $serviceConfig;
     }
 
     /**
-     * @param $date
-     * @param $cutOffTime
-     * @param $noDropOffDays
-     * @return string
+     * @param $storeId
+     * @return \DateTime
      * @throws \Exception
      */
-    public function getStartDate($date, $cutOffTime, $noDropOffDays)
+    public function getStartDate($storeId)
     {
-        $timeformat = 'Y-m-d H:i:s';
-        $isInCt = $this->isInCutOffTime($date, $cutOffTime);
-        $isWdAv = $this->isAvailable($date, $noDropOffDays);
+        $dateModel = $this->dateTimeFactory->create();
+        $currentDateTime = $dateModel->gmtDate("Y-m-d H:i:s");
+        $isDateLowerThanCutOffTime = $this->isDateLowerThanCutOffTime($currentDateTime, $storeId);
+        $dateIsAvailable = $this->isCurrentDateAvailable($currentDateTime, $storeId);
 
-        if ($isInCt && $isWdAv) {
-            $startDate = $date;
+        $nextPossibleDay = '';
+        if ($isDateLowerThanCutOffTime && $dateIsAvailable) {
+            $startDate = $currentDateTime;
         } else {
-            $end = 2;
-            for ($i = 1; $i < $end; $i++) {
-                /** @var \DateTime $datetime */
-                $datetime = new \DateTime($date);
+            for ($i = 1; $i < 2; $i++) {
+                $datetime = new \DateTime($currentDateTime);
                 $tmpDate = $datetime->add(new \DateInterval("P{$i}D"));
-                $nextPossibleDay = $tmpDate->format($timeformat);
-                $isAvailble = $this->isAvailable($nextPossibleDay, $noDropOffDays);
-                $isAvailble ? $end-- : $end++;
+                $nextPossibleDay = $tmpDate->format(self::TIME_FORMAT);
+                $isAvailable = $this->isCurrentDateAvailable($nextPossibleDay, $storeId);
+                $isAvailable ? $i-- : $i++;
             }
 
             $startDate = $nextPossibleDay;
         }
 
-        return $startDate;
+        return new \DateTime($startDate);
     }
 
     /**
      * @param $date
-     * @param $noDropOffDays
+     * @param string $storeId
      * @return bool
      * @throws \ReflectionException
      */
-    private function isAvailable($date, $noDropOffDays)
+    private function isCurrentDateAvailable($date, $storeId)
     {
         $locale = $this->localeResolverFactory->create()->getLocale();
+        $excludedDropOffDays = $this->serviceConfig->getExcludedDropOffDays($storeId);
         $dateModel = $this->dateTimeFactory->create();
         $year = $dateModel->date('Y');
         $holidayProvider = Yasumi::create('Germany', $year, $locale);
-        $weekday = (int)$dateModel->gmtDate('w', $date);
-        $isSunday = $weekday === 0;
+        $weekday = $dateModel->gmtDate('w', $date);
+        $isSunday = $weekday === self::SUNDAY_WEEKDAY_VALUE;
         $isHoliday = $holidayProvider->isHoliday(new \DateTime($date));
-        $isDropoffDay = $this->isDropOffDay($weekday, $noDropOffDays);
+        $isDropOffDay = $this->isWeekDayADropOffDay($weekday, $excludedDropOffDays);
 
-        return !$isSunday && !$isHoliday && $isDropoffDay;
+        return !$isSunday && !$isHoliday && $isDropOffDay;
     }
 
     /**
      * @param string $date
-     * @param string $cutOffTime
+     * @param string $storeId
      * @return bool
      */
-    private function isInCutOffTime($date, $cutOffTime)
+    private function isDateLowerThanCutOffTime($date, $storeId)
     {
-        $dateModel = $this->dateTimeFactory->create();
+        $dateModel  = $this->dateTimeFactory->create();
+        $cutOffTime = $this->serviceConfig->getCutOffTime($storeId);
+        $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
+
         return $cutOffTime > $dateModel->gmtTimestamp($date);
     }
 
     /**
-     * @param int $weekday
-     * @param string $noDropOffDays
+     * @param string $weekday
+     * @param string $excludedDropOffDays
      * @return bool
      */
-    private function isDropOffDay($weekday, $noDropOffDays)
+    private function isWeekDayADropOffDay($weekday, $excludedDropOffDays)
     {
-        $noDropOffDayArray = explode(',', $noDropOffDays);
-
-        return !in_array((string)$weekday, $noDropOffDayArray, true);
+        $noDropOffDayArray = explode(',', $excludedDropOffDays);
+        return !in_array($weekday, $noDropOffDayArray, true);
     }
 }

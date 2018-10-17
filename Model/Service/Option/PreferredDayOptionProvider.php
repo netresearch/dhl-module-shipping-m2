@@ -25,12 +25,9 @@
 namespace Dhl\Shipping\Model\Service\Option;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Model\Service\StartDate;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
 use Dhl\Shipping\Webservice\ParcelManagement;
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
 
 /**
  *
@@ -52,21 +49,6 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     private $parcelManagement;
 
     /**
-     * @var CheckoutSession
-     */
-    private $checkoutSession;
-
-    /**
-     * @var DateTimeFactory
-     */
-    private $dateTimeFactory;
-
-    /**
-     * @var ServiceConfigInterface
-     */
-    private $serviceConfig;
-
-    /**
      * @var StartDate
      */
     private $startDateModel;
@@ -74,22 +56,13 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     /**
      * PreferredDayOptionProvider constructor.
      * @param ParcelManagement $parcelManagement
-     * @param CheckoutSession $checkoutSession
-     * @param DateTimeFactory $dateTimeFactory
-     * @param ServiceConfigInterface $serviceConfig
      * @param StartDate $startDateModel
      */
     public function __construct(
         ParcelManagement $parcelManagement,
-        CheckoutSession $checkoutSession,
-        DateTimeFactory $dateTimeFactory,
-        ServiceConfigInterface $serviceConfig,
         StartDate $startDateModel
     ) {
         $this->parcelManagement = $parcelManagement;
-        $this->checkoutSession = $checkoutSession;
-        $this->dateTimeFactory = $dateTimeFactory;
-        $this->serviceConfig = $serviceConfig;
         $this->startDateModel = $startDateModel;
     }
 
@@ -97,13 +70,15 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     public function enhanceServiceWithOptions($service, $args)
     {
         try {
-            $startDate = $this->getStartDate();
+            $storeId = isset($args['storeId']) ? $args['storeId'] : null;
+            $startDate = $this->startDateModel->getStartDate($storeId);
             // options from the api
             $validDays = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
         } catch (\Exception $e) {
             $validDays = [];
         }
 
+        $options = [];
         foreach ($validDays as $validDay) {
             $options[] = [
                 'label' => $validDay->getStart()->format('D,d.'),
@@ -123,25 +98,4 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     {
         return self::SERVICE_CODE;
     }
-
-
-    /**
-     * @return \DateTime
-     * @throws \Exception
-     */
-    private function getStartDate()
-    {
-        $storeId = $this->checkoutSession->getQuote()->getStoreId();
-        $dateModel = $this->dateTimeFactory->create();
-        $noDropOffDays = $this->serviceConfig->getExcludedDropOffDays($storeId);
-        $cutOffTime = $this->serviceConfig->getCutOffTime($storeId);
-        $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
-        $currentDate = $dateModel->gmtDate("Y-m-d H:i:s");
-        $startDate = $this->startDateModel->getStartdate($currentDate, $cutOffTime, $noDropOffDays);
-
-
-        return new \DateTime($startDate);
-    }
-
-
 }
