@@ -89,16 +89,6 @@ class DefaultProduct extends Field
 
     /**
      * @param AbstractElement $element
-     * @param string $html
-     * @return string
-     */
-    protected function _decorateRowHtml(AbstractElement $element, $html)
-    {
-        return '<tr id="row_' . $element->getHtmlId() . '">' . $html . '</tr>';
-    }
-
-    /**
-     * @param AbstractElement $element
      * @return string
      */
     private function renderChildFields(AbstractElement $element)
