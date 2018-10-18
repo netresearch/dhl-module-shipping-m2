@@ -97,7 +97,8 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     public function enhanceServiceWithOptions($service, $args)
     {
         try {
-            $startDate = $this->getStartDate();
+            $storeId = isset($args['storeId']) ? $args['storeId'] : null;
+            $startDate = $this->startDateModel->getStartDate($storeId);
             // options from the api
             $timeFrames = $this->parcelManagement->getPreferredTimeOptions($startDate, $args[self::POSTAL_CODE]);
         } catch (\Exception $e) {
@@ -124,24 +125,4 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     {
         return self::SERVICE_CODE;
     }
-
-    /**
-     * @return \DateTime
-     * @throws \Exception
-     */
-    private function getStartDate()
-    {
-        $storeId = $this->checkoutSession->getQuote()->getStoreId();
-        $dateModel = $this->dateTimeFactory->create();
-        $noDropOffDays = $this->serviceConfig->getExcludedDropOffDays($storeId);
-        $cutOffTime = $this->serviceConfig->getCutOffTime($storeId);
-        $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
-        $currentDate = $dateModel->gmtDate("Y-m-d H:i:s");
-        $startDate = $this->startDateModel->getStartdate($currentDate, $cutOffTime, $noDropOffDays);
-
-
-        return new \DateTime($startDate);
-    }
-
-
 }
