@@ -213,14 +213,11 @@ class DefaultProduct extends Field
     {
         $values = [];
         foreach ($items as $item => $value) {
-            array_push(
-                $values,
+            $values[] =
                 [
                     'value' => $value,
-                    'label' => $this->shippingProducts->getProductName($value),
-                    'selected' => 'selected'
-                ]
-            );
+                    'label' => $this->shippingProducts->getProductName($value)
+                ];
         }
         return $values;
     }
