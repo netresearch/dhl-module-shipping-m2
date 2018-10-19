@@ -22,12 +22,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Service\Option;
+namespace Dhl\Shipping\Model\Service\Option\Packaging;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Model\Service\StartDate;
-use Dhl\Shipping\Service\Bcs\PreferredDay;
-use Dhl\Shipping\Webservice\ParcelManagement;
+use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
+use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
+use Dhl\Shipping\Service\Bcs\PreferredTime;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 /**
  *
@@ -36,36 +37,24 @@ use Dhl\Shipping\Webservice\ParcelManagement;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredDayOptionProvider implements OptionProviderInterface
+class PreferredTimeOptionProvider implements OptionProviderInterface
 {
 
-    const POSTAL_CODE = 'postalCode';
-
-    const SERVICE_CODE = PreferredDay::CODE;
+    const SERVICE_CODE = PreferredTime::CODE;
 
     /**
-     * @var ParcelManagement
+     * @var TimezoneInterface
      */
-    private $parcelManagement;
-
-    /**
-     * @var StartDate
-     */
-    private $startDateModel;
+    private $timezone;
 
     /**
      * PreferredDayOptionProvider constructor.
-     * @param ParcelManagement $parcelManagement
-     * @param StartDate $startDateModel
+     * @param TimezoneInterface $timezone
      */
-    public function __construct(
-        ParcelManagement $parcelManagement,
-        StartDate $startDateModel
-    ) {
-        $this->parcelManagement = $parcelManagement;
-        $this->startDateModel = $startDateModel;
+    public function __construct(TimezoneInterface $timezone)
+    {
+        $this->timezone = $timezone;
     }
-
 
     /**
      * @param array $service
@@ -74,24 +63,18 @@ class PreferredDayOptionProvider implements OptionProviderInterface
      */
     public function enhanceServiceWithOptions($service, $args)
     {
-        try {
-            $storeId = isset($args['storeId']) ? $args['storeId'] : null;
-            $startDate = $this->startDateModel->getStartDate($storeId);
-            // options from the api
-            $validDays = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
-        } catch (\Exception $e) {
-            $validDays = [];
-        }
-
+        /** @var ServiceSelectionInterface| bool $selection */
+        $selection = isset($args['selection']) ? $args['selection'] : false;
         $options = [];
-        foreach ($validDays as $validDay) {
+        if ($selection && $selection->getServiceCode() === $this->getServiceCode()) {
+            $selectedValue = current($selection->getServiceValue());
             $options[] = [
-                'label' => $validDay->getStart()->format('D,d.'),
-                'value' => $validDay->getStart()->format('Y-m-d'),
+                'label' => $this->formatTime($selectedValue),
+                'value' => $selectedValue,
                 'disable' => false
             ];
+            $service[ServiceSettingsInterface::OPTIONS] = $options;
         }
-        $service[ServiceSettingsInterface::OPTIONS] = $options;
 
         return $service;
     }
@@ -102,5 +85,20 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     public function getServiceCode()
     {
         return self::SERVICE_CODE;
+    }
+
+    /**
+     * Format selected value to start and end hours eg. 10:00 - 12:00
+     *
+     * @param string $timeString
+     * @return string
+     */
+    public function formatTime($timeString)
+    {
+        $start = substr($timeString,0,4);
+        $end = substr($timeString,4,4);
+
+        return substr_replace( $start, ':', -2, 0 )
+            . ' - ' . substr_replace( $end, ':', -2, 0 );
     }
 }

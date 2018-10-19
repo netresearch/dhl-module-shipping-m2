@@ -162,9 +162,7 @@ class PackagingServiceProvider
      */
     private function prepareServiceSettings(string $orderAddressId, string $storeId): array
     {
-        //@todo(nr) add (selected?) pref. day & time options
         $settings = $this->serviceConfig->getServiceSettings($storeId);
-        $settings = $this->compositeOptionProvider->enhanceServicesWithOptions($settings, []);
 
         /**
          * Add service values from serviceSelection objects
@@ -181,6 +179,12 @@ class PackagingServiceProvider
                     )][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
                     $settings[$selection->getServiceCode()][ServiceSettingsInterface::IS_SELECTED] = true;
                 }
+                // add selected options to service
+                $settings = $this->compositeOptionProvider
+                    ->enhanceServicesWithOptions(
+                        $settings,
+                        ['selection' => $selection]
+                    );
             }
         } catch (NoSuchEntityException $e) {
             // do nothing

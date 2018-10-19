@@ -209,6 +209,8 @@
         <arguments>
             <argument name="providers" xsi:type="array">
                 <item name="visualCheckOfAge" xsi:type="object">Dhl\Shipping\Model\Service\Option\VisualCheckOfAgeOptionProvider</item>
+                <item name="preferredDay" xsi:type="object">Dhl\Shipping\Model\Service\Option\Packaging\PreferredDayOptionProvider</item>
+                <item name="preferredTime" xsi:type="object">Dhl\Shipping\Model\Service\Option\Packaging\PreferredTimeOptionProvider</item>
             </argument>
         </arguments>
     </virtualType>

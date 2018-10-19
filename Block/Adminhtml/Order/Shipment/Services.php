@@ -112,7 +112,7 @@ class Services extends Packaging
         /** @var ServiceInputInterface $input */
         foreach ($service->getInputs() as $input) {
             if (in_array($input->getInputType(), ['date', 'time'])) {
-                $inputType = 'select';
+                $inputType = 'checkboxset';
             } else {
                 $inputType = $input->getInputType();
             }

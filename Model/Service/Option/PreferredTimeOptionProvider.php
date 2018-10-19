@@ -94,6 +94,11 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     }
 
 
+    /**
+     * @param array $service
+     * @param array $args
+     * @return array
+     */
     public function enhanceServiceWithOptions($service, $args)
     {
         try {

@@ -74,9 +74,11 @@ class ParcelManagement
      */
     public function getPreferredDayOptions($dropOff, $postalCode)
     {
-        //@Todo: use cached response if any
-        $checkoutServices = $this->getCheckoutServices($dropOff, $postalCode);
-        $validDays = $checkoutServices->getPreferredDay()->getValidDays();
+        if ($this->serviceResponse === null) {
+            $this->serviceResponse = $this->getCheckoutServices($dropOff, $postalCode);
+        }
+
+        $validDays = $this->serviceResponse->getPreferredDay()->getValidDays();
 
         return $validDays;
     }
@@ -90,10 +92,11 @@ class ParcelManagement
      */
     public function getPreferredTimeOptions($dropOff, $postalCode)
     {
-        //@Todo: use cached response if any
-        $checkoutServices = $this->getCheckoutServices($dropOff, $postalCode);
+        if ($this->serviceResponse === null) {
+            $this->serviceResponse = $this->getCheckoutServices($dropOff, $postalCode);
+        }
 
-        return $checkoutServices->getPreferredTime()->getTimeframes();
+        return $this->serviceResponse->getPreferredTime()->getTimeframes();
     }
 
 
