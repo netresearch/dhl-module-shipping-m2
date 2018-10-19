@@ -38,7 +38,7 @@ use Yasumi\Yasumi;
  */
 class StartDate
 {
-    const WEEKDAY_SUNDAY = '0';
+    const WEEKDAY_SUNDAY = '7';
 
     /**
      * @var TimezoneInterfaceFactory
@@ -107,9 +107,17 @@ class StartDate
             $currentDateTime->add(new \DateInterval('P1D'));
         }
 
+        $daysCount = 0;
         while ($this->isHoliday($currentDateTime) || $this->isNonDropOffDay($currentDateTime, $excludedDropOffDays)) {
             // if current date is a date where no package can be handed over, try the next day
             $currentDateTime->add(new \DateInterval('P1D'));
+            $daysCount++;
+
+            // if merchant has a bad configuration eg. all days marked as non dropp off days
+            // we need to exit the loop after 7 days
+            if ($daysCount === 7) {
+                break;
+            }
         }
 
         return $currentDateTime;
