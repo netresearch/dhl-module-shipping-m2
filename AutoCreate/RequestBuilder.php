@@ -302,7 +302,7 @@ class RequestBuilder implements RequestBuilderInterface
                 continue;
             }
 
-            $totalWeight += $item->getWeight();
+            $totalWeight += $item->getWeight() * $item->getQty();
 
             if ($isCrossBorder) {
                 $itemData = $item->toArray(
