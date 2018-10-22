@@ -57,9 +57,9 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     }
 
     /**
-     * @param array $service
-     * @param array $args
-     * @return array
+     * @param string[] $service
+     * @param string[] $args
+     * @return string[]
      */
     public function enhanceServiceWithOptions($service, $args)
     {

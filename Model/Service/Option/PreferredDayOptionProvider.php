@@ -24,7 +24,6 @@
  */
 namespace Dhl\Shipping\Model\Service\Option;
 
-use Dhl\ParcelManagement\Model\TimeInterval;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Model\Service\StartDate;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
