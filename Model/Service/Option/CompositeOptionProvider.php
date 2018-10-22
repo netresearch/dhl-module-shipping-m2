@@ -60,7 +60,6 @@ class CompositeOptionProvider
         $this->logger = $logger;
     }
 
-
     /**
      * @param string[][] $services
      * @param string[] $args
@@ -70,7 +69,7 @@ class CompositeOptionProvider
     {
         foreach ($this->providers as $provider) {
             $serviceCode = $provider->getServiceCode();
-            if(array_key_exists($serviceCode, $services)) {
+            if (array_key_exists($serviceCode, $services)) {
                 try {
                     $service = $provider->enhanceServiceWithOptions($services[$serviceCode], $args);
                     $services[$serviceCode] = $service;

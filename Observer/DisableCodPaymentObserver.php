@@ -31,8 +31,10 @@ use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Model\Service\Filter\CodServiceFilter;
 use Dhl\Shipping\Model\Service\ServiceCollection;
+use Dhl\Shipping\Model\Service\ServiceConfig;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
@@ -56,6 +58,11 @@ class DisableCodPaymentObserver implements ObserverInterface
      * @var ModuleConfigInterface
      */
     private $config;
+
+    /**
+     * @var ServiceConfig
+     */
+    private $serviceConfig;
 
     /**
      * @var SessionManagerInterface|CheckoutSession
@@ -86,6 +93,7 @@ class DisableCodPaymentObserver implements ObserverInterface
      * DisableCodPaymentObserver constructor.
      *
      * @param ModuleConfigInterface $config
+     * @param ServiceConfig $serviceConfig
      * @param SessionManagerInterface $checkoutSession
      * @param ServicePoolInterface $servicePool
      * @param RouteValidatorInterface $routeValidator
@@ -94,6 +102,7 @@ class DisableCodPaymentObserver implements ObserverInterface
      */
     public function __construct(
         ModuleConfigInterface $config,
+        ServiceConfig $serviceConfig,
         SessionManagerInterface $checkoutSession,
         ServicePoolInterface $servicePool,
         RouteValidatorInterface $routeValidator,
@@ -101,6 +110,7 @@ class DisableCodPaymentObserver implements ObserverInterface
         ServiceSelectionRepositoryInterface $serviceSelectionRepository
     ) {
         $this->config = $config;
+        $this->serviceConfig = $serviceConfig;
         $this->checkoutSession = $checkoutSession;
         $this->servicePool = $servicePool;
         $this->routeValidator = $routeValidator;
@@ -192,7 +202,7 @@ class DisableCodPaymentObserver implements ObserverInterface
         // fetch all COD services
         $codServiceSettings = [
             ServicePoolInterface::SERVICE_COD_CODE =>
-                $this->config->getServiceSettings(
+                $this->serviceConfig->getServiceSettings(
                     $quote->getStoreId()
                 )[ServicePoolInterface::SERVICE_COD_CODE],
         ];

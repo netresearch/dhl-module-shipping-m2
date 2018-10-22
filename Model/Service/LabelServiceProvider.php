@@ -102,7 +102,6 @@ class LabelServiceProvider
         $this->serviceConfig = $serviceConfig;
     }
 
-
     /**
      * @param ShipmentInterface $shipment
      * @return ServiceInterface[]|ServiceCollection

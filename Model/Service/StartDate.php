@@ -25,6 +25,7 @@
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Locale\ResolverInterfaceFactory;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterfaceFactory;
 use Yasumi\Yasumi;
@@ -83,12 +84,11 @@ class StartDate
         $timeZone = $this->timezoneFactory->create();
         $currentDateTime = $timeZone->date();
         $excludedDropOffDays = $this->serviceConfig->getExcludedDropOffDays($storeId);
-        list($hours, $minutes, $seconds) = array_map('intval',$this->serviceConfig->getCutOffTime($storeId));
+        list($hours, $minutes, $seconds) = array_map('intval', $this->serviceConfig->getCutOffTime($storeId));
         $cutOffDateTime = $timeZone->date()->setTime($hours, $minutes, $seconds);
 
         return $this->getNextPossibleStartDate($currentDateTime, $cutOffDateTime, $excludedDropOffDays);
     }
-
 
     /**
      * Determine the next possible start date.
@@ -117,7 +117,7 @@ class StartDate
              *  Exception is thrown and service will be removed from the array.
             **/
             if ($dayCount === 6) {
-                throw new \Exception('No valid start date.');
+                throw new LocalizedException(__('No valid start date.'));
             }
         }
 
@@ -151,6 +151,6 @@ class StartDate
     private function isNonDropOffDay($dateTime, $excludedDropOffDays): bool
     {
         $weekDay = $dateTime->format('N');
-        return in_array($weekDay,$excludedDropOffDays) || $weekDay === self::WEEKDAY_SUNDAY;
+        return in_array($weekDay, $excludedDropOffDays) || $weekDay === self::WEEKDAY_SUNDAY;
     }
 }

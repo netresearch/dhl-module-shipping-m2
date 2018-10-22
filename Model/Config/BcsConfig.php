@@ -443,13 +443,17 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * Get ParcelManagement API Endpoint
+     * @param string $store
      * @return string
      */
     public function getParcelManagementEndpoint($store = null)
     {
 
         if ($this->moduleConfig->isSandboxModeEnabled($store)) {
-            return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT, $store);
+            return $this->configAccessor->getConfigValue(
+                self::CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT,
+                $store
+            );
         }
 
         return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT, $store);

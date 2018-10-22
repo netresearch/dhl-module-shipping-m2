@@ -66,7 +66,6 @@ class PreferredDayOptionProvider implements OptionProviderInterface
         $this->startDateModel = $startDateModel;
     }
 
-
     /**
      * @param string[] $service
      * @param string[] $args

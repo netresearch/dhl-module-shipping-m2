@@ -40,7 +40,6 @@ use Dhl\Shipping\Model\Config\BcsConfig;
  */
 class ParcelManagement
 {
-
     const API_KEY_IDENTIFIER = 'DPDHL-User-Authentication-Token';
 
     /**
@@ -58,7 +57,11 @@ class ParcelManagement
      */
     private $serviceResponse = null;
 
-
+    /**
+     * ParcelManagement constructor.
+     * @param CheckoutApi $checkoutApi
+     * @param BcsConfig $bcsConfig
+     */
     public function __construct(
         CheckoutApi $checkoutApi,
         BcsConfig $bcsConfig
@@ -84,7 +87,6 @@ class ParcelManagement
         return $validDays;
     }
 
-
     /**
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
      * @param string $postalCode
@@ -99,7 +101,6 @@ class ParcelManagement
 
         return $this->serviceResponse->getPreferredTime()->getTimeframes();
     }
-
 
     /**
      * @param \DateTime $date
@@ -120,7 +121,6 @@ class ParcelManagement
             ->setPassword($passWd)
             ->setHost($pmApiEndpoint)
             ->setApiKey(self::API_KEY_IDENTIFIER, $apiKey);
-
 
         $response = $this->checkoutApi->checkoutRecipientZipAvailableServicesGet($ekp, $postalCode, $date);
 

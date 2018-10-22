@@ -137,7 +137,6 @@ class ServiceConfig
             ServiceSettingsInterface::SORT_ORDER => 30,
         ];
 
-
         $preferredLocationEnabled = (bool) $this->configAccessor->getConfigValue(
             'carriers/dhlshipping/service_' . strtolower(PreferredLocation::CODE) . '_enabled',
             $store

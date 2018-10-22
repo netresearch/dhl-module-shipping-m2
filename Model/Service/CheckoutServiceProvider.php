@@ -137,7 +137,6 @@ class CheckoutServiceProvider
         $this->compositeOptionProvider = $compositeOptionProvider;
     }
 
-
     /**
      * @param string $countryId
      * @param string $storeId

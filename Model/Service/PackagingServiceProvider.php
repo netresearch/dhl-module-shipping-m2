@@ -37,6 +37,7 @@ use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Model\Order\Shipment;
 
 /**
  * Load services for packaging popup
@@ -110,7 +111,6 @@ class PackagingServiceProvider
         $this->serviceSettingsFactory = $serviceSettingsFactory;
         $this->compositeOptionProvider = $compositeOptionProvider;
     }
-
 
     /**
      * @param ShipmentInterface|Shipment $shipment

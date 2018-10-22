@@ -52,11 +52,6 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     private $parcelManagement;
 
     /**
-     * @var CheckoutSession
-     */
-    private $checkoutSession;
-
-    /**
      * @var DateTimeFactory
      */
     private $dateTimeFactory;
@@ -74,25 +69,21 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     /**
      * PreferredDayOptionProvider constructor.
      * @param ParcelManagement $parcelManagement
-     * @param CheckoutSession $checkoutSession
      * @param DateTimeFactory $dateTimeFactory
      * @param ServiceConfigInterface $serviceConfig
      * @param StartDate $startDateModel
      */
     public function __construct(
         ParcelManagement $parcelManagement,
-        CheckoutSession $checkoutSession,
         DateTimeFactory $dateTimeFactory,
         ServiceConfigInterface $serviceConfig,
         StartDate $startDateModel
     ) {
         $this->parcelManagement = $parcelManagement;
-        $this->checkoutSession = $checkoutSession;
         $this->dateTimeFactory = $dateTimeFactory;
         $this->serviceConfig = $serviceConfig;
         $this->startDateModel = $startDateModel;
     }
-
 
     /**
      * @param string[] $service

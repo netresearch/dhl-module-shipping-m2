@@ -95,10 +95,10 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
      */
     public function formatTime($timeString)
     {
-        $start = substr($timeString,0,4);
-        $end = substr($timeString,4,4);
+        $start = substr($timeString, 0, 4);
+        $end = substr($timeString, 4, 4);
 
-        return substr_replace( $start, ':', -2, 0 )
-            . ' - ' . substr_replace( $end, ':', -2, 0 );
+        return substr_replace($start, ':', -2, 0)
+            . ' - ' . substr_replace($end, ':', -2, 0);
     }
 }
