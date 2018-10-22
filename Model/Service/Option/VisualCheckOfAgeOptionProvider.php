@@ -41,7 +41,11 @@ class VisualCheckOfAgeOptionProvider implements OptionProviderInterface
 
     const SERVICE_CODE = VisualCheckOfAge::CODE;
 
-
+    /**
+     * @param string[] $service
+     * @param string[] $args
+     * @return string[]
+     */
     public function enhanceServiceWithOptions($service, $args)
     {
         $options = [

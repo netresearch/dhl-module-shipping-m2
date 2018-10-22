@@ -25,6 +25,8 @@
 
 namespace Dhl\Shipping\Model\Service\Option;
 
+use Psr\Log\LoggerInterface;
+
 /**
  *
  * @package  Dhl\Shipping\Model
@@ -41,26 +43,45 @@ class CompositeOptionProvider
     private $providers = [];
 
     /**
-     * CompositeOptionProvider constructor.
-     * @param OptionProviderInterface[] $providers
+     * @var LoggerInterface
      */
-    public function __construct(array $providers = [])
-    {
-        $this->providers = $providers;
-    }
+    private $logger;
 
     /**
-     * @param array $services
-     * @param array $args
-     * @return array
+     * CompositeOptionProvider constructor.
+     * @param OptionProviderInterface[] $providers
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        array $providers,
+        LoggerInterface $logger
+    ) {
+        $this->providers = $providers;
+        $this->logger = $logger;
+    }
+
+
+    /**
+     * @param string[][] $services
+     * @param string[] $args
+     * @return string[][]
      */
     public function enhanceServicesWithOptions($services, $args)
     {
         foreach ($this->providers as $provider) {
             $serviceCode = $provider->getServiceCode();
             if(array_key_exists($serviceCode, $services)) {
-                $service = $provider->enhanceServiceWithOptions($services[$serviceCode], $args);
-                $services[$serviceCode] = $service;
+                try {
+                    $service = $provider->enhanceServiceWithOptions($services[$serviceCode], $args);
+                    $services[$serviceCode] = $service;
+                } catch (\Exception $e) {
+                    // something went wrong, remove service from output array
+                    unset($services[$serviceCode]);
+                    $this->logger->warning(
+                        "Service with code {$serviceCode} was removed due to error. "
+                        . 'Message: ' . $e->getMessage()
+                    );
+                }
             }
         }
 

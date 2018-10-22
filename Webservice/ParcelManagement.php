@@ -27,6 +27,7 @@ namespace Dhl\Shipping\Webservice;
 use Dhl\ParcelManagement\Api\CheckoutApi;
 use Dhl\ParcelManagement\ApiException;
 use Dhl\ParcelManagement\Model\AvailableServicesMap;
+use Dhl\ParcelManagement\Model\TimeInterval;
 use Dhl\Shipping\Model\Config\BcsConfig;
 
 /**
@@ -69,7 +70,7 @@ class ParcelManagement
     /**
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
      * @param string $postalCode
-     * @return array
+     * @return TimeInterval[]
      * @throws ApiException
      */
     public function getPreferredDayOptions($dropOff, $postalCode)

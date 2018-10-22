@@ -107,16 +107,17 @@ class StartDate
             $currentDateTime->add(new \DateInterval('P1D'));
         }
 
-        $daysCount = 0;
+        $dayCount = 0;
         while ($this->isHoliday($currentDateTime) || $this->isNonDropOffDay($currentDateTime, $excludedDropOffDays)) {
             // if current date is a date where no package can be handed over, try the next day
             $currentDateTime->add(new \DateInterval('P1D'));
-            $daysCount++;
+            $dayCount++;
 
-            // if merchant has a bad configuration eg. all days marked as non dropp off days
-            // we need to exit the loop after 7 days
-            if ($daysCount === 7) {
-                break;
+            /** If merchant has a bad configuration eg. all days marked as non dropp off days we need to exit the loop.
+             *  Exception is thrown and service will be removed from the array.
+            **/
+            if ($dayCount === 6) {
+                throw new \Exception('No valid start date.');
             }
         }
 

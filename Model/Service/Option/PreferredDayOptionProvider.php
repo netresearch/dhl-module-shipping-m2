@@ -24,6 +24,7 @@
  */
 namespace Dhl\Shipping\Model\Service\Option;
 
+use Dhl\ParcelManagement\Model\TimeInterval;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Model\Service\StartDate;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
@@ -68,20 +69,18 @@ class PreferredDayOptionProvider implements OptionProviderInterface
 
 
     /**
-     * @param array $service
-     * @param array $args
-     * @return array
+     * @param string[] $service
+     * @param string[] $args
+     * @return string[]
+     * @throws \Dhl\ParcelManagement\ApiException
+     * @throws \Exception
      */
     public function enhanceServiceWithOptions($service, $args)
     {
-        try {
-            $storeId = isset($args['storeId']) ? $args['storeId'] : null;
-            $startDate = $this->startDateModel->getStartDate($storeId);
-            // options from the api
-            $validDays = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
-        } catch (\Exception $e) {
-            $validDays = [];
-        }
+        $storeId = isset($args['storeId']) ? $args['storeId'] : null;
+        $startDate = $this->startDateModel->getStartDate($storeId);
+        // options from the api
+        $validDays = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
 
         $options = [];
         foreach ($validDays as $validDay) {
