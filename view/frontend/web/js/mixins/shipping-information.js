@@ -2,10 +2,11 @@ define([
     'underscore',
     'ko',
     'Dhl_Shipping/js/model/service-definitions',
+    'Dhl_Shipping/js/model/dhl-methods',
     'Dhl_Shipping/js/model/services',
     'Magento_Checkout/js/model/quote',
     'mage/translate'
-], function (_, ko, serviceDefinitions, serviceSelection, quote, $t) {
+], function (_, ko, serviceDefinitions, dhlMethods, serviceSelection, quote, $t) {
     'use strict';
 
     var mixin = {
@@ -96,6 +97,12 @@ define([
 
             return results.join(' ');
         },
+
+        isDhlMethod: function() {
+            var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
+            var methods = dhlMethods.get();
+            return _.contains(methods(), carrierCode);
+        }
     };
 
     return function (target) {

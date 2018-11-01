@@ -10,6 +10,7 @@ define([
     'Magento_Checkout/js/model/shipping-service',
     'Dhl_Shipping/js/model/service-compatibility',
     'Dhl_Shipping/js/model/service-definitions',
+    'Dhl_Shipping/js/model/dhl-methods',
     'Dhl_Shipping/js/model/storage',
 ], function (
     urlBuilder,
@@ -19,6 +20,7 @@ define([
     shippingService,
     serviceCompatibility,
     serviceDefinitions,
+    dhlMethods,
     storage
 ) {
     'use strict';
@@ -49,6 +51,7 @@ define([
     var updateModels = function (data) {
         serviceCompatibility.set(data.compatibility);
         serviceDefinitions.set(data.services);
+        dhlMethods.set(data.methods);
     };
 
     /**

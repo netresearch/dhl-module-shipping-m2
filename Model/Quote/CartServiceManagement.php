@@ -127,11 +127,13 @@ class CartServiceManagement implements CartServiceManagementInterface
             $services = $compatibility = [];
         }
 
+        $methods =  $this->moduleConfig->getShippingMethods($quote->getStoreId());
         return $this->serviceInformationFactory->create(
             [
                 'data' => [
                     'services' => $services,
                     'compatibility' => $compatibility,
+                    'methods' => $methods
                 ],
             ]
         );
@@ -142,25 +144,31 @@ class CartServiceManagement implements CartServiceManagementInterface
      *
      * @param int $cartId
      * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
+     * @param string $shippingMethod
      * @throws \Magento\Framework\Exception\NoSuchEntityException;
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
-    public function save($cartId, $serviceSelection)
+    public function save($cartId, $serviceSelection, $shippingMethod)
     {
         $quote = $this->quoteRepository->get($cartId);
         $quoteAddressId = $quote->getShippingAddress()->getId();
+
+        $canProcess = $this->moduleConfig->canProcessMethod($shippingMethod, $quote->getStoreId());
         $this->serviceSelectionRepository->deleteByQuoteAddressId($quoteAddressId);
-        foreach ($serviceSelection as $service) {
-            $model = $this->serviceSelectionFactory->create();
-            $model->setData(
-                [
-                    'parent_id' => $quoteAddressId,
-                    'service_code' => $service->getAttributeCode(),
-                    'service_value' => $this->getEscapedValues($service->getValue()),
-                ]
-            );
-            $this->serviceSelectionRepository->save($model);
+
+        if ($canProcess) {
+            foreach ($serviceSelection as $service) {
+                $model = $this->serviceSelectionFactory->create();
+                $model->setData(
+                    [
+                        'parent_id' => $quoteAddressId,
+                        'service_code' => $service->getAttributeCode(),
+                        'service_value' => $this->getEscapedValues($service->getValue()),
+                    ]
+                );
+                $this->serviceSelectionRepository->save($model);
+            }
         }
     }
 

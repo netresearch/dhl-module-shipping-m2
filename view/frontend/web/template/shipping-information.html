@@ -29,7 +29,7 @@
         </div>
         <div class="shipping-information-content">
             <span class="value" data-bind="text: getShippingMethodTitle()"></span>
-            <div data-bind="if: hasServiceInfo()">
+            <div data-bind="if: hasServiceInfo() && isDhlMethod()">
                 <h4>DHL Services</h4>
                 <small data-bind="foreach: serviceInfo">
                     <strong data-bind="text: $parent.getServiceName($data)"></strong>:

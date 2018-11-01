@@ -41,10 +41,6 @@ use Dhl\Shipping\Service\ServiceCollectionFactory;
 interface ServiceConfigInterface
 {
     const CONFIG_XML_FIELD_PREFERREDDAY = 'carriers/dhlshipping/service_preferredday_enabled';
-    const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE = 'carriers/dhlshipping/service_preferredday_handling_fee';
-    const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT = 'carriers/dhlshipping/service_preferredday_handling_fee_text';
-    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE = 'carriers/dhlshipping/service_preferredtime_handling_fee';
-    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT = 'carriers/dhlshipping/service_preferredtime_handling_fee_text';
     const CONFIG_XML_FIELD_CUTOFFTIME = 'carriers/dhlshipping/service_cutoff_time';
     const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'carriers/dhlshipping/service_preferredlocation_placeholder';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER = 'carriers/dhlshipping/service_preferredneighbour_placeholder';

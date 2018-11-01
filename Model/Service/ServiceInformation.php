@@ -49,4 +49,12 @@ class ServiceInformation extends AbstractModel implements ServiceInformationInte
     {
         return $this->getData('compatibility');
     }
+
+    /**
+     * @return string[]
+     */
+    public function getMethods(): array
+    {
+        return $this->getData('methods');
+    }
 }

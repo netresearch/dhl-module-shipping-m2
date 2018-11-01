@@ -42,4 +42,9 @@ interface ServiceInformationInterface
      * @return \Dhl\Shipping\Api\Data\ServiceCompatibilityInterface[]
      */
     public function getCompatibility(): array;
+
+    /**
+     * @return string[]
+     */
+    public function getMethods(): array;
 }
