@@ -53,7 +53,7 @@ class ServiceCollection extends \ArrayIterator implements ServiceCollectionInter
 
     /**
      * @param callable $callback
-     * @return static
+     * @return self
      */
     public function filter(callable $callback)
     {

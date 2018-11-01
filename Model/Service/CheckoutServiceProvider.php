@@ -28,17 +28,10 @@ namespace Dhl\Shipping\Model\Service;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\Data\ServiceInterface;
-use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Service\Filter\InStockFilter;
+use Dhl\Shipping\Model\Service\Filter\CheckoutServiceFilter;
 use Dhl\Shipping\Model\Service\Option\CompositeOptionProvider;
-use Dhl\Shipping\Service\Filter\CustomerSelectionFilter;
-use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
-use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
-use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Framework\Session\SessionManagerInterface;
 
 /**
  * Load services for display in checkout
@@ -56,19 +49,9 @@ class CheckoutServiceProvider
     private $servicePool;
 
     /**
-     * @var ModuleConfigInterface
-     */
-    private $config;
-
-    /**
      * @var ServiceConfig
      */
     private $serviceConfig;
-
-    /**
-     * @var RouteValidatorInterface
-     */
-    private $routeValidator;
 
     /**
      * @var ServiceHydrator
@@ -86,14 +69,9 @@ class CheckoutServiceProvider
     private $serviceSettingsFactory;
 
     /**
-     * @var SessionManagerInterface|CheckoutSession
+     * @var CheckoutServiceFilter
      */
-    private $checkoutSession;
-
-    /**
-     * @var StockRegistryInterface
-     */
-    private $stockRegistry;
+    private $checkoutServiceFilter;
 
     /**
      * @var CompositeOptionProvider
@@ -102,38 +80,30 @@ class CheckoutServiceProvider
 
     /**
      * CheckoutServiceProvider constructor.
+     *
      * @param ServicePool $servicePool
-     * @param ModuleConfigInterface $config
      * @param ServiceConfig $serviceConfig
-     * @param RouteValidatorInterface $routeValidator
      * @param ServiceHydrator $serviceHydrator
      * @param ServiceCompatibilityPool $compatibilityPool
      * @param ServiceSettingsInterfaceFactory $serviceSettingsFactory
-     * @param CheckoutSession|SessionManagerInterface $checkoutSession
-     * @param StockRegistryInterface $stockRegistry
+     * @param CheckoutServiceFilter $checkoutServiceFilter
      * @param CompositeOptionProvider $compositeOptionProvider
      */
     public function __construct(
         ServicePool $servicePool,
-        ModuleConfigInterface $config,
         ServiceConfig $serviceConfig,
-        RouteValidatorInterface $routeValidator,
         ServiceHydrator $serviceHydrator,
         ServiceCompatibilityPool $compatibilityPool,
         ServiceSettingsInterfaceFactory $serviceSettingsFactory,
-        SessionManagerInterface $checkoutSession,
-        StockRegistryInterface $stockRegistry,
+        CheckoutServiceFilter $checkoutServiceFilter,
         CompositeOptionProvider $compositeOptionProvider
     ) {
         $this->servicePool = $servicePool;
-        $this->config = $config;
         $this->serviceConfig = $serviceConfig;
-        $this->routeValidator = $routeValidator;
         $this->serviceHydrator = $serviceHydrator;
         $this->compatibilityPool = $compatibilityPool;
         $this->serviceSettingsFactory = $serviceSettingsFactory;
-        $this->checkoutSession = $checkoutSession;
-        $this->stockRegistry = $stockRegistry;
+        $this->checkoutServiceFilter = $checkoutServiceFilter;
         $this->compositeOptionProvider = $compositeOptionProvider;
     }
 
@@ -142,7 +112,7 @@ class CheckoutServiceProvider
      * @param string $storeId
      * @return string[][]
      */
-    public function getCompatibility($countryId, $storeId): array
+    public function getCompatibility($countryId, $storeId)
     {
         return $this->compatibilityPool->getRules($countryId, $storeId);
     }
@@ -153,7 +123,7 @@ class CheckoutServiceProvider
      * @param string $postalCode
      * @return array
      */
-    public function getServices($countryId, $storeId, $postalCode): array
+    public function getServices($countryId, $storeId, $postalCode)
     {
         $presets = $this->prepareServiceSettings($storeId, $postalCode);
         $serviceCollection = $this->servicePool->getServices($presets);
@@ -170,22 +140,6 @@ class CheckoutServiceProvider
     }
 
     /**
-     * @return \Closure
-     */
-    private function getSortCallback(): callable
-    {
-        $sortFn = function (ServiceInterface $serviceA, ServiceInterface $serviceB) {
-            if ($serviceA->getSortOrder() === $serviceB->getSortOrder()) {
-                return 0;
-            }
-
-            return ($serviceA->getSortOrder() < $serviceB->getSortOrder()) ? -1 : 1;
-        };
-
-        return $sortFn;
-    }
-
-    /**
      * Take a settings array, enrich it with additional data and
      * turn it into ServiceSettingsInterface[].
      *
@@ -193,7 +147,7 @@ class CheckoutServiceProvider
      * @param string $postalCode
      * @return ServiceSettingsInterface[]
      */
-    private function prepareServiceSettings(string $storeId, string $postalCode): array
+    private function prepareServiceSettings($storeId, $postalCode)
     {
         $settings = $this->serviceConfig->getServiceSettings($storeId);
         $args = [
@@ -216,23 +170,26 @@ class CheckoutServiceProvider
      * @param ServiceCollection $serviceCollection
      * @return ServiceCollection
      */
-    private function filterAvailableServices($countryId, $storeId, $serviceCollection): ServiceCollection
+    private function filterAvailableServices($countryId, $storeId, $serviceCollection)
     {
-        $checkoutFilter = CustomerSelectionFilter::create();
-        $routeFilter = RouteFilter::create(
-            $this->routeValidator,
-            $this->config->getShipperCountry($storeId),
-            $countryId,
-            $this->config->getEuCountryList($storeId)
-        );
+        return $this->checkoutServiceFilter->filterServiceCollection($serviceCollection, $storeId, $countryId);
+    }
 
-        $cartItems = $this->checkoutSession->getQuote()->getItems();
-        $inStockFilter = InStockFilter::create($cartItems, $this->stockRegistry);
+    /**
+     * Generates a sorting function for ServiceInterface instances
+     *
+     * @return \Closure
+     */
+    private function getSortCallback()
+    {
+        $sortFn = function (ServiceInterface $serviceA, ServiceInterface $serviceB) {
+            if ($serviceA->getSortOrder() === $serviceB->getSortOrder()) {
+                return 0;
+            }
 
-        $serviceCollection = $serviceCollection->filter($checkoutFilter);
-        $serviceCollection = $serviceCollection->filter($routeFilter);
-        $serviceCollection = $serviceCollection->filter($inStockFilter);
+            return ($serviceA->getSortOrder() < $serviceB->getSortOrder()) ? -1 : 1;
+        };
 
-        return $serviceCollection;
+        return $sortFn;
     }
 }
