@@ -22,15 +22,14 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Service\Option;
+
+namespace Dhl\Shipping\Model\Service\Option\Checkout;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Model\Config\ServiceConfigInterface;
+use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Model\Service\StartDate;
 use Dhl\Shipping\Service\Bcs\PreferredTime;
 use Dhl\Shipping\Webservice\ParcelManagement;
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
 
 /**
  *
@@ -52,36 +51,19 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     private $parcelManagement;
 
     /**
-     * @var DateTimeFactory
-     */
-    private $dateTimeFactory;
-
-    /**
-     * @var ServiceConfigInterface
-     */
-    private $serviceConfig;
-
-    /**
      * @var StartDate
      */
     private $startDateModel;
 
     /**
-     * PreferredDayOptionProvider constructor.
+     * PreferredTimeOptionProvider constructor.
+     *
      * @param ParcelManagement $parcelManagement
-     * @param DateTimeFactory $dateTimeFactory
-     * @param ServiceConfigInterface $serviceConfig
      * @param StartDate $startDateModel
      */
-    public function __construct(
-        ParcelManagement $parcelManagement,
-        DateTimeFactory $dateTimeFactory,
-        ServiceConfigInterface $serviceConfig,
-        StartDate $startDateModel
-    ) {
+    public function __construct(ParcelManagement $parcelManagement, StartDate $startDateModel)
+    {
         $this->parcelManagement = $parcelManagement;
-        $this->dateTimeFactory = $dateTimeFactory;
-        $this->serviceConfig = $serviceConfig;
         $this->startDateModel = $startDateModel;
     }
 
@@ -94,7 +76,7 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
      */
     public function enhanceServiceWithOptions($service, $args)
     {
-        $storeId = isset($args['storeId']) ? $args['storeId'] : null;
+        $storeId = isset($args[self::ARGUMENT_STORE]) ? $args[self::ARGUMENT_STORE] : null;
         $startDate = $this->startDateModel->getStartDate($storeId);
         // options from the api
         $timeFrames = $this->parcelManagement->getPreferredTimeOptions($startDate, $args[self::POSTAL_CODE]);
@@ -102,8 +84,8 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
         $options = [];
         foreach ($timeFrames as $timeFrame) {
             $options[] = [
-                'label' =>  $timeFrame->getStart() . '-' . $timeFrame->getEnd(),
-                'value' => str_replace(':', '', $timeFrame->getStart() . $timeFrame->getEnd())
+                'label' => $timeFrame->getStart() . '-' . $timeFrame->getEnd(),
+                'value' => str_replace(':', '', $timeFrame->getStart() . $timeFrame->getEnd()),
             ];
         }
 

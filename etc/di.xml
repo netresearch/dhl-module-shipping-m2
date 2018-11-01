@@ -200,15 +200,15 @@
     <virtualType name="Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider" type="Dhl\Shipping\Model\Service\Option\CompositeOptionProvider">
         <arguments>
             <argument name="providers" xsi:type="array">
-                <item name="preferredDay" xsi:type="object">Dhl\Shipping\Model\Service\Option\PreferredDayOptionProvider</item>
-                <item name="preferredTime" xsi:type="object">Dhl\Shipping\Model\Service\Option\PreferredTimeOptionProvider</item>
+                <item name="preferredDay" xsi:type="object">Dhl\Shipping\Model\Service\Option\Checkout\PreferredDayOptionProvider</item>
+                <item name="preferredTime" xsi:type="object">Dhl\Shipping\Model\Service\Option\Checkout\PreferredTimeOptionProvider</item>
             </argument>
         </arguments>
     </virtualType>
     <virtualType name="Dhl\Shipping\Model\Service\Virtual\PackagingOptionProvider" type="Dhl\Shipping\Model\Service\Option\CompositeOptionProvider">
         <arguments>
             <argument name="providers" xsi:type="array">
-                <item name="visualCheckOfAge" xsi:type="object">Dhl\Shipping\Model\Service\Option\VisualCheckOfAgeOptionProvider</item>
+                <item name="visualCheckOfAge" xsi:type="object">Dhl\Shipping\Model\Service\Option\Packaging\VisualCheckOfAgeOptionProvider</item>
                 <item name="preferredDay" xsi:type="object">Dhl\Shipping\Model\Service\Option\Packaging\PreferredDayOptionProvider</item>
                 <item name="preferredTime" xsi:type="object">Dhl\Shipping\Model\Service\Option\Packaging\PreferredTimeOptionProvider</item>
             </argument>

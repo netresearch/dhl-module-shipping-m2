@@ -49,6 +49,7 @@ class CompositeOptionProvider
 
     /**
      * CompositeOptionProvider constructor.
+     *
      * @param OptionProviderInterface[] $providers
      * @param LoggerInterface $logger
      */

@@ -22,6 +22,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Service\Option\Packaging;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
@@ -49,6 +50,7 @@ class PreferredDayOptionProvider implements OptionProviderInterface
 
     /**
      * PreferredDayOptionProvider constructor.
+     *
      * @param TimezoneInterface $timezone
      */
     public function __construct(TimezoneInterface $timezone)
@@ -64,14 +66,14 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     public function enhanceServiceWithOptions($service, $args)
     {
         /** @var ServiceSelectionInterface| bool $selection */
-        $selection = isset($args['selection']) ? $args['selection'] : false;
+        $selection = isset($args[self::ARGUMENT_SELECTION]) ? $args[self::ARGUMENT_SELECTION] : false;
         $options = [];
         if ($selection && $selection->getServiceCode() === $this->getServiceCode()) {
             $selectedValue = current($selection->getServiceValue());
             $options[] = [
                 'label' => $this->timezone->formatDate(new \DateTime($selectedValue)),
                 'value' => $selectedValue,
-                'disable' => false
+                'disable' => false,
             ];
             $service[ServiceSettingsInterface::OPTIONS] = $options;
         }

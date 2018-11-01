@@ -34,6 +34,10 @@ namespace Dhl\Shipping\Model\Service\Option;
  */
 interface OptionProviderInterface
 {
+    const ARGUMENT_POSTAL_CODE = 'postalCode';
+    const ARGUMENT_STORE = 'storeId';
+    const ARGUMENT_SELECTION = 'selection';
+
     /**
      * @param string[] $service
      * @param string[] $args

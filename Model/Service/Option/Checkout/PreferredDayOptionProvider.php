@@ -22,9 +22,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Shipping\Model\Service\Option;
+
+namespace Dhl\Shipping\Model\Service\Option\Checkout;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Model\Service\StartDate;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
 use Dhl\Shipping\Webservice\ParcelManagement;
@@ -55,6 +57,7 @@ class PreferredDayOptionProvider implements OptionProviderInterface
 
     /**
      * PreferredDayOptionProvider constructor.
+     *
      * @param ParcelManagement $parcelManagement
      * @param StartDate $startDateModel
      */
@@ -75,7 +78,7 @@ class PreferredDayOptionProvider implements OptionProviderInterface
      */
     public function enhanceServiceWithOptions($service, $args)
     {
-        $storeId = isset($args['storeId']) ? $args['storeId'] : null;
+        $storeId = isset($args[self::ARGUMENT_STORE]) ? $args[self::ARGUMENT_STORE] : null;
         $startDate = $this->startDateModel->getStartDate($storeId);
         // options from the api
         $validDays = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
@@ -85,7 +88,7 @@ class PreferredDayOptionProvider implements OptionProviderInterface
             $options[] = [
                 'label' => $validDay->getStart()->format('D,d.'),
                 'value' => $validDay->getStart()->format('Y-m-d'),
-                'disable' => false
+                'disable' => false,
             ];
         }
         $service[ServiceSettingsInterface::OPTIONS] = $options;

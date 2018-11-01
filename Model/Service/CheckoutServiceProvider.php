@@ -30,6 +30,7 @@ use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Service\Filter\CheckoutServiceFilter;
 use Dhl\Shipping\Model\Service\Option\CompositeOptionProvider;
+use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
 use Dhl\Shipping\Service\ServiceHydrator;
 
@@ -151,8 +152,8 @@ class CheckoutServiceProvider
     {
         $settings = $this->serviceConfig->getServiceSettings($storeId);
         $args = [
-            'storeId' => $storeId,
-            'postalCode' => $postalCode,
+            OptionProviderInterface::ARGUMENT_STORE => $storeId,
+            OptionProviderInterface::ARGUMENT_POSTAL_CODE => $postalCode,
         ];
         $settings = $this->compositeOptionProvider->enhanceServicesWithOptions($settings, $args);
 

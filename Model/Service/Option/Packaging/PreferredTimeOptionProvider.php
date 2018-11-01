@@ -22,13 +22,13 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Service\Option\Packaging;
 
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Service\Bcs\PreferredTime;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 /**
  *
@@ -43,20 +43,6 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     const SERVICE_CODE = PreferredTime::CODE;
 
     /**
-     * @var TimezoneInterface
-     */
-    private $timezone;
-
-    /**
-     * PreferredDayOptionProvider constructor.
-     * @param TimezoneInterface $timezone
-     */
-    public function __construct(TimezoneInterface $timezone)
-    {
-        $this->timezone = $timezone;
-    }
-
-    /**
      * @param string[] $service
      * @param string[] $args
      * @return string[]
@@ -64,14 +50,14 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     public function enhanceServiceWithOptions($service, $args)
     {
         /** @var ServiceSelectionInterface| bool $selection */
-        $selection = isset($args['selection']) ? $args['selection'] : false;
+        $selection = isset($args[self::ARGUMENT_SELECTION]) ? $args[self::ARGUMENT_SELECTION] : false;
         $options = [];
         if ($selection && $selection->getServiceCode() === $this->getServiceCode()) {
             $selectedValue = current($selection->getServiceValue());
             $options[] = [
                 'label' => $this->formatTime($selectedValue),
                 'value' => $selectedValue,
-                'disable' => false
+                'disable' => false,
             ];
             $service[ServiceSettingsInterface::OPTIONS] = $options;
         }
@@ -99,6 +85,6 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
         $end = substr($timeString, 4, 4);
 
         return substr_replace($start, ':', -2, 0)
-            . ' - ' . substr_replace($end, ':', -2, 0);
+               . ' - ' . substr_replace($end, ':', -2, 0);
     }
 }

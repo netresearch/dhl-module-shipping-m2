@@ -32,6 +32,7 @@ use Dhl\Shipping\Api\Data\ServiceSelectionInterface;
 use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Service\Option\CompositeOptionProvider;
+use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Service\Filter\MerchantSelectionFilter;
 use Dhl\Shipping\Service\Filter\RouteFilter;
 use Dhl\Shipping\Util\ShippingRoutes\RouteValidatorInterface;
@@ -183,7 +184,7 @@ class PackagingServiceProvider
                 $settings = $this->compositeOptionProvider
                     ->enhanceServicesWithOptions(
                         $settings,
-                        ['selection' => $selection]
+                        [OptionProviderInterface::ARGUMENT_SELECTION => $selection]
                     );
             }
         } catch (NoSuchEntityException $e) {
