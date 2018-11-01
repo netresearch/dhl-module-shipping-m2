@@ -235,6 +235,7 @@
                     <label>Days excluded from drop-off</label>
                     <comment>On the working days checked, there is no transfer of parcels to DHL (in addition to sundays and public holidays). This information influences the first displayed preferred day in the frontend.</comment>
                     <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DropOffDays</source_model>
+                    <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\DropOffDays</backend_model>
                 </field>
 
 
