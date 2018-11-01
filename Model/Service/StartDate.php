@@ -22,6 +22,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
@@ -58,6 +59,7 @@ class StartDate
 
     /**
      * StartDate constructor.
+     *
      * @param ResolverInterfaceFactory $localeResolverFactory
      * @param ServiceConfigInterface $serviceConfig
      * @param TimezoneInterfaceFactory $timezoneFactory
@@ -94,7 +96,7 @@ class StartDate
      * Determine the next possible start date.
      *
      * @param \DateTime $currentDateTime
-     * @param \DateTime$cutOffDateTime
+     * @param \DateTime $cutOffDateTime
      * @param string[] $excludedDropOffDays
      * @return \DateTime
      * @throws \Exception
@@ -113,9 +115,10 @@ class StartDate
             $currentDateTime->add(new \DateInterval('P1D'));
             $dayCount++;
 
-            /** If merchant has a bad configuration eg. all days marked as non dropp off days we need to exit the loop.
+            /**
+             * If merchant has a bad configuration eg. all days marked as non drop off days we need to exit the loop.
              *  Exception is thrown and service will be removed from the array.
-            **/
+             */
             if ($dayCount === 6) {
                 throw new LocalizedException(__('No valid start date.'));
             }
@@ -148,9 +151,10 @@ class StartDate
      * @param string[] $excludedDropOffDays
      * @return bool
      */
-    private function isNonDropOffDay($dateTime, $excludedDropOffDays): bool
+    private function isNonDropOffDay($dateTime, $excludedDropOffDays)
     {
         $weekDay = $dateTime->format('N');
+
         return in_array($weekDay, $excludedDropOffDays) || $weekDay === self::WEEKDAY_SUNDAY;
     }
 }

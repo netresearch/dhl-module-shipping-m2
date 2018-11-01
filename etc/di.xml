@@ -136,7 +136,6 @@
     </type>
     <type name="Dhl\Shipping\Model\Service\CheckoutServiceProvider">
         <arguments>
-            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
             <argument name="compositeOptionProvider" xsi:type="object">Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider</argument>
         </arguments>
     </type>
@@ -195,6 +194,11 @@
                 <item name="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
                 <item name="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
             </argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Model\Service\Filter\CheckoutServiceFilter">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
     </type>
     <virtualType name="Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider" type="Dhl\Shipping\Model\Service\Option\CompositeOptionProvider">

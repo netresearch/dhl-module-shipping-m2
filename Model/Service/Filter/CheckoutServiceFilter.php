@@ -76,7 +76,7 @@ class CheckoutServiceFilter
         ModuleConfigInterface $config,
         RouteValidatorInterface $routeValidator,
         StockRegistryInterface $stockRegistry,
-        $checkoutSession
+        SessionManagerInterface $checkoutSession
     ) {
         $this->config = $config;
         $this->routeValidator = $routeValidator;
