@@ -55,6 +55,7 @@ class Services extends Packaging
 
     /**
      * Services constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      * @param \Magento\Shipping\Model\Carrier\Source\GenericInterface $sourceSizeModel
@@ -83,7 +84,7 @@ class Services extends Packaging
     /**
      * @return ServiceCollection
      */
-    public function getServices(): ServiceCollection
+    public function getServices()
     {
         $shipment = $this->getShipment();
 
@@ -94,7 +95,7 @@ class Services extends Packaging
      * @return ServiceSelectionCollection
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getServiceSelection(): ServiceSelectionCollection
+    public function getServiceSelection()
     {
         $shipment = $this->getShipment();
 
@@ -105,7 +106,7 @@ class Services extends Packaging
      * @param ServiceInterface $service
      * @return string
      */
-    public function getServiceHtml($service): string
+    public function getServiceHtml($service)
     {
         $html = '';
 

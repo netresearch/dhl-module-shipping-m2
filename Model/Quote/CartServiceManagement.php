@@ -22,6 +22,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Quote;
 
 use Dhl\Shipping\Api\Data\ServiceInformationInterface;
@@ -179,10 +180,13 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @param array $values
      * @return array
      */
-    private function getEscapedValues(array $values): array
+    private function getEscapedValues(array $values)
     {
-        return array_map(function ($value) {
-            return $this->escaper->escapeHtml($value);
-        }, $values);
+        return array_map(
+            function ($value) {
+                return $this->escaper->escapeHtml($value);
+            },
+            $values
+        );
     }
 }

@@ -114,67 +114,6 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
-     * Obtain shipper country from shipping origin configuration.
-     *
-     * @param mixed $store
-     * @return string
-     */
-    public function getShipperCountry($store = null)
-    {
-        $country = $this->configAccessor->getConfigValue(ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, $store);
-        return $country;
-    }
-
-    /**
-     * @param mixed $store
-     * @return string[]
-     */
-    public function getEuCountryList($store = null)
-    {
-        $euCountries = $this->configAccessor->getConfigValue(
-            \Magento\Shipping\Helper\Carrier::XML_PATH_EU_COUNTRIES_LIST,
-            $store
-        );
-        return explode(',', $euCountries);
-    }
-
-    /**
-     * Obtain the shipping method that should be processed with DHL Shipping.
-     *
-     * @param mixed $store
-     * @return string[]
-     */
-    public function getShippingMethods($store = null)
-    {
-        $shippingMethods = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DHLMETHODS, $store);
-        if (empty($shippingMethods)) {
-            $shippingMethods = [];
-        } else {
-            $shippingMethods = explode(',', $shippingMethods);
-        }
-
-        return $shippingMethods;
-    }
-
-    /**
-     * Obtain the payment methods that should be treated as COD.
-     *
-     * @param mixed $store
-     * @return string[]
-     */
-    public function getCodPaymentMethods($store = null)
-    {
-        $codPaymentMethods = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CODMETHODS, $store);
-        if (empty($codPaymentMethods)) {
-            $codPaymentMethods = [];
-        } else {
-            $codPaymentMethods = explode(',', $codPaymentMethods);
-        }
-
-        return $codPaymentMethods;
-    }
-
-    /**
      * Obtain the default product setting. This is used to highlight one
      * shipping product in case multiple products apply to the current route.
      *
@@ -191,28 +130,41 @@ class ModuleConfig implements ModuleConfigInterface
         if (isset($defaultProducts[$recipientCountry])) {
             $defaultProduct = $defaultProducts[$recipientCountry];
         } elseif (in_array($recipientCountry, $this->getEuCountryList())
-                && isset($defaultProducts[RoutesInterface::REGION_EU])
+                  && isset($defaultProducts[RoutesInterface::REGION_EU])
         ) {
             $defaultProduct = $defaultProducts[RoutesInterface::REGION_EU];
         } else {
             $defaultProduct = $defaultProducts[RoutesInterface::REGION_INTERNATIONAL];
         }
+
         return $defaultProduct;
     }
 
     /**
-     * Check if the given origin/destination combination can be processed with DHL Shipping.
+     * @param mixed $store
+     * @return string[]
+     */
+    public function getEuCountryList($store = null)
+    {
+        $euCountries = $this->configAccessor->getConfigValue(
+            \Magento\Shipping\Helper\Carrier::XML_PATH_EU_COUNTRIES_LIST,
+            $store
+        );
+
+        return explode(',', $euCountries);
+    }
+
+    /**
+     * Check if the current order can be shipped with DHL Shipping.
      *
-     * @param string $destinationCountryId
+     * @param string $shippingMethod
+     * @param string $destCountryId
      * @param mixed $store
      * @return bool
      */
-    public function canProcessRoute($destinationCountryId, $store = null)
+    public function canProcessShipping($shippingMethod, $destCountryId, $store = null): bool
     {
-        $originCountryId = $this->getShipperCountry($store);
-        $euCountries = $this->getEuCountryList($store);
-
-        return $this->routeConfig->canProcessRoute($originCountryId, $destinationCountryId, $euCountries);
+        return $this->canProcessMethod($shippingMethod, $store) && $this->canProcessRoute($destCountryId, $store);
     }
 
     /**
@@ -235,16 +187,49 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
-     * Check if the current order can be shipped with DHL Shipping.
+     * Obtain the shipping method that should be processed with DHL Shipping.
      *
-     * @param string $shippingMethod
-     * @param string $destCountryId
+     * @param mixed $store
+     * @return string[]
+     */
+    public function getShippingMethods($store = null)
+    {
+        $shippingMethods = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DHLMETHODS, $store);
+        if (empty($shippingMethods)) {
+            $shippingMethods = [];
+        } else {
+            $shippingMethods = explode(',', $shippingMethods);
+        }
+
+        return $shippingMethods;
+    }
+
+    /**
+     * Check if the given origin/destination combination can be processed with DHL Shipping.
+     *
+     * @param string $destinationCountryId
      * @param mixed $store
      * @return bool
      */
-    public function canProcessShipping($shippingMethod, $destCountryId, $store = null): bool
+    public function canProcessRoute($destinationCountryId, $store = null)
     {
-        return $this->canProcessMethod($shippingMethod, $store) && $this->canProcessRoute($destCountryId, $store);
+        $originCountryId = $this->getShipperCountry($store);
+        $euCountries = $this->getEuCountryList($store);
+
+        return $this->routeConfig->canProcessRoute($originCountryId, $destinationCountryId, $euCountries);
+    }
+
+    /**
+     * Obtain shipper country from shipping origin configuration.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getShipperCountry($store = null)
+    {
+        $country = $this->configAccessor->getConfigValue(ShippingConfig::XML_PATH_ORIGIN_COUNTRY_ID, $store);
+
+        return $country;
     }
 
     /**
@@ -254,9 +239,41 @@ class ModuleConfig implements ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function isCodPaymentMethod($paymentMethod, $store = null): bool
+    public function isCodPaymentMethod($paymentMethod, $store = null)
     {
         return in_array($paymentMethod, $this->getCodPaymentMethods($store));
+    }
+
+    /**
+     * Obtain the payment methods that should be treated as COD.
+     *
+     * @param mixed $store
+     * @return string[]
+     */
+    public function getCodPaymentMethods($store = null)
+    {
+        $codPaymentMethods = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_CODMETHODS, $store);
+        if (empty($codPaymentMethods)) {
+            $codPaymentMethods = [];
+        } else {
+            $codPaymentMethods = explode(',', $codPaymentMethods);
+        }
+
+        return $codPaymentMethods;
+    }
+
+    /**
+     * @param int $destinationCountryId
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isCrossBorderRoute($destinationCountryId, $storeId = null)
+    {
+        return $this->routeConfig->isCrossBorderRoute(
+            $this->getShipperCountry($storeId),
+            $destinationCountryId,
+            $this->getEuCountries($storeId)
+        );
     }
 
     /**
@@ -265,7 +282,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param $storeId
      * @return array
      */
-    public function getEuCountries($storeId): array
+    public function getEuCountries($storeId)
     {
         $euCountries = explode(
             ',',
@@ -276,199 +293,6 @@ class ModuleConfig implements ModuleConfigInterface
         );
 
         return $euCountries;
-    }
-
-    /**
-     * @param int $destinationCountryId
-     * @param int|null $storeId
-     * @return bool
-     */
-    public function isCrossBorderRoute($destinationCountryId, $storeId = null): bool
-    {
-        return $this->routeConfig->isCrossBorderRoute(
-            $this->getShipperCountry($storeId),
-            $destinationCountryId,
-            $this->getEuCountries($storeId)
-        );
-    }
-
-    /**
-     * @param string|null $store
-     * @return array
-     * @throws \ReflectionException
-     */
-    public function getServiceSettings($store = null): array
-    {
-        $bulkyGoodsConfig = [
-            ServiceSettingsInterface::NAME => 'Bulky Goods', // display name
-            ServiceSettingsInterface::IS_ENABLED => true, // general availability of service
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false, // customer can select service
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true, // merchant can select service
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower(BulkyGoods::CODE),
-                $store
-            ), // by default, service is selected for shipment order
-            ServiceSettingsInterface::SORT_ORDER => 100,
-            ServiceSettingsInterface::OPTIONS => [], // possible service properties
-        ];
-
-        $codConfig = [
-            ServiceSettingsInterface::NAME => 'Cash On Delivery',
-            ServiceSettingsInterface::IS_ENABLED => true,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => false,
-            ServiceSettingsInterface::IS_SELECTED => false,
-            ServiceSettingsInterface::OPTIONS => [],
-            ServiceSettingsInterface::SORT_ORDER => 110,
-        ];
-
-        $insuranceConfig =  [
-            ServiceSettingsInterface::NAME => 'Additional Insurance',
-            ServiceSettingsInterface::IS_ENABLED => true,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower(Insurance::CODE),
-                $store
-            ),
-            ServiceSettingsInterface::OPTIONS => [],
-            ServiceSettingsInterface::SORT_ORDER => 120,
-            ServiceSettingsInterface::PROPERTIES => [
-                Insurance::PROPERTY_CURRENCY_CODE => $this->configAccessor->getConfigValue(
-                    'currency/options/base',
-                    $store
-                ),
-            ],
-        ];
-        $parcelAnnouncementEnabled = (bool) $this->configAccessor->getConfigValue(
-            'carriers/dhlshipping/service_' . strtolower(ParcelAnnouncement::CODE) . '_enabled',
-            $store
-        );
-        $parcelAnnouncementConfig = [
-            ServiceSettingsInterface::NAME => 'Parcel Announcement',
-            ServiceSettingsInterface::IS_ENABLED => $parcelAnnouncementEnabled,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => false,
-            ServiceSettingsInterface::OPTIONS => [],
-            ServiceSettingsInterface::SORT_ORDER => 30,
-        ];
-
-        $preferredDayCode = PreferredDay::CODE;
-        $preferredDayEnabled = (bool) $this->configAccessor->getConfigValue(
-            'carriers/dhlshipping/service_' . strtolower($preferredDayCode) . '_enabled',
-            $store
-        );
-        $preferredDayConfig = [
-            ServiceSettingsInterface::NAME => 'Preferred Day',
-            ServiceSettingsInterface::IS_ENABLED => $preferredDayEnabled,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => false,
-            ServiceSettingsInterface::SORT_ORDER => 10,
-            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredDayOptions(),
-            ServiceSettingsInterface::INFO_TEXT => ''
-        ];
-
-        $preferredLocationEnabled = (bool) $this->configAccessor->getConfigValue(
-            'carriers/dhlshipping/service_' . strtolower(PreferredLocation::CODE) . '_enabled',
-            $store
-        );
-        $preferredLocationConfig = [
-            ServiceSettingsInterface::NAME => 'Preferred Location',
-            ServiceSettingsInterface::IS_ENABLED => $preferredLocationEnabled,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => false,
-            ServiceSettingsInterface::OPTIONS => [],
-            ServiceSettingsInterface::SORT_ORDER => 40,
-        ];
-
-        $preferredNeighbourEnabled = (bool) $this->configAccessor->getConfigValue(
-            'carriers/dhlshipping/service_' . strtolower(PreferredNeighbour::CODE) . '_enabled',
-            $store
-        );
-        $preferredNeighbourConfig = [
-            ServiceSettingsInterface::NAME => 'Preferred Neighbour',
-            ServiceSettingsInterface::IS_ENABLED => $preferredNeighbourEnabled,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => false,
-            ServiceSettingsInterface::OPTIONS => [],
-            ServiceSettingsInterface::SORT_ORDER => 50,
-        ];
-
-        $preferredTimeEnabled = (bool) $this->configAccessor->getConfigValue(
-            'carriers/dhlshipping/service_' . strtolower(PreferredTime::CODE) . '_enabled',
-            $store
-        );
-        $preferredTimeConfig = [
-            ServiceSettingsInterface::NAME => 'Preferred Time',
-            ServiceSettingsInterface::IS_ENABLED => $preferredTimeEnabled,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => false,
-            ServiceSettingsInterface::SORT_ORDER => 20,
-            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredTimeOptions(),
-            ServiceSettingsInterface::INFO_TEXT => ''
-        ];
-
-        $printOnlyIfCodeableConfig = [
-            ServiceSettingsInterface::NAME => 'Print Only If Codeable',
-            ServiceSettingsInterface::IS_ENABLED => true,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower(PrintOnlyIfCodeable::CODE),
-                $store
-            ),
-            ServiceSettingsInterface::OPTIONS => [],
-            ServiceSettingsInterface::SORT_ORDER => 130,
-        ];
-
-        $returnShipmentConfig = [
-            ServiceSettingsInterface::NAME => 'Return Shipment',
-            ServiceSettingsInterface::IS_ENABLED => true,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower(ReturnShipment::CODE),
-                $store
-            ),
-            ServiceSettingsInterface::OPTIONS => [],
-            ServiceSettingsInterface::SORT_ORDER => 140,
-        ];
-
-        $visualCheckOfAgeDefault = $this->configAccessor->getConfigValue(
-            'carriers/dhlshipping/shipment_service_' . strtolower(VisualCheckOfAge::CODE),
-            $store
-        );
-        $visualCheckOfAgeConfig = [
-            ServiceSettingsInterface::NAME => 'Visual Check Of Age',
-            ServiceSettingsInterface::IS_ENABLED => true,
-            ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
-            ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
-            ServiceSettingsInterface::IS_SELECTED => (bool) $visualCheckOfAgeDefault,
-            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getVisualCheckOfAgeOptions(),
-            ServiceSettingsInterface::PROPERTIES => [
-                VisualCheckOfAge::PROPERTY_AGE => $visualCheckOfAgeDefault,
-            ],
-            ServiceSettingsInterface::SORT_ORDER => 150,
-        ];
-
-        return [
-            BulkyGoods::CODE => $bulkyGoodsConfig,
-            ServicePoolInterface::SERVICE_COD_CODE => $codConfig,
-            ServicePoolInterface::SERVICE_INSURANCE_CODE => $insuranceConfig,
-            ParcelAnnouncement::CODE => $parcelAnnouncementConfig,
-            PreferredDay::CODE => $preferredDayConfig,
-            PreferredLocation::CODE => $preferredLocationConfig,
-            PreferredNeighbour::CODE => $preferredNeighbourConfig,
-            PreferredTime::CODE => $preferredTimeConfig,
-            PrintOnlyIfCodeable::CODE => $printOnlyIfCodeableConfig,
-            ReturnShipment::CODE => $returnShipmentConfig,
-            VisualCheckOfAge::CODE => $visualCheckOfAgeConfig,
-        ];
     }
 
     /**
@@ -490,7 +314,7 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function getAutoCreateNotifyCustomer($store = null)
     {
-        return (bool) $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER, $store);
+        return (bool)$this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER, $store);
     }
 
     /**
@@ -527,6 +351,19 @@ class ModuleConfig implements ModuleConfigInterface
     }
 
     /**
+     * Get the default value of Terms of Trade
+     *
+     * @param mixed $store
+     * @return mixed
+     */
+    public function getTermsOfTrade($store = null)
+    {
+        $api = $this->getApiType($store);
+
+        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_TERM_OF_TRADE . '_' . $api, $store);
+    }
+
+    /**
      * Get the current Api Type
      *
      * @param mixed $store
@@ -545,18 +382,6 @@ class ModuleConfig implements ModuleConfigInterface
                     ? ApiType::API_TYPE_GLA
                     : ApiType::API_TYPE_NA;
         }
-    }
-
-    /**
-     * Get the default value of Terms of Trade
-     *
-     * @param mixed $store
-     * @return mixed
-     */
-    public function getTermsOfTrade($store = null)
-    {
-        $api = $this->getApiType($store);
-        return $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DEFAULT_TERM_OF_TRADE.'_'.$api, $store);
     }
 
     /**

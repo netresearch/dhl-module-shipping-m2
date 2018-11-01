@@ -50,7 +50,7 @@ class DropOffDays implements ArrayInterface
             '3' => __('Wed'),
             '4' => __('Thu'),
             '5' => __('Fri'),
-            '6' => __('Sat')
+            '6' => __('Sat'),
         ];
 
         return $days;

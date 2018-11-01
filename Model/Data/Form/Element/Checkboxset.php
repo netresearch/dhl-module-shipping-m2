@@ -22,6 +22,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Data\Form\Element;
 
 use Magento\Framework\Data\Form\Element\Checkboxes;
@@ -59,33 +60,35 @@ class Checkboxset extends Checkboxes
      */
     private function getAfterHtml()
     {
-        $html = '<input type="hidden" id="%s" value="%s"/>
-        <script>
-            (function() {
-                let checkboxes = document.querySelectorAll("[name=\'%s\']");
-                let hidden = document.getElementById("%s");
-                /** Make the hidden input the submitted one. **/
-                hidden.name = checkboxes.item(0).name;
-                checkboxes.forEach(function(checkbox) {
-                    checkbox.name = "";
-                    let values = hidden.value.split(",");
-                    if (values.includes(checkbox.value)) {
-                        checkbox.checked = true;
-                    }
-                    /** keep the hidden input value in sync with the checkboxes. **/
-                    checkbox.addEventListener("change", function (event) {
-                        let checkbox = event.target;
-                        let values = hidden.value.split(",");
-                        if (checkbox.checked && !values.includes(checkbox.value)) {
-                            values.push(checkbox.value);
-                        } else if (!checkbox.checked && values.includes(checkbox.value)) {
-                            values.splice(values.indexOf(checkbox.value), 1)
-                        }
-                        hidden.value = values.filter(Boolean).join();
-                    });
-                });
-            })();
-        </script>';
+        $html = <<<HTML
+<input type="hidden" id="%s" value="%s"/>
+<script>
+    (function () {
+        let checkboxes = document.querySelectorAll("[name=\'%s\']");
+        let hidden = document.getElementById("%s");
+        /** Make the hidden input the submitted one. **/
+        hidden.name = checkboxes.item(0).name;
+        checkboxes.forEach(function (checkbox) {
+            checkbox.name = "";
+            let values = hidden.value.split(",");
+            if (values.includes(checkbox.value)) {
+                checkbox.checked = true;
+            }
+            /** keep the hidden input value in sync with the checkboxes. **/
+            checkbox.addEventListener("change", function (event) {
+                let checkbox = event.target;
+                let values = hidden.value.split(",");
+                if (checkbox.checked && !values.includes(checkbox.value)) {
+                    values.push(checkbox.value);
+                } else if (!checkbox.checked && values.includes(checkbox.value)) {
+                    values.splice(values.indexOf(checkbox.value), 1)
+                }
+                hidden.value = values.filter(Boolean).join();
+            });
+        });
+    })();
+</script>
+HTML;
 
         return sprintf(
             $html,

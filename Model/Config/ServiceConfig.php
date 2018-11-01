@@ -46,12 +46,8 @@ class ServiceConfig implements ServiceConfigInterface
     private $configAccessor;
 
     /**
-     * @var Service\ServiceFactory
-     */
-    private $serviceFactory;
-
-    /**
      * BcsService constructor.
+     *
      * @param ConfigAccessorInterface $configAccessor
      * @param Service\ServiceFactory $serviceFactory
      */
@@ -60,7 +56,6 @@ class ServiceConfig implements ServiceConfigInterface
         Service\ServiceFactory $serviceFactory
     ) {
         $this->configAccessor = $configAccessor;
-        $this->serviceFactory = $serviceFactory;
     }
 
     /**

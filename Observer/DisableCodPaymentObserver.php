@@ -31,7 +31,6 @@ use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Model\Service\Filter\CodServiceFilter;
 use Dhl\Shipping\Model\Service\ServiceCollection;
 use Dhl\Shipping\Model\Service\ServiceConfig;

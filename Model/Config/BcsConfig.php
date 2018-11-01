@@ -52,14 +52,14 @@ class BcsConfig implements BcsConfigInterface
      * BcsApiConfig constructor.
      *
      * @param ConfigAccessorInterface $configAccessor
-     * @param ModuleConfigInterface   $moduleConfig
+     * @param ModuleConfigInterface $moduleConfig
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
         ModuleConfigInterface $moduleConfig
     ) {
         $this->configAccessor = $configAccessor;
-        $this->moduleConfig   = $moduleConfig;
+        $this->moduleConfig = $moduleConfig;
     }
 
     /**
@@ -166,7 +166,7 @@ class BcsConfig implements BcsConfigInterface
     /**
      * Obtain DHL Business Customer Shipping contract data: participation numbers.
      *
-     * @param mixed  $store
+     * @param mixed $store
      *
      * @return string[]
      */
@@ -191,7 +191,7 @@ class BcsConfig implements BcsConfigInterface
      * Obtain DHL Business Customer Shipping contract data: participation number for a given procedure.
      *
      * @param string $procedure
-     * @param mixed  $store
+     * @param mixed $store
      *
      * @return string
      */
@@ -209,6 +209,7 @@ class BcsConfig implements BcsConfigInterface
             );
         }
         $participations = array_column($participations, 'participation', 'procedure');
+
         return isset($participations[$procedure]) ? $participations[$procedure] : '';
     }
 
@@ -443,6 +444,7 @@ class BcsConfig implements BcsConfigInterface
 
     /**
      * Get ParcelManagement API Endpoint
+     *
      * @param string $store
      * @return string
      */

@@ -138,7 +138,7 @@ interface ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function canProcessShipping($shippingMethod, $destCountryId, $store = null): bool;
+    public function canProcessShipping($shippingMethod, $destCountryId, $store = null);
 
     /**
      * Check if the given payment method is cash on delivery.
@@ -147,7 +147,7 @@ interface ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function isCodPaymentMethod($paymentMethod, $store = null): bool;
+    public function isCodPaymentMethod($paymentMethod, $store = null);
 
     /**
      * Get Eu Countries.
@@ -155,7 +155,7 @@ interface ModuleConfigInterface
      * @param $storeId
      * @return array
      */
-    public function getEuCountries($storeId): array;
+    public function getEuCountries($storeId);
 
     /**
      * Checks if the route is crossing borders for given store configuration
@@ -164,7 +164,7 @@ interface ModuleConfigInterface
      * @param int|null $storeId
      * @return bool
      */
-    public function isCrossBorderRoute($destinationCountryId, $storeId = null): bool;
+    public function isCrossBorderRoute($destinationCountryId, $storeId = null);
 
     /**
      * Get allowed order statuses for automatic shipment creation
