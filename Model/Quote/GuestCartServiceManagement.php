@@ -83,13 +83,14 @@ class GuestCartServiceManagement implements GuestCartServiceManagementInterface
     /**
      * @param string $cartId
      * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
+     * @param string $shippingMethod
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function save($cartId, $serviceSelection)
+    public function save($cartId, $serviceSelection, $shippingMethod)
     {
-        $this->cartServiceManagement->save($this->getQuoteId($cartId), $serviceSelection);
+        $this->cartServiceManagement->save($this->getQuoteId($cartId), $serviceSelection, $shippingMethod);
     }
 
     /**

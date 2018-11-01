@@ -20,8 +20,10 @@ define([
                 cartId: quote.getQuoteId()
             };
         }
-
-        payload = {serviceSelection: []};
+        payload = {
+            serviceSelection: [],
+            shippingMethod: quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code,
+        };
         _.each(serviceSelection.get()(), function (value, key) {
             payload.serviceSelection.push(
                 {

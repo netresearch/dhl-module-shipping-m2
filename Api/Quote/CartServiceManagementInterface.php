@@ -47,8 +47,8 @@ interface CartServiceManagementInterface
     public function getServices($cartId, $countryId, $shippingMethod);
 
     /**
-     * @param string $cartId
-     * @param string[] $serviceSelection
+     * @param int $cartId
+     * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
      * @param string $shippingMethod
      * @return void
      */

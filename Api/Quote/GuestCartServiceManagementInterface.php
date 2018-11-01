@@ -49,7 +49,8 @@ interface GuestCartServiceManagementInterface
     /**
      * @param string $cartId
      * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
+     * @param string $shippingMethod
      * @return void
      */
-    public function save($cartId, $serviceSelection);
+    public function save($cartId, $serviceSelection, $shippingMethod);
 }

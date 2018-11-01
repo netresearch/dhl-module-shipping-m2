@@ -128,6 +128,7 @@ class CartServiceManagement implements CartServiceManagementInterface
         }
 
         $methods =  $this->moduleConfig->getShippingMethods($quote->getStoreId());
+
         return $this->serviceInformationFactory->create(
             [
                 'data' => [
