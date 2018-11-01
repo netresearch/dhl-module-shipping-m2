@@ -78,16 +78,7 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
     {
         $storeId = isset($args[self::ARGUMENT_STORE]) ? $args[self::ARGUMENT_STORE] : null;
         $startDate = $this->startDateModel->getStartDate($storeId);
-        // options from the api
-        $timeFrames = $this->parcelManagement->getPreferredTimeOptions($startDate, $args[self::POSTAL_CODE]);
-
-        $options = [];
-        foreach ($timeFrames as $timeFrame) {
-            $options[] = [
-                'label' => $timeFrame->getStart() . '-' . $timeFrame->getEnd(),
-                'value' => str_replace(':', '', $timeFrame->getStart() . $timeFrame->getEnd()),
-            ];
-        }
+        $options = $this->parcelManagement->getPreferredTimeOptions($startDate, $args[self::POSTAL_CODE]);
 
         $service[ServiceSettingsInterface::OPTIONS] = $options;
 

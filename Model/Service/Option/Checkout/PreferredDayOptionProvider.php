@@ -81,16 +81,7 @@ class PreferredDayOptionProvider implements OptionProviderInterface
         $storeId = isset($args[self::ARGUMENT_STORE]) ? $args[self::ARGUMENT_STORE] : null;
         $startDate = $this->startDateModel->getStartDate($storeId);
         // options from the api
-        $validDays = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
-
-        $options = [];
-        foreach ($validDays as $validDay) {
-            $options[] = [
-                'label' => $validDay->getStart()->format('D,d.'),
-                'value' => $validDay->getStart()->format('Y-m-d'),
-                'disable' => false,
-            ];
-        }
+        $options = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
         $service[ServiceSettingsInterface::OPTIONS] = $options;
 
         return $service;

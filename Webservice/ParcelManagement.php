@@ -27,7 +27,6 @@ namespace Dhl\Shipping\Webservice;
 use Dhl\ParcelManagement\Api\CheckoutApi;
 use Dhl\ParcelManagement\ApiException;
 use Dhl\ParcelManagement\Model\AvailableServicesMap;
-use Dhl\ParcelManagement\Model\TimeInterval;
 use Dhl\Shipping\Model\Config\BcsConfig;
 
 /**
@@ -73,7 +72,7 @@ class ParcelManagement
     /**
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
      * @param string $postalCode
-     * @return TimeInterval[]
+     * @return string[][]
      * @throws ApiException
      */
     public function getPreferredDayOptions($dropOff, $postalCode)
@@ -83,14 +82,22 @@ class ParcelManagement
         }
 
         $validDays = $this->serviceResponse->getPreferredDay()->getValidDays();
+        $options = [];
+        foreach ($validDays as $validDay) {
+            $options[] = [
+                'label' => $validDay->getStart()->format('D,d.'),
+                'value' => $validDay->getStart()->format('Y-m-d'),
+                'disable' => false,
+            ];
+        }
 
-        return $validDays;
+        return $options;
     }
 
     /**
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
      * @param string $postalCode
-     * @return \Dhl\ParcelManagement\Model\Timeframe[]
+     * @return string[][]
      * @throws ApiException
      */
     public function getPreferredTimeOptions($dropOff, $postalCode)
@@ -98,8 +105,16 @@ class ParcelManagement
         if ($this->serviceResponse === null) {
             $this->serviceResponse = $this->getCheckoutServices($dropOff, $postalCode);
         }
+        $timeFrames = $this->serviceResponse->getPreferredTime()->getTimeframes();
+        $options = [];
+        foreach ($timeFrames as $timeFrame) {
+            $options[] = [
+                'label' => $timeFrame->getStart() . '-' . $timeFrame->getEnd(),
+                'value' => str_replace(':', '', $timeFrame->getStart() . $timeFrame->getEnd()),
+            ];
+        }
 
-        return $this->serviceResponse->getPreferredTime()->getTimeframes();
+        return $options;
     }
 
     /**
