@@ -39,7 +39,6 @@ use Magento\Framework\Exception\LocalizedException;
 class DropOffDays extends Value
 {
 
-
     /**
      * @return $this|Value
      * @throws LocalizedException

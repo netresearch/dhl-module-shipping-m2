@@ -22,15 +22,17 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Webservice;
 
 use Dhl\ParcelManagement\Api\CheckoutApi;
 use Dhl\ParcelManagement\ApiException;
 use Dhl\ParcelManagement\Model\AvailableServicesMap;
 use Dhl\Shipping\Model\Config\BcsConfig;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
- * Parcel  Management API Client wrapper.
+ * Parcel Management API Client wrapper.
  *
  * @package  Dhl\Shipping\Webservice
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
@@ -58,6 +60,7 @@ class ParcelManagement
 
     /**
      * ParcelManagement constructor.
+     *
      * @param CheckoutApi $checkoutApi
      * @param BcsConfig $bcsConfig
      */
@@ -73,7 +76,7 @@ class ParcelManagement
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
      * @param string $postalCode
      * @return string[][]
-     * @throws ApiException
+     * @throws LocalizedException
      */
     public function getPreferredDayOptions($dropOff, $postalCode)
     {
@@ -95,10 +98,39 @@ class ParcelManagement
     }
 
     /**
+     * @param \DateTime $date
+     * @param string $postalCode
+     * @return \Dhl\ParcelManagement\Model\AvailableServicesMap
+     * @throws LocalizedException
+     */
+    public function getCheckoutServices($date, $postalCode)
+    {
+        $ekp = $this->bcsConfig->getAccountEkp();
+        $userName = $this->bcsConfig->getAuthUsername();
+        $passWd = $this->bcsConfig->getAuthPassword();
+        $pmApiEndpoint = $this->bcsConfig->getParcelManagementEndpoint();
+        $apiKey = base64_encode($this->bcsConfig->getAccountUser() . ':' . $this->bcsConfig->getAccountSignature());
+
+        $this->checkoutApi->getConfig()
+                          ->setUsername($userName)
+                          ->setPassword($passWd)
+                          ->setHost($pmApiEndpoint)
+                          ->setApiKey(self::API_KEY_IDENTIFIER, $apiKey);
+
+        try {
+            $response = $this->checkoutApi->checkoutRecipientZipAvailableServicesGet($ekp, $postalCode, $date);
+        } catch (ApiException $e) {
+            throw new LocalizedException(__('Parcel Management API error occured'), $e);
+        }
+
+        return $response;
+    }
+
+    /**
      * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
      * @param string $postalCode
      * @return string[][]
-     * @throws ApiException
+     * @throws LocalizedException
      */
     public function getPreferredTimeOptions($dropOff, $postalCode)
     {
@@ -115,30 +147,5 @@ class ParcelManagement
         }
 
         return $options;
-    }
-
-    /**
-     * @param \DateTime $date
-     * @param string $postalCode
-     * @return \Dhl\ParcelManagement\Model\AvailableServicesMap
-     * @throws \Dhl\ParcelManagement\ApiException
-     */
-    public function getCheckoutServices($date, $postalCode)
-    {
-        $ekp = $this->bcsConfig->getAccountEkp();
-        $userName = $this->bcsConfig->getAuthUsername();
-        $passWd = $this->bcsConfig->getAuthPassword();
-        $pmApiEndpoint = $this->bcsConfig->getParcelManagementEndpoint();
-        $apiKey = base64_encode($this->bcsConfig->getAccountUser() . ':' . $this->bcsConfig->getAccountSignature());
-
-        $this->checkoutApi->getConfig()
-            ->setUsername($userName)
-            ->setPassword($passWd)
-            ->setHost($pmApiEndpoint)
-            ->setApiKey(self::API_KEY_IDENTIFIER, $apiKey);
-
-        $response = $this->checkoutApi->checkoutRecipientZipAvailableServicesGet($ekp, $postalCode, $date);
-
-        return $response;
     }
 }
