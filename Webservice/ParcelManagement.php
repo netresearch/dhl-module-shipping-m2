@@ -84,8 +84,12 @@ class ParcelManagement
             $this->serviceResponse = $this->getCheckoutServices($dropOff, $postalCode);
         }
 
-        $validDays = $this->serviceResponse->getPreferredDay()->getValidDays();
+        if (!$this->serviceResponse->getPreferredDay()->getAvailable()) {
+            throw new LocalizedException(__('There are no results for this service.'));
+        }
+
         $options = [];
+        $validDays = $this->serviceResponse->getPreferredDay()->getValidDays();
         foreach ($validDays as $validDay) {
             $options[] = [
                 'label' => $validDay->getStart()->format('D, d.'),
@@ -137,8 +141,13 @@ class ParcelManagement
         if ($this->serviceResponse === null) {
             $this->serviceResponse = $this->getCheckoutServices($dropOff, $postalCode);
         }
-        $timeFrames = $this->serviceResponse->getPreferredTime()->getTimeframes();
+
+        if (!$this->serviceResponse->getPreferredTime()->getAvailable()) {
+            throw new LocalizedException(__('There are no results for this service.'));
+        }
+
         $options = [];
+        $timeFrames = $this->serviceResponse->getPreferredTime()->getTimeframes();
         foreach ($timeFrames as $timeFrame) {
             $options[] = [
                 'label' => $timeFrame->getStart() . '-' . $timeFrame->getEnd(),
