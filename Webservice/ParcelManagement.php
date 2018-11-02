@@ -88,7 +88,7 @@ class ParcelManagement
         $options = [];
         foreach ($validDays as $validDay) {
             $options[] = [
-                'label' => $validDay->getStart()->format('D,d.'),
+                'label' => $validDay->getStart()->format('D, d.'),
                 'value' => $validDay->getStart()->format('Y-m-d'),
                 'disable' => false,
             ];

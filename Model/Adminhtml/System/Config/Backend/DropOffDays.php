@@ -23,7 +23,7 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Model\Adminhtml\System\Config;
+namespace Dhl\Shipping\Model\Adminhtml\System\Config\Backend;
 
 use Magento\Framework\App\Config\Value;
 use Magento\Framework\Exception\LocalizedException;
