@@ -56,6 +56,15 @@ class PreferredDayOptionProvider implements OptionProviderInterface
     private $startDateModel;
 
     /**
+     * @var string[]
+     */
+    private $nonOption = [
+        'label' => "none",
+        'value' => "",
+        'disable' => false,
+    ];
+
+    /**
      * PreferredDayOptionProvider constructor.
      *
      * @param ParcelManagement $parcelManagement
@@ -82,6 +91,7 @@ class PreferredDayOptionProvider implements OptionProviderInterface
         $startDate = $this->startDateModel->getStartDate($storeId);
         // options from the api
         $options = $this->parcelManagement->getPreferredDayOptions($startDate, $args[self::POSTAL_CODE]);
+        $options = array_merge([$this->nonOption], $options);
         $service[ServiceSettingsInterface::OPTIONS] = $options;
 
         return $service;
