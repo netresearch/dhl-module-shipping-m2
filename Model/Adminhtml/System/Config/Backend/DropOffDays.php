@@ -51,7 +51,7 @@ class DropOffDays extends Value
             throw new LocalizedException(__('You need to have at least one drop off day.'));
         }
 
-        return $this;
+        return parent::beforeSave();
     }
 
 }

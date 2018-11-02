@@ -23,7 +23,7 @@
  * @link      http://www.netresearch.de/
  */
 
-namespace Dhl\Shipping\Model\Adminhtml\System\Config\Serialized;
+namespace Dhl\Shipping\Model\Adminhtml\System\Config\Backend;
 
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Magento\Framework\App\Cache\TypeListInterface;
