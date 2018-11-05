@@ -22,14 +22,11 @@
  */
 namespace Dhl\Shipping\Observer;
 
-use Dhl\Shipping\Api\Data\LabelStatusInterfaceFactory;
-use Dhl\Shipping\Api\LabelStatusRepositoryInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Label\LabelStatus;
-use Dhl\Shipping\Model\SalesOrderGrid\OrderGridUpdater;
 use Dhl\Shipping\Model\Shipping\Carrier;
 use Dhl\Shipping\Webservice\GatewayInterface;
 use Dhl\Shipping\Webservice\ResponseType\Generic\ResponseStatusInterface;
+use Magento\Framework\Event\Manager as EventManager;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\LocalizedException;
@@ -37,7 +34,7 @@ use Magento\Framework\Exception\LocalizedException;
 /**
  * Class DeleteTrackObserver
  *
- * @package Dhl\Shipping\Observer
+ * @package   Dhl\Shipping\Observer
  * @author    Max Melzer <max.melzer@netresearch.de>
  * @copyright 2018 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -56,41 +53,25 @@ class DeleteTrackObserver implements ObserverInterface
     private $config;
 
     /**
-     * @var LabelStatusInterfaceFactory
+     * @var EventManager
      */
-    private $labelStatusFactory;
-
-    /**
-     * @var LabelStatusRepositoryInterface
-     */
-    private $labelStatusRepository;
-
-    /**
-     * @var OrderGridUpdater
-     */
-    private $orderGridUpdater;
+    private $eventManager;
 
     /**
      * DeleteTrackObserver constructor.
      *
      * @param GatewayInterface $gateway
      * @param ModuleConfigInterface $config
-     * @param LabelStatusInterfaceFactory $labelStatusFactory
-     * @param LabelStatusRepositoryInterface $labelStatusRepo
-     * @param OrderGridUpdater $orderGridUpdater
+     * @param EventManager $eventManager
      */
     public function __construct(
         GatewayInterface $gateway,
         ModuleConfigInterface $config,
-        LabelStatusInterfaceFactory $labelStatusFactory,
-        LabelStatusRepositoryInterface $labelStatusRepo,
-        OrderGridUpdater $orderGridUpdater
+        EventManager $eventManager
     ) {
         $this->gateway = $gateway;
         $this->config = $config;
-        $this->labelStatusFactory = $labelStatusFactory;
-        $this->labelStatusRepository = $labelStatusRepo;
-        $this->orderGridUpdater = $orderGridUpdater;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -125,16 +106,7 @@ class DeleteTrackObserver implements ObserverInterface
         if ($response->getStatus()->getCode() === ResponseStatusInterface::STATUS_FAILURE) {
             throw new LocalizedException(__($response->getStatus()->getMessage()));
         } else {
-            /** set label status here because dispatching new event inside of observer is not good */
-            $orderId = $track->getShipment()->getOrderId();
-            $labelStatus = $this->labelStatusRepository->getByOrderId($orderId);
-
-            if (null === $labelStatus) {
-                $this->labelStatusFactory->create()->setOrderId($orderId);
-            }
-            $labelStatus->setStatusCode(LabelStatus::CODE_PENDING);
-            $this->labelStatusRepository->save($labelStatus);
-            $this->orderGridUpdater->update($orderId);
+            $this->eventManager->dispatch('dhl_delete_track_after', ['track' => $track]);
         }
     }
 }

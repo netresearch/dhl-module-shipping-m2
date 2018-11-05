@@ -70,7 +70,6 @@ class Uninstall implements UninstallInterface
         $this->deleteShippingAddressTable($schemaSetup);
         $this->removeConfigurations($schemaSetup);
         $this->deleteServiceSelectionTables($schemaSetup);
-        $this->deleteStatusTableAndColumn($schemaSetup);
         $this->deleteAttributes($this->eavSetup);
     }
 
@@ -122,18 +121,5 @@ class Uninstall implements UninstallInterface
     {
         $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_ORDER_SERVICE_SELECTION);
         $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_QUOTE_SERVICE_SELECTION);
-    }
-
-    /**
-     * @param SchemaSetupInterface $uninstaller
-     * @return void
-     */
-    private function deleteStatusTableAndColumn($uninstaller)
-    {
-        $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_LABEL_STATUS);
-        $uninstaller->getConnection()->dropColumn(
-            $uninstaller->getTable('sales_order_grid'),
-            'dhlshipping_label_status'
-        );
     }
 }

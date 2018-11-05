@@ -44,9 +44,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
-        if (version_compare($context->getVersion(), '0.9.1', '<')) {
-            ShippingSetup::createLabelStatusTable($setup);
-        }
         if (version_compare($context->getVersion(), '0.10.0', '<')) {
             ShippingSetup::createServiceSelectionTables($setup);
         }
