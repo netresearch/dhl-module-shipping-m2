@@ -57,6 +57,7 @@ $placeOfCommitalDefaultValue = $placeOfCommital ?? '';
                     <?php foreach ($termOptions as $option) : ?>
                         <option value="<?= $block->escapeHtmlAttr($option['value']) ?>"
                             <?= $option['value'] == $termsDefaultValue ? 'selected' : ''; ?>
+                        >
                             <?= $block->escapeHtml($option['value']) ?>
                         </option>
                     <?php endforeach; ?>
