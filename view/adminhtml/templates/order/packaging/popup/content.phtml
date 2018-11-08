@@ -29,8 +29,8 @@
     $configDefaultEct = $block->getDefaultExportContentType();
     $configDefaultEctExplanation = $block->getDefaultExportContentTypeExplanation();
 
-    $exportContentType = $configDefaultEct ?? '';
-    $exportContentTypeExplanation =  $configDefaultEctExplanation ?? '';
+    $exportContentType            = isset($configDefaultEct)            ? $configDefaultEct            : '';
+    $exportContentTypeExplanation = isset($configDefaultEctExplanation) ? $configDefaultEctExplanation : '';
 
 ?>
 <div id="packaging_window">

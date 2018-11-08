@@ -29,8 +29,8 @@ $termsDefaultValue = $block->getTermsOfTradeDefault();
 $addtionalFee = $block->getAdditionalFeeDefault();
 $placeOfCommital = $block->getPlaceOfCommitalDefault();
 
-$addtionalFeeDefaultValue = $addtionalFee ?? 0;
-$placeOfCommitalDefaultValue = $placeOfCommital ?? '';
+$addtionalFeeDefaultValue    = isset($addtionalFee)    ? $addtionalFee    : 0;
+$placeOfCommitalDefaultValue = isset($placeOfCommital) ? $placeOfCommital : '';
 ?>
 <table cellspacing="0" class="data-table admin__control-table">
     <thead>
