@@ -26,7 +26,6 @@
 namespace Dhl\Shipping\ViewModel\Packaging;
 
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
-use Magento\Framework\View\Element\Block\ArgumentInterface;
 
 /**
  * ShippingItems
@@ -36,7 +35,7 @@ use Magento\Framework\View\Element\Block\ArgumentInterface;
  * @license https://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link    https://www.netresearch.de/
  */
-class ShippingItems implements ArgumentInterface
+class ShippingItems
 {
     /**
      * @var CountryCollectionFactory
