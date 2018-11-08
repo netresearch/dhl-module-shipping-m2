@@ -47,28 +47,28 @@ interface ServiceSelectionRepositoryInterface
      * @return ServiceSelectionInterface
      * @throws CouldNotSaveException
      */
-    public function save(ServiceSelectionInterface $serviceSelection): ServiceSelectionInterface;
+    public function save(ServiceSelectionInterface $serviceSelection);
 
     /**
      * @param string $addressId
      * @return QuoteServiceSelectionCollection
      * @throws NoSuchEntityException
      */
-    public function getByQuoteAddressId($addressId): QuoteServiceSelectionCollection;
+    public function getByQuoteAddressId($addressId);
 
     /**
      * @param string $addressId
      * @return OrderServiceSelectionCollection
      * @throws NoSuchEntityException
      */
-    public function getByOrderAddressId($addressId): OrderServiceSelectionCollection;
+    public function getByOrderAddressId($addressId);
 
     /**
      * @param ServiceSelectionInterface $serviceSelection
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function delete(ServiceSelectionInterface $serviceSelection): bool;
+    public function delete(ServiceSelectionInterface $serviceSelection);
 
     /**
      * @param string $addressId

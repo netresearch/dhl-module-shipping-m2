@@ -83,7 +83,7 @@ class PersistServiceSelectionObserver implements ObserverInterface
      * @return ObserverInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function execute(EventObserver $observer): ObserverInterface
+    public function execute(EventObserver $observer)
     {
         /** @var \Magento\Sales\Model\Order $order */
         $order = $observer->getDataByKey('order');

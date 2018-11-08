@@ -36,15 +36,15 @@ interface ServiceInformationInterface
     /**
      * @return \Dhl\Shipping\Api\Data\ServiceInterface[];
      */
-    public function getServices(): array;
+    public function getServices();
 
     /**
      * @return \Dhl\Shipping\Api\Data\ServiceCompatibilityInterface[]
      */
-    public function getCompatibility(): array;
+    public function getCompatibility();
 
     /**
      * @return string[]
      */
-    public function getMethods(): array;
+    public function getMethods();
 }

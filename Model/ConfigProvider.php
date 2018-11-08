@@ -52,7 +52,7 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
     /**
      * @return string[]
      */
-    public function getConfig(): array
+    public function getConfig()
     {
         $config = [
             'dhl_service_block_before' =>  [

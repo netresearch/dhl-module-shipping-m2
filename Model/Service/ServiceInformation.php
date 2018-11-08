@@ -37,7 +37,7 @@ class ServiceInformation extends AbstractModel implements ServiceInformationInte
     /**
      * @return mixed[][]
      */
-    public function getServices(): array
+    public function getServices()
     {
         return $this->getData('services');
     }
@@ -45,7 +45,7 @@ class ServiceInformation extends AbstractModel implements ServiceInformationInte
     /**
      * @return string[][]
      */
-    public function getCompatibility(): array
+    public function getCompatibility()
     {
         return $this->getData('compatibility');
     }
@@ -53,7 +53,7 @@ class ServiceInformation extends AbstractModel implements ServiceInformationInte
     /**
      * @return string[]
      */
-    public function getMethods(): array
+    public function getMethods()
     {
         return $this->getData('methods');
     }

@@ -455,7 +455,7 @@ class RequestBuilder implements RequestBuilderInterface
      * @param Request $shipmentRequest
      * @return string[]
      */
-    private function getServiceSelection(Request $shipmentRequest): array
+    private function getServiceSelection(Request $shipmentRequest)
     {
         $enabledFilter = SelectedFilter::create();
 

@@ -48,7 +48,7 @@ class ServiceSelection extends AbstractModel implements ServiceSelectionInterfac
     /**
      * @return string
      */
-    public function getParentId(): string
+    public function getParentId()
     {
         return $this->getData('parent_id');
     }
@@ -56,7 +56,7 @@ class ServiceSelection extends AbstractModel implements ServiceSelectionInterfac
     /**
      * @return String
      */
-    public function getServiceCode(): string
+    public function getServiceCode()
     {
         return $this->getData('service_code');
     }
@@ -64,7 +64,7 @@ class ServiceSelection extends AbstractModel implements ServiceSelectionInterfac
     /**
      * @return string[]
      */
-    public function getServiceValue(): array
+    public function getServiceValue()
     {
         return $this->getData('service_value');
     }

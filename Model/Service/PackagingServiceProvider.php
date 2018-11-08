@@ -142,7 +142,7 @@ class PackagingServiceProvider
          * @param ServiceInterface $b
          * @return int
          */
-        $sortFunction = function ($a, $b): int {
+        $sortFunction = function ($a, $b) {
             if ($a->getSortOrder() === $b->getSortOrder()) {
                 return 0;
             }
@@ -161,7 +161,7 @@ class PackagingServiceProvider
      * @param string $orderAddressId
      * @return ServiceSettingsInterface[]
      */
-    private function prepareServiceSettings(string $orderAddressId, string $storeId): array
+    private function prepareServiceSettings(string $orderAddressId, string $storeId)
     {
         $settings = $this->serviceConfig->getServiceSettings($storeId);
 

@@ -36,12 +36,12 @@ interface ServiceSelectionInterface
     /**
      * @return string
      */
-    public function getParentId(): string;
+    public function getParentId();
 
     /**
      * @return string
      */
-    public function getServiceCode(): string;
+    public function getServiceCode();
 
     /**
      * @return string[]

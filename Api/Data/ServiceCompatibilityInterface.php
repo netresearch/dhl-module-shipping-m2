@@ -36,10 +36,10 @@ interface ServiceCompatibilityInterface
     /**
      * @return string
      */
-    public function getType(): string;
+    public function getType();
 
     /**
      * @return string[]
      */
-    public function getSubject(): array;
+    public function getSubject();
 }

@@ -84,7 +84,7 @@ class PersistShipmentServiceSelectionObserver implements ObserverInterface
      * @return ObserverInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function execute(EventObserver $observer): ObserverInterface
+    public function execute(EventObserver $observer)
     {
         return $this;
 

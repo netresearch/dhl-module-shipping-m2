@@ -26,19 +26,6 @@
 
 namespace Dhl\Shipping\Model\Config;
 
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Api\ServicePoolInterface;
-use Dhl\Shipping\Model\Service\ServiceOptionProvider;
-use Dhl\Shipping\Service\Bcs\BulkyGoods;
-use Dhl\Shipping\Service\Bcs\Insurance;
-use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
-use Dhl\Shipping\Service\Bcs\PreferredDay;
-use Dhl\Shipping\Service\Bcs\PreferredLocation;
-use Dhl\Shipping\Service\Bcs\PreferredNeighbour;
-use Dhl\Shipping\Service\Bcs\PreferredTime;
-use Dhl\Shipping\Service\Bcs\PrintOnlyIfCodeable;
-use Dhl\Shipping\Service\Bcs\ReturnShipment;
-use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingRoutes\RoutesInterface;

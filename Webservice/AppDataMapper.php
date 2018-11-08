@@ -291,7 +291,7 @@ class AppDataMapper implements AppDataMapperInterface
      *
      * @return ShipmentDetailsInterface
      */
-    private function getShipmentDetails(ShipmentRequest $request, bool $printOnlyIfCodeable): ShipmentDetailsInterface
+    private function getShipmentDetails(ShipmentRequest $request, bool $printOnlyIfCodeable)
     {
         $storeId  = $request->getOrderShipment()->getStoreId();
         $bankData = $this->bankDataFactory->create([
@@ -669,7 +669,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @return ShipmentOrderInterface
      * @throws CreateShipmentValidationException
      */
-    public function mapShipmentRequest($request, $sequenceNumber): ShipmentOrderInterface
+    public function mapShipmentRequest($request, $sequenceNumber)
     {
         $services        = $this->getServices($request);
         $printOnlyIfCodeable = false;
@@ -703,7 +703,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipmentRequest $request
      * @return bool
      */
-    private function isPartialShipment(ShipmentRequest $request): bool
+    private function isPartialShipment(ShipmentRequest $request)
     {
         $qtyOrdered = $request->getOrderShipment()->getOrder()->getTotalQtyOrdered();
         $qtyShipped = $request->getOrderShipment()->getTotalQty();
