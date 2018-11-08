@@ -137,7 +137,7 @@ class LabelServiceProvider
      * @param string[][] $serviceData
      * @return ServiceSettingsInterface[]
      */
-    private function prepareServiceSettings($orderAddressId, array $serviceData, string $storeId)
+    private function prepareServiceSettings($orderAddressId, array $serviceData, $storeId)
     {
         $settings = $this->serviceConfig->getServiceSettings($storeId);
         $orderServices = [];

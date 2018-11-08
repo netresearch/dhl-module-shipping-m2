@@ -161,7 +161,7 @@ class PackagingServiceProvider
      * @param string $orderAddressId
      * @return ServiceSettingsInterface[]
      */
-    private function prepareServiceSettings(string $orderAddressId, string $storeId)
+    private function prepareServiceSettings($orderAddressId, $storeId)
     {
         $settings = $this->serviceConfig->getServiceSettings($storeId);
 

@@ -291,7 +291,7 @@ class AppDataMapper implements AppDataMapperInterface
      *
      * @return ShipmentDetailsInterface
      */
-    private function getShipmentDetails(ShipmentRequest $request, bool $printOnlyIfCodeable)
+    private function getShipmentDetails(ShipmentRequest $request, $printOnlyIfCodeable)
     {
         $storeId  = $request->getOrderShipment()->getStoreId();
         $bankData = $this->bankDataFactory->create([
