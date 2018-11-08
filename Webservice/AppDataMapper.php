@@ -370,6 +370,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipmentRequest $request
      *
      * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getReceiver(ShipmentRequest $request)
     {
@@ -664,10 +665,11 @@ class AppDataMapper implements AppDataMapperInterface
      * Convert M2 shipment request to platform independent request object.
      *
      * @param ShipmentRequest $request
-     * @param string $sequenceNumber
+     * @param string          $sequenceNumber
      *
      * @return ShipmentOrderInterface
-     * @throws CreateShipmentValidationException
+     * @throws \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function mapShipmentRequest($request, $sequenceNumber)
     {

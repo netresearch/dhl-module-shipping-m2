@@ -103,7 +103,9 @@ class LabelServiceProvider
     }
 
     /**
+     * @param array             $servicesData
      * @param ShipmentInterface $shipment
+     *
      * @return ServiceInterface[]|ServiceCollection
      */
     public function getServices(array $servicesData, ShipmentInterface $shipment)
@@ -133,8 +135,10 @@ class LabelServiceProvider
      * Take a settings array, enrich it with additional data and
      * turn it into ServiceSettingsInterface[].
      *
-     * @param string $storeId
+     * @param            $orderAddressId
      * @param string[][] $serviceData
+     * @param string     $storeId
+     *
      * @return ServiceSettingsInterface[]
      */
     private function prepareServiceSettings($orderAddressId, array $serviceData, $storeId)

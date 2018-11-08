@@ -122,7 +122,7 @@ class UpdateShippingInfoObserver implements ObserverInterface
 
         // load updated address
         $addressId = $this->request->getParam('address_id');
-        /** @var $shippingAddress \Magento\Sales\Api\Data\OrderAddressInterface|\Magento\Sales\Model\Order\Address */
+        /** @var \Magento\Sales\Api\Data\OrderAddressInterface|\Magento\Sales\Model\Order\Address $shippingAddress */
         $shippingAddress = $this->addressRepository->get($addressId);
 
         // load previous info data if available

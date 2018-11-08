@@ -78,8 +78,10 @@ class AdapterChain
 
     /**
      * @param RequestType\CreateShipment\ShipmentOrderInterface[] $shipmentOrders
+     *
      * @return ResponseType\CreateShipment\LabelInterface[]
-     * @throws ApiAdapterException
+     * @throws \Dhl\Shipping\Webservice\Exception\ApiCommunicationException
+     * @throws \Dhl\Shipping\Webservice\Exception\ApiOperationException
      */
     public function createLabels(array $shipmentOrders)
     {

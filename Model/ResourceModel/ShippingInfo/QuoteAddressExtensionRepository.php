@@ -127,7 +127,10 @@ class QuoteAddressExtensionRepository implements QuoteAddressExtensionRepository
      * Delete Shipping Address Extension using Quote Address ID.
      *
      * @param int $addressId
+     *
      * @return bool
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function deleteById($addressId)
     {

@@ -74,7 +74,7 @@ class ExtendAddressFormObserver implements ObserverInterface
      *
      * @param Observer $observer
      *
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute(Observer $observer)
     {

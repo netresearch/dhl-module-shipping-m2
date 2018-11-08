@@ -107,7 +107,9 @@ class QuoteAddressExtension extends AbstractDb
      * Save object object data
      *
      * @param AbstractModel|AbstractAddressExtension $object
+     *
      * @return $this
+     * @throws \Exception
      */
     public function save(AbstractModel $object)
     {
@@ -128,6 +130,7 @@ class QuoteAddressExtension extends AbstractDb
      *
      * @param AbstractModel|QuoteAddressExtensionInterface $object
      * @return $this
+     * @throws \Exception
      */
     public function delete(AbstractModel $object)
     {

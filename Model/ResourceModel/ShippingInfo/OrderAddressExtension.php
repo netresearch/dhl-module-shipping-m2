@@ -107,7 +107,9 @@ class OrderAddressExtension extends AbstractDb
      * Save object object data
      *
      * @param AbstractModel|AbstractAddressExtension $object
+     *
      * @return $this
+     * @throws \Exception
      */
     public function save(AbstractModel $object)
     {
@@ -128,6 +130,7 @@ class OrderAddressExtension extends AbstractDb
      *
      * @param AbstractModel|OrderAddressExtensionInterface $object
      * @return $this
+     * @throws \Exception
      */
     public function delete(AbstractModel $object)
     {

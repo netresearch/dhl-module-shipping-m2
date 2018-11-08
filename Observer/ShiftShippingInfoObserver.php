@@ -83,7 +83,8 @@ class ShiftShippingInfoObserver implements ObserverInterface
      * - sales_model_service_quote_submit_success
      *
      * @param Observer $observer
-     * @throws NoSuchEntityException
+     *
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function execute(Observer $observer)
     {

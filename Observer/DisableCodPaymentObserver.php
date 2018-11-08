@@ -165,6 +165,8 @@ class DisableCodPaymentObserver implements ObserverInterface
      * Validates if cash on delivery service is available for route and customer selection
      *
      * @param \Magento\Quote\Model\Quote $quote
+     * @param                            $recipientCountry
+     *
      * @return bool
      */
     private function validateCodAvailibility(\Magento\Quote\Model\Quote $quote, $recipientCountry)
