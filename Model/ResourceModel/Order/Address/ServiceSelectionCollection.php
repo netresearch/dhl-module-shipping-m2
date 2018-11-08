@@ -25,7 +25,7 @@
 
 namespace Dhl\Shipping\Model\ResourceModel\Order\Address;
 
-use Dhl\Shipping\Model\Quote\ServiceSelection;
+use Dhl\Shipping\Model\Order\ServiceSelection as ModelServiceSelection;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
 /**
@@ -43,7 +43,7 @@ class ServiceSelectionCollection extends AbstractCollection
      */
     public function _construct()
     {
-        $this->_init(ServiceSelection::class, \Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelection::class);
+        $this->_init(ModelServiceSelection::class, ServiceSelection::class);
     }
 
     /**

@@ -31,7 +31,7 @@ use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\PackagingServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
-use Magento\Shipping\Block\Adminhtml\Order\Packaging;
+use Magento\Shipping\Block\Adminhtml\Order\Packaging as MagentoPackaging;
 
 /**
  * Services
@@ -41,7 +41,7 @@ use Magento\Shipping\Block\Adminhtml\Order\Packaging;
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link    http://www.netresearch.de/
  */
-class Services extends Packaging
+class Services extends MagentoPackaging
 {
     /**
      * @var PackagingServiceProvider
