@@ -187,7 +187,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="164" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredlocation_enabled" translate="label" type="select" sortOrder="164" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Preferred location</label>
                     <tooltip>Allow customers to declare a preferred parcel location during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -195,7 +195,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="165" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredneighbour_enabled" translate="label" type="select" sortOrder="165" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Preferred neighbor</label>
                     <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -203,7 +203,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="166" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_parcelannouncement_enabled" translate="label" type="select" sortOrder="166" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Parcel announcement</label>
                     <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
                     <comment><![CDATA[Please note that you need to mention the data transmission in your privacy policy for GDPR compliance.]]></comment>
@@ -212,7 +212,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="167" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="167" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Preferred day</label>
                     <tooltip>Allow customers to select a preferred day of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -220,7 +220,7 @@
                         <field id="api_type">bcs</field>
                     </depends>
                 </field>
-                <field id="service_cutoff_time" translate="label" type="time" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_cutoff_time" translate="label" type="time" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Cut off time</label>
                     <tooltip>Cut-off time is the latest possible order time up to which the minimum preferred day (day of order + 2 working days) can be guaranteed. As soon as the time is exceeded, the earliest preferred day displayed in the frontend will be shifted to one day later (day of order + 3 working days). where appropriate: Reference to the manuel where the cutt-off-time is explained in detail especially with reference to the preferred day.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
@@ -230,7 +230,7 @@
                     </depends>
                 </field>
 
-                <field id="service_drop_off_days" translate="label" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1"
+                <field id="service_drop_off_days" translate="label" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="0"
                        type="Dhl\Shipping\Model\Data\Form\Element\Checkboxset">
                     <label>Days excluded from drop-off</label>
                     <comment>On the working days checked, there is no transfer of parcels to DHL (in addition to sundays and public holidays). This information influences the first displayed preferred day in the frontend.</comment>
@@ -239,7 +239,7 @@
                 </field>
 
 
-                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="171" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="service_preferredtime_enabled" translate="label" type="select" sortOrder="171" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Enable Preferred time</label>
                     <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
