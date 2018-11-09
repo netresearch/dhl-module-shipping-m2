@@ -214,7 +214,7 @@
                 </field>
                 <field id="service_preferredday_enabled" translate="label" type="select" sortOrder="167" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Preferred day</label>
-                    <tooltip>Cut-off time is the latest possible order time up to which the minimum preferred day (day of order + 2 working days) can be guaranteed. As soon as the time is exceeded, the earliest preferred day displayed in the frontend will be shifted to one day later (day of order + 3 working days). where appropriate: Reference to the manuel where the cutt-off-time is explained in detail especially with reference to the preferred day.</tooltip>
+                    <tooltip>Allow customers to select a preferred day of delivery.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="api_type">bcs</field>
@@ -222,7 +222,7 @@
                 </field>
                 <field id="service_cutoff_time" translate="label" type="time" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cut off time</label>
-                    <tooltip>Orders placed after the cut-off time will not be shipped the same day.</tooltip>
+                    <tooltip>Cut-off time is the latest possible order time up to which the minimum preferred day (day of order + 2 working days) can be guaranteed. As soon as the time is exceeded, the earliest preferred day displayed in the frontend will be shifted to one day later (day of order + 3 working days). where appropriate: Reference to the manuel where the cutt-off-time is explained in detail especially with reference to the preferred day.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
                     <depends>
                         <field id="service_preferredday_enabled">1</field>
