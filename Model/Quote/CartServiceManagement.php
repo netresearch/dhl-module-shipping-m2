@@ -134,7 +134,7 @@ class CartServiceManagement implements CartServiceManagementInterface
                 'data' => [
                     'services' => $services,
                     'compatibility' => $compatibility,
-                    'methods' => $methods
+                    'methods' => $methods,
                 ],
             ]
         );

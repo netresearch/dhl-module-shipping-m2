@@ -375,7 +375,9 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 10,
-            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredDayOptions()
+            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredDayOptions(),
+            ServiceSettingsInterface::INFO_TEXT => ''
+
         ];
 
         $preferredLocationEnabled = (bool) $this->configAccessor->getConfigValue(
@@ -417,7 +419,8 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 20,
-            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredTimeOptions()
+            ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredTimeOptions(),
+            ServiceSettingsInterface::INFO_TEXT => ''
         ];
 
         $printOnlyIfCodeableConfig = [

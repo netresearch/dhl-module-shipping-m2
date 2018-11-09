@@ -55,7 +55,13 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
     public function getConfig(): array
     {
         $config = [
+            'dhl_service_block_before' =>  [
+                __('Thanks to the flexible recipient services of DHL Preferred Delivery, 
+                    you decide when and where you want to receive your parcels.'),
+                __('Please choose your preferred delivery options.')
+            ],
             'dhl_logo_image_url' => $this->assetRepo->getUrl('Dhl_Shipping::images/dhl_logo.png'),
+            'dhl_service_block_after' =>  [],
         ];
 
         return $config;

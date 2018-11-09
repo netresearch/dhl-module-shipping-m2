@@ -4,11 +4,17 @@
         <legend class="label">
             <h3 data-bind="text: dhlTitle"></h3>
         </legend>
-        <!-- ko foreach: { data: dhlMarketingStrings, as: 'text' } -->
+        <!-- ko foreach: { data: dhlServiceBlockBefore, as: 'text' } -->
             <p data-bind="text: text"></p>
         <!-- /ko -->
         <!-- ko foreach: { data: elems, as: 'element' } -->
             <render if="hasTemplate()"></render>
+        <!-- /ko -->
+        <!-- ko if: dhlServiceBlockAfter -->
+            <p class="info-text">
+                <span class="asterisk">*</span>
+                <span data-bind="html: dhlServiceBlockAfter"></span>
+            </p>
         <!-- /ko -->
         <!-- ko if: error()-->
             <label class="message error" data-bind="text: error"></label>

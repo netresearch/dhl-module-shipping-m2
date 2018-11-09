@@ -40,11 +40,6 @@ use Dhl\Shipping\Service\ServiceCollectionFactory;
  */
 interface ServiceConfigInterface
 {
-    const CONFIG_XML_FIELD_PREFERREDDAY = 'carriers/dhlshipping/service_preferredday_enabled';
-    const CONFIG_XML_FIELD_CUTOFFTIME = 'carriers/dhlshipping/service_cutoff_time';
-    const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'carriers/dhlshipping/service_preferredlocation_placeholder';
-    const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER = 'carriers/dhlshipping/service_preferredneighbour_placeholder';
-
     /**
      * Load all DHL additional service models.
      *
@@ -53,36 +48,4 @@ interface ServiceConfigInterface
      * @return Service\ServiceCollection
      */
     public function getServices($store = null);
-
-    /**
-     * Obtain preferred day handling fee from config.
-     *
-     * @param null $store
-     * @return int
-     */
-    public function getPrefDayFee($store = null);
-
-    /**
-     * Obtain prefered time handling fees from config.
-     *
-     * @param null $store
-     * @return int
-     */
-    public function getPrefTimeFee($store = null);
-
-    /**
-     * Obtain pref day handling fee text from config.
-     *
-     * @param null $store
-     * @return string
-     */
-    public function getPrefDayHandlingFeeText($store = null);
-
-    /**
-     * Obtain pref time handling fee text from config.
-     *
-     * @param null $store
-     * @return string
-     */
-    public function getPrefTimeHandlingFeeText($store = null);
 }

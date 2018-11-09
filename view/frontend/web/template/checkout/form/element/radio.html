@@ -13,5 +13,10 @@
                attr="for: $parent.serviceInput.code+option.value">
             <span data-bind="text:option.label"></span>
         </label>
+
+
     </div>
+<!-- /ko -->
+<!-- ko if: serviceInput.infoText -->
+    <p class="info-text" data-bind="html: serviceInput.infoText"></p>
 <!-- /ko -->

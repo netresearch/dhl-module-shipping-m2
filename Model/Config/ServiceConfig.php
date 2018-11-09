@@ -46,11 +46,6 @@ class ServiceConfig implements ServiceConfigInterface
     private $configAccessor;
 
     /**
-     * @var \Magento\Framework\Pricing\Helper\Data
-     */
-    private $pricingHelper;
-
-    /**
      * @var Service\ServiceFactory
      */
     private $serviceFactory;
@@ -58,16 +53,13 @@ class ServiceConfig implements ServiceConfigInterface
     /**
      * BcsService constructor.
      * @param ConfigAccessorInterface $configAccessor
-     * @param \Magento\Framework\Pricing\Helper\Data $pricingHelper
      * @param Service\ServiceFactory $serviceFactory
      */
     public function __construct(
         ConfigAccessorInterface $configAccessor,
-        \Magento\Framework\Pricing\Helper\Data $pricingHelper,
         Service\ServiceFactory $serviceFactory
     ) {
         $this->configAccessor = $configAccessor;
-        $this->pricingHelper =  $pricingHelper;
         $this->serviceFactory = $serviceFactory;
     }
 
@@ -106,71 +98,5 @@ class ServiceConfig implements ServiceConfigInterface
         }
 
         return Service\ServiceCollection::fromArray($services);
-    }
-
-    /**
-     * Obtain preferred day handling fee from config.
-     *
-     * @param null $store
-     * @return int
-     */
-    public function getPrefDayFee($store = null)
-    {
-        return (float) $this->configAccessor->getConfigValue(self::CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE, $store);
-    }
-
-    /**
-     * Obtain prefered time handling fees from config.
-     *
-     * @param null $store
-     * @return int
-     */
-    public function getPrefTimeFee($store = null)
-    {
-        return (float) $this->configAccessor->getConfigValue(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE, $store);
-    }
-
-    /**
-     * Obtain pref day handling fee text from config.
-     *
-     * @param null $store
-     * @return string
-     */
-    public function getPrefDayHandlingFeeText($store = null)
-    {
-        $text = '';
-        $fee  = $this->getPrefDayFee($store);
-        if ($fee > 0) {
-            $formatedFee = $this->pricingHelper->currency($fee, true, false);
-            $text = str_replace(
-                '$1',
-                '<b>' .$formatedFee . '</b>',
-                $this->configAccessor->getConfigValue(self::CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT, $store)
-            );
-        }
-
-        return $text;
-    }
-
-    /**
-     * Obtain pref time handling fee text from config.
-     *
-     * @param null $store
-     * @return string
-     */
-    public function getPrefTimeHandlingFeeText($store = null)
-    {
-        $text = '';
-        $fee  = $this->getPrefTimeFee($store);
-        if ($fee > 0) {
-            $formatedFee = $this->pricingHelper->currency($this->getPrefTimeFee($store), true, false);
-            $text = str_replace(
-                '$1',
-                '<b>' .$formatedFee . '</b>',
-                $this->configAccessor->getConfigValue(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT, $store)
-            );
-        }
-
-        return $text;
     }
 }
