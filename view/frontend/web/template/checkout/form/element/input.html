@@ -14,5 +14,8 @@
        }"
 />
 <!-- ko if: serviceInput.infoText -->
-    <p class="info-text" data-bind="html: serviceInput.infoText"></p>
+    <p class="dhl-info-text">
+        <span data-bind="html: serviceInput.infoText"></span>
+        <span class="asterisk">*</span>
+    </p>
 <!-- /ko -->
