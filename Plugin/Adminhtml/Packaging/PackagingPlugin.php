@@ -25,7 +25,7 @@
 
 namespace Dhl\Shipping\Plugin\Adminhtml\Packaging;
 
-use Magento\Framework\Serialize\SerializerInterface;
+use Dhl\Shipping\Util\Serializer;
 use Magento\Framework\UrlInterface;
 use Magento\Shipping\Block\Adminhtml\Order\Packaging;
 
@@ -40,7 +40,7 @@ use Magento\Shipping\Block\Adminhtml\Order\Packaging;
 class PackagingPlugin
 {
     /**
-     * @var SerializerInterface
+     * @var Serializer
      */
     private $serializer;
 
@@ -51,11 +51,12 @@ class PackagingPlugin
 
     /**
      * PackagingPlugin constructor.
-     * @param SerializerInterface $serializer
+     *
+     * @param Serializer   $serializer
      * @param UrlInterface $urlBuilder
      */
     public function __construct(
-        SerializerInterface $serializer,
+        Serializer $serializer,
         UrlInterface $urlBuilder
     ) {
         $this->serializer = $serializer;
