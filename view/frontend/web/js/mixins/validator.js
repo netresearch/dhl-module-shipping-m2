@@ -29,7 +29,7 @@ define([
             function (value, params) {
                 return !isOnBlacklist(value, specialChars);
             },
-            $t('Your input must not include one of the following: ' + specialChars.join(' '))
+            $t('Your input must not include one of the following: ') + specialChars.join(' ')
         );
 
         return validator;
