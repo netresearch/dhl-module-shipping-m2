@@ -31,7 +31,14 @@ use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\PackagingServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
+use Magento\Backend\Block\Template;
+use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Json\EncoderInterface;
+use Magento\Framework\Registry;
 use Magento\Shipping\Block\Adminhtml\Order\Packaging as MagentoPackaging;
+use Magento\Shipping\Model\Carrier\Source\GenericInterface;
+use Magento\Shipping\Model\CarrierFactory;
 
 /**
  * Services
@@ -56,21 +63,21 @@ class Services extends MagentoPackaging
     /**
      * Services constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
-     * @param \Magento\Shipping\Model\Carrier\Source\GenericInterface $sourceSizeModel
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Shipping\Model\CarrierFactory $carrierFactory
-     * @param PackagingServiceProvider $serviceProvider
+     * @param Context                    $context
+     * @param EncoderInterface           $jsonEncoder
+     * @param GenericInterface           $sourceSizeModel
+     * @param Registry                   $coreRegistry
+     * @param CarrierFactory             $carrierFactory
+     * @param PackagingServiceProvider   $serviceProvider
      * @param ServiceSelectionRepository $serviceSelectionRepository
-     * @param array $data
+     * @param array                      $data
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Json\EncoderInterface $jsonEncoder,
-        \Magento\Shipping\Model\Carrier\Source\GenericInterface $sourceSizeModel,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Shipping\Model\CarrierFactory $carrierFactory,
+        Context $context,
+        EncoderInterface $jsonEncoder,
+        GenericInterface $sourceSizeModel,
+        Registry $coreRegistry,
+        CarrierFactory $carrierFactory,
         PackagingServiceProvider $serviceProvider,
         ServiceSelectionRepository $serviceSelectionRepository,
         array $data = []
@@ -93,7 +100,7 @@ class Services extends MagentoPackaging
 
     /**
      * @return ServiceSelectionCollection
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function getServiceSelection()
     {
@@ -104,6 +111,7 @@ class Services extends MagentoPackaging
 
     /**
      * @param ServiceInterface $service
+     *
      * @return string
      */
     public function getServiceHtml($service)
@@ -123,7 +131,7 @@ class Services extends MagentoPackaging
                 $inputType
             );
 
-            /** @var \Magento\Backend\Block\Template $serviceBlock */
+            /** @var Template $serviceBlock */
             $serviceBlock = $this->getChildBlock('dhl_shipment_packaging_service');
             $serviceBlock->setTemplate($template);
             $serviceBlock->setData('service', $service);

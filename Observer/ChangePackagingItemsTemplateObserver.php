@@ -82,6 +82,7 @@ class ChangePackagingItemsTemplateObserver implements ObserverInterface
     public function execute(Observer $observer)
     {
         $block = $observer->getData('block');
+
         if (!$block instanceof \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid) {
             return;
         }

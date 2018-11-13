@@ -33,7 +33,9 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
 use Magento\Framework\Registry;
+use Magento\Sales\Model\Order\Shipment\Item;
 use Magento\Sales\Model\Order\Shipment\ItemFactory;
+use Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid as MagentoGrid;
 
 /**
  * Grid
@@ -44,12 +46,10 @@ use Magento\Sales\Model\Order\Shipment\ItemFactory;
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link    http://www.netresearch.de/
  */
-class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
+class Grid extends MagentoGrid
 {
     const BCS_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid/bcs.phtml';
-
-    const GL_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid/gl.phtml';
-
+    const GL_GRID_TEMPLATE  = 'Dhl_Shipping::order/packaging/grid/gl.phtml';
     const STANDARD_TEMPLATE = 'Magento_Shipping::order/packaging/grid.phtml';
 
     /**
@@ -89,13 +89,14 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     /**
      * Grid constructor.
-     * @param Context $context
-     * @param ItemFactory $shipmentItemFactory
-     * @param Registry $registry
-     * @param ModuleConfigInterface $moduleConfig
+     *
+     * @param Context                  $context
+     * @param ItemFactory              $shipmentItemFactory
+     * @param Registry                 $registry
+     * @param ModuleConfigInterface    $moduleConfig
      * @param CountryCollectionFactory $countryCollectionFactory
      * @param ProductCollectionFactory $productCollectionFactory
-     * @param mixed[] $data
+     * @param mixed[]                  $data
      */
     public function __construct(
         Context $context,
@@ -143,12 +144,13 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * Obtain the given product's tariff number
      *
      * @param int $productId
+     *
      * @return string
      */
     public function getTariffNumber($productId)
     {
         if (empty($this->tariffNumbers)) {
-            /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
+            /** @var Item[] $items */
             $this->initItemAttributes();
         }
 
@@ -159,12 +161,13 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * Obtain the "Export Description" attribute value for a given product.
      *
      * @param int $productId
+     *
      * @return string
      */
     public function getExportDescription($productId)
     {
         if (empty($this->exportDescriptions)) {
-            /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
+            /** @var Item[] $items */
             $this->initItemAttributes();
         }
 
@@ -175,12 +178,13 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
      * Obtain the given product's country of manufacture.
      *
      * @param int $productId
+     *
      * @return string
      */
     public function getCountryOfManufacture($productId)
     {
         if (empty($this->countriesOfManufacture)) {
-            /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
+            /** @var Item[] $items */
             $this->initItemAttributes();
         }
 
@@ -205,6 +209,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
 
     /**
      * @param int $productId
+     *
      * @return string
      */
     public function getDangerousGoodsCategory($productId)
@@ -222,7 +227,7 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
     private function initItemAttributes()
     {
         $productIds = [];
-        /** @var \Magento\Sales\Model\Order\Shipment\Item[] $items */
+        /** @var Item[] $items */
         $items = $this->getCollection();
         foreach ($items as $item) {
             $productIds[] = $item->getProductId();
@@ -245,7 +250,8 @@ class Grid extends \Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid
             )->addAttributeToSelect(
                 ExportDescription::CODE,
                 true
-            );
+            )
+        ;
 
         while ($product = $productCollection->fetchItem()) {
             $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');

@@ -27,10 +27,15 @@ namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\DataObject;
 use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Registry;
+use Magento\Sales\Model\Order\Shipment;
+use Magento\Shipping\Block\Adminhtml\Order\Packaging as MagentoPackaging;
 use Magento\Shipping\Model\Carrier\Source\GenericInterface;
 use Magento\Shipping\Model\CarrierFactory;
+use Magento\Store\Model\ScopeInterface;
+use Zend_Measure_Weight;
 
 /**
  * Packaging
@@ -40,7 +45,7 @@ use Magento\Shipping\Model\CarrierFactory;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
+class Packaging extends MagentoPackaging
 {
     /**
      * @var ModuleConfigInterface
@@ -54,13 +59,14 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
 
     /**
      * Packaging constructor.
-     * @param Context $context
-     * @param EncoderInterface $jsonEncoder
-     * @param GenericInterface $sourceSizeModel
-     * @param Registry $coreRegistry
-     * @param CarrierFactory $carrierFactory
+     *
+     * @param Context               $context
+     * @param EncoderInterface      $jsonEncoder
+     * @param GenericInterface      $sourceSizeModel
+     * @param Registry              $coreRegistry
+     * @param CarrierFactory        $carrierFactory
      * @param ModuleConfigInterface $moduleConfig
-     * @param array $data
+     * @param array                 $data
      */
     public function __construct(
         Context $context,
@@ -94,7 +100,7 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
     {
         $weightUnit = strtoupper($this->scopeConfig->getValue(
             'general/locale/weight_unit',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            ScopeInterface::SCOPE_STORE,
             $this->getShipment()->getStoreId()
         ));
 
@@ -107,7 +113,7 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
     public function isMetricUnit()
     {
         $unit = $this->getStoreWeightUnit();
-        return $unit != \Zend_Measure_Weight::LBS;
+        return $unit != Zend_Measure_Weight::LBS;
     }
 
     /**
@@ -138,15 +144,15 @@ class Packaging extends \Magento\Shipping\Block\Adminhtml\Order\Packaging
         $address = $order->getShippingAddress();
         $carrier = $this->_carrierFactory->create($order->getShippingMethod(true)->getCarrierCode(), $storeId);
         $countryShipper = $this->_scopeConfig->getValue(
-            \Magento\Sales\Model\Order\Shipment::XML_PATH_STORE_COUNTRY_ID,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            Shipment::XML_PATH_STORE_COUNTRY_ID,
+            ScopeInterface::SCOPE_STORE,
             $storeId
         );
         if ($carrier) {
-            $params = new \Magento\Framework\DataObject(
+            $params = new DataObject(
                 [
-                    'method' => $order->getShippingMethod(true)->getMethod(),
-                    'country_shipper' => $countryShipper,
+                    'method'            => $order->getShippingMethod(true)->getMethod(),
+                    'country_shipper'   => $countryShipper,
                     'country_recipient' => $address->getCountryId(),
                 ]
             );
