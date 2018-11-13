@@ -10,10 +10,10 @@
         <!-- ko foreach: { data: elems, as: 'element' } -->
             <render if="hasTemplate()"></render>
         <!-- /ko -->
-        <!-- ko if: dhlServiceBlockAfter -->
+        <!-- ko foreach: { data: dhlServiceBlockAfter, as: 'text' } -->
             <p class="dhl-info-text">
                 <span class="asterisk">*</span>
-                <span data-bind="html: dhlServiceBlockAfter"></span>
+                <span data-bind="html: text"></span>
             </p>
         <!-- /ko -->
         <!-- ko if: error()-->

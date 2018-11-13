@@ -30,7 +30,6 @@ use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Model\Service\ServiceOptionProvider;
 use Dhl\Shipping\Service\Bcs\BulkyGoods;
-use Dhl\Shipping\Service\Bcs\Cod;
 use Dhl\Shipping\Service\Bcs\Insurance;
 use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
@@ -377,7 +376,6 @@ class ModuleConfig implements ModuleConfigInterface
             ServiceSettingsInterface::SORT_ORDER => 10,
             ServiceSettingsInterface::OPTIONS => $this->serviceOptionProvider->getPreferredDayOptions(),
             ServiceSettingsInterface::INFO_TEXT => ''
-
         ];
 
         $preferredLocationEnabled = (bool) $this->configAccessor->getConfigValue(
