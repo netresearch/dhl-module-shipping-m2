@@ -50,7 +50,6 @@ define([
                 matchingDefinition = _.find(definitions(), function (item) {
                     return item.code == serviceCode;
                 });
-            debugger;
             if (matchingDefinition) {
                 return $t(matchingDefinition.name);
             } else {
