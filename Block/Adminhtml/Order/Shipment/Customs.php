@@ -29,6 +29,7 @@ use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
 use Magento\Backend\Block\Template;
 use Magento\Framework\Registry;
 use Magento\Backend\Block\Template\Context;
@@ -43,6 +44,8 @@ use Magento\Backend\Block\Template\Context;
  */
 class Customs extends Template
 {
+    use EscapeHtmlAttrTrait;
+
     const BCS_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup/customs/bcs.phtml';
     const GL_CUSTOMS_TEMPLATE  = 'Dhl_Shipping::order/packaging/popup/customs/gl.phtml';
 

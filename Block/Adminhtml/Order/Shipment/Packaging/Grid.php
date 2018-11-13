@@ -29,6 +29,7 @@ use Dhl\Shipping\Model\Attribute\Backend\ExportDescription;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
 use Magento\Backend\Block\Template\Context;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
@@ -48,6 +49,8 @@ use Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid as MagentoGrid;
  */
 class Grid extends MagentoGrid
 {
+    use EscapeHtmlAttrTrait;
+
     const BCS_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid/bcs.phtml';
     const GL_GRID_TEMPLATE  = 'Dhl_Shipping::order/packaging/grid/gl.phtml';
     const STANDARD_TEMPLATE = 'Magento_Shipping::order/packaging/grid.phtml';

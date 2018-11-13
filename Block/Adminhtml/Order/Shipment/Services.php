@@ -31,6 +31,7 @@ use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\PackagingServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
+use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -50,6 +51,8 @@ use Magento\Shipping\Model\CarrierFactory;
  */
 class Services extends MagentoPackaging
 {
+    use EscapeHtmlAttrTrait;
+
     /**
      * @var PackagingServiceProvider
      */

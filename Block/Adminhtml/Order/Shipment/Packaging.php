@@ -25,6 +25,7 @@
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
@@ -47,6 +48,8 @@ use Zend_Measure_Weight;
  */
 class Packaging extends MagentoPackaging
 {
+    use EscapeHtmlAttrTrait;
+
     /**
      * @var ModuleConfigInterface
      */
