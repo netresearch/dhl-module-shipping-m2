@@ -251,3 +251,4 @@
 "Invalid service combination. Services %1 must be booked together.","Ungültige Servicekombination. Die Services %1 müssen zusammen gebucht werden."
 "You must not refer to a packing station, postal office, or similar.","Sie dürfen nicht eine Packstation, eine Poststelle oder ähnliches angeben."
 "Your input must not include one of the following: ","Ihre Eingabe darf Folgendes nicht enthalten: "
+"DHL Custom Package Delivery","DHL Wunschpaket"

@@ -30,7 +30,7 @@
         <div class="shipping-information-content">
             <span class="value" data-bind="text: getShippingMethodTitle()"></span>
             <div data-bind="if: hasServiceInfo() && isDhlMethod()">
-                <h4>DHL Services</h4>
+                <h4 data-bind="i18n: 'DHL Custom Package Delivery'"></h4>
                 <small data-bind="foreach: serviceInfo">
                     <strong data-bind="text: $parent.getServiceName($data)"></strong>:
                     <span data-bind="text: $parent.getFormattedServiceValue($data)"></span><br/>
