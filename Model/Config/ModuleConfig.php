@@ -271,6 +271,7 @@ class ModuleConfig implements ModuleConfigInterface
      */
     public function getEuCountries($storeId)
     {
+
         $euCountries = explode(
             ',',
             $this->configAccessor->getConfigValue(
