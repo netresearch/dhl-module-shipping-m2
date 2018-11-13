@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="bcs_account_settings" translate="label comment" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+        <label>Business Customer Shipping Account Data</label>
+        <comment>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</comment>
+        <attribute type="expanded">1</attribute>
+        <depends>
+            <field id="carriers/dhlshipping/api_type" separator=",">bcs</field>
+            <field id="carriers/dhlshipping/sandbox_mode">0</field>
+        </depends>
+        <!-- User -->
+        <field id="bcs_account_user" translate="label tooltip" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>User</label>
+            <config_path>carriers/dhlshipping/bcs_account_user</config_path>
+        </field>
+        <!-- Signature -->
+        <field id="bcs_account_signature" translate="label tooltip" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Signature</label>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>carriers/dhlshipping/bcs_account_signature</config_path>
+        </field>
+        <!-- EKP -->
+        <field id="bcs_account_ekp" translate="label tooltip" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>EKP</label>
+            <validate>validate-length maximum-length-10 minimum-length-10 validate-digits</validate>
+            <config_path>carriers/dhlshipping/bcs_account_ekp</config_path>
+        </field>
+        <!-- Participation Numbers -->
+        <field id="bcs_account_participations" type="select" sortOrder="40" translate="label" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Participation Numbers</label>
+            <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\Participation</frontend_model>
+            <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Backend\ArraySerialized</backend_model>
+            <config_path>carriers/dhlshipping/bcs_account_participations</config_path>
+        </field>
+    </group>
+</include>

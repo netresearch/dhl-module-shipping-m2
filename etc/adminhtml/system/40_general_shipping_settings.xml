@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="general_shipping_settings" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>General Shipping Settings</label>
+        <attribute type="expanded">1</attribute>
+        <depends>
+            <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
+        </depends>
+
+        <!-- Shipping Methods for DHL Shipping -->
+        <field id="shipment_dhlmethods" translate="label tooltip comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Shipping Methods for DHL Shipping</label>
+            <comment>Selected shipping methods will be processed with DHL Shipping.</comment>
+            <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+            <config_path>carriers/dhlshipping/shipment_dhlmethods</config_path>
+        </field>
+    </group>
+</include>

@@ -1,0 +1,97 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="cod_settings" translate="label comment" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Cash on Delivery Settings</label>
+        <comment>Configure the use of Cash on Delivery payments.</comment>
+        <attribute type="expanded">1</attribute>
+        <depends>
+            <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
+        </depends>
+
+        <!-- Cash On Delivery Payment Methods for DHL Shipping -->
+        <field id="shipment_dhlcodmethods" translate="label tooltip" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Cash On Delivery Payment Methods for DHL Shipping</label>
+            <comment>Selected payment methods will be treated as CoD methods during shipment order creation.</comment>
+            <source_model>Dhl\Shipping\Model\Payment\Config\Source\Allmethods</source_model>
+            <config_path>carriers/dhlshipping/shipment_dhlcodmethods</config_path>
+        </field>
+        <!-- Bank Data -->
+        <field id="bcs_bankdata_account_owner" translate="label" sortOrder="20" showInDefault="1"
+                showInWebsite="1" showInStore="0">
+            <label>Account Owner</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_bankdata_account_owner</config_path>
+        </field>
+        <!-- Bank Name -->
+        <field id="bcs_bankdata_bankname" translate="label" sortOrder="30" showInDefault="1"
+                showInWebsite="1" showInStore="0">
+            <label>Bank Name</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_bankdata_bankname</config_path>
+        </field>
+        <!-- IBAN -->
+        <field id="bcs_bankdata_iban" translate="label" sortOrder="40" showInDefault="1"
+                showInWebsite="1" showInStore="0">
+            <label>IBAN</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_bankdata_iban</config_path>
+        </field>
+        <!-- BIC -->
+        <field id="bcs_bankdata_bic" translate="label" sortOrder="50" showInDefault="1"
+                showInWebsite="1" showInStore="0">
+            <label>BIC</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_bankdata_bic</config_path>
+        </field>
+        <!-- Reason for Payment -->
+        <field id="bcs_bankdata_note1" translate="label" sortOrder="60" showInDefault="1"
+                showInWebsite="1" showInStore="1">
+            <label>Reason for Payment</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_bankdata_note1</config_path>
+        </field>
+        <!-- Reason for Payment -->
+        <field id="bcs_bankdata_note2" translate="label" sortOrder="70" showInDefault="1"
+                showInWebsite="1" showInStore="1">
+            <label>Reason for Payment (2)</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_bankdata_note2</config_path>
+        </field>
+        <!-- Reason for Payment -->
+        <field id="bcs_bankdata_account_reference" translate="label" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Account Reference to Customer Profile</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_bankdata_account_reference</config_path>
+        </field>
+        <!-- Name of Company (2) -->
+        <field id="bcs_shipper_contact_company_addition" translate="label" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Name of Company</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_shipper_contact_company_addition</config_path>
+        </field>
+        <!-- Dispatching Information -->
+        <field id="bcs_shipper_contact_dispatchinfo" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Dispatching Information</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/bcs_shipper_contact_dispatchinfo</config_path>
+        </field>
+    </group>
+</include>

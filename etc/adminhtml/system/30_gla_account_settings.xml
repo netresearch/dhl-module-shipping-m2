@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="gla_account_settings" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>eCommerce Global API Account Data</label>
+        <attribute type="expanded">1</attribute>
+        <depends>
+            <field id="carriers/dhlshipping/api_type">gla</field>
+        </depends>
+
+        <!-- Pickup Account Number -->
+        <field id="gl_pickup_number" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Pickup Account Number</label>
+            <validate>validate-digits</validate>
+            <comment>Please enter the number you received from DHL.</comment>
+            <config_path>carriers/dhlshipping/gl_pickup_number</config_path>
+        </field>
+        <!-- Unique Customer Prefix -->
+        <field id="gl_customer_prefix" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Customer Prefix</label>
+            <validate>validate-alphanum validate-length maximum-length-5</validate>
+            <comment>Please enter the customer prefix you received from DHL.</comment>
+            <config_path>carriers/dhlshipping/gl_customer_prefix</config_path>
+        </field>
+        <!-- Distribution Center -->
+        <field id="gl_distribution_center" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Distribution Center</label>
+            <comment>Primary DHL eCommerce Distribution center assigned to your products/services. This will be provided by DHL.</comment>
+            <config_path>carriers/dhlshipping/gl_distribution_center</config_path>
+        </field>
+        <!-- Client ID -->
+        <field id="gl_api_auth_username" translate="label" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Client ID</label>
+            <comment>This is a hash value which will be provided by DHL.</comment>
+            <config_path>carriers/dhlshipping/gl_api_auth_username</config_path>
+        </field>
+        <!-- Client Secret -->
+        <field id="gl_api_auth_password" type="password" translate="label" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Client Secret</label>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <comment>This is a hash value which will be provided by DHL.</comment>
+            <config_path>carriers/dhlshipping/gl_api_auth_password</config_path>
+        </field>
+    </group>
+</include>

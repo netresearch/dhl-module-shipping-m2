@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="autocreate_settings" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Default shipping label creation settings</label>
+        <comment>Used for prefilling fields in manual label creation and for bulk actions.</comment>
+        <depends>
+            <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
+        </depends>
+
+        <!-- Default Product -->
+        <field id="default_shipping_products" translate="label, comment" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Default Products</label>
+            <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
+            <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Backend\DefaultProduct</backend_model>
+            <comment>Selected products will be pre-selected for automatic shipping label creation. You can still
+                select another product when creating shipping labels manually.
+            </comment>
+            <config_path>carriers/dhlshipping/default_shipping_products</config_path>
+        </field>
+        <!-- Terms of Trade BCS -->
+        <field id="shipmemt_autocreate_termsoftrade_bcs" translate="label" sortOrder="20" showInWebsite="1"
+                showInStore="0" showInDefault="1" type="select">
+            <label>Default Terms of Trade</label>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs</source_model>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/shipmemt_autocreate_termsoftrade_bcs</config_path>
+        </field>
+        <!-- Terms of Trade GLA -->
+        <field id="shipmemt_autocreate_termsoftrade_gla" translate="label" sortOrder="30" showInWebsite="1" showInStore="0" showInDefault="1" type="select">
+            <label>Default Terms of Trade</label>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla</source_model>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">gla</field>
+            </depends>
+            <config_path>carriers/dhlshipping/shipmemt_autocreate_termsoftrade_gla</config_path>
+        </field>
+        <!-- Place of Commital -->
+        <field id="shipmemt_autocreate_placeofcommital" translate="label" sortOrder="40" showInDefault="1" showInStore="1" showInWebsite="1">
+            <label>Default Place of Commital</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <validate>validate-length maximum-length-35</validate>
+            <config_path>carriers/dhlshipping/shipmemt_autocreate_placeofcommital</config_path>
+        </field>
+        <!-- Additional Fee -->
+        <field id="shipmemt_autocreate_addtionalfee" translate="label" sortOrder="50" showInDefault="1" showInStore="0" showInWebsite="1">
+            <label>Default Additional Fee</label>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <validate>validate-number</validate>
+            <config_path>carriers/dhlshipping/shipmemt_autocreate_addtionalfee</config_path>
+        </field>
+        <!-- Export Content Type -->
+        <field id="shipment_autocreate_export_contenttype" translate="label" sortOrder="60" showInDefault="1" showInStore="0" showInWebsite="1" type="select">
+            <label>Default Export Content Type</label>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\ExportContentType</source_model>
+            <depends>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+            <config_path>carriers/dhlshipping/shipment_autocreate_export_contenttype</config_path>
+        </field>
+        <!-- Description -->
+        <field id="shipment_autocreate_export_contenttype_explanation" translate="label" sortOrder="70" showInDefault="1" showInStore="0" showInWebsite="1">
+            <label>Export Content Description</label>
+            <depends>
+                <field id="shipment_autocreate_export_contenttype">OTHER</field>
+            </depends>
+            <config_path>carriers/dhlshipping/shipment_autocreate_export_contenttype_explanation</config_path>
+        </field>
+
+        <include path="Dhl_Shipping::system/80_autocreate_settings/80_additional_services.xml"/>
+    </group>
+</include>

@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="checkout_service_settings" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Additional Services In Checkout</label>
+        <depends>
+            <field id="carriers/dhlshipping/api_type">bcs</field>
+        </depends>
+
+        <field id="service_preferredlocation_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Preferred location</label>
+            <comment>Allow customers to declare a preferred parcel location during checkout.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/service_preferredlocation_enabled</config_path>
+        </field>
+        <field id="service_preferredneighbour_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Preferred neighbor</label>
+            <comment>Allow customers to declare a preferred neighbour during checkout.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/service_preferredneighbour_enabled</config_path>
+        </field>
+        <field id="service_parcelannouncement_enabled" translate="label comment tooltip" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Parcel announcement</label>
+            <comment><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></comment>
+            <tooltip><![CDATA[Please note that you need to mention the data transmission in your privacy policy for GDPR compliance.]]></tooltip>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/service_parcelannouncement_enabled</config_path>
+        </field>
+        <field id="service_preferredday_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Preferred day</label>
+            <comment>Allow customers to select a preferred day of delivery.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/service_preferredday_enabled</config_path>
+        </field>
+        <field id="service_cutoff_time" translate="label comment tooltip" type="time" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Cut off time</label>
+            <comment>Orders placed after the cut-off time will not be shipped the same day.</comment>
+            <tooltip>Cut-off time is the latest possible order time up to which the minimum preferred day (day of order + 2 working days) can be guaranteed. As soon as the time is exceeded, the earliest preferred day displayed in the frontend will be shifted to one day later (day of order + 3 working days). where appropriate: Reference the manual where the cut-off-time is explained in detail especially with reference to the preferred day.</tooltip>
+            <source_model>Magento\Config\Model\Config\Source\Date\Short</source_model>
+            <depends>
+                <field id="service_preferredday_enabled">1</field>
+            </depends>
+            <config_path>carriers/dhlshipping/service_cutoff_time</config_path>
+        </field>
+        <field id="service_drop_off_days" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0"
+               type="Dhl\Shipping\Model\Data\Form\Element\Checkboxset">
+            <label>Days excluded from drop-off</label>
+            <comment>On the working days checked, there is no transfer of parcels to DHL (in addition to sundays and public holidays). This information influences the first displayed preferred day in the frontend.</comment>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\DropOffDays</source_model>
+            <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Backend\DropOffDays</backend_model>
+            <config_path>carriers/dhlshipping/service_drop_off_days</config_path>
+        </field>
+
+        <field id="service_preferredtime_enabled" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enable Preferred time</label>
+            <comment>Allow customers to select a preferred time of delivery.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/service_preferredtime_enabled</config_path>
+        </field>
+    </group>
+</include>

@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="autocreate_cron_settings" translate="label comment" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Shipping label creation settings for cron action</label>
+        <comment>Automatic shipment creation will periodically collect all orders ready for shipping and create shipments with DHL. Orders are processed every 15 minutes.</comment>
+        <depends>
+            <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
+        </depends>
+
+        <!-- Cron Job -->
+        <field id="shipment_autocreate_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enabled</label>
+            <comment>Create shipments and retrieve labels via cron job.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/shipment_autocreate_enabled</config_path>
+        </field>
+        <!-- Cron Order LabelStatus -->
+        <field id="shipment_autocreate_order_status" translate="label comment" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Order Status</label>
+            <comment>Create shipments for orders with the given status.</comment>
+            <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+            <depends>
+                <field id="shipment_autocreate_enabled">1</field>
+            </depends>
+            <config_path>carriers/dhlshipping/shipment_autocreate_order_status</config_path>
+        </field>
+        <!-- Notify Customer -->
+        <field id="shipment_autocreate_send_shippinginfo" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Send Shipment Confirmation Email</label>
+            <comment><![CDATA[If set to <em>Yes</em>, a shipment confirmation email will be sent to the customer when shipment and label were created.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <depends>
+                <field id="shipment_autocreate_enabled">1</field>
+            </depends>
+            <config_path>carriers/dhlshipping/shipment_autocreate_send_shippinginfo</config_path>
+        </field>
+    </group>
+</include>

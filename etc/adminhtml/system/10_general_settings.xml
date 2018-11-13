@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="general_settings" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+        <label>General Settings</label>
+        <attribute type="expanded">1</attribute>
+        <depends>
+            <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
+        </depends>
+        <!-- Sandbox Mode -->
+        <field id="sandbox_mode" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Sandbox Mode</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/sandbox_mode</config_path>
+        </field>
+        <!-- Enable Logging -->
+        <field id="logging_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Enable Logging</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <comment>Please ensure that the global Magento logging is also activated. Data will be written to the existing Magento logs.</comment>
+            <config_path>carriers/dhlshipping/logging_enabled</config_path>
+        </field>
+        <!-- Log Level -->
+        <field id="log_level" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Log Level</label>
+            <comment><![CDATA[Beware: Log level <em>Debug</em> will result in large log files.]]></comment>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Loglevel</source_model>
+            <depends>
+                <field id="logging_enabled">1</field>
+            </depends>
+            <config_path>carriers/dhlshipping/log_level</config_path>
+        </field>
+    </group>
+</include>

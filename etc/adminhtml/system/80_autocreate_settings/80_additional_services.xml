@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="additional_services" translate="label" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+        <label>Additional Shipping Services</label>
+        <comment>The following settings apply only to bulk shipments and shipments created via cron.</comment>
+        <depends>
+            <field id="carriers/dhlshipping/api_type">bcs</field>
+        </depends>
+
+        <!-- Print Only If Codeable -->
+        <field id="shipment_service_printonlyifcodeable" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Use Print Only If Codeable Service</label>
+            <comment><![CDATA[If set to <em>Yes</em>, shipment orders will only return a label if the DHL delivery address verification succeeds.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/shipment_service_printonlyifcodeable</config_path>
+        </field>
+        <!-- Parcel Announcement -->
+        <field id="shipment_service_parcelannouncement" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Use Parcel Announcement Service</label>
+            <comment><![CDATA[If set to <em>Yes</em>, DHL will send shipment status updates to the customer.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/shipment_service_parcelannouncement</config_path>
+        </field>
+        <!-- Visal Check of Age -->
+        <field id="shipment_service_visualcheckofage" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Use Visual Check of Age Service</label>
+            <comment>If enabled, the visual age check service will be booked during shipment orders.</comment>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge</source_model>
+            <config_path>carriers/dhlshipping/shipment_service_visualcheckofage</config_path>
+        </field>
+        <!-- Return Shipment -->
+        <field id="shipment_service_returnshipment" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Use Return Shipment Service</label>
+            <comment><![CDATA[If set to <em>Yes</em>, a return shipment label will be requested from the webservice.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/shipment_service_returnshipment</config_path>
+        </field>
+        <!-- Additional Insurance -->
+        <field id="shipment_service_additionalinsurance" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Use Additional Insurance Service</label>
+            <comment><![CDATA[If set to <em>Yes</em>, shipments will be insured with higher than standard amount.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/shipment_service_additionalinsurance</config_path>
+        </field>
+        <!-- Bulky Goods -->
+        <field id="shipment_service_bulkygoods" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Use Bulky Goods Service</label>
+            <comment><![CDATA[If set to <em>Yes</em>, shipments will be marked as bulk freight.]]></comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/dhlshipping/shipment_service_bulkygoods</config_path>
+        </field>
+    </group>
+</include>

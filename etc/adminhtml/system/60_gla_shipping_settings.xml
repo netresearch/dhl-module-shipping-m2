@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="gla_shipping_settings" translate="label" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+        <label>eCommerce Global API Shipping Settings</label>
+        <attribute type="expanded">1</attribute>
+        <depends>
+            <field id="carriers/dhlshipping/api_type">gla</field>
+        </depends>
+        <!-- Label Size -->
+        <field id="gl_label_size" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Label Size</label>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\LabelSize</source_model>
+            <config_path>carriers/dhlshipping/gl_label_size</config_path>
+        </field>
+        <!-- Page Size -->
+        <field id="gl_page_size" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Page Size</label>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageSize</source_model>
+            <config_path>carriers/dhlshipping/gl_page_size</config_path>
+        </field>
+        <!-- Page Layout -->
+        <field id="gl_page_layout" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Page Layout</label>
+            <source_model>Dhl\Shipping\Model\Adminhtml\System\Config\Source\PageLayout</source_model>
+            <depends>
+                <field id="gl_page_size">A4</field>
+            </depends>
+            <config_path>carriers/dhlshipping/gl_page_layout</config_path>
+        </field>
+    </group>
+</include>
