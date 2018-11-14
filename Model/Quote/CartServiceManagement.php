@@ -113,8 +113,9 @@ class CartServiceManagement implements CartServiceManagementInterface
      * @param int $cartId
      * @param string $countryId
      * @param string $shippingMethod
+     * @param string $postalCode
      * @return ServiceInformationInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException;
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getServices($cartId, $countryId, $shippingMethod, $postalCode)
     {

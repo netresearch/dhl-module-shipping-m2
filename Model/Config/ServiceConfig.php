@@ -30,9 +30,6 @@ use Dhl\Shipping\Service;
 /**
  * ServiceConfig
  *
- * @deprecated
- * @see \Dhl\Shipping\Model\Service\ServicePool
- *
  * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -49,49 +46,38 @@ class ServiceConfig implements ServiceConfigInterface
      * BcsService constructor.
      *
      * @param ConfigAccessorInterface $configAccessor
-     * @param Service\ServiceFactory $serviceFactory
      */
     public function __construct(
-        ConfigAccessorInterface $configAccessor,
-        Service\ServiceFactory $serviceFactory
+        ConfigAccessorInterface $configAccessor
     ) {
         $this->configAccessor = $configAccessor;
     }
 
     /**
-     * Load all DHL additional service models.
+     * Obtain drop off days from config.
      *
-     * @param mixed $store
-     *
-     * @return Service\ServiceCollection
+     * @param null $store
+     * @return string[]
      */
-    public function getServices($store = null)
+    public function getExcludedDropOffDays($store = null)
     {
-        $services = [];
-        $serviceCodes = [
-            // customer/checkout services
-            Service\ParcelAnnouncement::CODE,
-            Service\PreferredDay::CODE,
-            Service\PreferredTime::CODE,
-            Service\PreferredLocation::CODE,
-            Service\PreferredNeighbour::CODE,
-            // merchant/admin services
-            Service\BulkyGoods::CODE,
-            Service\Insurance::CODE,
-            Service\PrintOnlyIfCodeable::CODE,
-            Service\ReturnShipment::CODE,
-            Service\VisualCheckOfAge::CODE,
-        ];
+        $dropOffDays = $this->configAccessor->getConfigValue(self::CONFIG_XML_FIELD_EXCLUDED_DROPOFFDAYS, $store);
 
-        foreach ($serviceCodes as $serviceCode) {
-            // read config
-            $path = strtolower("carriers/dhlshipping/shipment_service_{$serviceCode}");
-            $serviceValue = $this->configAccessor->getConfigValue($path, $store);
-
-            $service = Service\ServiceFactory::get($serviceCode, $serviceValue);
-            $services[$serviceCode] = $service;
-        }
-
-        return Service\ServiceCollection::fromArray($services);
+        return explode(',', $dropOffDays);
     }
+
+    /**
+     * @param null $store
+     * @return string[]
+     */
+    public function getCutOffTime($store = null)
+    {
+        $cutOffTimeString = $this->configAccessor->getConfigValue(
+            self::CONFIG_XML_FIELD_CUT_OFF_TIME_CONFIG,
+            $store
+        );
+
+        return explode(',', $cutOffTimeString);
+    }
+
 }

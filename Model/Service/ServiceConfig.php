@@ -79,7 +79,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 10,
-            ServiceSettingsInterface::OPTIONS => []
+            ServiceSettingsInterface::OPTIONS => [],
         ];
 
         $bulkyGoodsConfig = [
@@ -176,7 +176,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 20,
-            ServiceSettingsInterface::OPTIONS => []
+            ServiceSettingsInterface::OPTIONS => [],
         ];
 
         $printOnlyIfCodeableConfig = [

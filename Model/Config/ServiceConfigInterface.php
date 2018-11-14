@@ -25,12 +25,8 @@
 
 namespace Dhl\Shipping\Model\Config;
 
-use Dhl\Shipping\Service;
-
 /**
  * ServiceConfig
- *
- * @deprecated
  *
  * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
@@ -39,12 +35,20 @@ use Dhl\Shipping\Service;
  */
 interface ServiceConfigInterface
 {
+    const CONFIG_XML_FIELD_CUT_OFF_TIME_CONFIG = 'carriers/dhlshipping/service_cutoff_time';
+    const CONFIG_XML_FIELD_EXCLUDED_DROPOFFDAYS = 'carriers/dhlshipping/service_drop_off_days';
+
     /**
-     * Load all DHL additional service models.
+     * Obtain drop off days froms config.
      *
-     * @param mixed $store
-     *
-     * @return Service\ServiceCollection
+     * @param null $store
+     * @return string[]
      */
-    public function getServices($store = null);
+    public function getExcludedDropOffDays($store = null);
+
+    /**
+     * @param null $store
+     * @return string[]
+     */
+    public function getCutOffTime($store = null);
 }
