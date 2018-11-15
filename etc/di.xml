@@ -136,6 +136,7 @@
     </type>
     <type name="Dhl\Shipping\Model\Service\CheckoutServiceProvider">
         <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
             <argument name="compositeOptionProvider" xsi:type="object">Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider</argument>
         </arguments>
     </type>
