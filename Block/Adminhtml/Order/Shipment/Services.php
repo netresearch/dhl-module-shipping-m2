@@ -31,7 +31,7 @@ use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Dhl\Shipping\Model\Service\PackagingServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
-use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
+use Dhl\Shipping\Util\Escaper;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -51,8 +51,6 @@ use Magento\Shipping\Model\CarrierFactory;
  */
 class Services extends MagentoPackaging
 {
-    use EscapeHtmlAttrTrait;
-
     /**
      * @var PackagingServiceProvider
      */
@@ -64,6 +62,11 @@ class Services extends MagentoPackaging
     private $serviceSelectionRepository;
 
     /**
+     * @var Escaper
+     */
+    private $escaper;
+
+    /**
      * Services constructor.
      *
      * @param Context                    $context
@@ -73,6 +76,7 @@ class Services extends MagentoPackaging
      * @param CarrierFactory             $carrierFactory
      * @param PackagingServiceProvider   $serviceProvider
      * @param ServiceSelectionRepository $serviceSelectionRepository
+     * @param Escaper                    $escaper
      * @param array                      $data
      */
     public function __construct(
@@ -83,10 +87,12 @@ class Services extends MagentoPackaging
         CarrierFactory $carrierFactory,
         PackagingServiceProvider $serviceProvider,
         ServiceSelectionRepository $serviceSelectionRepository,
+        Escaper $escaper,
         array $data = []
     ) {
         $this->serviceProvider = $serviceProvider;
         $this->serviceSelectionRepository = $serviceSelectionRepository;
+        $this->escaper = $escaper;
 
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
@@ -139,6 +145,7 @@ class Services extends MagentoPackaging
             $serviceBlock->setTemplate($template);
             $serviceBlock->setData('service', $service);
             $serviceBlock->setData('input', $input);
+            $serviceBlock->setData('escaper', $this->escaper);
             $html .= $serviceBlock->toHtml();
         }
 

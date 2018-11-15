@@ -29,10 +29,10 @@ use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeBcs;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\TermsOfTradeGla;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
+use Dhl\Shipping\Util\Escaper;
 use Magento\Backend\Block\Template;
-use Magento\Framework\Registry;
 use Magento\Backend\Block\Template\Context;
+use Magento\Framework\Registry;
 
 /**
  * Customs
@@ -44,8 +44,6 @@ use Magento\Backend\Block\Template\Context;
  */
 class Customs extends Template
 {
-    use EscapeHtmlAttrTrait;
-
     const BCS_CUSTOMS_TEMPLATE = 'Dhl_Shipping::order/packaging/popup/customs/bcs.phtml';
     const GL_CUSTOMS_TEMPLATE  = 'Dhl_Shipping::order/packaging/popup/customs/gl.phtml';
 
@@ -75,6 +73,11 @@ class Customs extends Template
     private $glaTerms;
 
     /**
+     * @var Escaper
+     */
+    private $escaper;
+
+    /**
      * Customs constructor.
      *
      * @param \Magento\Framework\Registry $registry
@@ -83,6 +86,7 @@ class Customs extends Template
      * @param DGCategory $category
      * @param TermsOfTradeBcs $termsOfTradeBcs
      * @param TermsOfTradeGla $termsOfTradeGla
+     * @param Escaper $escaper
      * @param mixed[] $data
      */
     public function __construct(
@@ -92,6 +96,7 @@ class Customs extends Template
         DGCategory $category,
         TermsOfTradeBcs $termsOfTradeBcs,
         TermsOfTradeGla $termsOfTradeGla,
+        Escaper $escaper,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
@@ -99,6 +104,7 @@ class Customs extends Template
         $this->dgCategoryAttribute = $category;
         $this->bcsTerms = $termsOfTradeBcs;
         $this->glaTerms = $termsOfTradeGla;
+        $this->escaper = $escaper;
 
         parent::__construct($context, $data);
     }
@@ -201,5 +207,18 @@ class Customs extends Template
     {
         $scopeId = $this->getShipment()->getStoreId();
         return $this->moduleConfig->getDefaultPlaceOfCommital($scopeId);
+    }
+
+    /**
+     * Escape a string for the HTML attribute context.
+     *
+     * @param string  $string
+     * @param boolean $escapeSingleQuote
+     *
+     * @return string
+     */
+    public function escapeHtmlAttr($string, $escapeSingleQuote = true)
+    {
+        return $this->escaper->escapeHtmlAttr($string, $escapeSingleQuote);
     }
 }

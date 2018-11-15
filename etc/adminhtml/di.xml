@@ -23,7 +23,7 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid" type="Dhl\Shipping\Block\Adminhtml\Order\Packaging\Grid" />
+    <!--<preference for="Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid" type="Dhl\Shipping\Block\Adminhtml\Order\Packaging\Grid" />-->
 
     <!-- passing arguments -->
     <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">

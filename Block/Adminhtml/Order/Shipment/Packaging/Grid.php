@@ -29,7 +29,7 @@ use Dhl\Shipping\Model\Attribute\Backend\ExportDescription;
 use Dhl\Shipping\Model\Attribute\Backend\TariffNumber;
 use Dhl\Shipping\Model\Attribute\Source\DGCategory;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
+use Dhl\Shipping\Util\Escaper;
 use Magento\Backend\Block\Template\Context;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
@@ -49,7 +49,6 @@ use Magento\Shipping\Block\Adminhtml\Order\Packaging\Grid as MagentoGrid;
  */
 class Grid extends MagentoGrid
 {
-    use EscapeHtmlAttrTrait;
 
     const BCS_GRID_TEMPLATE = 'Dhl_Shipping::order/packaging/grid/bcs.phtml';
     const GL_GRID_TEMPLATE  = 'Dhl_Shipping::order/packaging/grid/gl.phtml';
@@ -91,6 +90,11 @@ class Grid extends MagentoGrid
     private $exportDescriptions = [];
 
     /**
+     * @var Escaper
+     */
+    private $escaper;
+
+    /**
      * Grid constructor.
      *
      * @param Context                  $context
@@ -99,6 +103,7 @@ class Grid extends MagentoGrid
      * @param ModuleConfigInterface    $moduleConfig
      * @param CountryCollectionFactory $countryCollectionFactory
      * @param ProductCollectionFactory $productCollectionFactory
+     * @param Escaper                   $escaper
      * @param mixed[]                  $data
      */
     public function __construct(
@@ -108,11 +113,13 @@ class Grid extends MagentoGrid
         ModuleConfigInterface $moduleConfig,
         CountryCollectionFactory $countryCollectionFactory,
         ProductCollectionFactory $productCollectionFactory,
+        Escaper $escaper,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
         $this->countryCollectionFactory = $countryCollectionFactory;
         $this->productCollectionFactory = $productCollectionFactory;
+        $this->escaper = $escaper;
 
         parent::__construct(
             $context,
@@ -262,5 +269,18 @@ class Grid extends MagentoGrid
             $this->tariffNumbers[$product->getId()] = $product->getData(TariffNumber::CODE);
             $this->exportDescriptions[$product->getId()] = $product->getData(ExportDescription::CODE);
         }
+    }
+
+    /**
+     * Escape a string for the HTML attribute context.
+     *
+     * @param string  $string
+     * @param boolean $escapeSingleQuote
+     *
+     * @return string
+     */
+    public function escapeHtmlAttr($string, $escapeSingleQuote = true)
+    {
+        return $this->escaper->escapeHtmlAttr($string, $escapeSingleQuote);
     }
 }

@@ -25,7 +25,7 @@
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Traits\EscapeHtmlAttrTrait;
+use Dhl\Shipping\Util\Escaper;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
@@ -48,8 +48,6 @@ use Zend_Measure_Weight;
  */
 class Packaging extends MagentoPackaging
 {
-    use EscapeHtmlAttrTrait;
-
     /**
      * @var ModuleConfigInterface
      */
@@ -61,6 +59,11 @@ class Packaging extends MagentoPackaging
     private $scopeConfig;
 
     /**
+     * @var Escaper
+     */
+    private $escaper;
+
+    /**
      * Packaging constructor.
      *
      * @param Context               $context
@@ -69,6 +72,7 @@ class Packaging extends MagentoPackaging
      * @param Registry              $coreRegistry
      * @param CarrierFactory        $carrierFactory
      * @param ModuleConfigInterface $moduleConfig
+     * @param Escaper               $escaper
      * @param array                 $data
      */
     public function __construct(
@@ -78,10 +82,12 @@ class Packaging extends MagentoPackaging
         Registry $coreRegistry,
         CarrierFactory $carrierFactory,
         ModuleConfigInterface $moduleConfig,
+        Escaper $escaper,
         array $data = []
     ) {
         $this->scopeConfig = $context->getScopeConfig();
         $this->moduleConfig = $moduleConfig;
+        $this->escaper = $escaper;
 
         parent::__construct($context, $jsonEncoder, $sourceSizeModel, $coreRegistry, $carrierFactory, $data);
     }
@@ -162,5 +168,18 @@ class Packaging extends MagentoPackaging
             return $carrier->getContainerTypes($params);
         }
         return [];
+    }
+
+    /**
+     * Escape a string for the HTML attribute context.
+     *
+     * @param string  $string
+     * @param boolean $escapeSingleQuote
+     *
+     * @return string
+     */
+    public function escapeHtmlAttr($string, $escapeSingleQuote = true)
+    {
+        return $this->escaper->escapeHtmlAttr($string, $escapeSingleQuote);
     }
 }
