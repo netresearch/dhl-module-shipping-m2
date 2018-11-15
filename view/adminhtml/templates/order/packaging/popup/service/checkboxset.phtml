@@ -32,7 +32,7 @@
 <dt class="service-checkboxset <?= /* @noEscape */ $service->getCode() ?>">
     <?php foreach ($input->getOptions() as $option) : ?>
         <label class="checkbox-label">
-            <input <?= /* @noEscape */ $input->getValue() === $option['value'] ? 'selected' : ''; ?>
+            <input <?= /* @noEscape */ $input->getValue() === $option['value'] ? 'checked' : ''; ?>
                     type="checkbox"
                     class="checkbox"
                     data-module="dhl_shipping"
