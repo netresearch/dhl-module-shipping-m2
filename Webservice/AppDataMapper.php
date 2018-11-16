@@ -67,6 +67,7 @@ use Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFa
 use Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
 use Magento\Framework\DataObject;
 use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 /**
  * AppDataMapper
@@ -195,6 +196,11 @@ class AppDataMapper implements AppDataMapperInterface
     private $labelServiceProvider;
 
     /**
+     * @var TimezoneInterface
+     */
+    private $timeZone;
+
+    /**
      * AppDataMapper constructor.
      *
      * @param BcsConfigInterface $bcsConfig
@@ -220,6 +226,7 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
      * @param RequestValidatorInterface $requestValidator
      * @param LabelServiceProvider $labelServiceProvider
+     * @param TimezoneInterface $timeZone
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
@@ -244,7 +251,8 @@ class AppDataMapper implements AppDataMapperInterface
         PackageItemInterfaceFactory $packageItemFactory,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
         RequestValidatorInterface $requestValidator,
-        LabelServiceProvider $labelServiceProvider
+        LabelServiceProvider $labelServiceProvider,
+        TimezoneInterface $timeZone
     ) {
         $this->bcsConfig = $bcsConfig;
         $this->glConfig = $glConfig;
@@ -269,6 +277,7 @@ class AppDataMapper implements AppDataMapperInterface
         $this->shipmentOrderFactory = $shipmentOrderFactory;
         $this->requestValidator = $requestValidator;
         $this->labelServiceProvider = $labelServiceProvider;
+        $this->timeZone = $timeZone;
     }
 
 
@@ -323,7 +332,7 @@ class AppDataMapper implements AppDataMapperInterface
                 'consignmentNumber' => $this->glConfig->getConsignmentNumber($storeId),
                 'reference' => $request->getOrderShipment()->getOrder()->getIncrementId(),
                 'returnShipmentReference' => $request->getOrderShipment()->getOrder()->getIncrementId(),
-                'shipmentDate' => date("Y-m-d"),
+                'shipmentDate' => $this->timeZone->date()->format('Y-m-d'),
                 'bankData' => $bankData,
             ]
         );
