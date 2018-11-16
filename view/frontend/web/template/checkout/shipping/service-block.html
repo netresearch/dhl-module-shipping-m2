@@ -11,10 +11,12 @@
             <render if="hasTemplate()"></render>
         <!-- /ko -->
         <!-- ko foreach: { data: dhlServiceBlockAfter, as: 'text' } -->
+            <!-- ko if: !!text -->
             <p class="dhl-info-text">
                 <span class="asterisk">*</span>
                 <span data-bind="html: text"></span>
             </p>
+            <!-- /ko -->
         <!-- /ko -->
         <!-- ko if: error()-->
             <label class="message error" data-bind="text: error"></label>
