@@ -38,9 +38,7 @@ use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\GlShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Dhl\Shipping\Util\StreetSplitterInterface;
-use Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException;
 use Dhl\Shipping\Webservice\RequestMapper\AppDataMapperInterface;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\AddressInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\IdCardInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\PackstationInterfaceFactory;
@@ -54,20 +52,16 @@ use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\Pac
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package\PackageItemInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\PackageInterfaceFactory;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service;
-use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\AbstractServiceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\BankDataInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\ShipmentDetails\ShipmentDetailsInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterface;
 use Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrderInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFactory;
-use Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterface;
 use Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
 use Magento\Framework\DataObject;
 use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
-use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 
 /**
  * AppDataMapper
@@ -196,11 +190,6 @@ class AppDataMapper implements AppDataMapperInterface
     private $labelServiceProvider;
 
     /**
-     * @var TimezoneInterface
-     */
-    private $timeZone;
-
-    /**
      * AppDataMapper constructor.
      *
      * @param BcsConfigInterface $bcsConfig
@@ -226,7 +215,6 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipmentOrderInterfaceFactory $shipmentOrderFactory
      * @param RequestValidatorInterface $requestValidator
      * @param LabelServiceProvider $labelServiceProvider
-     * @param TimezoneInterface $timeZone
      */
     public function __construct(
         BcsConfigInterface $bcsConfig,
@@ -251,8 +239,7 @@ class AppDataMapper implements AppDataMapperInterface
         PackageItemInterfaceFactory $packageItemFactory,
         ShipmentOrderInterfaceFactory $shipmentOrderFactory,
         RequestValidatorInterface $requestValidator,
-        LabelServiceProvider $labelServiceProvider,
-        TimezoneInterface $timeZone
+        LabelServiceProvider $labelServiceProvider
     ) {
         $this->bcsConfig = $bcsConfig;
         $this->glConfig = $glConfig;
@@ -277,9 +264,7 @@ class AppDataMapper implements AppDataMapperInterface
         $this->shipmentOrderFactory = $shipmentOrderFactory;
         $this->requestValidator = $requestValidator;
         $this->labelServiceProvider = $labelServiceProvider;
-        $this->timeZone = $timeZone;
     }
-
 
     /**
      * Calculate total value of order
@@ -318,6 +303,11 @@ class AppDataMapper implements AppDataMapperInterface
 
         $billingNumber = $this->shippingProducts->getBillingNumber($productCode, $ekp, $participations);
         $returnBillingNumber = $this->shippingProducts->getReturnBillingNumber($productCode, $ekp, $participations);
+        /**
+         * Set timezone to MEZ to avoid landing on a date that is already yesterday in Germany.
+         */
+        /** @codingStandardsIgnoreLine */
+        $shipmentDate = new \DateTime('now', new \DateTimeZone('Europe/Berlin'));
 
         $shipmentDetails = $this->shipmentDetailsFactory->create(
             [
@@ -332,7 +322,7 @@ class AppDataMapper implements AppDataMapperInterface
                 'consignmentNumber' => $this->glConfig->getConsignmentNumber($storeId),
                 'reference' => $request->getOrderShipment()->getOrder()->getIncrementId(),
                 'returnShipmentReference' => $request->getOrderShipment()->getOrder()->getIncrementId(),
-                'shipmentDate' => $this->timeZone->date()->format('Y-m-d'),
+                'shipmentDate' => $shipmentDate->format('Y-m-d'),
                 'bankData' => $bankData,
             ]
         );
