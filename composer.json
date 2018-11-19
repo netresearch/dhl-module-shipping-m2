@@ -26,7 +26,7 @@
         "magento/module-ui": "^100.1.3 || ^101.0.0",
         "magento/zendframework1": "~1.12.16 || ~1.13.0",
         "azuyalabs/yasumi": "^1.8.0",
-        "dhl/lib-shipping-mx": "dev-develop",
+        "dhl/lib-shipping-mx": "~0.9",
         "dhl/sdk-api-parcel-management": "^0.1.0"
     },
     "require-dev": {
