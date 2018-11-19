@@ -149,7 +149,7 @@ class ModuleConfig implements ModuleConfigInterface
      * @param mixed $store
      * @return bool
      */
-    public function canProcessShipping($shippingMethod, $destCountryId, $store = null): bool
+    public function canProcessShipping($shippingMethod, $destCountryId, $store = null)
     {
         return $this->canProcessMethod($shippingMethod, $store) && $this->canProcessRoute($destCountryId, $store);
     }
