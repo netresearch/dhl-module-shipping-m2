@@ -12,9 +12,7 @@
             <label>Default Products</label>
             <frontend_model>Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field\DefaultProduct</frontend_model>
             <backend_model>Dhl\Shipping\Model\Adminhtml\System\Config\Backend\DefaultProduct</backend_model>
-            <comment>Selected products will be pre-selected for automatic shipping label creation. You can still
-                select another product when creating shipping labels manually.
-            </comment>
+            <comment>Selected products will be pre-selected for automatic shipping label creation. You can still select another product when creating shipping labels manually.</comment>
             <config_path>carriers/dhlshipping/default_shipping_products</config_path>
         </field>
         <!-- Terms of Trade BCS -->

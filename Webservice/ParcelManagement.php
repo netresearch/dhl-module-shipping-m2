@@ -91,8 +91,9 @@ class ParcelManagement
         $options = [];
         $validDays = $this->serviceResponse->getPreferredDay()->getValidDays();
         foreach ($validDays as $validDay) {
+            $startDay = $validDay->getStart();
             $options[] = [
-                'label' => $validDay->getStart()->format('D, d.'),
+                'label' => __($startDay->format('D')).', '.$startDay->format('d.'),
                 'value' => $validDay->getStart()->format('Y-m-d'),
                 'disable' => false,
             ];
