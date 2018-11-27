@@ -22,6 +22,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Block\Adminhtml\System\Config\Form\Field;
 
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType as Source;
@@ -29,6 +30,9 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Store\Model\Website;
 
 /**
  * Config field block for the current API type. API type depends on shipping
@@ -49,6 +53,11 @@ class ApiType extends Field
     private $moduleConfig;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * ApiType constructor.
      *
      * @param Context $context
@@ -58,9 +67,11 @@ class ApiType extends Field
     public function __construct(
         Context $context,
         ModuleConfigInterface $moduleConfig,
+        StoreManagerInterface $storeManager,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
+        $this->storeManager = $storeManager;
 
         parent::__construct($context, $data);
     }
@@ -81,8 +92,25 @@ class ApiType extends Field
             return parent::_getElementHtml($element);
         }
 
-        $scopeId = $this->_request->getParam('website', 0);
-        $apiType = $this->moduleConfig->getApiType($scopeId);
+        $storeId = $this->_request->getParam('store', 0);
+        $websiteId = $this->_request->getParam('website', 0);
+
+        /**
+         * Retrieve store id from available scope params.
+         */
+        if ($storeId) {
+            $apiType = $this->moduleConfig->getApiType($storeId);
+        } elseif ($websiteId) {
+            try {
+                /** @var Website $website */
+                $website = $this->storeManager->getWebsite($websiteId);
+                $apiType = $this->moduleConfig->getApiType(current($website->getStoreIds()));
+            } catch (LocalizedException $e) {
+                $apiType = $this->moduleConfig->getApiType();
+            }
+        } else {
+            $apiType = $this->moduleConfig->getApiType();
+        }
 
         $element->setData('value', $apiType);
         if ($apiType === Source::API_TYPE_NA) {
