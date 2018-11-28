@@ -30,7 +30,7 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Api\StoreResolverInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\Website;
 
@@ -68,6 +68,7 @@ class ApiType extends Field
         Context $context,
         ModuleConfigInterface $moduleConfig,
         StoreManagerInterface $storeManager,
+        StoreResolverInterface $storeResolver,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
@@ -92,25 +93,16 @@ class ApiType extends Field
             return parent::_getElementHtml($element);
         }
 
-        $storeId = $this->_request->getParam('store', 0);
-        $websiteId = $this->_request->getParam('website', 0);
-
-        /**
-         * Retrieve store id from available scope params.
-         */
-        if ($storeId) {
-            $apiType = $this->moduleConfig->getApiType($storeId);
-        } elseif ($websiteId) {
-            try {
-                /** @var Website $website */
-                $website = $this->storeManager->getWebsite($websiteId);
-                $apiType = $this->moduleConfig->getApiType(current($website->getStoreIds()));
-            } catch (LocalizedException $e) {
-                $apiType = $this->moduleConfig->getApiType();
-            }
+        $websiteId = $this->_request->getParam('website');
+        if ($websiteId) {
+            /** @var Website $website */
+            $website = $this->storeManager->getWebsite($websiteId);
+            $storeId = current($website->getStoreIds());
         } else {
-            $apiType = $this->moduleConfig->getApiType();
+            $storeId = $this->_request->getParam('store');
         }
+
+        $apiType = $this->moduleConfig->getApiType($storeId);
 
         $element->setData('value', $apiType);
         if ($apiType === Source::API_TYPE_NA) {
