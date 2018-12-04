@@ -29,6 +29,7 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Event;
 use Magento\Framework\Event\InvokerInterface;
 use Magento\Framework\Event\Observer;
+use Magento\Quote\Model\Quote;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
 use \PHPUnit_Framework_MockObject_MockObject as MockObject;
@@ -83,6 +84,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
     protected function tearDown()
     {
         $this->objectManager->removeSharedInstance(DisableCodPaymentObserver::class);
+        $this->objectManager->removeSharedInstance(CheckoutSession\Proxy::class);
 
         parent::tearDown();
     }
@@ -287,13 +289,16 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             'shipping_method' => $shippingMethod,
             'country_id' => $destCountryId,
         ]]);
-        $quote = $this->objectManager->create(DataObject::class, ['data' => [
-            'shipping_address' => $shippingAddress,
-        ]]);
+        $quoteMock = $this->getMockBuilder(Quote::class)
+            ->setMethods(['getShippingAddress', 'getStoreId'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $quoteMock->expects($this->exactly(2))->method('getShippingAddress')->willReturn($shippingAddress);
+
         $this->checkoutSession
             ->expects($this->once())
             ->method('getQuote')
-            ->willReturn($quote);
+            ->willReturn($quoteMock);
 
         foreach ($methodAvailability as $isCurrentMethodAvailable) {
             $checkResult = $this->objectManager->create(DataObject::class, ['data' => [
@@ -315,7 +320,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
      * support it.
      *
      * @test
-     * @magentoConfigFixture default/shipping/origin/country_id AT
+     * @magentoConfigFixture default/shipping/origin/country_id DE
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlmethods flatrate_flatrate,tablerate_bestway
      * @magentoConfigFixture default/carriers/dhlshipping/shipment_dhlcodmethods cashondelivery,nachnahme
      */
@@ -339,13 +344,16 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             'shipping_method' => $shippingMethod,
             'country_id' => $destCountryId,
         ]]);
-        $quote = $this->objectManager->create(DataObject::class, ['data' => [
-            'shipping_address' => $shippingAddress,
-        ]]);
+        $quoteMock = $this->getMockBuilder(Quote::class)
+            ->setMethods(['getShippingAddress', 'getStoreId'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $quoteMock->expects($this->exactly(3))->method('getShippingAddress')->willReturn($shippingAddress);
+
         $this->checkoutSession
             ->expects($this->once())
             ->method('getQuote')
-            ->willReturn($quote);
+            ->willReturn($quoteMock);
 
         foreach ($methodAvailability as $isCurrentMethodAvailable) {
             $checkResult = $this->objectManager->create(DataObject::class, ['data' => [

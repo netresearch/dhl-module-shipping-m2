@@ -46,7 +46,6 @@ class ShipmentOrderProvider
         $receiver        = self::getReceiverObject();
         $returnReceiver  = self::getReturnReceiverObject();
         $services        = self::getServicesObject();
-        $package         = self::getPackageObject();
 
         $shipmentOrder = new ShipmentOrder(
             '1010',
@@ -55,69 +54,18 @@ class ShipmentOrderProvider
             $receiver,
             $returnReceiver,
             $services,
-            [$package]
+            []
         );
 
         return $shipmentOrder;
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    public static function getPackageObject()
-    {
-        $mockObjectGenerator = new \PHPUnit_Framework_MockObject_Generator();
-        $package = $mockObjectGenerator->getMock(
-            \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Package::class,
-            [],
-            [],
-            '',
-            false
-        );
-
-        return $package;
-    }
-
-    /**
-     * @return ShipmentOrder\CustomsDetails\ExportType
-     */
-    private static function getExporTypeObject()
-    {
-        $exportType = new ShipmentOrder\CustomsDetails\ExportType(
-            'type',
-            'description'
-        );
-
-        return  $exportType;
-    }
-
-    /**
-     * @return ShipmentOrder\Service\ServiceCollection
+     * @return \Dhl\Shipping\Api\ServiceCollectionInterface
      */
     private static function getServicesObject()
     {
-        $mockObjectGenerator = new \PHPUnit_Framework_MockObject_Generator();
-        $codFactoryMock = $mockObjectGenerator->getMock(
-            \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\CodFactory::class,
-            [],
-            [],
-            '',
-            false
-        );
-
-        /** @var \Dhl\Shipping\Webservice\RequestServiceFactory $requestServiceFactoryMock */
-        $requestServiceFactoryMock = $mockObjectGenerator->getMock(
-            \Dhl\Shipping\Webservice\RequestServiceFactory::class,
-            [],
-            [],
-            '',
-            false
-        );
-        $services = new \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Service\ServiceCollection(
-            $requestServiceFactoryMock
-        );
-
-        return $services;
+        return \Dhl\Shipping\Model\Service\ServiceCollection::fromArray([]);
     }
 
     /**
