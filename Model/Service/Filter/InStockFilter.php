@@ -31,6 +31,7 @@ use Dhl\Shipping\Service\Filter\FilterInterface;
 use Magento\Catalog\Model\Product\Configuration\Item\ItemInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Quote\Api\Data\CartItemInterface;
+use Magento\Catalog\Model\Product\Type;
 
 /**
  * Check if items are in stock and filter services accordingly.
@@ -82,6 +83,9 @@ class InStockFilter implements FilterInterface
         }
         $inStock = true;
         foreach ($this->cartItems as $cartItem) {
+            if ($cartItem->getProductType() !== Type::TYPE_SIMPLE) {
+                continue;
+            }
             $stockItem = $this->stockRegistry->getStockItem(
                 $cartItem->getProduct()->getId(),
                 $cartItem->getProduct()->getStoreId()
