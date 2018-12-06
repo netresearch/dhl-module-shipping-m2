@@ -10,8 +10,8 @@
         <!-- ko foreach: { data: elems, as: 'element' } -->
             <render if="hasTemplate()"></render>
         <!-- /ko -->
-        <!-- ko foreach: { data: dhlServiceBlockAfter, as: 'text' } -->
-            <!-- ko if: !!text -->
+        <!-- ko if: showCombinedText() -->
+            <!-- ko foreach: { data: dhlServiceBlockAfter, as: 'text' } -->
             <p class="dhl-info-text">
                 <span class="asterisk">*</span>
                 <span data-bind="html: text"></span>

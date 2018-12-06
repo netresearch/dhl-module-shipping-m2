@@ -108,5 +108,12 @@ define([
                 input.disabled(false);
             });
         },
+
+        showCombinedText: function () {
+            var hasPrefTime = _.find(this.services(), function (service) { return service.code === 'preferredTime'; });
+            var hasPrefDay = _.find(this.services(), function (service) { return service.code === 'preferredDay'; });
+
+            return (_.isObject(hasPrefDay) && _.isObject(hasPrefDay))
+        },
     });
 });
