@@ -261,3 +261,11 @@
 "Additional Shipping Services","Zusätzliche Versandservices"
 "The following settings apply only to bulk shipments and shipments created via cron.","Die folgenden Einstellungen gelten nur für die Massenverarbeitung und Sendungen, die via Cron erstellt wurden."
 "Select Procedure","Verfahren auswählen"
+"Enable Preferred neighbor","Wunschnachbar aktivieren"
+"This is a hash value which will be provided by DHL.","Dies ist ein Hash-Wert, der von DHL bereitgestellt wird.",
+"Please enter the number you received from DHL.","Bitte geben Sie die Nummer ein, die Sie von DHL erhalten haben."
+"Please enter the customer prefix you received from DHL.","Bitte geben Sie das Kunden-Präfix ein, das Sie von DHL erhalten haben."
+"Primary DHL eCommerce Distribution center assigned to your products/services. This will be provided by DHL.","Primäres eCommerce-Vertriebszentrum von DHL, das Ihren Produkten / Dienstleistungen zugeordnet ist. Dies wird von DHL zur Verfügung gestellt."
+"Insert 0 to offer service for free. Use ""."" as decimal separator.","Geben Sie 0 ein, um den Service kostenlos anzubieten. Benutzen ""."" als Dezimaltrennzeichen."
+"Insert gross value as surcharge for the combination of preferred day and time. Insert 0 to offer service for free. Use ""."" as decimal separator.","Geben Sie den Bruttowert als Zuschlag für die Kombination von Wunschtag und -zeit ein. Geben Sie 0 ein, um den Service kostenlos anzubieten. Benutzen ""."" als Dezimaltrennzeichen."
+
