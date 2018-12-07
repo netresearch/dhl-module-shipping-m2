@@ -7,26 +7,26 @@
         </depends>
 
         <field id="service_preferredlocation_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label>Enable Preferred location</label>
+            <label>Enable preferred location</label>
             <comment>Allow customers to declare a preferred parcel location during checkout.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/service_preferredlocation_enabled</config_path>
         </field>
         <field id="service_preferredneighbour_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label>Enable Preferred neighbor</label>
+            <label>Enable preferred neighbor</label>
             <comment>Allow customers to declare a preferred neighbour during checkout.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/service_preferredneighbour_enabled</config_path>
         </field>
         <field id="service_parcelannouncement_enabled" translate="label comment tooltip" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label>Enable Parcel announcement</label>
+            <label>Enable parcel announcement</label>
             <comment><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></comment>
             <tooltip><![CDATA[Please note that you need to mention the data transmission in your privacy policy for GDPR compliance.]]></tooltip>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/service_parcelannouncement_enabled</config_path>
         </field>
         <field id="service_preferredday_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label>Enable Preferred day</label>
+            <label>Enable preferred day</label>
             <comment>Allow customers to select a preferred day of delivery.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/service_preferredday_enabled</config_path>
@@ -51,7 +51,7 @@
         </field>
 
         <field id="service_preferredtime_enabled" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label>Enable Preferred time</label>
+            <label>Enable preferred time</label>
             <comment>Allow customers to select a preferred time of delivery.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/service_preferredtime_enabled</config_path>
