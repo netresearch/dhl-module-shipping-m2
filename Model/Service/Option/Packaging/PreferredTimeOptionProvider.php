@@ -31,7 +31,6 @@ use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Service\Bcs\PreferredTime;
 
 /**
- *
  * @package  Dhl\Shipping\Model
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -39,7 +38,6 @@ use Dhl\Shipping\Service\Bcs\PreferredTime;
  */
 class PreferredTimeOptionProvider implements OptionProviderInterface
 {
-
     const SERVICE_CODE = PreferredTime::CODE;
 
     /**

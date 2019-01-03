@@ -59,8 +59,8 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
      * @var string[]
      */
     private $nonOption = [
-        'label' => "keine",
-        'value' => "",
+        'label' => 'none time',
+        'value' => '',
         'disable' => false,
     ];
 

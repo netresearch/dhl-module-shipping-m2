@@ -95,14 +95,14 @@ define([
             this.error('');
         },
 
-        triggerDisableInput:  function(serviceCode) {
+        triggerDisableInput:  function (serviceCode) {
             var inputs = registry.filter({'serviceCode': serviceCode});
             _.each(inputs, function (input) {
                input.disabled(true);
             });
         },
 
-        triggerEnableInput:  function(serviceCode) {
+        triggerEnableInput:  function (serviceCode) {
             var inputs = registry.filter({'serviceCode': serviceCode});
             _.each(inputs, function (input) {
                 input.disabled(false);

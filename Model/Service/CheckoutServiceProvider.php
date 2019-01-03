@@ -32,7 +32,6 @@ use Dhl\Shipping\Model\Service\Filter\CheckoutServiceFilter;
 use Dhl\Shipping\Model\Service\Option\CompositeOptionProvider;
 use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Service\ServiceCompatibilityPool;
-use Dhl\Shipping\Service\ServiceHydrator;
 
 /**
  * Load services for display in checkout

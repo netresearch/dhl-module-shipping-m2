@@ -13,13 +13,6 @@ define([
         defaults: {
             template: 'Dhl_Shipping/shipping-information', // override core template
             serviceInfo: [],
-            serviceNames: {
-                'day': $t('Preferred Day'),
-                'neighbour': $t('Preferred Neighbour'),
-                'location' : $t('Preferred Location'),
-                'time' : $t('Preferred Time'),
-                'announcement' : $t('Parcel Announcement')
-            }
         },
 
         initialize: function () {
