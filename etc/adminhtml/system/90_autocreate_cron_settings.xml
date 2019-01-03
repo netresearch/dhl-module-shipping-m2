@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="autocreate_cron_settings" translate="label comment" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+    <group id="autocreate_cron_settings" translate="label comment" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Shipping label creation settings for cron action</label>
         <comment>Automatic shipment creation will periodically collect all orders ready for shipping and create shipments with DHL. Orders are processed every 15 minutes.</comment>
         <depends>

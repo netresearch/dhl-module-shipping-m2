@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="checkout_service_settings" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+    <group id="checkout_service_settings" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Additional Services In Checkout</label>
         <depends>
             <field id="carriers/dhlshipping/api_type">bcs</field>
