@@ -159,6 +159,7 @@ PDF;
 
         $response = new CreateShipmentResponseCollection($labels);
         $response->setStatus($responseStatus);
+
         return $response;
     }
 

@@ -32,6 +32,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Shipping\Model\Carrier\AbstractCarrierOnline;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
 use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
+use Magento\Shipping\Model\Shipping\LabelGenerator;
 
 /**
  * CarrierTest
@@ -58,6 +59,11 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
      */
     private $webserviceGateway;
 
+    /**
+     * @var LabelGenerator|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $labelGenerator;
+
     protected function setUp()
     {
         parent::setUp();
@@ -80,6 +86,10 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
                                         ->setMethods(['createLabels'])
                                         ->disableOriginalConstructor()
                                         ->getMock();
+        $this->labelGenerator = $this->getMockBuilder(LabelGenerator::class)
+                                     ->disableOriginalConstructor()
+                                     ->setMethods(['combineLabelsPdf', 'render'])
+                                     ->getMock();
     }
 
     /**
@@ -141,8 +151,6 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
      */
     public function shipmentRequestSuccess()
     {
-        $this->markTestIncomplete('Carrier is created without object dependencies');
-
         $incrementId = '1001';
         $packageId = '7';
 
@@ -178,7 +186,16 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
         $carrier = $this->objectManager->getObject(Carrier::class, [
             'dataObjectFactory' => $this->dataObjectFactory,
             'webserviceGateway' => $this->webserviceGateway,
+            'labelGenerator'    => $this->labelGenerator
         ]);
+        $this->labelGenerator->expects($this::atLeastOnce())
+                             ->method('combineLabelsPdf')
+                             ->with([$mockResponse->getCreatedItem($sequenceNumber)->getLabel()])
+                             ->willReturn($this->labelGenerator);
+        $this->labelGenerator->expects($this::atLeastOnce())
+                             ->method('render')
+                             ->willReturn('expectedLabelResult');
+
         $response = $carrier->requestToShipment($request);
         $this->assertInstanceOf(DataObject::class, $response);
 
@@ -195,7 +212,7 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
 
         $this->assertArrayHasKey('label_content', $response->getData('info/0'));
         $this->assertEquals(
-            $mockResponse->getCreatedItem($sequenceNumber)->getLabel(),
+            'expectedLabelResult',
             $response->getData('info/0/label_content')
         );
     }

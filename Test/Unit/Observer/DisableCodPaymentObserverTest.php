@@ -26,7 +26,7 @@ namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
+use Dhl\Shipping\Model\Service\Availability\CodAvailability;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\DataObject;
@@ -35,6 +35,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\OfflinePayments\Model\Cashondelivery;
 use Magento\OfflinePayments\Model\Checkmo;
+use Magento\Quote\Model\Quote;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
@@ -64,6 +65,11 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
     private $checkoutSession;
 
     /**
+     * @var CodAvailability|MockObject
+     */
+    private $codAvailability;
+
+    /**
      * @var ShippingProductsInterface|MockObject
      */
     private $shippingProducts;
@@ -84,8 +90,11 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->shippingProducts = $this->getMockBuilder(ShippingProductsInterface::class)
-            ->getMock();
+        $this->codAvailability = $this->getMockBuilder(CodAvailability::class)
+                                      ->disableOriginalConstructor()
+                                      ->getMock();
+
+        $this->shippingProducts = $this->getMockBuilder(ShippingProductsInterface::class)->getMock();
     }
 
     /**
@@ -231,6 +240,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
             'config' => $this->config,
             'checkoutSession' => $this->checkoutSession,
+            'codAvailability' => $this->codAvailability
         ]);
 
         /** @var Observer|MockObject $observerMock */
@@ -290,17 +300,13 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
      */
     public function codIsNotAvailable()
     {
-        $this->markTestIncomplete('Mock setup is incomplete');
-
-        $shipperCountry = 'DE';
         $recipientCountry = 'PL';
-        $euCountryList = ['DE', 'AT', 'PL'];
 
         /** @var DisableCodPaymentObserver $codObserver */
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
             'config' => $this->config,
             'checkoutSession' => $this->checkoutSession,
-            'shippingProducts' => $this->shippingProducts,
+            'codAvailability' => $this->codAvailability
         ]);
 
         /** @var Observer|MockObject $observerMock */
@@ -336,7 +342,8 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             'shipping_method' => 'flatrate_flatrate',
             'country_id' => $recipientCountry,
         ]);
-        $quote = new DataObject(['shipping_address' => $shippingAddress]);
+        $quote = $this->getMockBuilder(Quote::class)->disableOriginalConstructor()->getMock();
+        $quote->method('getShippingAddress')->willReturn($shippingAddress);
         $this->checkoutSession
             ->expects($this->once())
             ->method('getQuote')
@@ -352,22 +359,6 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             ->method('isCodPaymentMethod')
             ->willReturn(true);
 
-        $this->config
-            ->expects($this->once())
-            ->method('getShipperCountry')
-            ->willReturn($shipperCountry);
-
-        $this->config
-            ->expects($this->exactly(1))
-            ->method('getEuCountryList')
-            ->willReturn($euCountryList);
-
-        $this->shippingProducts
-            ->expects($this->once())
-            ->method('getApplicableCodes')
-            ->willReturn([]);
-
-        $resultMock->expects($this->once())->method('setData')->with('is_available', false);
         $codObserver->execute($observerMock);
     }
 
@@ -376,17 +367,13 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
      */
     public function codIsAvailable()
     {
-        $this->markTestIncomplete('Mock setup is incomplete');
-
-        $shipperCountry = 'AT';
         $recipientCountry = 'DE';
-        $euCountryList = ['DE', 'AT', 'PL'];
 
-        /** @var DisableCodPaymentObserver $codObserver */
+        /** @var DisableCodPaymentObserver|MockObject $codObserver */
         $codObserver = $this->objectManager->getObject(DisableCodPaymentObserver::class, [
             'config' => $this->config,
             'checkoutSession' => $this->checkoutSession,
-            'shippingProducts' => $this->shippingProducts,
+            'codAvailability' => $this->codAvailability
         ]);
 
         /** @var Observer|MockObject $observerMock */
@@ -422,7 +409,9 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             'shipping_method' => 'flatrate_flatrate',
             'country_id' => $recipientCountry,
         ]);
-        $quote = new DataObject(['shipping_address' => $shippingAddress]);
+
+        $quote = $this->getMockBuilder(Quote::class)->disableOriginalConstructor()->getMock();
+        $quote->method('getShippingAddress')->willReturn($shippingAddress);
         $this->checkoutSession
             ->expects($this->once())
             ->method('getQuote')
@@ -438,20 +427,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             ->method('isCodPaymentMethod')
             ->willReturn(true);
 
-        $this->config
-            ->expects($this->once())
-            ->method('getShipperCountry')
-            ->willReturn($shipperCountry);
-
-        $this->config
-            ->expects($this->exactly(1))
-            ->method('getEuCountryList')
-            ->willReturn($euCountryList);
-
-        $this->shippingProducts
-            ->expects($this->once())
-            ->method('getApplicableCodes')
-            ->willReturn([BcsShippingProductsInterface::CODE_PAKET_CONNECT]);
+        $this->codAvailability->expects($this->once())->method('isCodAvailable')->willReturn(true);
 
         $resultMock->expects($this->once())->method('setData')->with('is_available', true);
         $codObserver->execute($observerMock);
