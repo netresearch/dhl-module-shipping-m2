@@ -66,7 +66,14 @@ class Reflection implements ReflectionInterface
             return null;
         }
 
-        return $tag->getContent();
+        if ($tag instanceof \Zend\Code\Reflection\DocBlock\Tag\PhpDocTypedTagInterface) {
+            $propertyTypes = $tag->getTypes();
+            return current($propertyTypes);
+        } elseif ($tag instanceof \Zend\Code\Reflection\DocBlock\Tag\GenericTag) {
+            return $tag->getContent();
+        }
+
+        return '';
     }
 
     /**

@@ -239,19 +239,20 @@ final class OrderCollectionFixture
         $productRepository = Bootstrap::getObjectManager()
                                       ->get(ProductRepositoryInterface::class);
         foreach (self::$productData as $sku => &$productData) {
-            $product = Bootstrap::getObjectManager()
-                                ->create(
-                                    \Magento\Catalog\Model\Product::class,
-                                    [
-                                        'data' => [
-                                            'attribute_set_id' => '4',
-                                            'type_id' => 'simple',
-                                            'sku' => $sku,
-                                            'name' => $productData['name'],
-                                            'price' => $productData['unit_price'],
-                                        ]
-                                    ]
-                                );
+            $product = Bootstrap::getObjectManager()->create(\Magento\Catalog\Model\Product::class);
+            $product->setTypeId('simple')
+                ->setAttributeSetId(4)
+                ->setWebsiteIds([1])
+                ->setName($productData['name'])
+                ->setSku($sku)
+                ->setPrice($productData['unit_price'])
+                ->setMetaTitle('meta title')
+                ->setMetaKeyword('meta keyword')
+                ->setMetaDescription('meta description')
+                ->setVisibility(\Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH)
+                ->setStatus(\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED)
+                ->setStockData(['use_config_manage_stock' => 0]);
+
             $product = $productRepository->save($product);
             $productData['entity_id'] = $product->getId();
         }
