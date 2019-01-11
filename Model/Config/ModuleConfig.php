@@ -182,11 +182,8 @@ class ModuleConfig implements ModuleConfigInterface
     public function getShippingMethods($store = null)
     {
         $shippingMethods = $this->configAccessor->getConfigValue(self::CONFIG_XML_PATH_DHLMETHODS, $store);
-        if (empty($shippingMethods)) {
-            $shippingMethods = [];
-        } else {
-            $shippingMethods = explode(',', $shippingMethods);
-        }
+        $shippingMethods = explode(',', $shippingMethods);
+        $shippingMethods =  array_filter($shippingMethods);
 
         return $shippingMethods;
     }
