@@ -105,7 +105,7 @@ class CodAvailability
      * Validates if cash on delivery service is available for route and customer selection
      *
      * @param \Magento\Quote\Model\Quote $quote
-     * @param $recipientCountry
+     * @param string $recipientCountry
      *
      * @return bool
      */
@@ -116,7 +116,6 @@ class CodAvailability
 
         $codServiceSettings = $this->prepareCodServiceSettings($quote);
 
-        /** @var ServiceCollection $codServices */
         $codServices = $this->servicePool->getServices($codServiceSettings);
 
         // filter cod services by route
@@ -161,11 +160,11 @@ class CodAvailability
      * Validates if all services selected by customer in checkout are compatible with cash on delivery
      *
      * @param \Magento\Quote\Model\Quote $quote
-     * @param $codServices
+     * @param ServiceCollection $codServices
      *
      * @return bool
      */
-    private function validateCustomerSelection(\Magento\Quote\Model\Quote $quote, $codServices)
+    private function validateCustomerSelection(\Magento\Quote\Model\Quote $quote, ServiceCollection $codServices)
     {
         try {
             $selectedServices = $this->serviceSelectionRepository

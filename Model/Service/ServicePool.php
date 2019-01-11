@@ -69,7 +69,7 @@ class ServicePool implements ServicePoolInterface
      * Obtain all available services, optionally configured with presets.
      *
      * @param ServiceSettingsInterface[] $servicePresets
-     * @return ServiceCollection|ServiceInterface[]
+     * @return ServiceCollection
      */
     public function getServices(array $servicePresets = [])
     {

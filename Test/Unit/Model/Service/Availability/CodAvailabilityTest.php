@@ -170,7 +170,7 @@ class CodAvailabilityTest extends \PHPUnit\Framework\TestCase
             ->willReturn($shipperCountry);
 
         $this->config
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('getEuCountryList')
             ->willReturn($euCountryList);
 
@@ -184,7 +184,9 @@ class CodAvailabilityTest extends \PHPUnit\Framework\TestCase
             'serviceSelectionRepository' => $this->serviceSelectionRepository
         ]);
 
-        $codAvailability->isCodAvailable($this->quote, $recipientCountry);
+        $res = $codAvailability->isCodAvailable($this->quote, $recipientCountry);
+
+        $this->assertTrue($res);
     }
 
     /**
@@ -207,7 +209,7 @@ class CodAvailabilityTest extends \PHPUnit\Framework\TestCase
             ->willReturn($shipperCountry);
 
         $this->config
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('getEuCountryList')
             ->willReturn($euCountryList);
 
@@ -223,6 +225,6 @@ class CodAvailabilityTest extends \PHPUnit\Framework\TestCase
 
         $res = $codAvailability->isCodAvailable($this->quote, $recipientCountry);
 
-        $this->assertEquals(false, $res);
+        $this->assertFalse($res);
     }
 }

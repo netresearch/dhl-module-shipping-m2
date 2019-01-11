@@ -260,6 +260,7 @@ class DisableCodPaymentObserverTest extends \PHPUnit\Framework\TestCase
             );
         }
     }
+
     /**
      * Assert that payment method gets disabled in case the current route does
      * not support it.

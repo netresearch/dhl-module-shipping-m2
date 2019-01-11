@@ -30,7 +30,7 @@
         "dhl/sdk-api-parcel-management": "^0.1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.1.0",
+        "phpunit/phpunit": "^6.0.9",
         "magento/module-offline-payments": "^100.1.1"
     },
     "suggest": {
