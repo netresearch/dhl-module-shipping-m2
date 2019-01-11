@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.10.0 - 2018-01-11
+
+### Fixed
+- Package weight calculation for massaction and cron
+- Exception can occure when switching store scope
+- Dhl Shipping Configuration was accessible if shipping origin cannot be processed with DHL Shipping
+
+### Added
+- Support for Magento 2.1 (without Label-Status) and 2.3
+- Dhl Wunschpaket Services in Checkout 
+- Service Charge Configuration, Calculation and Display
+- German Translation
+- disable Cash on delivery when Prefered Day or Neighbour is selected
+
+### Changed
+- Label-Status now optional installable module only for Magento 2.2.* !
+- Structure Configuration in Groups
+
 ## 0.9.1 - 2018-10-08
 
 ### Fixed
@@ -59,6 +77,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Now displaying separate tracking link for Global Shipping API labels
 - Reworked product attribute uninstaller
 
+[0.10.0]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.9.1...0.10.0
 [0.9.1]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.9.0...0.9.1
 [0.9.0]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.8.1...0.9.0
 [0.8.1]: https://git.netresearch.de/dhl/module-shipping-m2/compare/0.8.0...0.8.1
