@@ -19,11 +19,16 @@ For more details on the API connections, see the [documentation](http://dhl.supp
 Requirements
 ------------
 
+* PHP 5.6.5
 * PHP >= 7.0.6
+* PHP >= 7.1.0
+* PHP >= 7.2.0
 
 Compatibility
 -------------
-* Magento >= 2.1.0
+* Magento >= 2.1.4+
+* Magento >= 2.2.0+
+* Magento >= 2.3.0+
 
 Installation Instructions
 -------------------------
@@ -47,8 +52,8 @@ replace this path with the actual artifact directory of choice.
         └── share
             └── marketplace
                └── dhl
-                    ├── Dhl_Shipping_Lib-0.10.0.zip
-                    └── Dhl_Shipping_Module_M2-0.10.0.zip
+                    ├── Dhl_Shipping_Lib-x.xx.x.zip
+                    └── Dhl_Shipping_Module_M2-x.xx.x.zip
 
 Then navigate to the project root directory and run the following commands:
 

@@ -7,20 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 0.10.0 - 2018-01-11
 
 ### Fixed
-- package weight calculation for mass action and cron
-- Exception can occur when switching store scope
-- Dhl Shipping Configuration was accessible if shipping origin cannot be processed with DHL Shipping
+- Package weight calculation for mass action and cron autocreate
+- Exception when switching store scope (store not found)
+- Dhl Shipping configuration inaccessible if shipping origin country cannot be processed with DHL
 
 ### Added
-- Support for Magento 2.1 (without Label-Status) and 2.3
-- Dhl Wunschpaket Services in Checkout 
-- Service Charge Configuration, Calculation and Display
-- german Translation
-- disable Cash on delivery when Prefered Day or Neighbour is selected
+- Support for Magento 2.1 (without label status!) and 2.3
+- Dhl Wunschpaket services in checkout 
+- Disable Cash On Delivery (COD) when 'Preferred Day / Neighbour' is selected
+- Service charge configuration, calculation, and display
+- German translation
 
 ### Changed
-- Label-Status is now a optional installable module only for Magento 2.2.* !
-- structure Configuration in groups
+- Label status display is now handled by optional module. ONLY installable in Magento 2.2.x and 2.3.x.
+- Admin configuration structured into groups
 
 ## 0.9.1 - 2018-10-08
 
