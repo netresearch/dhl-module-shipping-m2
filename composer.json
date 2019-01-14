@@ -56,5 +56,10 @@
         "psr-4": {
             "Dhl\\Shipping\\": ""
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.10.x-dev"
+        }
     }
 }
