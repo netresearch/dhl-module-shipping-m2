@@ -32,7 +32,7 @@ Das Modul unterstützt die folgenden Schnittstellen:
 * DHL Paket Geschäftskundenversand API (Business Customer Shipping)
 * DHL eCommerce Global Shipping API
 
-Die tatsächlich nutzbaren Schnittstellen hängen vom Absenderstandort ab.
+Die tatsächlich genutzte Schnittstelle hängt vom Absenderstandort (Land) ab.
 
 .. raw:: pdf
 
@@ -49,36 +49,48 @@ Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Mod
 |mage2|
 -------
 
-Folgende |mage2|-Versionen werden vom Modul unterstützt:
+Folgende |mage2|-Versionen werden vom aktuellen Modul unterstützt:
 
-- Community Edition 2.2.4 oder höher
+- Community Edition 2.1.4+
+- Community Edition 2.2.0+
+- Community Edition 2.3.0+
 
 PHP
 ---
 
+Folgende PHP-Versionen werden vom aktuellen Modul unterstützt:
+
+- PHP 5.6.5
+- PHP 7.0.6+
+- PHP 7.1.0+
+- PHP 7.2.0+
+
 Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
 Webserver installiert und aktiviert sein.
-
-Folgende PHP-Versionen werden vom Modul unterstützt:
-
-- PHP 5.6.5+
-- PHP 7.0.6+
 
 Weitere Informationen finden Sie auch in diesen Dateien im Modulpackage bzw. Repository:
 
 * README.md
 * composer.json
 
-Im Zweifelsfall sind die Versionsangaben in der Datei *composer.json* maßgeblich.
+Im Zweifelsfall sind die Versionsangaben in der Datei *composer.json* maßgeblich (Abschnitt "require").
 
-Repository: https://github.com/netresearch/dhl-module-shipping-m2/
+.. admonition:: Repository
+
+   Das öffentliche Git-Repository ist hier zu finden:
+   
+   https://github.com/netresearch/dhl-module-shipping-m2/
+
+   README.md mit Installationsanleitung:
+
+   https://github.com/netresearch/dhl-module-shipping-m2/blob/master/README.md
 
 
 Hinweise zur Verwendung des Moduls
 ==================================
 
-Versandursprung und Währung
----------------------------
+Versandursprung
+---------------
 
 Bei Nutzung der *DHL Geschäftskundenversand API (Business Customer Shipping)* ist der
 Versand aus Deutschland und Österreich möglich. Die Absenderadresse des Shops muss in
@@ -93,9 +105,24 @@ Beachten Sie auch die Informationen in Abschnitt `Internationale Sendungen`_.
 Stellen Sie in jedem Fall sicher, dass die Absenderadressen in den drei im Abschnitt
 Modulkonfiguration_ genannten Bereichen korrekt ist.
 
+Währung
+-------
+
 Als Basiswährung wird die für das jeweilige Absenderland offiziell gültige Standardwährung
-angenommen, die in der |mage|-Konfiguration eingestellt sein muss. Es findet keine
+angenommen, die in der |mage2|-Konfiguration eingestellt sein muss. Es findet keine
 automatische Konvertierung der Währungen statt.
+
+Datenschutz
+-----------
+
+Durch das Modul werden personenbezogene Daten an DHL übermittelt, die zur Verarbeitung des Auftrags
+erforderlich sind (Namen, Anschriften, Telefonnumern, E-Mail-Adressen, etc.). Der Umfang der
+übermittelten Daten hängt von der `Modulkonfiguration`_ sowie den gewählten
+`DHL Zusatzleistungen im Checkout`_ ab.
+
+Der Händler muss sich vom Kunden das Einverständnis zur Verarbeitung der Daten einholen,
+beispielsweise über die AGB des Shops bzw. eine Einverständniserklärung im Checkout (|mage2|
+Checkout Agreements / Terms and Conditions).
 
 .. raw:: pdf
 
@@ -108,14 +135,23 @@ Installation
 ------------
 
 Installieren Sie das Modul gemäß der Anweisung in der Datei *README.md*, die Sie im
-Modulpackage finden. Achten Sie darauf, alle Anweisungen exakt zu befolgen und keine
-Schritte zu überspringen.
+Modulpackage finden. Wir empfehlen die Installation mit Composer. Achten Sie darauf,
+alle Anweisungen exakt zu befolgen und keine Schritte zu überspringen.
 
 In der Datei *README.md* finden Sie zudem Informationen, welche Änderungen in der
 Datenbank durch die Installation vorgenommen werden.
 
-Die Datei *README.md* ist im Repository enthalten, welches im Abschnitt
-`Voraussetzungen`_ verlinkt ist.
+Die Datei *README.md* ist im Repository enthalten, siehe Abschnitt `Voraussetzungen`_.
+
+.. admonition:: Zusatzmodul für DHL Label-Status erforderlich
+
+   Für die `Übersicht über offene und erstellte Sendungen`_ muss **seit Modulversion 0.10.0**
+   das zusätzliche Modul *dhl/module-label-status* installiert werden. Bei der Installation
+   mit Composer wird dieses Zusatzmodul vorgeschlagen (suggested module) und kann einfach
+   mit installiert werden. Es wird jedoch nicht standardmäßig installiert.
+   
+   Das Zusatzmodul kann nur in |mage| 2.2.x oder 2.3.x installiert werden. |mage| **2.1.x wird
+   nicht unterstützt.** Der DHL Label-Status wird in der Bestellliste dann nicht angezeigt.
 
 Modulkonfiguration
 ------------------
@@ -152,10 +188,6 @@ abweichende Absenderadressen eintragen.
    die Schnittstelle von DHL USA an. Diese Einstellungen beziehen sich nicht auf die
    *DHL Shipping*-Extension.
 
-.. raw:: pdf
-
-   PageBreak
-
 Allgemeine Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -165,12 +197,12 @@ zur Verfügung stehenden API-Anbindungen konfiguriert wird.
 * DHL Business Customer Shipping (DE, AT), oder
 * DHL eCommerce Global Label API
 
-Dieses Feld ist bereits gemäß dem eingestellten Versandursprung vorbelegt und
+Dieses Feld ist bereits gemäß dem eingestellten `Versandursprung`_ vorbelegt und
 ist nicht manuell anzupassen.
 
-.. admonition:: Hinweis
+.. admonition:: Hinweis zur API
 
-   Die tatsächlich verwendete API-Anbindung hängt vom Versandursprung
+   Die tatsächlich verwendete API-Anbindung hängt vom `Versandursprung`_
    (Absenderadresse der Sendung) ab und wird zur Beauftragung von
    Paketaufklebern automatisch gewählt. Das Dropdown macht lediglich die
    passenden Konfigurationsfelder sichtbar.
@@ -179,7 +211,7 @@ Außerdem kann in diesem Abschnitt gewählt werden, ob der *Sandbox-Modus* zum T
 der Integration verwendet oder die Extension produktiv betrieben werden soll.
 
 Wenn die Protokollierung aktiviert ist, werden Webservice-Nachrichten in die |mage2|
-Log-Dateien in ``var/log`` geschrieben. Es wird *keine gesonderte* Log-Datei für
+Log-Datei in ``var/log/debug.log`` geschrieben. Es wird *keine gesonderte* Log-Datei für
 die DHL-Extension erstellt.
 
 Sie haben die Auswahl zwischen drei Protokollstufen:
@@ -189,13 +221,13 @@ Sie haben die Auswahl zwischen drei Protokollstufen:
   (z.B. Adressvalidierung, ungültige Service-Auswahl), auf.
 - *Debug*: Zeichnet sämtliche Nachrichten einschl. Paketaufkleber-Rohdaten im Log auf.
 
-.. admonition:: Hinweis
+.. admonition:: Hinweise zum Logging
 
    Stellen Sie sicher, dass die Log-Dateien regelmäßig bereinigt bzw. rotiert werden. Die
    Einstellung *Debug* sollte nur zur Problembehebung aktiviert werden, da die Log-Dateien
    sonst mit der Zeit sehr groß werden.
 
-Weitere Eingabefelder, die hier nicht beschrieben wurden, sind nicht relevant.
+   Weitere Tipps: http://dhl.support.netresearch.de/support/solutions/articles/12000051180
 
 .. raw:: pdf
 
@@ -213,10 +245,10 @@ im Sandbox-Modus sind keine Stammdaten erforderlich.
 Für die Nutzung des *DHL Geschäftskundenversands (Business Customer Shipping)*
 im Produktivbetrieb tragen Sie folgende Daten ein:
 
-* Benutzername (User)
+* Benutzername
 * Passwort (Signature)
-* EKP (DHL-Kundennummer, 10 stellig)
-* Teilnahmenummern (Participation, jeweils zweistellig)
+* DHL-Kundennummer (EKP), 10 stellig)
+* Teilnahmenummern (jeweils zweistellig)
 
 Zur Nutzung der *eCommerce Global Label API* tragen Sie stattdessen folgende Daten ein:
 
@@ -232,77 +264,137 @@ Allgemeine Versandeinstellungen
 In diesem Konfigurationsbereich werden Basis-Einstellungen vorgenommen, die
 für die Erstellung von Versandaufträgen über den DHL Webservice erforderlich sind.
 
-- *Versandarten für DHL Shipping*: Legen Sie fest, welche Versandarten für die
+- *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten für die
   Versandkostenberechnung im Checkout verwendet werden sollen. Nur die hier ausgewählten
   Versandarten werden bei der Lieferscheinerstellung über die DHL-Extension abgewickelt.
-- *Standardprodukt*: Stellen Sie hier das DHL Produkt ein, das standardmäßig zur
-  Erstellung von Versandaufträgen verwendet werden soll. Wenn keine Auswahl möglich ist,
-  sind die Felder ausgegraut. Beachten Sie die Hinweise im Abschnitt Modulkonfiguration_
-  zur Absenderadresse.
 
 .. raw:: pdf
 
    PageBreak
 
-DHL Geschäftskundenversand Einstellungen
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+DHL Zusatzleistungen im Checkout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Die Einstellungen in diesem Bereich sind speziell bei Nutzung des
-*DHL Geschäftskundenversands (Business Customer Shipping)* relevant.
+Im Konfigurationsbereich *DHL Zusatzleistungen im Checkout* legen Sie fest,
+welche im Rahmen des DHL Geschäftskundenversand zubuchbaren Services Ihren Kunden
+angeboten werden.
 
-- *Nachnahme-Zahlarten für DHL Shipping*: Legen Sie fest, bei welchen Zahlarten
+Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie die
+`Zusatzkosten für Services`_ und die Hinweise zum `Datenschutz`_.
+
+* *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
+  falls er nicht angetroffen wird.
+* *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
+  für die Abgabe der Sendung, falls er nicht angetroffen wird.
+* *Paketankündigung aktivieren*: Der Kunde wird per E-Mail von DHL über den Status seiner
+  Sendung informiert. Hierzu wird die E-Mail-Adresse des Kunden an DHL übermittelt (siehe
+  Hinweise zum `Datenschutz`_). Wählen Sie hier aus folgenden Optionen:
+
+  * *Ja*: Der Service wird immer hinzugebucht. Im Checkout wird keine Auswahl angezeigt.
+  * *Freiwillig*: Der Kunde kann im Checkout wählen, ob der Service gebucht werden soll.
+  * *Nein*: Der Service wird nie hinzugebucht.
+
+* *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
+  an welchem die Lieferung ankommen soll. Die verfügbaren Wunschtage werden dynamisch
+  angezeigt, basierend auf der Empfängeradresse.
+* *Aufpreis für Wunschtag*: Dieser Betrag wird zu den Versandkosten
+  hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
+  als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+  Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
+  ``0`` ein.
+* *Wunschtag Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+  im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
+  Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
+  und die Währung ersetzt wird.
+* *Annahmeschluss*: Legt den Zeitpunkt fest, bis zu dem eingegangene Bestellungen
+  noch am selben Tag abgeschickt werden. Bestellungen, die *nach* Annahmeschluss
+  eingehen, werden nicht mehr am selben Tag verschickt. Der früheste Wunschtag
+  verschiebt sich dann um einen Tag.
+* *Tage ohne Paketübergabe*: Legen Sie fest, an welchen Tagen Sie *keine* Pakete an DHL
+  übergeben. Hierdurch können die wählbaren Wunschtage beeinflusst werden.
+* *Wunschzeit*: Der Kunde wählt ein Zeitfenster für seine Sendung,
+  in welchem die Lieferung ankommen soll. Die verfügbaren Wunschzeiten werden dynamisch
+  angezeigt, basierend auf der Empfängeradresse.
+* *Aufpreis für Wunschzeit*: Dieser Betrag wird zu den Versandkosten
+  hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
+  als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+  Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
+  ``0`` ein.
+* *Wunschzeit Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+  im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
+  Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
+  und die Währung ersetzt wird.
+* *Aufpreis für kombinierten Wunschtag und Wunschzeit*: Dieser Betrag wird zu
+  den Versandkosten hinzu addiert, wenn *beide* Services gebucht werden. Verwenden Sie Punkt
+  statt Komma als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+  Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
+  ``0`` ein.
+* *Kombinierter Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+  im Checkout angezeigt, wenn *beide* Zusatzservices ausgewählt sind. Sie können den
+  Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
+  und die Währung ersetzt wird.
+
+
+Nachnahme Einstellungen
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten
   es sich um Nachnahme-Zahlarten handelt. Diese Information wird benötigt, um
   bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende
   Nachnahme-Label zu erzeugen.
 
-- Ebenso legen Sie fest, welche Bankdaten für
-  Nachnahme-Versandaufträge an DHL übermittelt werden. Der vom Empfänger erhobene
-  Nachnahmebetrag wird auf dieses Konto transferiert.
+* Ebenso legen Sie fest, welche Bankdaten für Nachnahme-Versandaufträge an DHL übermittelt
+  werden. Der vom Empfänger erhobene Nachnahmebetrag wird auf dieses Konto transferiert.
 
   Beachten Sie, dass die Bankverbindung ggf. auch in Ihrem DHL-Konto hinterlegt werden
   muss. I.d.R. kann dies über das DHL Geschäftskundenportal erledigt werden.
 
-- Weitehin können Sie festlegen, welche Absenderdaten ergänzend
-  zur allgemeinen |mage|-Konfiguration an DHL übermittelt werden sollen.
+Bei Nutzung der *eCommerce Global Label API* ist kein Nachnahmeversand möglich. Nachnahme-Zahlarten
+werden dementsprechend im Checkout automatisch ausgeblendet.
 
-Dieser Abschnitt wird bei Nutzung der *eCommerce Global Label API* nicht angezeigt,
-da hier kein Nachnahmeversand möglich ist.
+Paketaufkleber Erstellung Standardeinstellungen
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Einstellungen für die Massenerstellung von Versandetiketten
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-In diesem Konfigurationsbereich legen Sie die Standardwerte für Sendungen fest, die
-automatisch (per Cronjob) oder über die Massenaktion_ erstellt werden.
+In diesem Konfigurationsbereich legen Sie die Standardwerte für Sendungen fest.
 
 Je nach gewählter API (DHL Business Customer Shipping, eCommerce Global Label API, ...) erscheinen
 hier unterschiedliche Eingabemöglichkeiten.
 
-Beachten Sie zudem die Konfiguration von Zollinformationen über die Produkt-Attribute, siehe
-Abschnitt `Internationale Sendungen`_.
+* *Standardprodukt*: Hier werden die DHL Produkte angezeigt, die standardmäßig zur
+  Erstellung von Versandaufträgen verwendet werden. Die Produkte hängen vom Absender-Standort ab
+  und können deswegen hier nicht eingestellt werden. Beachten Sie die Hinweise im Abschnitt
+  Modulkonfiguration_ zur Absenderadresse.
+* *Standard Handelsklauseln*: Wählen Sie die Standard-Handelsklausel für die Zollabfertigung.
+* *Standard Einlieferungsstelle*: Einlieferungstelle für Zollabfertigung.
+* *Standard Zusatzentgelte*: Zusätzliche Entgelte für Zollabfertigung.
+* *Standard Exportinhalt-Typ*: Inhalt der Sendung für Zollabfertigung.
 
-Weiterhin können in diesem Konfigurationsbereich die Standardwerte für DHL Zusatzleistungen
-(Services) eingestellt werden.
+Die Zollinformationen können auch über `Zusätzliche Produkt-Attribute`_ gesetzt werden, siehe auch
+Abschnitt`Internationale Sendungen`_.
 
-- *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
+Zusätzliche Versandservices
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
   wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten
   lehnt DHL die Sendung mit einer Fehlermeldung ab. Wenn diese Einstellung abgeschaltet
   ist, wird DHL versuchen, fehlerhafte Lieferadressen automatisch korrekt zuzuordnen,
   wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht
   zugeordnet werden kann, wird die Sendung dennoch abgelehnt.
-- *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
+* *Paketankündigung aktivieren*: Der Kunde wird per E-Mail von DHL über den Status seiner
   Sendung informiert.
-- *Alterssichtprüfung:* Wählen Sie, ob die Versandlabel das Vermerk zur Alterssichtprüfung
+* *Alterssichtprüfung aktivieren:* Wählen Sie, ob die Versandlabel das Vermerk zur Alterssichtprüfung
   tragen sollen, sowie welches Alter gelten soll. Auswahl:
 
   * *Nein*: Der Service wird nicht hinzugebucht.
   * *A16*: Mindestalter 16 Jahre.
   * *A18*: Mindestalter 18 Jahre.
 
-- *Retourenbeileger*: Wählen Sie, ob zum Versandauftrag auch ein Retourenbeileger
+* *Retourenbeileger aktivieren*: Wählen Sie, ob zum Versandauftrag auch ein Retourenbeileger
   erstellt werden soll. Siehe auch `Erstellen eines Retouren-Beilegers`_.
-- *Zusatzversicherung:* Wählen Sie, ob für den Versandauftrag eine Zusatzversicherung
+* *Zusätzlliche Transportversicherung aktivieren:* Wählen Sie, ob für den Versandauftrag eine Zusatzversicherung
   hinzugebucht werden soll.
-- *Sperrgut:* Wählen Sie, ob der Service *Sperrgut* hinzugebucht werden soll.
+* *Sperrgut aktivieren:* Wählen Sie, ob der Service *Sperrgut* hinzugebucht werden soll.
 
 .. raw:: pdf
 
@@ -328,7 +420,11 @@ werden sollen.
 
 Außerdem legen Sie hier fest, ob eine E-Mail an den Käufer gesendet werden soll,
 wenn der Lieferschein angelegt wurde. Hierbei handelt es sich um die
-Versandbestätigung von |mage|, nicht um die Paketankündigung von DHL.
+Versandbestätigung von |mage2|, nicht um die Paketankündigung von DHL.
+
+.. admonition:: Hinweis
+
+   Die automatische Sendungserstellung erfordert funktionierende |mage2| Cron Jobs.
 
 Zusätzliche Produkt-Attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -349,6 +445,33 @@ Beachten Sie auch die Hinweise im Abschnitt `Internationale Sendungen`_.
 .. raw:: pdf
 
    PageBreak
+
+Buchbarkeit von Zusatzservices
+------------------------------
+
+Die tatsächlich buchbaren Services sowie die wählbaren Wunschtage und Wunschzeiten hängen
+von der Lieferadresse bzw. dem Zielland ab. Dazu wird die DHL Paketsteuerung API während
+des Checkouts verwendet. Nicht verfügbare Services werden im Checkout
+automatisch ausgeblendet.
+
+Falls die Bestellung Artikel enthält, die nicht sofort lieferbar sind, ist keine Buchung
+vom Wunschtag möglich.
+
+Die gleichzeitige Buchung von Wunschort und Wunschnachbar ist nicht möglich.
+
+Zusatzkosten für Services
+-------------------------
+
+Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!** Wenn diese
+gebucht werden, werden die konfigurierten Service-Aufschläge zu den Versandkosten hinzugefügt.
+
+Bei Nutzung der Versandart *Free Shipping / Versandkostenfrei* werden die eingestellten
+Zusatzkosten generell außer Kraft gesetzt!
+
+Wenn die Versandart *Table Rates / Tabellenbasierte Versandkosten* genutzt wird und eine
+Grenze für kostenlosen Versand festgelegt werden soll, empfehlen wir dazu eine
+Warenkorbpreisregel einzurichten. Durch Nutzung dieser Versandart bleiben die Aufpreise
+für Zusatzservices erhalten.
 
 Ablaufbeschreibung und Features
 ===============================
@@ -491,8 +614,29 @@ Die Vorauswahl der Services hängt von den Standardwerten in der allgemeinen
 
 .. admonition:: Hinweis
 
-   Dieser Screenshot ist nur ein Beispiel. Es stehen evtl. noch nicht alle hier gezeigten
+   Dieser Screenshot ist nur ein Beispiel. Es stehen evtl. auch andere als die hier gezeigten
    Services zur Verfügung.
+
+Beachten Sie, dass bei Wunschort oder Wunschnachbar folgende Angaben **nicht** zulässig sind:
+
+**Unzulässige Sonderzeichen**
+
+::
+
+    < > \ ' " " + \n \r
+
+**Unzulässige Angaben**
+
+* Paketbox
+* Postfach
+* Postfiliale / Postfiliale Direkt / Filiale / Filiale Direkt / Wunschfiliale
+* Paketkasten
+* DHL / Deutsche Post
+* Packstation / P-A-C-K-S-T-A-T-I-O-N / Paketstation / Pack Station / P.A.C.K.S.T.A.T.I.O.N. /
+  Pakcstation / Paackstation / Pakstation / Backstation / Bakstation / P A C K S T A T I O N
+
+Für den Versand an DHL-Abholorte (Packstation, Filiale, usw.) nutzen Sie bitte die dafür
+vorgesehenen Adressfelder.
 
 .. raw:: pdf
 
@@ -506,12 +650,13 @@ Lieferscheine und Paketaufkleber können über die Massenaktion
 
 * Verkäufe → Bestellungen → Massenaktion *Paketaufkleber abrufen*
 
-Dies ermöglicht es, Paketaufkleber ohne zusätzliche Eingaben zu erstellen
+Dies ermöglicht es, einfache Paketaufkleber ohne manuelle Eingaben zu erstellen.
+Dabei gilt:
 
-* für alle in der Bestellung enthaltenen Artikel
-* mit den im Checkout gewählten Zusatzleistungen
-* mit den im Bereich *Einstellungen zur Erstellung von Massensendungen* der Modulkonfiguration_
-  gewählten Zusatzleistungen.
+* Es werden alle in der Bestellung enthaltenen Artikel übernommen.
+* Die im Checkout gewählten DHL-Zusatzleistungen werden übernommen.
+* Weitere Zusatzleistungen, die im Bereich *Automatische Sendungserstellung* in der
+  Modulkonfiguration_ eingestellt sind, werden hinzugebucht.
 
 Bei internationalen Sendungen werden wenn nötig die Zollinformationen aus den Produkt-Attributen
 sowie aus den Standardwerten in der Konfiguration verwendet (siehe `Internationale Sendungen`_).
@@ -589,12 +734,12 @@ auch der Auftrag bei DHL storniert.
 .. admonition:: Hinweis zur eCommerce Global Label API
 
    Bei Nutzung der *eCommerce Global Label API* wird über den oben beschriebenen Weg der
-   Auftrag bei DHL *nicht* storniert! Es wird lediglich die Trackingnummer aus |mage| entfernt.
+   Auftrag bei DHL *nicht* storniert! Es wird lediglich die Trackingnummer aus |mage2| entfernt.
 
    Zur Stornierung eines *eCommerce Global Label API* Versandauftrags nutzen Sie bitte den
    Ihnen bekannten Zugang über die DHL Website (z.B. das Geschäftskundenportal).
 
-   Wenn lediglich die Trackingnummer aus |mage| entfernt wird, ohne den Auftrag bei
+   Wenn lediglich die Trackingnummer aus |mage2| entfernt wird, ohne den Auftrag bei
    DHL zu stornieren, wird DHL diesen in Rechnung stellen.
 
 .. raw:: pdf
@@ -615,12 +760,12 @@ hinzugebucht werden sollen.
 
 .. admonition:: Hinweis
 
-   Die automatische Sendungserstellung erfordert funktionierende |mage| Cron Jobs.
+   Die automatische Sendungserstellung erfordert funktionierende |mage2| Cron Jobs.
 
 Im Abstand von 15 Minuten werden alle versandbereiten Bestellungen (gemäß den
 getroffenen Einstellungen) gesammelt und an DHL übermittelt.
 
-Bei erfolgreicher Übertragung werden die DHL-Label in |mage| gespeichert und die
+Bei erfolgreicher Übertragung werden die DHL-Label in |mage2| gespeichert und die
 Lieferscheine erstellt.
 
 Im Fehlerfall sehen Sie die entsprechende Meldung in den Bestellkommentaren.
@@ -646,6 +791,12 @@ Die Symbole haben folgende Bedeutung:
 Bei Sendungen, die nicht mit DHL Shipping verarbeitet werden können, wird kein Logo angezeigt.
 
 Über die Funktion *Filter* in der Bestellübersicht lassen sich Bestellungen nach den verschiedenen Labelstati filtern.
+
+.. admonition:: Bitte beachten: Zusatzmodul erforderlich
+
+   Für diese Funktion muss ein zusätzliches Modul installiert werden, siehe Abschnitt `Installation`_.
+   
+   In |mage2|.1.x kann das Zusatzmodul nicht installiert werden, daher wird diese Funktion darin **nicht unterstützt**.
 
 .. raw:: pdf
 
