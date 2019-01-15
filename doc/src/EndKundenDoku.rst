@@ -160,10 +160,10 @@ Datenbank-Änderungen durch die Installation sind ebenfalls in der Datei *README
 
 .. admonition:: Zusatzmodul für DHL Label-Status erforderlich
 
-   Ab Version 0.10.0 muss für die `Übersicht über offene und erstellte Sendungen`_
-   das zusätzliche Modul *dhl/module-label-status* installiert werden. Bei der Installation
-   mit Composer wird dieses Zusatzmodul vorgeschlagen (suggested module) und kann einfach
-   mit installiert werden. Es wird jedoch nicht standardmäßig installiert.
+   Ab **Version 0.10.0** muss für die `Übersicht über offene und erstellte Sendungen`_
+   das zusätzliche Modul `dhl/module-label-status <https://github.com/netresearch/dhl-module-label-status>`_
+   installiert werden. Bei der Installation mit Composer wird dieses Zusatzmodul vorgeschlagen (suggested module).
+   Es wird jedoch nicht standardmäßig installiert.
    
    Das Zusatzmodul kann nur in |mage| 2.2.x oder 2.3.x installiert werden. |mage| **2.1.x wird
    nicht unterstützt.** Es wird dann kein DHL Label-Status in der Bestellliste angezeigt.
@@ -262,9 +262,9 @@ im Produktivbetrieb tragen Sie folgende Daten ein:
 * DHL-Kundennummer (EKP), 10 stellig)
 * Teilnahmenummern (jeweils zweistellig)
 
-.. admonition:: Einrichtung der Teilnahmenummern
+.. admonition:: Konfiguration der Abrechnungsnummern
 
-   Eine detaillierte Anleitung zur Einrichtung der DHL-Produkte und Teilnahmenummern finden Sie
+   Eine detaillierte Anleitung zur Konfiguration der Abrechnungsnummern, DHL-Produkte und Teilnahmenummern finden Sie
    in diesem `Artikel in der Wissensdatenbank <http://dhl.support.netresearch.de/support/solutions/articles/12000024658>`_.
 
 Zur Nutzung der *eCommerce Global Label API* tragen Sie stattdessen folgende Daten ein:
@@ -337,11 +337,14 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
 
+.. raw:: pdf
+
+   PageBreak
 
 Nachnahme Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-* *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten
+* *Nachnahme-Zahlarten*: Legen Sie fest, bei welchen Zahlarten
   es sich um Nachnahme-Zahlarten handelt. Basierend darauf wird der Nachnahmebetrag
   an den DHL Webservice übertragen und Nachnahme-Label erzeugt. Wenn Nachnahme nicht
   nutzbar ist, werden diese Zahlarten im Checkout ausgeblendet.
@@ -373,10 +376,15 @@ hier unterschiedliche Eingabemöglichkeiten.
 * *Standard Exportinhalt-Typ*: Inhalt der Sendung für Zollabfertigung.
 
 Die Zollinformationen können auch über `Zusätzliche Produkt-Attribute`_ gesetzt werden, siehe auch
-Abschnitt`Internationale Sendungen`_.
+Abschnitt `Internationale Sendungen`_.
+
+.. raw:: pdf
+
+   PageBreak
 
 Zusätzliche Versandservices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Diese Einstellungen gelten nur für Massenaktionen und automatisch erstellte Sendungen (Cronjob).
 
 * *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
   wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten
@@ -396,10 +404,6 @@ Zusätzliche Versandservices
 * *Zusätzlliche Transportversicherung aktivieren:* Wählen Sie, ob für den Versandauftrag eine Zusatzversicherung
   hinzugebucht werden soll.
 * *Sperrgut aktivieren:* Wählen Sie, ob der Service *Sperrgut* hinzugebucht werden soll.
-
-.. raw:: pdf
-
-   PageBreak
 
 eCommerce Global API Versandeinstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -427,6 +431,10 @@ Versandbestätigung von |mage2|, nicht um die Paketankündigung von DHL.
 
    Die automatische Sendungserstellung erfordert funktionierende |mage2| Cron Jobs.
 
+.. raw:: pdf
+
+   PageBreak
+
 Zusätzliche Produkt-Attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -437,15 +445,12 @@ sind.
 Diese Attribute können verwendet werden, um Zollinformationen fest im System zu hinterlegen,
 so dass diese nicht bei jeder Sendung von Hand eingetragen werden müssen.
 
-Zu beachten ist die maximale Länge von:
+Beachten Sie die maximale Länge von:
+
  * 50 Zeichen für die Produktbeschreibung
  * 10 Zeichen für die Zolltarifnummer
 
 Beachten Sie auch die Hinweise im Abschnitt `Internationale Sendungen`_.
-
-.. raw:: pdf
-
-   PageBreak
 
 Buchbarkeit von Zusatzservices
 ------------------------------
@@ -610,7 +615,7 @@ Die Vorauswahl der Services hängt von den Standardwerten in der allgemeinen
 `Modulkonfiguration`_ ab.
 
 .. image:: images/de/merchant_services.png
-   :scale: 150 %
+   :scale: 120 %
 
 .. admonition:: Hinweis
 
@@ -781,6 +786,7 @@ Unter *Verkäufe → Bestellungen* finden Sie eine Spalte *DHL Label Status*.
 Dort wird der aktuelle Zustand Ihrer DHL-Sendungen abgebildet.
 
 .. image:: images/de/label_status.png
+  :scale: 75 %
 
 Die Symbole haben folgende Bedeutung:
 
@@ -796,7 +802,7 @@ Bei Sendungen, die nicht mit DHL Shipping verarbeitet werden können, wird kein 
 
    Für diese Funktion muss ein zusätzliches Modul installiert werden, siehe Abschnitt `Installation`_.
    
-   In |mage2|.1.x kann das Zusatzmodul nicht installiert werden, daher wird diese Funktion darin **nicht unterstützt**.
+   In |mage| 2.1.x kann das Zusatzmodul nicht installiert werden, daher wird diese Funktion darin **nicht unterstützt**.
 
 .. raw:: pdf
 
