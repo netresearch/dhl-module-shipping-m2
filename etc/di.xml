@@ -131,7 +131,7 @@
     </type>
     <type name="Dhl\Shipping\Model\Shipping\Carrier">
         <arguments>
-            <argument name="webserviceGateway" xsi:type="object">\Dhl\Shipping\Webservice\GatewayInterface\Proxy</argument>
+            <argument name="webserviceGateway" xsi:type="object">Dhl\Shipping\Webservice\GatewayInterface\Proxy</argument>
         </arguments>
     </type>
     <type name="Dhl\Shipping\Model\Service\CheckoutServiceProvider">

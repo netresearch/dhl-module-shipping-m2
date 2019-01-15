@@ -14,13 +14,6 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/shipment_service_printonlyifcodeable</config_path>
         </field>
-        <!-- Parcel Announcement -->
-        <field id="shipment_service_parcelannouncement" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label>Use Parcel Announcement Service</label>
-            <comment><![CDATA[If set to <em>Yes</em>, DHL will send shipment status updates to the customer.]]></comment>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>carriers/dhlshipping/shipment_service_parcelannouncement</config_path>
-        </field>
         <!-- Visal Check of Age -->
         <field id="shipment_service_visualcheckofage" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>Use Visual Check of Age Service</label>

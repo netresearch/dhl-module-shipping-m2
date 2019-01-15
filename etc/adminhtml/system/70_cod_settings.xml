@@ -11,7 +11,7 @@
         <!-- Cash On Delivery Payment Methods for DHL Shipping -->
         <field id="shipment_dhlcodmethods" translate="label tooltip" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>Cash On Delivery Payment Methods for DHL Shipping</label>
-            <comment>Selected payment methods will be treated as CoD methods during shipment order creation.</comment>
+            <comment>Selected payment methods will be treated as CoD methods during shipment order creation. When using DHL eCommerce Global Label API, cash on delivery payment methods are automatically hidden.</comment>
             <source_model>Dhl\Shipping\Model\Payment\Config\Source\Allmethods</source_model>
             <config_path>carriers/dhlshipping/shipment_dhlcodmethods</config_path>
         </field>
