@@ -33,6 +33,8 @@ use Dhl\Shipping\Config\BcsConfigInterface;
 use Dhl\Shipping\Config\GlConfigInterface;
 use Dhl\Shipping\Model\Service\LabelServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
+use Dhl\Shipping\Service\Bcs\Insurance;
+use Dhl\Shipping\Service\Gla\Insurance as InsuranceGla;
 use Dhl\Shipping\Service\Bcs\PrintOnlyIfCodeable;
 use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\GlShippingProductsInterface;
@@ -516,10 +518,12 @@ class AppDataMapper implements AppDataMapperInterface
         $packageParams = $request->getData('package_params');
         $servicesData  = $packageParams->getData('services') ?: [];
 
-        if (isset($servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE])) {
+        if (isset($servicesData[Insurance::CODE]) || isset($servicesData[InsuranceGla::CODE])) {
+            /** Normalize Insurance service from "bcs/gla_insurance" to "insurance" */
+            unset($servicesData[Insurance::CODE], $servicesData[InsuranceGla::CODE]);
             $servicesData[ServicePoolInterface::SERVICE_INSURANCE_CODE] = [
-                ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $this->getOrderValue($request),
-                ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $request->getData('base_currency_code')
+                Insurance::PROPERTY_AMOUNT => $this->getOrderValue($request),
+                Insurance::PROPERTY_CURRENCY_CODE => $request->getData('base_currency_code')
             ];
         }
 

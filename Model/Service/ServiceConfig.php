@@ -111,7 +111,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => false,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => (bool) $this->configAccessor->getConfigValue(
-                'carriers/dhlshipping/shipment_service_' . strtolower(Insurance::CODE),
+                'carriers/dhlshipping/shipment_service_' . strtolower(\Dhl\Shipping\Api\ServicePoolInterface::SERVICE_INSURANCE_CODE),
                 $store
             ),
             ServiceSettingsInterface::OPTIONS => [],

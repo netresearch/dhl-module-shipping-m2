@@ -29,11 +29,11 @@
             <config_path>carriers/dhlshipping/shipment_service_returnshipment</config_path>
         </field>
         <!-- Additional Insurance -->
-        <field id="shipment_service_additionalinsurance" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="shipment_service_insurance" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>Use Additional Insurance Service</label>
             <comment><![CDATA[If set to <em>Yes</em>, shipments will be insured with higher than standard amount.]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>carriers/dhlshipping/shipment_service_additionalinsurance</config_path>
+            <config_path>carriers/dhlshipping/shipment_service_insurance</config_path>
         </field>
         <!-- Bulky Goods -->
         <field id="shipment_service_bulkygoods" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
