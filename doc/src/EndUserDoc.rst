@@ -1,4 +1,4 @@
-.. |date| date:: %d/%m/%Y
+.. |date| date:: %Y-%m-%d
 .. |year| date:: %Y
 .. |mage| unicode:: Magento U+00AE
 .. |mage2| replace:: |mage| 2
@@ -7,7 +7,7 @@
    .. class:: footertable
 
    +-------------------------+-------------------------+
-   | As of: |date|           | .. class:: rightalign   |
+   | Last updated: |date|    | .. class:: rightalign   |
    |                         |                         |
    |                         | ###Page###/###Total###  |
    +-------------------------+-------------------------+
@@ -32,7 +32,7 @@ The module supports the following webservices:
 * DHL Paket Business Customer Shipping (Geschäftskundenversand) API
 * DHL eCommerce Global Shipping API
 
-Which of these webservices is actually used depends on the shipping origin (country).
+Which of these webservices is actually used depends on the shipping origin country.
 
 .. raw:: pdf
 
@@ -56,7 +56,7 @@ The following requirements must be met for a smooth operation of the module.
 The following |mage2| versions are supported:
 
 - Community Edition 2.1.4+
-- Community Edition 2.2.0+
+- Community Edition 2.2.4+
 - Community Edition 2.3.0+
 
 PHP
@@ -64,7 +64,9 @@ PHP
 
 These PHP versions are supported:
 
-- PHP 5.6.5
+- PHP 5.6.5+
+- PHP 7.0.2
+- PHP 7.0.4
 - PHP 7.0.6+
 - PHP 7.1.0+
 - PHP 7.2.0+
@@ -138,7 +140,7 @@ The module transmits personal data to DHL which are needed to process the shipme
 addresses, phone numbers, email addresses, etc.). The amount of data depends on the
 `Module configuration`_ as well as the booked `Additional Services In Checkout`_.
 
-The merchant needs the agreement from the customer to process the data, e.g. via the shop's
+The merchant must obtain consent from the customer to process the data, e.g. via the shop's
 terms and conditions and / or an agreement in the checkout (|mage2| Checkout Agreements).
 
 .. raw:: pdf
@@ -167,7 +169,6 @@ Any database changes during installation are also shown in the file *README.md*.
 
    The additional module can only be installed in |mage| 2.2.x or 2.3.x. |mage| **2.1.x is not supported**.
    The DHL label status will not be shown in the order list.
-
 
 Module configuration
 --------------------
@@ -295,41 +296,41 @@ additional DHL services you want to offer to your customers.
 Please also note the information about `Booking additional services`_ and
 `Additional costs for services`_.
 
-* *Enable Preferred Location*: The customer selects an alternative location where
+* *Enable Preferred Location*: The customer can state an alternative location where
   the shipment can be placed in case they are not at home.
-* *Enable Preferred Neighbor*: The customer selects an alternative address in the
+* *Enable Preferred Neighbor*: The customer can state an alternative address in the
   neighborhood for the shipment in case they are not at home.
-* *Enable Parcel Announcement*: The customer gets notified by email about the status
+* *Enable Parcel Announcement*: The customer can choose to be notified via email about the status
   of the shipment. The customer's email address will be transmitted to DHL for this service
   (note the section `Data protection`_). Select one of the following options:
 
   * *Yes*:The customer decides in the checkout if the service should be booked.
   * *No*: No option is shown in the checkout. The service will not be booked.
 
-* *Enable Preferred Day*: The customer chooses a specific day on which the shipment
+* *Enable Preferred Day*: The customer can choose a specific day on which the shipment
   should arrive. The available days are displayed dynamically, depending on the recipient's
-  address.
-* *Enable Preferred Time*: The customer chooses a time frame within which the
+  address and your configured drop-off days.
+* *Enable Preferred Time*: The customer can choose a time frame within which the
   shipment should arrive. The available times are displayed dynamically, depending on the recipient's
   address.
 * *Service charge for Preferred day / time*: This amount will
-  be added to the shipping cost if the service is used. Use a decimal point, not comma.
+  be added to the shipping cost if the corresponding service is used. Use a decimal point, not comma.
   The gross amount must be entered here (incl. VAT). If you want to offer the service
-  for free, enter a ``0`` here.
+  for free, enter ``0``.
 * *Preferred day / time handling fee text*: This text will be displayed to the customer
-  in the checkout if the service has been selected. You can use the placeholder ``$1``
-  in the text which will show the additional handling fee and currency in the checkout.
-* *Cut off time*: This sets the time up to which new orders will be dispatched on the
-  same day. Orders placed *after* the cut off time will not be dispatched on the same
-  day. The earliest possible preferred day will then be postponed by one day.
+  in the checkout to explain the handling fee. You can use the placeholder ``$1``
+  in the text which will be substituted with configured handling fee and currency in the checkout.
+* *Cut-off time*: This sets the time up to which new orders will be dispatched by you on the
+  same day. Orders placed *after* the cut-off time will not be dispatched by you on the same
+  day. This affects the Preferred Days available to customers
 * *Days excluded from drop-off*: Select the days on which you do *not* hand over shipments to
-  DHL. This affects the available Preferred Days.
+  DHL. This affects the Preferred Days available to customers.
 * *Service charge for preferred day and time combined*: This amount will
   be added to the shipping cost if *both* services are booked. Use a decimal point, not comma.
   The gross amount must be entered here (incl. VAT). If you want to offer the services combination
-  for free, enter a ``0`` here.
+  for free, enter ``0``.
 * *Combined service charge text*: This text will be displayed to the customer
-  in the checkout if *both* services have been selected. You can use the placeholder ``$1``
+  in the checkout to explain the combined handling fee. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
 
 .. raw:: pdf
@@ -345,7 +346,7 @@ Cash On Delivery Settings
   these payment methods will be hidden in the checkout.
 
 - Configure the bank account to be used for Cash On Delivery (COD) shipments with DHL. The Cash On Delivery
-  amount from the customer will be transferred to this bank account.
+  amount from the customer will be transferred to this bank account by DHL.
 
   Please note that you might also have to store the bank data in your DHL account.
   Usually, this can be done through the DHL Business Customer Portal (Geschäftskundenportal).
@@ -357,19 +358,19 @@ Default shipping label creation settings
 
 In this section you can configure the default settings for shipments.
 
-Depending on the selected API (DHL Business Customer Shipping, eCommerce Global Label API, ...)
+Depending on the selected API (DHL Business Customer Shipping or eCommerce Global Label API)
 different options are displayed.
 
 * *Default product*: Shows the DHL product which will be used by default for creating
-  shipments. The products are choosen automatically depending on the shipping origin and
-  cannot be set here. Please note the information in section `Module configuration`_ regarding
+  shipments. The available products are choosen automatically depending on the configured shipping origin.
+  Please note the information in section `Module configuration`_ regarding
   the sender (origin) address.
 * *Default Terms of Trade*: Select the default terms of trade for customs handling.
 * *Default Place of Commital*: Select the default place of commitial for customs handling.
 * *Default Additional Fee*: Additional fee for customs handling.
 * *Default Export Content Type*: Content type of the shipment for customs handling.
 
-The customs information can also be set via `Additional Product-Attributes`_, see also the
+The customs information can also be set via `Additional Product Attributes`_, see also the
 section `International shipments`_.
 
 .. raw:: pdf
@@ -381,7 +382,7 @@ Additional Shipping Services
 
 These settings apply only to bulk shipments (mass action) and shipments automatically created via Cronjob.
 
-* *Use Print only if codeable service*: If this is enabled, only shipments with 100%
+* *Use Print only if codeable service*: If this is enabled, only shipments with 100 %
   valid addresses will be accepted by DHL. Otherwise, DHL will reject the shipment
   and issue an error message. If this option is disabled, DHL will attempt to
   correct an invalid address automatically, which results in an additional charge
@@ -428,7 +429,7 @@ not the parcel announcement from DHL.
 
    PageBreak
 
-Additional Product-Attributes
+Additional Product Attributes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The module introduces the new product attributes **DHL Export Description** and
@@ -447,23 +448,24 @@ Also note the section `International shipments`_.
 Booking additional services
 ---------------------------
 
-The available services as well as preferred days and preferred times depend on the
-actual shipping address and country. The DHL Parcel Management API is used for this
-during the checkout process. Unusable services will be hidden in the checkout
-automatically.
+The available services as well as preferred days and preferred times depend on
+the shipping address and country of the customer. The DHL Parcel Management API
+is used for this during the checkout process. Unusable services will be hidden from
+the checkout automatically.
 
-If the order contains articles which are not in stock, it won't be possible to book
-preferred day.
+If the order contains articles which are not in stock, it will not be possible to book
+Preferred Day.
 
-The services *Preferred location* and *Preferred neighbor* cannot be booked together.
+The services *Preferred location* and *Preferred neighbor* can not be booked together.
 
 Additional costs for services
 -----------------------------
 
 The services *Preferred Day* and *Preferred Time* are **enabled by default!**
-Therefore the standard DHL handling fees will be added to the shipping cost.
+Therefore the standard DHL handling fees will be added to your shipping cost every time
+a customer selects one of these services.
 
-When using the shipping method *Free Shipping* the additional handling fees will
+When using the shipping method *Free Shipping*, the additional handling fees will
 always be ignored!
 
 If you want to use the shipping method *Table Rates* and set a threshold for free
@@ -577,7 +579,7 @@ In particular:
    the product export description are needed.
 
 The **export description** and the **tariff number** are taken from the respective **product
-attributes**, see also `Additional Product-Attributes`_. If the export description is not set,
+attributes**, see also `Additional Product Attributes`_. If the export description is not set,
 the product name will be used instead.
 
 The default values (e.g. Terms Of Trade) can be set in the module configuration.
@@ -628,8 +630,6 @@ Please note that the following inputs are **not** allowed for *Preferred locatio
 * DHL / Deutsche Post
 * Packstation / P-A-C-K-S-T-A-T-I-O-N / Paketstation / Pack Station / P.A.C.K.S.T.A.T.I.O.N. /
   Pakcstation / Paackstation / Pakstation / Backstation / Bakstation / P A C K S T A T I O N
-
-For shipments to DHL locations (Packstation, Post Offices, etc.) please use the appropriate address fields.
 
 .. raw:: pdf
 
@@ -841,10 +841,10 @@ in the section `Canceling a shipment`_. Then click *Create shipping label...*
 inside the same box *Shipping and tracking information*. From here on, the
 process is the same as described in `Creating a shipment`_.
 
-Addition DHL services
-~~~~~~~~~~~~~~~~~~~~~
+Additional DHL services
+~~~~~~~~~~~~~~~~~~~~~~~
 
-In case of problems with `Additional Services In Checkout`_ (e.g. preferred day), error messages will be
+In case of problems with `Additional Services In Checkout`_ (e.g. Preferred Day), error messages will be
 written to a separate log file. See the notes in chapter `General settings`_. The log contains information
 for further troubleshooting.
 

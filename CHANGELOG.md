@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Package weight calculation for mass action and cron autocreate
 - Exception when switching store scope (store not found)
-- Dhl Shipping configuration inaccessible if shipping origin country cannot be processed with DHL
+- Dhl Shipping configuration now properly hidden if shipping origin country cannot be processed with DHL
 
 ### Added
-- Support for Magento 2.1 (without label status!) and 2.3
+- Support for Magento 2.1 (without inline label status!) and 2.3
 - Dhl Wunschpaket services in checkout 
 - Disable Cash On Delivery (COD) when 'Preferred Day / Neighbour' is selected
 - Service charge configuration, calculation, and display
