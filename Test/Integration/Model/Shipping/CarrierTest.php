@@ -219,9 +219,8 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
         $order->expects($this->any())
               ->method('getShippingMethod')
               ->willReturn(new DataObject(['carrier_code' => 'dhlshipping']));
-        $order->expects($this->once())
-            ->method('getIsVirtual')
-            ->willReturn(1);
+        $order->method('getIsVirtual')
+              ->willReturn(1);
         $shipment = $this->objectManager->create(DataObject::class, ['data' => [
             'order' => $order,
         ]]);
