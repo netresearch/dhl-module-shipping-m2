@@ -31,6 +31,26 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/service_preferredday_enabled</config_path>
         </field>
+
+        <!-- Service Charges -->
+        <field id="preferred_day_charge" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="41" translate="label comment">
+            <label>Service Charge for preferred day</label>
+            <comment>Insert 0 to offer service for free. Use "." as decimal separator.</comment>
+            <depends>
+                <field id="service_preferredday_enabled">1</field>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+        </field>
+        <field id="service_preferredday_charge_text" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="42" translate="label comment tooltip" type="textarea">
+            <label>Preferred day handling fee text</label>
+            <comment><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></comment>
+            <tooltip>e.g. This service will incur additional shipping costs of $1 including VAT.</tooltip>
+            <depends>
+                <field id="service_preferredday_enabled">1</field>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+        </field>
+
         <field id="service_cutoff_time" translate="label comment tooltip" type="time" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>Cut off time</label>
             <comment>Orders placed after the cut-off time will not be shipped the same day.</comment>
@@ -55,6 +75,47 @@
             <comment>Allow customers to select a preferred time of delivery.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/dhlshipping/service_preferredtime_enabled</config_path>
+        </field>
+
+        <!-- Service Charges -->
+        <field id="preferred_time_charge" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="91" translate="label comment">
+            <label>Service Charge for preferred time</label>
+            <comment>Insert 0 to offer service for free. Use "." as decimal separator.</comment>
+            <depends>
+                <field id="service_preferredtime_enabled">1</field>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+        </field>
+
+        <field id="service_preferredtime_charge_text" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="92" translate="label comment tooltip" type="textarea">
+            <label>Preferred time handling fee text</label>
+            <comment><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></comment>
+            <tooltip>e.g. This service will incur additional shipping costs of $1 including VAT.</tooltip>
+            <depends>
+                <field id="service_preferredtime_enabled">1</field>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+        </field>
+
+        <field id="combined_charge" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="93" translate="label comment">
+            <label>Service charge for preferred day and time combined</label>
+            <comment>Insert gross value as surcharge for the combination of preferred day and time. Insert 0 to offer service for free. Use "." as decimal separator.</comment>
+            <depends>
+                <field id="service_preferredday_enabled">1</field>
+                <field id="service_preferredtime_enabled">1</field>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
+        </field>
+
+        <field id="service_combined_charge_text" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="94" translate="label comment tooltip" type="textarea">
+            <label>Combined service charge text.</label>
+            <comment><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></comment>
+            <tooltip>e.g. For a combined booking of preferred day and preferred time, the shipping costs are a total of $1 including VAT.</tooltip>
+            <depends>
+                <field id="service_preferredday_enabled">1</field>
+                <field id="service_preferredtime_enabled">1</field>
+                <field id="carriers/dhlshipping/api_type">bcs</field>
+            </depends>
         </field>
     </group>
 </include>

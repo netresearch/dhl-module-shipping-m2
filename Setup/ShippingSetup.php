@@ -51,6 +51,14 @@ class ShippingSetup
     const TABLE_QUOTE_SERVICE_SELECTION = 'dhlshipping_quote_address_service_selection';
     const TABLE_ORDER_SERVICE_SELECTION = 'dhlshipping_order_address_service_selection';
 
+    const QUOTE_TABLE_NAME = 'quote';
+    const QUOTE_ADDRESS_TABLE_NAME = 'quote_address';
+    const ORDER_TABLE_NAME = 'sales_order';
+    const INVOICE_TABLE_NAME = 'sales_invoice';
+    const CREDITMEMO_TABLE_NAME = 'sales_creditmemo';
+    const SERVICE_CHARGE_FIELD_NAME = 'dhl_service_charge';
+    const SERVICE_CHARGE_BASE_FIELD_NAME = 'base_dhl_service_charge';
+
     /**
      * @param EavSetup $eavSetup
      */
@@ -220,5 +228,144 @@ class ShippingSetup
 
         $setup->getConnection()->createTable($quoteTable);
         $setup->getConnection()->createTable($orderTable);
+    }
+
+    /**
+     * @param SchemaSetupInterface $setup
+     */
+    public static function createServiceChargeColumns(SchemaSetupInterface $setup)
+    {
+        $setup->startSetup();
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::QUOTE_TABLE_NAME),
+                self::SERVICE_CHARGE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::QUOTE_ADDRESS_TABLE_NAME),
+                self::SERVICE_CHARGE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::QUOTE_ADDRESS_TABLE_NAME),
+                self::SERVICE_CHARGE_BASE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Base Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::QUOTE_TABLE_NAME),
+                self::SERVICE_CHARGE_BASE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Base Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::ORDER_TABLE_NAME),
+                self::SERVICE_CHARGE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::ORDER_TABLE_NAME),
+                self::SERVICE_CHARGE_BASE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Base Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::INVOICE_TABLE_NAME),
+                self::SERVICE_CHARGE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::INVOICE_TABLE_NAME),
+                self::SERVICE_CHARGE_BASE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Base Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::CREDITMEMO_TABLE_NAME),
+                self::SERVICE_CHARGE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Service Charge'
+                ]
+            );
+
+        $setup->getConnection()
+            ->addColumn(
+                $setup->getTable(self::CREDITMEMO_TABLE_NAME),
+                self::SERVICE_CHARGE_BASE_FIELD_NAME,
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                    'nullable' => true,
+                    'length' => '12,4',
+                    'default' => '0.0000',
+                    'comment' => 'DHL Base Service Charge'
+                ]
+            );
+
+        $setup->endSetup();
     }
 }

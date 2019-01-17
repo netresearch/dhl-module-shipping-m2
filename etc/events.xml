@@ -46,4 +46,9 @@
     <event name="controller_action_predispatch_adminhtml_order_shipment_save">
         <observer name="shipping_save_shipment" instance="Dhl\Shipping\Observer\PersistShipmentServiceSelectionObserver" />
     </event>
+
+    <!-- Service Charges -->
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="dhl_service_charge" instance="Dhl\Shipping\Observer\AfterOrder"/>
+    </event>
 </config>

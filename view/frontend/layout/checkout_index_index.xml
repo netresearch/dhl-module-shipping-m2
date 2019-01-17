@@ -7,6 +7,26 @@
                     <item name="components" xsi:type="array">
                         <item name="checkout" xsi:type="array">
                             <item name="children" xsi:type="array">
+                                <item name="sidebar" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="summary" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="totals" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="service_fee" xsi:type="array">
+                                                            <item name="component" xsi:type="string">Dhl_Shipping/js/view/checkout/service-fee</item>
+                                                            <item name="sortOrder" xsi:type="string">20</item>
+                                                            <item name="config" xsi:type="array">
+                                                                <item name="template" xsi:type="string">Dhl_Shipping/checkout/summary/service-fee</item>
+                                                                <item name="title" xsi:type="string" translate="true">DHL Custom Package Delivery Service Fee</item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
                                 <item name="steps" xsi:type="array">
                                     <item name="children" xsi:type="array">
                                         <item name="shipping-step" xsi:type="array">

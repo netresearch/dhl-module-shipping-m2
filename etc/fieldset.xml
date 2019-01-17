@@ -30,6 +30,20 @@
             <field name="dhl_shipping_info">
                 <aspect name="to_order_address"/>
             </field>
+            <field name="dhl_service_charge">
+                <aspect name="to_order"/>
+            </field>
+            <field name="base_dhl_service_charge">
+                <aspect name="to_order"/>
+            </field>
+        </fieldset>
+        <fieldset id="sales_convert_quote">
+            <field name="dhl_service_charge">
+                <aspect name="to_order"/>
+            </field>
+            <field name="base_dhl_service_charge">
+                <aspect name="to_order"/>
+            </field>
         </fieldset>
     </scope>
 </config>
