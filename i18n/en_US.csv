@@ -71,7 +71,7 @@
 "Allow customers to declare a preferred neighbour during checkout.","Allow customers to declare a preferred neighbour during checkout."
 "Parcel Announcement","Parcel Announcement"
 "Enable parcel announcement","Enable parcel announcement"
-"Allow customers to declare getting sent shipment status updates by DHL during checkout.","Allow customers to declare getting sent shipment status updates by DHL during checkout."
+"Allow customers to request shipment status updates by DHL during checkout.","Allow customers to declare getting sent shipment status updates by DHL during checkout."
 "Visual Check of Age","Visual Check of Age"
 "Enable Visual Check of Age","Enable Visual Check of Age"
 "Display the age check service while creating shipments.","Display the age check service while creating shipments."
