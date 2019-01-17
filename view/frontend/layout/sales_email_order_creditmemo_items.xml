@@ -27,7 +27,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Email Invoice Items List" design_abstraction="custom">
     <body>
         <referenceBlock name="creditmemo_totals">
-            <block class="Dhl\Shipping\Block\Sales\Totals" name="service_charge" as="service_charge"/>
+            <block class="Dhl\Shipping\Block\Adminhtml\Sales\Totals" name="service_charge" as="service_charge"/>
         </referenceBlock>
     </body>
 </page>
