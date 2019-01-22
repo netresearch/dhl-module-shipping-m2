@@ -27,8 +27,7 @@
         "magento/zendframework1": "~1.12.16 || ~1.13.0 || ~1.14.0",
         "azuyalabs/yasumi": "^1.8.0",
         "dhl/lib-shipping-mx": "~0.10",
-        "dhl/sdk-api-parcel-management": "^0.1.0",
-        "dhl/module-service-charge-m2": "^1.0.0"
+        "dhl/sdk-api-parcel-management": "^0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0.9",
