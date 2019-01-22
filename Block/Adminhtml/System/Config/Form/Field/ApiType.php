@@ -30,8 +30,7 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Magento\Backend\Block\Template\Context;
 use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
-use Magento\Store\Api\StoreResolverInterface;
-use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\Website;
 
 /**
@@ -53,11 +52,6 @@ class ApiType extends Field
     private $moduleConfig;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
      * ApiType constructor.
      *
      * @param Context $context
@@ -67,12 +61,9 @@ class ApiType extends Field
     public function __construct(
         Context $context,
         ModuleConfigInterface $moduleConfig,
-        StoreManagerInterface $storeManager,
-        StoreResolverInterface $storeResolver,
         array $data = []
     ) {
         $this->moduleConfig = $moduleConfig;
-        $this->storeManager = $storeManager;
 
         parent::__construct($context, $data);
     }
@@ -95,8 +86,12 @@ class ApiType extends Field
 
         $websiteId = $this->_request->getParam('website');
         if ($websiteId) {
-            /** @var Website $website */
-            $website = $this->storeManager->getWebsite($websiteId);
+            try {
+                /** @var Website $website */
+                $website = $this->_storeManager->getWebsite($websiteId);
+            } catch (LocalizedException $exception) {
+                return parent::_getElementHtml($element);
+            }
             $storeId = current($website->getStoreIds());
         } else {
             $storeId = $this->_request->getParam('store');
