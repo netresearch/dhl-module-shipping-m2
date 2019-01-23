@@ -2,7 +2,7 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="general_shipping_settings" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>General Shipping Settings</label>
-        <attribute type="expanded">1</attribute>
+        <attribute type="expanded">0</attribute>
         <depends>
             <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
         </depends>

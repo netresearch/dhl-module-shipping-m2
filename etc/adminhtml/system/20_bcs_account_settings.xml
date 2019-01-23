@@ -3,7 +3,7 @@
     <group id="bcs_account_settings" translate="label comment" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Business Customer Shipping Account Data</label>
         <comment>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</comment>
-        <attribute type="expanded">1</attribute>
+        <attribute type="expanded">0</attribute>
         <depends>
             <field id="carriers/dhlshipping/api_type" separator=",">bcs</field>
             <field id="carriers/dhlshipping/sandbox_mode">0</field>

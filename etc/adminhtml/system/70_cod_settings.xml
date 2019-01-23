@@ -3,7 +3,7 @@
     <group id="cod_settings" translate="label comment" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Cash on Delivery Settings</label>
         <comment>Configure the use of Cash on Delivery payments.</comment>
-        <attribute type="expanded">1</attribute>
+        <attribute type="expanded">0</attribute>
         <depends>
             <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
         </depends>

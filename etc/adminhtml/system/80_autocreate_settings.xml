@@ -2,6 +2,7 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="autocreate_settings" translate="label comment" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Default shipping label creation settings</label>
+        <attribute type="expanded">0</attribute>
         <comment>Used for prefilling fields in manual label creation and for bulk actions.</comment>
         <depends>
             <field id="carriers/dhlshipping/api_type" separator=",">bcs,gla</field>
