@@ -4,6 +4,11 @@
   margin-top: 20px;
   margin-bottom: 20px !important;
 
+  /** Work around the wrapping layout for checkboxes with tooltip, see DHLVM2-340. **/
+  .field .control._with-tooltip input {
+    width: auto !important;
+  }
+
   .admin__field-option {
     display: inline-block;
     margin-right: 1px;

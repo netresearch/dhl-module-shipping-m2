@@ -82,7 +82,6 @@ class PreferredDayOptionProvider implements OptionProviderInterface
      * @param string[] $service
      * @param string[] $args
      * @return string[]
-     * @throws \Dhl\ParcelManagement\ApiException
      * @throws \Exception
      */
     public function enhanceServiceWithOptions($service, $args)

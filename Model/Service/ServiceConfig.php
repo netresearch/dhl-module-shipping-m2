@@ -133,6 +133,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
+            ServiceSettingsInterface::TOOLTIP => 'Your e-mail address will be sent to DHL upon enabling, after which DHL will trigger a package announcement for your shipment. The e-mail address will exclusively be used for the announcement of this shipment.',
             ServiceSettingsInterface::OPTIONS => [],
             ServiceSettingsInterface::SORT_ORDER => 30,
         ];
