@@ -67,6 +67,8 @@ define([
             if (this.serviceInput.tooltip) {
                 this.tooltip = {description: this.serviceInput.tooltip};
             }
+            this.hasAsterisk = this.serviceInput.hasAsterisk;
+            this.notice(this.serviceInput.infoText);
             this.inputName = this.serviceInput.code;
             this.autocomplete = this.serviceInput.code;
             this.serviceCode = this.service.code;
@@ -75,7 +77,7 @@ define([
         getTemplateForType: function (type) {
             var templates = {
                 text: 'ui/form/element/input',
-                checkbox: 'ui/form/element/checkbox',
+                checkbox: 'Dhl_Shipping/checkout/form/element/checkbox',
                 time: 'Dhl_Shipping/checkout/form/element/radio',
                 date: 'Dhl_Shipping/checkout/form/element/radio'
             };

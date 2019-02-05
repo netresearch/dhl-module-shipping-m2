@@ -219,12 +219,4 @@
             </argument>
         </arguments>
     </virtualType>
-
-    <!-- Service Charges -->
-    <type name="Dhl\Shipping\Model\ConfigProvider">
-        <plugin name="dhl_after_getconfig" type="Dhl\Shipping\Plugin\ConfigProviderPlugin"/>
-    </type>
-    <type name="Dhl\Shipping\Model\Service\ServiceConfig">
-        <plugin name="dhl_after_getservicesettings" type="Dhl\Shipping\Plugin\ServiceConfigProviderPlugin"/>
-    </type>
 </config>

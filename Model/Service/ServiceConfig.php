@@ -27,6 +27,7 @@ namespace Dhl\Shipping\Model\Service;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Model\Config\ConfigAccessorInterface;
+use Dhl\Shipping\Model\Config\ServiceChargeConfig;
 use Dhl\Shipping\Service\Bcs\BulkyGoods;
 use Dhl\Shipping\Service\Bcs\Insurance;
 use Dhl\Shipping\Service\Bcs\ParcelAnnouncement;
@@ -53,12 +54,22 @@ class ServiceConfig
     private $configAccessor;
 
     /**
-     * ServiceConfig constructor.
-     * @param ConfigAccessorInterface $configAccessor
+     * @var ServiceChargeConfig
      */
-    public function __construct(ConfigAccessorInterface $configAccessor)
-    {
+    private $serviceChargeConfig;
+
+    /**
+     * ServiceConfig constructor.
+     *
+     * @param ConfigAccessorInterface $configAccessor
+     * @param ServiceChargeConfig $serviceChargeConfig
+     */
+    public function __construct(
+        ConfigAccessorInterface $configAccessor,
+        ServiceChargeConfig $serviceChargeConfig
+    ) {
         $this->configAccessor = $configAccessor;
+        $this->serviceChargeConfig = $serviceChargeConfig;
     }
 
     /**
@@ -80,6 +91,9 @@ class ServiceConfig
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 10,
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::INFO_TEXT => $this->serviceChargeConfig->getPrefDayHandlingChargeText(),
+            ServiceSettingsInterface::HAS_ASTERISK => $this->serviceChargeConfig->getCombinedChargeText() &&
+                $this->serviceChargeConfig->getCombinedCharge(),
         ];
 
         $bulkyGoodsConfig = [
@@ -128,12 +142,13 @@ class ServiceConfig
             $store
         );
         $parcelAnnouncementConfig = [
-            ServiceSettingsInterface::NAME => 'Parcel Announcement',
+            ServiceSettingsInterface::NAME => 'Enable DHL Parcel Notification',
             ServiceSettingsInterface::IS_ENABLED => $parcelAnnouncementEnabled,
             ServiceSettingsInterface::IS_CUSTOMER_SERVICE => true,
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::TOOLTIP => 'Your e-mail address will be sent to DHL upon enabling, after which DHL will trigger a package announcement for your shipment. The e-mail address will exclusively be used for the announcement of this shipment.',
+            ServiceSettingsInterface::INFO_TEXT => 'When you enable parcel notifications, DHL will inform you via email about the planned delivery of your shipment.',
             ServiceSettingsInterface::OPTIONS => [],
             ServiceSettingsInterface::SORT_ORDER => 30,
         ];
@@ -178,6 +193,9 @@ class ServiceConfig
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::SORT_ORDER => 20,
             ServiceSettingsInterface::OPTIONS => [],
+            ServiceSettingsInterface::INFO_TEXT => $this->serviceChargeConfig->getPrefTimeHandlingChargeText(),
+            ServiceSettingsInterface::HAS_ASTERISK => $this->serviceChargeConfig->getCombinedChargeText() &&
+                $this->serviceChargeConfig->getCombinedCharge(),
         ];
 
         $printOnlyIfCodeableConfig = [

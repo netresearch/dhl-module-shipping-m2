@@ -25,6 +25,7 @@
 
 namespace Dhl\Shipping\Model;
 
+use Dhl\Shipping\Model\Config\ServiceChargeConfig;
 use Magento\Framework\View\Asset\Repository;
 
 /**
@@ -40,13 +41,20 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
     private $assetRepo;
 
     /**
+     * @var ServiceChargeConfig
+     */
+    private $serviceChargeConfig;
+
+    /**
      * ConfigProvider constructor.
      *
      * @param Repository $assetRepo
+     * @param ServiceChargeConfig $serviceChargeConfig
      */
-    public function __construct(Repository $assetRepo)
+    public function __construct(Repository $assetRepo, ServiceChargeConfig $serviceChargeConfig)
     {
         $this->assetRepo = $assetRepo;
+        $this->serviceChargeConfig = $serviceChargeConfig;
     }
 
     /**
@@ -60,7 +68,7 @@ class ConfigProvider implements \Magento\Checkout\Model\ConfigProviderInterface
                 __('Please choose your preferred delivery options.')
             ],
             'dhl_logo_image_url' => $this->assetRepo->getUrl('Dhl_Shipping::images/dhl_logo.png'),
-            'dhl_service_block_after' =>  [],
+            'dhl_service_block_after' => [$this->serviceChargeConfig->getCombinedChargeText()],
         ];
 
         return $config;

@@ -78,7 +78,8 @@ class ServiceHydrator
             'validationRules' => $input->getValidationRules(),
             'inputType'       => $input->getInputType(),
             'value'           => $input->getValue(),
-            'infoText'        => __($input->getInfoText())
+            'infoText'        => __($input->getInfoText()),
+            'hasAsterisk'     => $input->hasAsterisk(),
         ];
     }
 }
