@@ -186,7 +186,6 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      */
     private function getShippingProducts($countryShipper, $countryRecipient, $store)
     {
-
         // read available codes
         if (!$countryShipper || !$countryRecipient) {
             $codes = $this->shippingProducts->getAllCodes();

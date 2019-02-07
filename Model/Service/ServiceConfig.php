@@ -151,6 +151,7 @@ class ServiceConfig
             ServiceSettingsInterface::INFO_TEXT => 'When you enable parcel notifications, DHL will inform you via email about the planned delivery of your shipment.',
             ServiceSettingsInterface::OPTIONS => [],
             ServiceSettingsInterface::SORT_ORDER => 30,
+            ServiceSettingsInterface::IS_MERCHANT_READONLY => true,
         ];
 
         $preferredLocationEnabled = (bool) $this->configAccessor->getConfigValue(

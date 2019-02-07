@@ -22,4 +22,12 @@
     flex: 0 1 200px;
     margin: 10px;
   }
+
+  label.disabled, :not(.disabled) > :disabled {
+    opacity: .5;
+    cursor: not-allowed !important;
+  }
+  :disabled + i.custom-checkbox {
+    cursor: not-allowed;
+  }
 }

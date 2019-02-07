@@ -28,7 +28,7 @@
     $input = $block->getData('input');
 ?>
 <dt class="service-<?= /* @noEscape */ $service->getCode(); ?>">
-    <label class="checkbox-label">
+    <label class="checkbox-label <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>">
         <input
                 type="checkbox"
                 class="checkbox"
@@ -37,6 +37,7 @@
                 data-input_code="<?= /* @noEscape */ $input->getCode() ?>"
                 value="<?= /* @noEscape */ $service->getCode() ?>"
                 <?= /* @noEscape */ $service->isSelected() ? 'checked' : ''; ?>
+                <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>
         />
         <i class="custom-checkbox"></i>
         <?= $block->escapeHtml(__($service->getName())) ?>

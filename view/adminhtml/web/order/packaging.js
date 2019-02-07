@@ -391,7 +391,6 @@ define(["underscore", "prototype", "Magento_Shipping/order/packaging"], function
                     // Collect customs information
                     if (element.type.match('checkbox')) {
                         inputValue = element.checked;
-
                     } else if (element.type.match('select')) {
                         inputValue = element.options[element.selectedIndex].value
                     } else {

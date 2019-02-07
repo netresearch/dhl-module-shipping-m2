@@ -31,7 +31,7 @@
 
 <dt class="service-checkboxset <?= /* @noEscape */ $service->getCode() ?>">
     <?php foreach ($input->getOptions() as $option) : ?>
-        <label class="checkbox-label">
+        <label class="checkbox-label" <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>>
             <input <?= /* @noEscape */ $input->getValue() === $option['value'] ? 'checked' : ''; ?>
                     type="checkbox"
                     class="checkbox"
@@ -39,6 +39,7 @@
                     data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
                     data-input_code="<?= /* @noEscape */ $input->getCode() ?>"
                     value="<?= $block->escapeHtmlAttr($option['value']) ?>"
+                    <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>
             />
             <i class="custom-checkbox"></i>
             <?= $block->escapeHtml(__($option['label'])) ?>

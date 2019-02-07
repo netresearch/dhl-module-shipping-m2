@@ -32,5 +32,6 @@ $input = $block->getData('input');
            class="input-text admin__control-text"
            data-module="dhl_shipping"
            data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
-           data-input_code="<?= /* @noEscape */ $input->getCode() ?>">
+           data-input_code="<?= /* @noEscape */ $input->getCode() ?>"
+           <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>>
 </dd>

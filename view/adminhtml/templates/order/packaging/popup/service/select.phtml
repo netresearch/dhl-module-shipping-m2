@@ -34,7 +34,8 @@
     <select class="admin__control-select"
             data-module="dhl_shipping"
             data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
-            data-input_code="<?= /* @noEscape */ $input->getCode() ?>">
+            data-input_code="<?= /* @noEscape */ $input->getCode() ?>"
+            <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>>
         <option <?= $input->getValue() ? '' : 'selected'; ?> value="">
             <?= __('Please select'); ?>
         </option>

@@ -26,9 +26,7 @@ namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Api\ServiceProviderInterface;
-use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 
 /**
  * Central hub for all shipping services, e.g.
@@ -45,23 +43,17 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 class ServicePool implements ServicePoolInterface
 {
     /**
-     * @var ModuleConfigInterface
-     */
-    private $config;
-
-    /**
      * @var ServiceProviderInterface[]
      */
     private $serviceProviders;
 
     /**
      * ServicePool constructor.
-     * @param ModuleConfigInterface $config
+     *
      * @param ServiceProviderInterface[] $serviceProviders
      */
-    public function __construct(ModuleConfigInterface $config, $serviceProviders = [])
+    public function __construct($serviceProviders = [])
     {
-        $this->config = $config;
         $this->serviceProviders = $serviceProviders;
     }
 
