@@ -112,8 +112,9 @@ class ConfigAccessor implements ConfigAccessorInterface
     {
         $scope = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
         if ($store) {
-            $scope = ScopeInterface::SCOPE_STORE;
-            $store = $this->storeManager->getStore($store)->getCode();
+            //$scope = ScopeInterface::SCOPE_STORE;
+            $scope = ScopeInterface::SCOPE_WEBSITE;
+            //$store = $this->storeManager->getStore($store)->getCode();
         }
 
         return $this->scopeConfig->getValue($path, $scope, $store);
