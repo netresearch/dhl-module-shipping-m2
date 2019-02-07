@@ -22,20 +22,22 @@
  */
 ?>
 <?php
-    /** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Services $block */
-    $services = $block->getServices();
+/** @var Dhl\Shipping\Block\Adminhtml\Order\Shipment\Services $block */
+$services = $block->getServices();
 ?>
 
 <?php if ($services->count() > 0) : ?>
     <dl>
         <h3><?= __('DHL Shipping Services'); ?></h3>
         <div class="dhl-service-block-container">
-        <?php foreach ($services as $service) : ?>
-            <div class="dhl-service-block">
-                <h4><?= $block->escapeHtml(__($service->getName())) ?></h4>
-                <?= /* @noEscape */ $block->getServiceHtml($service) ?>
-            </div>
-        <?php endforeach; ?>
+            <?php foreach ($services as $service) : ?>
+                <?php if ($output = $block->getServiceHtml($service)): ?>
+                    <div class="dhl-service-block">
+                        <h4><?= $block->escapeHtml(__($service->getName())) ?></h4>
+                        <?= /* @noEscape */ $output ?>
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
         </div>
     </dl>
 <?php endif; ?>

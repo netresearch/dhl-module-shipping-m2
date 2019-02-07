@@ -28,7 +28,7 @@
     /** @var \Dhl\Shipping\Api\Data\Service\ServiceInputInterface $input */
     $input = $block->getData('input');
 ?>
-
+<?php if(!empty($input->getOptions())): ?>
 <dt class="service-checkboxset <?= /* @noEscape */ $service->getCode() ?>">
     <?php foreach ($input->getOptions() as $option) : ?>
         <label class="checkbox-label" <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>>
@@ -46,3 +46,5 @@
         </label>
     <?php endforeach; ?>
 </dt>
+<?php endif; ?>
+
