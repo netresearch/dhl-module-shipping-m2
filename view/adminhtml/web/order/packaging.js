@@ -378,7 +378,7 @@ define(["underscore", "prototype", "Magento_Shipping/order/packaging"], function
                 if (serviceCode && serviceInputCode) {
                     // Collect service information
                     if (element.type.match('checkbox')) {
-                        inputValue = element.checked;
+                        inputValue = element.checked ? element.value : '';
                     } else if (element.type.match('select')) {
                         inputValue = element.options[element.selectedIndex].value
                     } else {

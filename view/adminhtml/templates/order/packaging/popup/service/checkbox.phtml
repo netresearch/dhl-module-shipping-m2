@@ -25,21 +25,22 @@
     /** @var \Magento\Backend\Block\Template $block */
     /** @var \Dhl\Shipping\Api\Data\ServiceInterface $service */
     $service = $block->getData('service');
+    /** @var \Dhl\Shipping\Api\Data\Service\ServiceInputInterface $input */
     $input = $block->getData('input');
 ?>
-<dt class="service-<?= /* @noEscape */ $service->getCode(); ?>">
+<dt class="service-<?= $block->escapeHtml($service->getCode()); ?>">
     <label class="checkbox-label <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>">
         <input
                 type="checkbox"
                 class="checkbox"
                 data-module="dhl_shipping"
-                data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
-                data-input_code="<?= /* @noEscape */ $input->getCode() ?>"
-                value="<?= /* @noEscape */ $service->getCode() ?>"
+                data-service_code="<?= $block->escapeHtml($service->getCode()); ?>"
+                data-input_code="<?= $block->escapeHtml($input->getCode()); ?>"
+                value="<?= $block->escapeHtml($input->getValue()); ?>"
                 <?= /* @noEscape */ $service->isSelected() ? 'checked' : ''; ?>
                 <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>
         />
         <i class="custom-checkbox"></i>
-        <?= $block->escapeHtml(__($service->getName())) ?>
+        <?= $block->escapeHtml(__($service->getName())); ?>
     </label>
 </dt>
