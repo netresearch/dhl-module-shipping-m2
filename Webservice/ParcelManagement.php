@@ -29,6 +29,7 @@ use Dhl\ParcelManagement\Api\CheckoutApi;
 use Dhl\ParcelManagement\ApiException;
 use Dhl\ParcelManagement\Model\AvailableServicesMap;
 use Dhl\Shipping\Model\Config\BcsConfig;
+use Dhl\Shipping\Util\Logger;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
@@ -59,17 +60,22 @@ class ParcelManagement
     private $serviceResponse = null;
 
     /**
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * ParcelManagement constructor.
      *
      * @param CheckoutApi $checkoutApi
      * @param BcsConfig $bcsConfig
+     * @param Logger $logger
      */
-    public function __construct(
-        CheckoutApi $checkoutApi,
-        BcsConfig $bcsConfig
-    ) {
+    public function __construct(CheckoutApi $checkoutApi, BcsConfig $bcsConfig, Logger $logger)
+    {
         $this->checkoutApi = $checkoutApi;
         $this->bcsConfig = $bcsConfig;
+        $this->logger = $logger;
     }
 
     /**
@@ -123,7 +129,14 @@ class ParcelManagement
                           ->setApiKey(self::API_KEY_IDENTIFIER, $apiKey);
 
         try {
+            $this->logger->debug(
+                'Calling Parcel Management API:' . PHP_EOL
+                . "EKP: $ekp, ZIP: $postalCode, Date: " . $date->format('Y-m-d')
+            );
             $response = $this->checkoutApi->checkoutRecipientZipAvailableServicesGet($ekp, $postalCode, $date);
+            $this->logger->debug(
+                'Parcel Management API response:' . PHP_EOL . $response
+            );
         } catch (ApiException $e) {
             throw new LocalizedException(__('Parcel Management API error occured'), $e);
         }
