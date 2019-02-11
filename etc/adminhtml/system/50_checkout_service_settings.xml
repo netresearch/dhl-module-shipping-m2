@@ -20,7 +20,7 @@
             <config_path>carriers/dhlshipping/service_preferredneighbour_enabled</config_path>
         </field>
         <field id="service_parcelannouncement_enabled" translate="label comment tooltip" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label>Enable parcel announcement</label>
+            <label>Enable DHL Parcel Notification</label>
             <comment><![CDATA[Allow customers to request shipment status updates by DHL during checkout.]]></comment>
             <tooltip><![CDATA[Please note that you need to mention the data transmission in your privacy policy for GDPR compliance.]]></tooltip>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
