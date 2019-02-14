@@ -64,8 +64,6 @@ Then navigate to the project root directory and run the following commands:
 If you prefer to install the module using [git](https://git-scm.com/), run the
 following commands in your project root directory:
 
-    composer config repositories.dhl-module-shipping-m2 vcs https://github.com/netresearch/dhl-module-shipping-m2.git
-    composer config repositories.dhl-lib-shipping vcs https://github.com/netresearch/dhl-lib-shipping-mx.git
     composer require dhl/module-shipping-m2:0.10.0
 
 ### Enable Module ###
