@@ -1,11 +1,10 @@
 define([
     'Magento_Ui/js/form/element/abstract',
-    'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/model/service-validation-map',
     'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/action/validate-service-compatibility',
     'Dhl_Shipping/js/action/enforce-service-compatibility',
-], function (Component, serviceModel, serviceValidationMap, serviceSelection, validateCompatibility, enforceCompatibility) {
+], function (Component, serviceValidationMap, serviceSelection, validateCompatibility, enforceCompatibility) {
     'use strict';
 
     return Component.extend({
@@ -32,13 +31,13 @@ define([
 
             this.value.subscribe(function (value) {
                 if (value) {
-                    serviceModel.addService(
+                    serviceSelection.addService(
                         this.service.code,
                         this.serviceInput.code,
                         value
                     );
                 } else {
-                    serviceModel.removeService(
+                    serviceSelection.removeService(
                         this.service.code,
                         this.serviceInput.code
                     );

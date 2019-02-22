@@ -1,7 +1,3 @@
-/**
- * Refer to LICENSE.txt distributed with the Temando Shipping module for notice of license
- */
-
 define([
     'Magento_Checkout/js/model/url-builder',
     'Magento_Customer/js/model/customer',
@@ -63,8 +59,8 @@ define([
     return function (countryId, shippingMethod, postalCode) {
         var fromCache = storage.get(countryId + shippingMethod + postalCode);
         if (fromCache) {
-            //updateModels(fromCache);
-            //return;
+            updateModels(fromCache);
+            return;
         }
 
         var serviceUrl = buildRequestUrl(),
