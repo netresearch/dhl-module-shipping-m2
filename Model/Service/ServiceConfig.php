@@ -148,7 +148,7 @@ class ServiceConfig
             ServiceSettingsInterface::IS_MERCHANT_SERVICE => true,
             ServiceSettingsInterface::IS_SELECTED => false,
             ServiceSettingsInterface::TOOLTIP => 'Your e-mail address will be sent to DHL upon enabling, after which DHL will trigger a package announcement for your shipment. The e-mail address will exclusively be used for the announcement of this shipment.',
-            ServiceSettingsInterface::INFO_TEXT => 'When you enable parcel notifications, DHL will inform you via email about the planned delivery of your shipment.',
+            ServiceSettingsInterface::INFO_TEXT => 'By enabling the parcel notification, DHL informs you by e-mail about the planned delivery of your shipment.',
             ServiceSettingsInterface::OPTIONS => [],
             ServiceSettingsInterface::SORT_ORDER => 30,
             ServiceSettingsInterface::IS_MERCHANT_READONLY => true,
