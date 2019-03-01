@@ -29,7 +29,7 @@ use Dhl\ParcelManagement\Api\CheckoutApi;
 use Dhl\ParcelManagement\ApiException;
 use Dhl\ParcelManagement\Model\AvailableServicesMap;
 use Dhl\Shipping\Model\Config\BcsConfig;
-use Dhl\Shipping\Util\Logger;
+use Dhl\Shipping\Util\Logger as BaseLogger;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
@@ -60,7 +60,7 @@ class ParcelManagement
     private $serviceResponse = null;
 
     /**
-     * @var Logger
+     * @var BaseLogger
      */
     private $logger;
 
@@ -69,9 +69,9 @@ class ParcelManagement
      *
      * @param CheckoutApi $checkoutApi
      * @param BcsConfig $bcsConfig
-     * @param Logger $logger
+     * @param BaseLogger $logger
      */
-    public function __construct(CheckoutApi $checkoutApi, BcsConfig $bcsConfig, Logger $logger)
+    public function __construct(CheckoutApi $checkoutApi, BcsConfig $bcsConfig, BaseLogger $logger)
     {
         $this->checkoutApi = $checkoutApi;
         $this->bcsConfig = $bcsConfig;
