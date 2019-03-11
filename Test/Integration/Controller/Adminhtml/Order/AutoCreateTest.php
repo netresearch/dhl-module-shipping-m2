@@ -26,16 +26,12 @@ namespace Dhl\Shipping\Controller\Adminhtml\Order;
 
 use Dhl\Shipping\AutoCreate\LabelGenerator;
 use Dhl\Shipping\AutoCreate\LabelGeneratorInterface;
-use Dhl\Shipping\AutoCreate\OrderProvider;
-use Dhl\Shipping\AutoCreate\OrderProviderInterface;
 use Dhl\Shipping\Model\Config\ModuleConfigInterface;
-use Dhl\Shipping\Model\Config\ModuleConfig;
 use Dhl\Shipping\Model\Config\ServiceConfigInterface;
 use Dhl\Shipping\Model\CreateShipment;
 use Dhl\Shipping\Test\Fixture\OrderCollectionFixture;
 use Magento\Framework\Message\Manager;
-use Magento\Sales\Api\OrderRepositoryInterface;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Store\Model\StoresConfig;
 use Magento\TestFramework\Helper\Bootstrap;
@@ -122,6 +118,10 @@ class AutoCreateTest extends \PHPUnit\Framework\TestCase
 
         /** @var Collection $orderCollection */
         $orderCollection = $this->objectManager->create(Collection::class);
+        $orderCollection->addFieldToFilter(
+            OrderInterface::INCREMENT_ID,
+            ['in' => OrderCollectionFixture::getOrderIncrementIds()]
+        );
 
         $filter = $this->getMockBuilder(Filter::class)
             ->disableOriginalConstructor()
