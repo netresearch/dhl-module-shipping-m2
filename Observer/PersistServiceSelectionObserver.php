@@ -30,7 +30,6 @@ use Dhl\Shipping\Model\Config\ModuleConfigInterface;
 use Dhl\Shipping\Model\Order\ServiceSelection;
 use Dhl\Shipping\Model\Order\ServiceSelectionFactory;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
-use Dhl\Shipping\Service\AbstractService;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Quote\Model\Quote;

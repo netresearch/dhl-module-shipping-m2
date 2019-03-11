@@ -25,8 +25,10 @@ namespace Dhl\Shipping\Test\Fixture;
 
 use Dhl\Shipping\Model\Shipping\Carrier;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Sales\Model\Order\Address as OrderAddress;
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Address as OrderAddress;
 use Magento\Sales\Model\OrderRepository;
 use Magento\TestFramework\Helper\Bootstrap;
 
@@ -100,24 +102,18 @@ final class OrderCollectionFixture
      */
     private function getOrderAddress($addressType)
     {
-        $address = Bootstrap::getObjectManager()
-                            ->create(
-                                OrderAddress::class,
-                                [
-                                    'data' => [
-                                        'address_type' => $addressType,
-                                        'email' => self::$customerData['email'],
-                                        'firstname' => self::$customerData['firstname'],
-                                        'lastname' => self::$customerData['lastname'],
-                                        'company' => self::$customerData['company'],
-                                        'street' => self::$customerData['street'],
-                                        'city' => self::$customerData['city'],
-                                        'postcode' => self::$customerData['postcode'],
-                                        'country_id' => self::$customerData['country'],
-                                        'telephone' => self::$customerData['phone'],
-                                    ]
-                                ]
-                            );
+        $address = Bootstrap::getObjectManager()->create(OrderAddress::class, ['data' => [
+            'address_type' => $addressType,
+            'email' => self::$customerData['email'],
+            'firstname' => self::$customerData['firstname'],
+            'lastname' => self::$customerData['lastname'],
+            'company' => self::$customerData['company'],
+            'street' => self::$customerData['street'],
+            'city' => self::$customerData['city'],
+            'postcode' => self::$customerData['postcode'],
+            'country_id' => self::$customerData['country'],
+            'telephone' => self::$customerData['phone'],
+        ]]);
 
         return $address;
     }
@@ -160,13 +156,9 @@ final class OrderCollectionFixture
             self::$orderData[$orderIncrementId]
         );
         /** @var \Magento\Sales\Model\Order $order */
-        $order = Bootstrap::getObjectManager()
-                          ->create(
-                              \Magento\Sales\Model\Order::class,
-                              [
-                                  'data' => $orderData
-                              ]
-                          );
+        $order = Bootstrap::getObjectManager()->create(\Magento\Sales\Model\Order::class, [
+            'data' => $orderData
+        ]);
 
         foreach (self::$productData as $sku => $productData) {
             $orderItemQty = $productData['qty'];
@@ -228,7 +220,7 @@ final class OrderCollectionFixture
     // --------------------------------- Create and Rollback functions ----------------------------------//
 
     /**
-     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @return void
      */
     public function createOrders()
     {
@@ -236,8 +228,7 @@ final class OrderCollectionFixture
 
         // save products
         /** @var ProductRepositoryInterface $productRepository */
-        $productRepository = Bootstrap::getObjectManager()
-                                      ->get(ProductRepositoryInterface::class);
+        $productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         foreach (self::$productData as $sku => &$productData) {
             $product = Bootstrap::getObjectManager()->create(\Magento\Catalog\Model\Product::class);
             $product->setTypeId('simple')
@@ -258,31 +249,21 @@ final class OrderCollectionFixture
         }
 
         // save order
-        $orderRepository = Bootstrap::getObjectManager()
-                                    ->get(OrderRepository::class);
+        /** @var OrderRepository $orderRepository */
+        $orderRepository = Bootstrap::getObjectManager()->get(OrderRepository::class);
         foreach ($orderIncrementIds as $orderIncrementId) {
-            $order = $this->getOrder(
-                $orderIncrementId,
-                null
-            );
+            $order = $this->getOrder($orderIncrementId, null);
             $orderBillingAddress = $this->getOrderAddress(OrderAddress::TYPE_BILLING);
             $orderShippingAddress = $this->getOrderAddress(OrderAddress::TYPE_SHIPPING);
-            $payment = Bootstrap::getObjectManager()
-                                ->create(
-                                    \Magento\Sales\Model\Order\Payment::class,
-                                    [
-                                        'data' => [
-                                            'method' => 'checkmo',
-                                        ]
-                                    ]
-                                );
+            $payment = Bootstrap::getObjectManager()->create(\Magento\Sales\Model\Order\Payment::class, ['data' => [
+                'method' => 'checkmo'
+            ]]);
             $order->setBillingAddress($orderBillingAddress);
             $order->setShippingAddress($orderShippingAddress);
             $order->setPayment($payment);
 
             $orderRepository->save($order);
         }
-        return $order;
     }
 
     public function rollbackOrders()
@@ -290,20 +271,13 @@ final class OrderCollectionFixture
         $orderIncrementIds = $this->getOrderIncrementIds();
 
         /** @var OrderRepository $orderRepository */
-        $orderRepository = Bootstrap::getObjectManager()
-                                    ->get(OrderRepository::class);
+        $orderRepository = Bootstrap::getObjectManager()->get(OrderRepository::class);
         /** @var ProductRepositoryInterface|ProductRepository $productRepository */
-        $productRepository = Bootstrap::getObjectManager()
-                                      ->get(ProductRepositoryInterface::class);
+        $productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
 
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = Bootstrap::getObjectManager()
-                                          ->create(SearchCriteriaBuilder::class);
-        $searchCriteriaBuilder->addFilter(
-            'increment_id',
-            $orderIncrementIds,
-            'in'
-        );
+        $searchCriteriaBuilder = Bootstrap::getObjectManager()->create(SearchCriteriaBuilder::class);
+        $searchCriteriaBuilder->addFilter('increment_id', $orderIncrementIds, 'in');
         $searchResult = $orderRepository->getList($searchCriteriaBuilder->create());
         foreach ($searchResult as $order) {
             $orderRepository->delete($order);
@@ -311,13 +285,8 @@ final class OrderCollectionFixture
 
         $skus = array_keys(self::$productData);
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = Bootstrap::getObjectManager()
-                                          ->create(SearchCriteriaBuilder::class);
-        $searchCriteriaBuilder->addFilter(
-            'sku',
-            $skus,
-            'in'
-        );
+        $searchCriteriaBuilder = Bootstrap::getObjectManager()->create(SearchCriteriaBuilder::class);
+        $searchCriteriaBuilder->addFilter('sku', $skus, 'in');
         $searchResult = $productRepository->getList($searchCriteriaBuilder->create());
         foreach ($searchResult->getItems() as $product) {
             $productRepository->delete($product);
@@ -336,8 +305,7 @@ final class OrderCollectionFixture
     public static function createOrdersFixture()
     {
         /** @var OrderCollectionFixture $self */
-        $self = Bootstrap::getObjectManager()
-                         ->create(static::class);
+        $self = Bootstrap::getObjectManager()->create(static::class);
         $self->createOrders();
     }
 
@@ -349,8 +317,7 @@ final class OrderCollectionFixture
     public static function createOrdersRollback()
     {
         /** @var OrderCollectionFixture $self */
-        $self = Bootstrap::getObjectManager()
-                         ->create(static::class);
+        $self = Bootstrap::getObjectManager()->create(static::class);
         $self->rollbackOrders();
     }
 }

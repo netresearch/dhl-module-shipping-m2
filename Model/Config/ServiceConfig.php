@@ -25,8 +25,6 @@
 
 namespace Dhl\Shipping\Model\Config;
 
-use Dhl\Shipping\Service;
-
 /**
  * ServiceConfig
  *
