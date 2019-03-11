@@ -25,7 +25,7 @@
 
 namespace Dhl\Shipping\Model\Service;
 
-use Dhl\Shipping\Api\Data\Service\ServiceInputInterface;
+use Dhl\Shipping\Api\Data\ServiceInputInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 
 /**

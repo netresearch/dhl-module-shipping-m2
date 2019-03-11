@@ -27,7 +27,7 @@
 namespace Dhl\Shipping\Api\Data;
 
 /**
- * Interface ServiceCompatibilityInterface
+ * Compatibility information between services.
  *
  * @package Dhl\Shipping\Api
  */

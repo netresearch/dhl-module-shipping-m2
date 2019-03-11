@@ -26,7 +26,7 @@ namespace Dhl\Shipping\Model\Service;
 
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Api\ServiceProviderInterface;
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\ServiceSettingsInterface;
 
 /**
  * Central hub for all shipping services, e.g.

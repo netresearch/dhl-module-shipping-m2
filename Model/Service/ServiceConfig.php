@@ -24,7 +24,7 @@
  */
 namespace Dhl\Shipping\Model\Service;
 
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\ServiceSettingsInterface;
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Model\Config\ConfigAccessorInterface;
 use Dhl\Shipping\Model\Config\ServiceChargeConfig;

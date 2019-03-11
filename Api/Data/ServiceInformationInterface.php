@@ -27,23 +27,29 @@
 namespace Dhl\Shipping\Api\Data;
 
 /**
- * Interface ServiceInformationInterface
+ * Service data comprises metadata about each service and about relationships between them.
  *
  * @package Dhl\Shipping\Api
  */
 interface ServiceInformationInterface
 {
     /**
-     * @return \Dhl\Shipping\Api\Data\ServiceInterface[];
+     * Service metadata like rendering information and validation rules.
+     *
+     * @return \Dhl\Shipping\Api\Data\ServiceInterface[]
      */
     public function getServices();
 
     /**
+     * Compatibility information between services.
+     *
      * @return \Dhl\Shipping\Api\Data\ServiceCompatibilityInterface[]
      */
     public function getCompatibility();
 
     /**
+     * Shipping methods to be processed with DHL.
+     *
      * @return string[]
      */
     public function getMethods();

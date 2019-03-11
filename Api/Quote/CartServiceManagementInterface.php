@@ -26,9 +26,7 @@
 namespace Dhl\Shipping\Api\Quote;
 
 /**
- * Interface CartServiceManagementInterface
- *
- * Get Checkout Services
+ * Manage value-added services during checkout operations for logged-in customers.
  *
  * @api
  * @package  Dhl\Shipping\Api
@@ -40,6 +38,8 @@ namespace Dhl\Shipping\Api\Quote;
 interface CartServiceManagementInterface
 {
     /**
+     * Obtain available service metadata, including rendering, compatibility, and default value information.
+     *
      * @param int $cartId
      * @param string $countryId
      * @param string $shippingMethod
@@ -49,6 +49,8 @@ interface CartServiceManagementInterface
     public function getServices($cartId, $countryId, $shippingMethod, $postalCode);
 
     /**
+     * Persist the service values as selected by a consumer or merchant.
+     *
      * @param int $cartId
      * @param \Magento\Framework\Api\AttributeInterface[] $serviceSelection
      * @param string $shippingMethod

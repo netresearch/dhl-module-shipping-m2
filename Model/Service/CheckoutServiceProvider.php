@@ -25,8 +25,8 @@
 
 namespace Dhl\Shipping\Model\Service;
 
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
+use Dhl\Shipping\Api\Data\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\Service\Filter\CheckoutServiceFilter;
 use Dhl\Shipping\Model\Service\Option\CompositeOptionProvider;

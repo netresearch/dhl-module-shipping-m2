@@ -43,7 +43,7 @@
     <preference for="Dhl\Shipping\Api\ServicePoolInterface" type="Dhl\Shipping\Model\Service\ServicePool"/>
 
     <!-- library preferences -->
-    <preference for="Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface" type="Dhl\Shipping\Service\ServiceSettings"/>
+    <preference for="Dhl\Shipping\Api\Data\ServiceSettingsInterface" type="Dhl\Shipping\Service\ServiceSettings"/>
     <preference for="Dhl\Shipping\Api\Data\ShippingInfoInterface" type="Dhl\Shipping\Model\ShippingInfo"/>
     <preference for="Dhl\Shipping\Api\Data\ShippingInfo\ReceiverInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver"/>
     <preference for="Dhl\Shipping\Api\Data\ShippingInfo\Receiver\AddressInterface" type="Dhl\Shipping\Model\ShippingInfo\Receiver\Address"/>

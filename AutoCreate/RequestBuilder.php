@@ -23,7 +23,7 @@
 
 namespace Dhl\Shipping\AutoCreate;
 
-use Dhl\Shipping\Api\Data\Service\ServiceInputInterface;
+use Dhl\Shipping\Api\Data\ServiceInputInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Helper\ProductData as Helper;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\ApiType;

@@ -24,7 +24,7 @@
  */
 namespace Test\Unit\Model\Service\Availability;
 
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterfaceFactory;
+use Dhl\Shipping\Api\Data\ServiceSettingsInterfaceFactory;
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Api\ServiceSelectionRepositoryInterface;
 use Dhl\Shipping\Model\Config\ConfigAccessorInterface;

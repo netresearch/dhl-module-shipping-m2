@@ -25,7 +25,7 @@
 
 namespace Dhl\Shipping\Model\Service\Option\Packaging;
 
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\ServiceSettingsInterface;
 use Dhl\Shipping\Model\Adminhtml\System\Config\Source\Service\VisualCheckOfAge as VisualCheckOfAgeOptions;
 use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Service\Bcs\VisualCheckOfAge;

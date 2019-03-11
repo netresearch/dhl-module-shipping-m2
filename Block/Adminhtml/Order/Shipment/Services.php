@@ -25,7 +25,7 @@
 
 namespace Dhl\Shipping\Block\Adminhtml\Order\Shipment;
 
-use Dhl\Shipping\Api\Data\Service\ServiceInputInterface;
+use Dhl\Shipping\Api\Data\ServiceInputInterface;
 use Dhl\Shipping\Api\Data\ServiceInterface;
 use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelectionCollection;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;

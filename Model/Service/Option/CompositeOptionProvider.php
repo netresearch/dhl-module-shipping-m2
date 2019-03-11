@@ -36,7 +36,6 @@ use Psr\Log\LoggerInterface;
  */
 class CompositeOptionProvider
 {
-
     /**
      * @var OptionProviderInterface[]
      */

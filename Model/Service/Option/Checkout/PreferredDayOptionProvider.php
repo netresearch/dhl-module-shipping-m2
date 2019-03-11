@@ -25,7 +25,7 @@
 
 namespace Dhl\Shipping\Model\Service\Option\Checkout;
 
-use Dhl\Shipping\Api\Data\Service\ServiceSettingsInterface;
+use Dhl\Shipping\Api\Data\ServiceSettingsInterface;
 use Dhl\Shipping\Model\Service\Option\OptionProviderInterface;
 use Dhl\Shipping\Model\Service\StartDate;
 use Dhl\Shipping\Service\Bcs\PreferredDay;
