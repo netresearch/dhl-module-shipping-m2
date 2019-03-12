@@ -27,6 +27,8 @@
     $service = $block->getData('service');
     /** @var \Dhl\Shipping\Api\Data\ServiceInputInterface $input */
     $input = $block->getData('input');
+    /** @var \Dhl\Shipping\Util\Escaper $escaper */
+    $escaper = $block->getData('escaper');
 ?>
 <?php if(!empty($input->getOptions())): ?>
 <dt class="service-checkboxset <?= /* @noEscape */ $service->getCode() ?>">
@@ -38,7 +40,7 @@
                     data-module="dhl_shipping"
                     data-service_code="<?= /* @noEscape */ $service->getCode() ?>"
                     data-input_code="<?= /* @noEscape */ $input->getCode() ?>"
-                    value="<?= $block->escapeHtmlAttr($option['value']) ?>"
+                    value="<?= $escaper->escapeHtmlAttr($option['value']) ?>"
                     <?= /* @noEscape */ $service->isMerchantReadonly() ? 'disabled' : ''; ?>
             />
             <i class="custom-checkbox"></i>
@@ -47,4 +49,3 @@
     <?php endforeach; ?>
 </dt>
 <?php endif; ?>
-

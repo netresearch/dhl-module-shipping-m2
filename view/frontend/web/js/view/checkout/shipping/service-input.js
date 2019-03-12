@@ -1,10 +1,11 @@
 define([
+    'ko',
     'Magento_Ui/js/form/element/abstract',
     'Dhl_Shipping/js/model/service-validation-map',
     'Dhl_Shipping/js/model/services',
     'Dhl_Shipping/js/action/validate-service-compatibility',
     'Dhl_Shipping/js/action/enforce-service-compatibility',
-], function (Component, serviceValidationMap, serviceSelection, validateCompatibility, enforceCompatibility) {
+], function (ko, Component, serviceValidationMap, serviceSelection, validateCompatibility, enforceCompatibility) {
     'use strict';
 
     return Component.extend({
@@ -67,7 +68,11 @@ define([
                 this.tooltip = {description: this.serviceInput.tooltip};
             }
             this.hasAsterisk = this.serviceInput.hasAsterisk;
-            this.notice(this.serviceInput.infoText);
+            if (ko.isObservable(this.notice)) {
+                this.notice(this.serviceInput.infoText);
+            } else {
+                this.notice = this.serviceInput.infoText;
+            }
             this.inputName = this.serviceInput.code;
             this.autocomplete = this.serviceInput.code;
             this.serviceCode = this.service.code;
@@ -90,7 +95,7 @@ define([
         /**
          * Unselect the radio set when an already selected item is clicked.
          *
-         * @return {boolean}
+         * @returns {Boolean}
          */
         handleRadioUnselect: function () {
             if (this.lastValue === this.value()) {
@@ -102,6 +107,19 @@ define([
 
         onUpdate: function () {
             this._super();
+        },
+
+        /**
+         * M2.1 fallback for non-existent parent method.
+         *
+         * @returns {String}
+         */
+        getDescriptionId: function () {
+            if (typeof this._super === "function") {
+                return this._super();
+            }
+
+            return '';
         }
     });
 });

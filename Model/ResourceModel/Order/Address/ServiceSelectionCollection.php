@@ -25,7 +25,7 @@
 
 namespace Dhl\Shipping\Model\ResourceModel\Order\Address;
 
-use Dhl\Shipping\Model\Order\ServiceSelection;
+use Dhl\Shipping\Model\Order\ServiceSelection as ServiceSelectionModel;
 use Dhl\Shipping\Model\ResourceModel\Order\Address\ServiceSelection as ServiceSelectionResource;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
@@ -44,7 +44,7 @@ class ServiceSelectionCollection extends AbstractCollection
      */
     public function _construct()
     {
-        $this->_init(ServiceSelection::class, ServiceSelectionResource::class);
+        $this->_init(ServiceSelectionModel::class, ServiceSelectionResource::class);
     }
 
     /**
@@ -54,7 +54,7 @@ class ServiceSelectionCollection extends AbstractCollection
      */
     protected function _afterLoad()
     {
-        /** @var ServiceSelection $item */
+        /** @var ServiceSelectionModel $item */
         foreach ($this->_items as $item) {
             $this->getResource()->unserializeFields($item);
         }

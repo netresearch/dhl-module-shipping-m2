@@ -202,6 +202,11 @@
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
     </type>
+    <type name="Dhl\Shipping\Webservice\ParcelManagement">
+        <arguments>
+            <argument name="checkoutApi" xsi:type="object">Dhl\ParcelManagement\Api\Virtual\CheckoutApi</argument>
+        </arguments>
+    </type>
     <virtualType name="Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider" type="Dhl\Shipping\Model\Service\Option\CompositeOptionProvider">
         <arguments>
             <argument name="providers" xsi:type="array">
@@ -219,4 +224,5 @@
             </argument>
         </arguments>
     </virtualType>
+    <virtualType name="Dhl\ParcelManagement\Api\Virtual\CheckoutApi" type="Dhl\ParcelManagement\Api\CheckoutApi"/>
 </config>
