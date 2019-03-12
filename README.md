@@ -6,7 +6,7 @@ shipping API or the DHL eCommerce Global Label API into the order processing wor
 
 Facts
 -----
-* version: 0.10.0
+* version: 0.10.1
 
 Description
 -----------
@@ -58,14 +58,14 @@ replace this path with the actual artifact directory of choice.
 Then navigate to the project root directory and run the following commands:
 
     composer config repositories.dhl-shipping-m2 artifact /var/www/share/marketplace/dhl/
-    composer require dhl/module-shipping-m2:0.10.0
+    composer require dhl/module-shipping-m2:0.10.1
 
 #### VCS ####
 If you prefer to install the module using [git](https://git-scm.com/), run the
 following commands in your project root directory:
 
     composer config repositories.dhl-shipping-m2 vcs https://github.com/netresearch/dhl-module-shipping-m2.git
-    composer require dhl/module-shipping-m2:0.10.0
+    composer require dhl/module-shipping-m2:0.10.1
 
 ### Enable Module ###
 Once the source files are available, make them known to the application:

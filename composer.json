@@ -1,6 +1,6 @@
 {
     "name": "dhl/module-shipping-m2",
-    "version": "0.10.0",
+    "version": "0.10.1",
     "license": "OSL-3.0",
     "type": "magento2-module",
     "description": "DHL business customer shipping extension for Magento",
@@ -26,7 +26,7 @@
         "magento/module-ui": "^100.1.3 || ^101.0.0",
         "magento/zendframework1": "~1.12.16 || ~1.13.0 || ~1.14.0",
         "azuyalabs/yasumi": "^1.8.0",
-        "dhl/lib-shipping-mx": "^0.10.0",
+        "dhl/lib-shipping-mx": "^0.11.0",
         "dhl/sdk-api-parcel-management": "^0.1.0"
     },
     "require-dev": {

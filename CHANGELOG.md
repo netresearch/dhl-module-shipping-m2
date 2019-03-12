@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.10.1 - 2019-03-12
+### Fixed
+- Web API schema generation
+- DHL Paket participation numbers configuration
+- Magento 2.1 compatibility
+
 ## 0.10.0 - 2019-02-28
 ### Fixed
 - Package weight calculation for mass action and cron autocreate
