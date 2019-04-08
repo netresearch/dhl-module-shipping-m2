@@ -25,29 +25,23 @@
 namespace Dhl\Shipping\Observer;
 
 use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
-use Dhl\Shipping\Api\QuoteAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Model\Shipping\Carrier;
 use Dhl\Shipping\Model\ShippingInfo\AbstractAddressExtension;
 use Dhl\Shipping\Model\ShippingInfo\OrderAddressExtensionFactory;
+use Dhl\Shipping\Model\ShippingInfoBuilder;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
- * Shift shipping info from quote address to order address
+ * Persist Shipping Info Observer.
  *
  * @package  Dhl\Shipping\Observer
  * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ShiftShippingInfoObserver implements ObserverInterface
+class SaveShippingInfoObserver implements ObserverInterface
 {
-    /**
-     * @var QuoteAddressExtensionRepositoryInterface
-     */
-    private $quoteAddressExtensionRepository;
-
     /**
      * @var OrderAddressExtensionRepositoryInterface
      */
@@ -59,25 +53,29 @@ class ShiftShippingInfoObserver implements ObserverInterface
     private $addressExtensionFactory;
 
     /**
+     * @var ShippingInfoBuilder
+     */
+    private $shippingInfoBuilder;
+
+    /**
      * ShiftShippingInfoObserver constructor.
      *
-     * @param QuoteAddressExtensionRepositoryInterface $quoteAddressExtensionRepository
      * @param OrderAddressExtensionRepositoryInterface $orderAddressExtensionRepository
      * @param OrderAddressExtensionFactory $addressExtensionFactory
+     * @param ShippingInfoBuilder $shippingInfoBuilder
      */
     public function __construct(
-        QuoteAddressExtensionRepositoryInterface $quoteAddressExtensionRepository,
         OrderAddressExtensionRepositoryInterface $orderAddressExtensionRepository,
-        OrderAddressExtensionFactory $addressExtensionFactory
+        OrderAddressExtensionFactory $addressExtensionFactory,
+        ShippingInfoBuilder $shippingInfoBuilder
     ) {
-        $this->quoteAddressExtensionRepository = $quoteAddressExtensionRepository;
         $this->orderAddressExtensionRepository = $orderAddressExtensionRepository;
         $this->addressExtensionFactory = $addressExtensionFactory;
+        $this->shippingInfoBuilder = $shippingInfoBuilder;
     }
 
     /**
-     * When a new order is placed, shift additional DHL shipping information from quote to order
-     * from quote address to order address.
+     * When a new order is placed, persist additional DHL shipping information.
      *
      * Event:
      * - sales_model_service_quote_submit_success
@@ -88,8 +86,6 @@ class ShiftShippingInfoObserver implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /** @var \Magento\Quote\Model\Quote $quote */
-        $quote = $observer->getEvent()->getData('quote');
         /** @var \Magento\Sales\Api\Data\OrderInterface|\Magento\Sales\Model\Order $order */
         $order = $observer->getEvent()->getData('order');
 
@@ -97,21 +93,17 @@ class ShiftShippingInfoObserver implements ObserverInterface
             return;
         }
 
-        $shippingMethod = $order->getShippingMethod(true);
-        if ($shippingMethod->getData('carrier_code') != Carrier::CODE) {
+        $carrierCode = strtok((string) $order->getShippingMethod(), '_');
+        if ($carrierCode !== Carrier::CODE) {
             return;
         }
 
-        $shippingAddressId = $quote->getShippingAddress()->getId();
-
-        try {
-            $shippingInfo = $this->quoteAddressExtensionRepository->getShippingInfo($shippingAddressId);
-        } catch (NoSuchEntityException $e) {
-            $shippingInfo = null;
-        }
+        $shippingAddressId = $order->getShippingAddress()->getId();
+        $this->shippingInfoBuilder->setShippingAddress($order->getShippingAddress());
+        $shippingInfo = $this->shippingInfoBuilder->create();
 
         $addressExtension = $this->addressExtensionFactory->create(['data' => [
-            AbstractAddressExtension::ADDRESS_ID => $order->getShippingAddress()->getId(),
+            AbstractAddressExtension::ADDRESS_ID => $shippingAddressId,
             AbstractAddressExtension::SHIPPING_INFO => $shippingInfo
         ]]);
 

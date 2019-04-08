@@ -31,7 +31,7 @@
         <observer name="shipping_update_carrier" instance="Dhl\Shipping\Observer\UpdateCarrierObserver" />
     </event>
     <event name="sales_model_service_quote_submit_success">
-        <observer name="shipping_persist_info_to_address" instance="Dhl\Shipping\Observer\ShiftShippingInfoObserver" />
+        <observer name="shipping_persist_info_to_address" instance="Dhl\Shipping\Observer\SaveShippingInfoObserver" />
         <observer name="shipping_persist_service_selection" instance="Dhl\Shipping\Observer\PersistServiceSelectionObserver"/>
     </event>
     <event name="adminhtml_block_html_before">

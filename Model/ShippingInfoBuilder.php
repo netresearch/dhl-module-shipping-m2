@@ -187,7 +187,7 @@ class ShippingInfoBuilder
      */
     public function setShippingAddress(AddressModelInterface $shippingAddress)
     {
-        $street = $shippingAddress->getStreetFull();
+        $street = implode(' ', $shippingAddress->getStreet());
         $streetParts = $this->streetSplitter->splitStreet($street);
 
         $countryDirectory = $this->countryFactory->create();
@@ -224,7 +224,7 @@ class ShippingInfoBuilder
         $this->info[ShippingInfoInterface::RECEIVER] = $receiver;
 
         // check if address includes postal facility data
-        $station = $shippingAddress->getStreetFull();
+        $station = implode(' ', $shippingAddress->getStreet());
         if (stripos($station, 'Packstation') === 0) {
             $packstationNumber = preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station);
             $postNumber = is_numeric($shippingAddress->getCompany()) ? $shippingAddress->getCompany() : '';
