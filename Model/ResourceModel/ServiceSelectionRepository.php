@@ -103,7 +103,7 @@ class ServiceSelectionRepository implements ServiceSelectionRepositoryInterface
             }
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__(
-                'Could not save the test: %1',
+                'Could not save the service selection: %1',
                 $exception->getMessage()
             ));
         }

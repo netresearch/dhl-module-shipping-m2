@@ -188,7 +188,11 @@ class PackagingServiceProvider
                     );
             }
         } catch (NoSuchEntityException $e) {
-            // do nothing
+            $settings = $this->compositeOptionProvider
+                ->enhanceServicesWithOptions(
+                    $settings,
+                    []
+                );
         }
 
         return array_map(
