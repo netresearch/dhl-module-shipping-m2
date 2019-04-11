@@ -163,43 +163,39 @@ class PackagingServiceProvider
      */
     private function prepareServiceSettings($orderAddressId, $storeId)
     {
-        $settings = $this->serviceConfig->getServiceSettings($storeId);
+        // load default service settings
+        $serviceConfigs = $this->serviceConfig->getServiceSettings($storeId);
+        // load default service options
+        $serviceConfigs = $this->compositeOptionProvider->enhanceServicesWithOptions($serviceConfigs, []);
 
-        /**
-         * Add service values from serviceSelection objects
-         */
         try {
-            /** @var ServiceSelectionInterface[] $serviceSelections */
-            $serviceSelections = $this->serviceSelectionRepo
-                ->getByOrderAddressId($orderAddressId)
-                ->getItems();
-
-            foreach ($serviceSelections as $selection) {
-                if ($settings[$selection->getServiceCode()]) {
-                    $settings[$selection->getServiceCode(
-                    )][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
-                    $settings[$selection->getServiceCode()][ServiceSettingsInterface::IS_SELECTED] = true;
-                }
-                // add selected options to service
-                $settings = $this->compositeOptionProvider
-                    ->enhanceServicesWithOptions(
-                        $settings,
-                        [OptionProviderInterface::ARGUMENT_SELECTION => $selection]
-                    );
-            }
-        } catch (NoSuchEntityException $e) {
-            $settings = $this->compositeOptionProvider
-                ->enhanceServicesWithOptions(
-                    $settings,
-                    []
-                );
+            // load service settings as selected by customer
+            $serviceSelections = $this->serviceSelectionRepo->getByOrderAddressId($orderAddressId)->getItems();
+        } catch (NoSuchEntityException $exception) {
+            // no services selected
+            $serviceSelections = [];
         }
 
-        return array_map(
-            function ($config) {
-                return $this->serviceSettingsFactory->create($config);
-            },
-            $settings
-        );
+        foreach ($serviceSelections as $selection) {
+            $serviceCode = $selection->getServiceCode();
+            if (!isset($serviceConfigs[$serviceCode])) {
+                continue;
+            }
+
+            $serviceConfigs[$serviceCode][ServiceSettingsInterface::PROPERTIES] = $selection->getServiceValue();
+            $serviceConfigs[$serviceCode][ServiceSettingsInterface::IS_SELECTED] = true;
+
+            // override default options, taking into account the selected value
+            $serviceConfigs = $this->compositeOptionProvider->enhanceServicesWithOptions(
+                $serviceConfigs,
+                [OptionProviderInterface::ARGUMENT_SELECTION => $selection]
+            );
+        }
+
+        $serviceSettings = array_map(function ($serviceConfig) {
+            return $this->serviceSettingsFactory->create($serviceConfig);
+        }, $serviceConfigs);
+
+        return $serviceSettings;
     }
 }
