@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.10.2 - 2019-04-16
+### Fixed
+- Cannot select 'Visual Check Of Age' in shipping popup
+- Populating select fields in packaging popup
+- Persist delivery location details on order place
+
 ## 0.10.1 - 2019-03-12
 ### Fixed
 - Web API schema generation
@@ -65,12 +71,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.8.0 - 2018-01-10
 ### Added
-
 - API support for postal facilities (Packstation, Postfiliale)
 - Cancel Business Customer Shipping labels
 - Cash On Delivery support for Global Shipping API labels
 
 ### Fixed
-
 - Now displaying separate tracking link for Global Shipping API labels
 - Reworked product attribute uninstaller
