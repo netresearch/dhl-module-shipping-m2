@@ -33,6 +33,7 @@ use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Quote\Model\Quote;
+use Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelectionCollectionFactory;
 
 /**
  * Update shipping info when order address was updated in admin panel.
@@ -55,6 +56,11 @@ class PersistServiceSelectionObserver implements ObserverInterface
     private $serviceSelectionFactory;
 
     /**
+     * @var ServiceSelectionCollectionFactory
+     */
+    private $serviceSelectionCollectionFactory;
+
+    /**
      * @var ModuleConfigInterface
      */
     private $moduleConfig;
@@ -63,17 +69,21 @@ class PersistServiceSelectionObserver implements ObserverInterface
      * PersistServiceSelectionObserver constructor.
      * @param ServiceSelectionRepository $serviceSelectionRepository
      * @param ServiceSelectionFactory $serviceSelectionFactory
+     * @param ServiceSelectionCollectionFactory $serviceSelectionCollectionFactory
      * @param ModuleConfigInterface $moduleConfig
      */
     public function __construct(
         ServiceSelectionRepository $serviceSelectionRepository,
         ServiceSelectionFactory $serviceSelectionFactory,
+        ServiceSelectionCollectionFactory $serviceSelectionCollectionFactory,
         ModuleConfigInterface $moduleConfig
     ) {
         $this->serviceSelectionRepository = $serviceSelectionRepository;
         $this->serviceSelectionFactory = $serviceSelectionFactory;
+        $this->serviceSelectionCollectionFactory = $serviceSelectionCollectionFactory;
         $this->moduleConfig = $moduleConfig;
     }
+
 
     /**
      * Persist service selection with reference to an Order Address ID.
@@ -92,28 +102,32 @@ class PersistServiceSelectionObserver implements ObserverInterface
             return $this;
         }
 
+        $quoteAddressId = $quote->getShippingAddress()->getId();
+        $paymentMethod = $order->getPayment()->getMethod();
+
         try {
-            $quoteAddressId = $quote->getShippingAddress()->getId();
             $serviceSelection = $this->serviceSelectionRepository->getByQuoteAddressId($quoteAddressId);
-            $paymentMethod = $order->getPayment()->getMethod();
-            if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
-                $codService = $this->serviceSelectionFactory->create();
-                $codValues = [
-                    ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $order->getBaseGrandTotal(),
-                    ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $order->getBaseCurrencyCode(),
-                ];
-                $codService->setData(
-                    [
-                        'parent_id' => $order->getShippingAddressId(),
-                        'service_code' => ServicePoolInterface::SERVICE_COD_CODE,
-                        'service_value' => json_encode($codValues),
-                    ]
-                );
-                $serviceSelection->addItem($codService);
-            }
         } catch (\Exception $e) {
-            return $this;
+            // in case there is no service selection in DB, we need a empty service collection to handle cod case.
+            $serviceSelection = $this->serviceSelectionCollectionFactory->create();
         }
+
+        if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
+            $codService = $this->serviceSelectionFactory->create();
+            $codValues = [
+                ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $order->getBaseGrandTotal(),
+                ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $order->getBaseCurrencyCode(),
+            ];
+            $codService->setData(
+                [
+                    'parent_id' => $order->getShippingAddressId(),
+                    'service_code' => ServicePoolInterface::SERVICE_COD_CODE,
+                    'service_value' => json_encode($codValues),
+                ]
+            );
+            $serviceSelection->addItem($codService);
+        }
+
         foreach ($serviceSelection as $selection) {
             /** @var ServiceSelection $selection */
             $model = $this->serviceSelectionFactory->create();
