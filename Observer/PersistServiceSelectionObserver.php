@@ -32,11 +32,14 @@ use Dhl\Shipping\Model\Order\ServiceSelectionFactory;
 use Dhl\Shipping\Model\ResourceModel\ServiceSelectionRepository;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote;
-use Dhl\Shipping\Model\ResourceModel\Quote\Address\ServiceSelectionCollectionFactory;
+use Magento\Sales\Model\Order;
 
 /**
- * Update shipping info when order address was updated in admin panel.
+ * Persist service selection on a successful quote submit
+ *
+ * @event sales_model_service_quote_submit_success
  *
  * @package  Dhl\Shipping\Observer
  * @author   Max Melzer <max.melzer@netresearch.de>
@@ -56,34 +59,26 @@ class PersistServiceSelectionObserver implements ObserverInterface
     private $serviceSelectionFactory;
 
     /**
-     * @var ServiceSelectionCollectionFactory
-     */
-    private $serviceSelectionCollectionFactory;
-
-    /**
      * @var ModuleConfigInterface
      */
     private $moduleConfig;
 
     /**
      * PersistServiceSelectionObserver constructor.
+     *
      * @param ServiceSelectionRepository $serviceSelectionRepository
      * @param ServiceSelectionFactory $serviceSelectionFactory
-     * @param ServiceSelectionCollectionFactory $serviceSelectionCollectionFactory
      * @param ModuleConfigInterface $moduleConfig
      */
     public function __construct(
         ServiceSelectionRepository $serviceSelectionRepository,
         ServiceSelectionFactory $serviceSelectionFactory,
-        ServiceSelectionCollectionFactory $serviceSelectionCollectionFactory,
         ModuleConfigInterface $moduleConfig
     ) {
         $this->serviceSelectionRepository = $serviceSelectionRepository;
         $this->serviceSelectionFactory = $serviceSelectionFactory;
-        $this->serviceSelectionCollectionFactory = $serviceSelectionCollectionFactory;
         $this->moduleConfig = $moduleConfig;
     }
-
 
     /**
      * Persist service selection with reference to an Order Address ID.
@@ -94,7 +89,7 @@ class PersistServiceSelectionObserver implements ObserverInterface
      */
     public function execute(EventObserver $observer)
     {
-        /** @var \Magento\Sales\Model\Order $order */
+        /** @var Order $order */
         $order = $observer->getDataByKey('order');
         /** @var Quote $quote */
         $quote = $observer->getDataByKey('quote');
@@ -107,29 +102,16 @@ class PersistServiceSelectionObserver implements ObserverInterface
 
         try {
             $serviceSelection = $this->serviceSelectionRepository->getByQuoteAddressId($quoteAddressId);
-        } catch (\Exception $e) {
+        } catch (NoSuchEntityException $e) {
             // in case there is no service selection in DB, we need a empty service collection to handle cod case.
-            $serviceSelection = $this->serviceSelectionCollectionFactory->create();
+            $serviceSelection = [];
         }
 
-        if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
-            $codService = $this->serviceSelectionFactory->create();
-            $codValues = [
-                ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $order->getBaseGrandTotal(),
-                ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $order->getBaseCurrencyCode(),
-            ];
-            $codService->setData(
-                [
-                    'parent_id' => $order->getShippingAddressId(),
-                    'service_code' => ServicePoolInterface::SERVICE_COD_CODE,
-                    'service_value' => json_encode($codValues),
-                ]
-            );
-            $serviceSelection->addItem($codService);
-        }
+        $this->handleCodService($paymentMethod, $order);
 
+        /** @var ServiceSelection $selection */
         foreach ($serviceSelection as $selection) {
-            /** @var ServiceSelection $selection */
+            // transfer quote service selection to order service selection
             $model = $this->serviceSelectionFactory->create();
             $model->setData(
                 [
@@ -142,5 +124,31 @@ class PersistServiceSelectionObserver implements ObserverInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Books Cash on delivery service if necessary and persists it in the order service selection table
+     *
+     * @param $paymentMethod
+     * @param Order $order
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     */
+    private function handleCodService($paymentMethod, Order $order)
+    {
+        if ($this->moduleConfig->isCodPaymentMethod($paymentMethod)) {
+            $codService = $this->serviceSelectionFactory->create();
+            $codValues = [
+                ServicePoolInterface::SERVICE_COD_PROPERTY_AMOUNT => $order->getBaseGrandTotal(),
+                ServicePoolInterface::SERVICE_COD_PROPERTY_CURRENCY_CODE => $order->getBaseCurrencyCode(),
+            ];
+            $codService->setData(
+                [
+                    'parent_id' => $order->getShippingAddressId(),
+                    'service_code' => ServicePoolInterface::SERVICE_COD_CODE,
+                    'service_value' => $codValues,
+                ]
+            );
+            $this->serviceSelectionRepository->save($codService);
+        }
     }
 }
