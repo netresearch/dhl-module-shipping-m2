@@ -24,8 +24,8 @@
  */
 namespace Dhl\Shipping\Model\Payment\Config\Source;
 
+use Dhl\Shipping\Model\Payment\PaymentData;
 use Magento\Framework\Data\OptionSourceInterface;
-use Magento\Payment\Helper\Data;
 
 /**
  * Payment methods source model.
@@ -46,14 +46,14 @@ use Magento\Payment\Helper\Data;
 class Allmethods implements OptionSourceInterface
 {
     /**
-     * @var Data
+     * @var PaymentData
      */
     private $paymentData;
 
     /**
-     * @param Data $paymentData
+     * @param PaymentData $paymentData
      */
-    public function __construct(Data $paymentData)
+    public function __construct(PaymentData $paymentData)
     {
         $this->paymentData = $paymentData;
     }
