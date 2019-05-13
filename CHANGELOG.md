@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.10.3 - 2019-05-13
+### Fixed
+- Cash On Delivery (COD) - if there is no service selected in checkout
+- payment method list lacking options
+
 ## 0.10.2 - 2019-04-16
 ### Fixed
 - Cannot select 'Visual Check Of Age' in shipping popup

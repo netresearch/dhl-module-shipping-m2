@@ -26,7 +26,7 @@
     <default>
         <modules>
             <Dhl_Shipping>
-                <version>0.10.0</version>
+                <version>0.10.3</version>
             </Dhl_Shipping>
         </modules>
         <carriers>
