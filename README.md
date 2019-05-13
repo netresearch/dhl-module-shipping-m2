@@ -4,10 +4,6 @@ DHL Shipping Extension
 The DHL Shipping extension for Magento® 2 integrates the DHL business customer
 shipping API or the DHL eCommerce Global Label API into the order processing workflow.
 
-Facts
------
-* version: 0.10.2
-
 Description
 -----------
 This extension enables merchants to request shipping labels for incoming orders
