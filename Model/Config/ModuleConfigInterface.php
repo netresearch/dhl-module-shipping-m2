@@ -48,7 +48,6 @@ interface ModuleConfigInterface
     const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'carriers/dhlshipping/shipment_autocreate_send_shippinginfo';
     const CONFIG_XML_PATH_DEFAULT_ADDITIONAL_FEE = 'carriers/dhlshipping/shipmemt_autocreate_addtionalfee';
     const CONFIG_XML_PATH_DEFAULT_PLACE_OF_COMMITAL = 'carriers/dhlshipping/shipmemt_autocreate_placeofcommital';
-    const CONFIG_XML_PATH_API_TYPE = 'carriers/dhlshipping/api_type';
     const CONFIG_XML_PATH_DEFAULT_TERM_OF_TRADE = 'carriers/dhlshipping/shipmemt_autocreate_termsoftrade';
     const CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE = 'carriers/dhlshipping/shipment_autocreate_export_contenttype';
     const CONFIG_XML_PATH_DEFAULT_EXPORT_CONTENT_TYPE_EXPLANATION  =

@@ -99,7 +99,9 @@ Die DHL Schnittstellen (APIs) unterstützen ausschließlich folgende Absenderlä
 **DHL Geschäftskundenversand API (Business Customer Shipping)**
 
 * Deutschland
-* Österreich
+
+.. ACHTUNG::
+   Versand aus Österreich (AT) wird nicht länger unterstützt.
 
 **eCommerce Global Label API**
 
@@ -212,7 +214,7 @@ Allgemeine Einstellungen
 Im Konfigurationsbereich *Allgemeine Einstellungen* wird angezeigt, welche der
 zur Verfügung stehenden API-Anbindungen konfiguriert wird.
 
-* DHL Business Customer Shipping (DE, AT), oder
+* DHL Business Customer Shipping (DE), oder
 * DHL eCommerce Global Label API
 
 Dieses Feld ist bereits gemäß dem eingestellten `Versandursprung`_ vorbelegt. Je nach
@@ -715,8 +717,6 @@ Nutzen Sie dafür beim Erstellen des Labels im Popup das Auswahlfeld *Retouren-B
 Stellen Sie sicher, dass die `Teilnahmenummern`__ für Retouren korrekt konfiguriert sind:
 
 - Retoure DHL Paket (DE → DE)
-- Retoure DHL Paket Austria (AT → AT)
-- Retoure DHL Paket Connect (AT → DE)
 
 __ `Stammdaten`_
 

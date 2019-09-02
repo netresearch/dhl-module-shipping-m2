@@ -60,7 +60,7 @@ class UpdateCarrierObserverTest extends \PHPUnit\Framework\TestCase
 
         $this->objectManager = new ObjectManager($this);
         $this->config = $this->getMockBuilder(ModuleConfig::class)
-            ->setMethods(['canProcessShipping'])
+            ->setMethods(['canProcessShipping','getShipperCountry'])
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -78,6 +78,11 @@ class UpdateCarrierObserverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('canProcessShipping')
             ->willReturn(false);
+
+        $this->config
+            ->expects($this->once())
+            ->method('getShipperCountry')
+            ->willReturn('PL');
 
         $order = new DataObject([
             'shipping_address' => new DataObject(['country_id' => $recipientCountry]),
@@ -123,6 +128,11 @@ class UpdateCarrierObserverTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('canProcessShipping')
             ->willReturn(true);
+
+        $this->config
+            ->expects($this->once())
+            ->method('getShipperCountry')
+            ->willReturn('PL');
 
         $order = new DataObject([
             'shipping_address' => new DataObject(['country_id' => $recipientCountry]),

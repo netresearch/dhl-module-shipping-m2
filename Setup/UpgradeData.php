@@ -26,6 +26,7 @@ namespace Dhl\Shipping\Setup;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
@@ -56,20 +57,27 @@ class UpgradeData implements UpgradeDataInterface
     private $configWriter;
 
     /**
+     * @var SerializerInterface
+     */
+    public $serializer;
+
+    /**
      * UpgradeData constructor.
-     *
      * @param EavSetupFactory $eavSetupFactory
-     * @param ScopeConfigInterface $config
+     * @param ScopeConfigInterface $scopeConfig
      * @param WriterInterface $configWriter
+     * @param SerializerInterface $serializer
      */
     public function __construct(
         EavSetupFactory $eavSetupFactory,
-        ScopeConfigInterface $config,
-        WriterInterface $configWriter
+        ScopeConfigInterface $scopeConfig,
+        WriterInterface $configWriter,
+        SerializerInterface $serializer
     ) {
         $this->eavSetupFactory = $eavSetupFactory;
-        $this->scopeConfig = $config;
+        $this->scopeConfig = $scopeConfig;
         $this->configWriter = $configWriter;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -88,7 +96,7 @@ class UpgradeData implements UpgradeDataInterface
             ShippingSetup::addTariffNumberAttribute($eavSetup);
         }
         if (version_compare($context->getVersion(), '0.6.0', '<')) {
-            ShippingSetup::convertSerializedToJson($this->scopeConfig, $this->configWriter);
+            ShippingSetup::convertSerializedToJson($this->scopeConfig, $this->configWriter, $this->serializer);
         }
         if (version_compare($context->getVersion(), '0.9.0', '<')) {
             ShippingSetup::addExportDescriptionAttribute($eavSetup);

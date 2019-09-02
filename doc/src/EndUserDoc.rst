@@ -104,7 +104,9 @@ The DHL webservices (APIs) only support the following origin countries:
 **DHL Business Customer Shipping (Geschäftskundenversand) API**
 
 * Germany
-* Austria
+
+.. CAUTION::
+   Austria(AT) is no longer supported
 
 **eCommerce Global Label API**
 
@@ -210,7 +212,7 @@ General Settings
 The dropdown in the configuration section *General Settings* shows which
 API connection is being configured.
 
-* DHL Business Customer Shipping (DE, AT), or
+* DHL Business Customer Shipping (DE), or
 * DHL eCommerce Global Label API
 
 This field is pre-selected according to the current `Shipping origin`_. Depending on the
@@ -698,8 +700,6 @@ Use the option *Retoure slip* when requesting a label in the packaging popup.
 To book this service, make sure the `participation numbers`__ for returns are properly configured:
 
 - Retoure DHL Paket (DE → DE)
-- Retoure DHL Paket Austria (AT → AT)
-- Retoure DHL Paket Connect (AT → DE)
 
 __ `Account Data`_
 

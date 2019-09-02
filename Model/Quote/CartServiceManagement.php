@@ -122,7 +122,7 @@ class CartServiceManagement implements CartServiceManagementInterface
         $quote = $this->quoteRepository->get($cartId);
         $canProcess = $this->moduleConfig->canProcessMethod($shippingMethod, $quote->getStoreId());
 
-        if ($canProcess) {
+        if ($canProcess && $this->moduleConfig->getShipperCountry($quote->getStoreId()) !== 'AT') {
             $services = $this->checkoutServiceProvider->getServices($countryId, $quote->getStoreId(), $postalCode);
             $compatibility = $this->checkoutServiceProvider->getCompatibility($countryId, $quote->getStoreId());
         } else {
