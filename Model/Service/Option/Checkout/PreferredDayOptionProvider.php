@@ -59,7 +59,7 @@ class PreferredDayOptionProvider implements OptionProviderInterface
      * @var string[]
      */
     private $nonOption = [
-        'label' => 'none day',
+        'label' => 'no day',
         'value' => '',
         'disable' => false,
     ];
