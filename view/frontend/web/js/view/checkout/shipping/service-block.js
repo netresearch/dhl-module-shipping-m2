@@ -39,9 +39,9 @@ define([
             }, this);
 
             quote.shippingMethod.subscribe(function () {
-                var countryId = quote.shippingAddress().countryId;
-                var carrierCode = quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code;
-                var postalCode = quote.shippingAddress().postcode;
+                var countryId = quote.shippingAddress() ? quote.shippingAddress().countryId : null;
+                var carrierCode = quote.shippingMethod() ? (quote.shippingMethod().carrier_code + '_' + quote.shippingMethod().method_code) : null;
+                var postalCode = quote.shippingAddress() ? quote.shippingAddress().postcode : null;
 
                 if (countryId && carrierCode && postalCode) {
                     if ((countryId !== this.currentCountryId)
