@@ -1,6 +1,7 @@
 <?php
 namespace Dhl\Shipping;
 
+use Dhl\Shipping\Webservice\Client\BcsSoapClient;
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\TestFramework\ObjectManager;
 
@@ -47,9 +48,10 @@ class ModuleConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf($className, $libObject);
 
         // business customer shipping api access
+        $soapClient = $this->getMockBuilder(BcsSoapClient::class)->disableOriginalConstructor()->getMock();
         $className = \Dhl\Shipping\Webservice\Adapter\BcsAdapter::class;
         try {
-            $libObject = $this->objectManager->create($className);
+            $libObject = $this->objectManager->create($className, ['soapClient' => $soapClient]);
         } catch (\ReflectionException $e) {
             $libObject = null;
         }

@@ -1,13 +1,14 @@
 DHL Shipping Extension
 ======================
 
-The DHL Shipping extension for Magento® 2 integrates the DHL business customer
-shipping API or the DHL eCommerce Global Label API into the order processing workflow.
+The DHL Shipping extension for Magento® 2 integrates the DHL Business Customer
+Shipping API or the DHL eCommerce Global Label API into the order processing workflow.
 
 Description
 -----------
+
 This extension enables merchants to request shipping labels for incoming orders
-via the [DHL business customer shipping API](https://entwickler.dhl.de/en/)
+via the [DHL Business Customer Shipping API](https://entwickler.dhl.de/en/)
 (DHL Geschäftskundenversand-API) or the DHL eCommerce Global Label API.
 
 For more details on the API connections, see the [documentation](http://dhl.support.netresearch.de/support/solutions/articles/12000023174).
@@ -15,71 +16,68 @@ For more details on the API connections, see the [documentation](http://dhl.supp
 Requirements
 ------------
 
-* PHP 5.6.5
 * PHP >= 7.0.6
 * PHP >= 7.1.0
 * PHP >= 7.2.0
 
 Compatibility
 -------------
-* Magento >= 2.1.4+
+
 * Magento >= 2.2.0+
 * Magento >= 2.3.0+
 
 Installation Instructions
 -------------------------
-The DHL Shipping module for Magento® 2 is distributed in two formats:
-* [Composer Artifact](https://getcomposer.org/doc/05-repositories.md#artifact)
-* [Composer VCS](https://getcomposer.org/doc/05-repositories.md#using-private-repositories)
 
 ### Install Source Files ###
 
-The following sections describe how to install the module source files,
-depending on the distribution format, to your Magento® 2 instance. 
+The DHL Shipping module for Magento® 2 can be installed from the following sources:
+* [Composer Repository](https://getcomposer.org/doc/05-repositories.md#composer)
+* [VCS Repository](https://getcomposer.org/doc/05-repositories.md#using-private-repositories)
 
-#### Artifact ####
-If you received multiple ZIP files with `composer.json` files included, move
-them to a common directory on the server. The directory
-`/var/www/share/marketplace/dhl` is used in the following examples. Please
-replace this path with the actual artifact directory of choice.
+#### Integrators ####
 
-    /var
-    └── www
-        └── share
-            └── marketplace
-               └── dhl
-                    ├── Dhl_Shipping_Lib-x.xx.x.zip
-                    └── Dhl_Shipping_Module_M2-x.xx.x.zip
+As an integrator you installed Magento using Composer and acquired the [DHL Shipping
+module on Magento Marketplace](https://marketplace.magento.com/dhl-module-shipping-m2.html)
+(free of charge).
 
-Then navigate to the project root directory and run the following commands:
+The Composer repository https://repo.magento.com/ is declared in your root `composer.json`
+which allows you to directly install the module like this:
 
-    composer config repositories.dhl-shipping-m2 artifact /var/www/share/marketplace/dhl/
-    composer require dhl/module-shipping-m2:0.10.2
+    composer require dhl/module-shipping-m2
 
-#### VCS ####
-If you prefer to install the module using [git](https://git-scm.com/), run the
-following commands in your project root directory:
+During installation, Composer might ask for a user and password. You must use the public and
+private key of the Magento Marketplace user which was used to purchase the module.
+
+#### Developers ####
+
+If you want to contribute to the module, you can declare the GitHub repository in your
+root `composer.json` and install the module like this:
 
     composer config repositories.dhl-shipping-m2 vcs https://github.com/netresearch/dhl-module-shipping-m2.git
-    composer require dhl/module-shipping-m2:0.10.2
+    composer require dhl/module-shipping-m2
 
 ### Enable Module ###
-Once the source files are available, make them known to the application:
+
+Once the source files are installed, make them known to the application:
 
     ./bin/magento module:enable Dhl_Shipping
     ./bin/magento setup:upgrade
 
-Last but not least, flush cache and compile.
+And finally: flush the cache, compile, and deploy the static content:
 
     ./bin/magento cache:flush
     ./bin/magento setup:di:compile
+    ./bin/magento setup:static-content:deploy <list_of_locales>
+
+The list of locales could be something like: en_US en_GB fr_FR de_DE it_IT
 
 Uninstallation
 --------------
 
 The following sections describe how to uninstall the module from your Magento® 2 instance. 
 
-#### Composer VCS and Composer Artifact ####
+#### Composer ####
 
 To unregister the shipping module from the application, run the following command:
 
@@ -87,9 +85,6 @@ To unregister the shipping module from the application, run the following comman
     composer update
     
 This will automatically remove source files, clean up the database, update package dependencies.
-
-*Please note that automatic uninstallation is only available on Magento version 2.2 or newer.
-On Magento 2.1 and below, please use the following manual uninstallation method.*
 
 #### Manual Steps ####
 
@@ -111,8 +106,11 @@ To clean up the database, run the following commands:
 
 Support
 -------
+
 In case of questions or problems, please have a look at the
 [Support Portal (FAQ)](http://dhl.support.netresearch.de/) first.
+
+Also check the [user documentation](http://dhl.support.netresearch.de/support/solutions/articles/12000023174).
 
 If the issue cannot be resolved, you can contact the support team via the
 [Support Portal](http://dhl.support.netresearch.de/) or by sending an email
@@ -120,6 +118,7 @@ to <dhl.support@netresearch.de>.
 
 Developer
 ---------
+
 * Christoph Aßmann | [Netresearch GmbH & Co. KG](http://www.netresearch.de/) | [@mam08ixo](https://twitter.com/mam08ixo)
 * Sebastian Ertner | [Netresearch GmbH & Co. KG](http://www.netresearch.de/)
 * Benjamin Heuer | [Netresearch GmbH & Co. KG](http://www.netresearch.de/)
@@ -127,8 +126,10 @@ Developer
 
 License
 -------
+
 [OSL - Open Software Licence 3.0](http://opensource.org/licenses/osl-3.0.php)
 
 Copyright
 ---------
+
 (c) 2019 DHL Paket GmbH
