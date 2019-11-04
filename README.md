@@ -96,11 +96,16 @@ root directory:
 
 To clean up the database, run the following commands:
 
-    DROP TABLE `dhlshipping_quote_address`;
-    DROP TABLE `dhlshipping_order_address`;
-    DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_dangerous_goods_category';
-    DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_tariff_number';
-    DELETE FROM `eav_attribute` WHERE `attribute_code` = 'dhl_export_description';
+    DROP TABLE `dhlshipping_quote_address`, `dhlshipping_order_address`;
+    DROP TABLE `dhlshipping_quote_address_service_selection`, `dhlshipping_order_address_service_selection`;
+
+    DELETE FROM `eav_attribute` WHERE `attribute_code` IN ('dhl_dangerous_goods_category', 'dhl_tariff_number', 'dhl_export_description');
+
+    ALTER TABLE `quote` DROP COLUMN `dhl_service_charge`, DROP COLUMN `base_dhl_service_charge`;
+    ALTER TABLE `quote_address` DROP COLUMN `dhl_service_charge`, DROP COLUMN `base_dhl_service_charge`;
+    ALTER TABLE `sales_order` DROP COLUMN `dhl_service_charge`, DROP COLUMN `base_dhl_service_charge`;
+    ALTER TABLE `sales_invoice` DROP COLUMN `dhl_service_charge`, DROP COLUMN `base_dhl_service_charge`;
+    ALTER TABLE `sales_creditmemo` DROP COLUMN `dhl_service_charge`, DROP COLUMN `base_dhl_service_charge`;
     DELETE FROM `core_config_data` WHERE `path` LIKE 'carriers/dhlshipping/%';
     DELETE FROM `setup_module` WHERE `module` = 'Dhl_Shipping';
 

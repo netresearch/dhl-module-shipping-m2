@@ -239,19 +239,6 @@ class ShippingSetup
         $setup->startSetup();
         $setup->getConnection()
             ->addColumn(
-                $setup->getTable(self::QUOTE_TABLE_NAME),
-                self::SERVICE_CHARGE_FIELD_NAME,
-                [
-                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
-                    'nullable' => true,
-                    'length' => '12,4',
-                    'default' => '0.0000',
-                    'comment' => 'DHL Service Charge'
-                ]
-            );
-
-        $setup->getConnection()
-            ->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE_NAME),
                 self::SERVICE_CHARGE_FIELD_NAME,
                 [
@@ -275,6 +262,19 @@ class ShippingSetup
                     'comment' => 'DHL Base Service Charge'
                 ]
             );
+
+        $setup->getConnection()
+              ->addColumn(
+                  $setup->getTable(self::QUOTE_TABLE_NAME),
+                  self::SERVICE_CHARGE_FIELD_NAME,
+                  [
+                      'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                      'nullable' => true,
+                      'length' => '12,4',
+                      'default' => '0.0000',
+                      'comment' => 'DHL Service Charge'
+                  ]
+              );
 
         $setup->getConnection()
             ->addColumn(

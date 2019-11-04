@@ -71,6 +71,7 @@ class Uninstall implements UninstallInterface
         $this->removeConfigurations($schemaSetup);
         $this->deleteServiceSelectionTables($schemaSetup);
         $this->deleteAttributes($this->eavSetup);
+        $this->deleteServiceChargeColumns($schemaSetup);
     }
 
     /**
@@ -121,5 +122,63 @@ class Uninstall implements UninstallInterface
     {
         $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_ORDER_SERVICE_SELECTION);
         $uninstaller->getConnection()->dropTable(ShippingSetup::TABLE_QUOTE_SERVICE_SELECTION);
+    }
+
+    /**
+     * Drop all service charge columns from core tables.
+     *
+     * @param SchemaSetupInterface $uninstaller
+     */
+    private function deleteServiceChargeColumns(SchemaSetupInterface $uninstaller)
+    {
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::QUOTE_ADDRESS_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::QUOTE_ADDRESS_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_BASE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::QUOTE_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::QUOTE_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_BASE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::ORDER_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::ORDER_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_BASE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::INVOICE_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::INVOICE_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_BASE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::CREDITMEMO_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_FIELD_NAME
+        );
+
+        $uninstaller->getConnection()->dropColumn(
+            ShippingSetup::CREDITMEMO_TABLE_NAME,
+            ShippingSetup::SERVICE_CHARGE_BASE_FIELD_NAME
+        );
     }
 }
