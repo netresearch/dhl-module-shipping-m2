@@ -110,103 +110,9 @@
     <preference for="\Dhl\Shipping\Api\Quote\CartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\CartServiceManagement"/>
     <preference for="\Dhl\Shipping\Api\Quote\GuestCartServiceManagementInterface" type="\Dhl\Shipping\Model\Quote\GuestCartServiceManagement"/>
 
-    <!-- third party library adapter -->
+    <!-- virtual types / third party library adapter -->
+    <virtualType name="Dhl\ParcelManagement\Api\Virtual\CheckoutApi" type="Dhl\ParcelManagement\Api\CheckoutApi"/>
     <virtualType name="Dhl\Shipping\Http\VirtualClient" type="Zend\Http\Client"/>
-
-    <!-- argument di overrides -->
-    <type name="Dhl\Shipping\Webservice\Client\GlRestClient">
-        <arguments>
-            <argument name="zendClient" xsi:type="object">\Dhl\Shipping\Http\VirtualClient</argument>
-        </arguments>
-    </type>
-    <type name="Zend\Http\ClientFactory">
-        <arguments>
-            <argument name="instanceName" xsi:type="string">\Dhl\Shipping\Http\VirtualClient</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Model\Config\ConfigAccessor">
-        <arguments>
-            <argument name="systemConfigType" xsi:type="object">\Magento\Config\App\Config\Type\System</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Model\Shipping\Carrier">
-        <arguments>
-            <argument name="webserviceGateway" xsi:type="object">Dhl\Shipping\Webservice\GatewayInterface\Proxy</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Model\Service\CheckoutServiceProvider">
-        <arguments>
-            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
-            <argument name="compositeOptionProvider" xsi:type="object">Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider</argument>
-        </arguments>
-    </type>
-
-    <type name="Dhl\Shipping\Model\Service\PackagingServiceProvider">
-        <arguments>
-            <argument name="compositeOptionProvider" xsi:type="object">Dhl\Shipping\Model\Service\Virtual\PackagingOptionProvider</argument>
-        </arguments>
-    </type>
-
-    <!-- observer -->
-    <type name="Dhl\Shipping\Observer\DisableCodPaymentObserver">
-        <arguments>
-            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
-        </arguments>
-    </type>
-
-    <!-- plugins -->
-    <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">
-        <plugin name="logWsApiCalls" type="Dhl\Shipping\Plugin\AdapterChainPlugin"/>
-    </type>
-
-    <!-- passing arguments -->
-    <type name="Dhl\Shipping\Webservice\Client\BcsSoapClient">
-        <arguments>
-            <argument name="wsdl" xsi:type="string">https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.2/geschaeftskundenversand-api-2.2.wsdl</argument>
-        </arguments>
-    </type>
-
-    <type name="Dhl\Shipping\Model\Service\ServicePool">
-        <arguments>
-            <argument name="serviceProviders" xsi:type="array">
-                <item name="bcsServiceProvider" xsi:type="object">Dhl\Shipping\Service\Bcs\BcsServiceProvider</item>
-                <item name="glaServiceProvider" xsi:type="object">Dhl\Shipping\Service\Gla\GlaServiceProvider</item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="Magento\Framework\EntityManager\MetadataPool">
-        <arguments>
-            <argument name="metadata" xsi:type="array">
-                <item name="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" xsi:type="array">
-                    <item name="entityTableName" xsi:type="string">dhlshipping_order_address</item>
-                    <item name="identifierField" xsi:type="string">address_id</item>
-                </item>
-                <item name="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" xsi:type="array">
-                    <item name="entityTableName" xsi:type="string">dhlshipping_quote_address</item>
-                    <item name="identifierField" xsi:type="string">address_id</item>
-                </item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Magento\Framework\EntityManager\HydratorPool">
-        <arguments>
-            <argument name="hydrators" xsi:type="array">
-                <item name="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
-                <item name="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
-            </argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Model\Service\Filter\CheckoutServiceFilter">
-        <arguments>
-            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
-        </arguments>
-    </type>
-    <type name="Dhl\Shipping\Webservice\ParcelManagement">
-        <arguments>
-            <argument name="checkoutApi" xsi:type="object">Dhl\ParcelManagement\Api\Virtual\CheckoutApi</argument>
-        </arguments>
-    </type>
     <virtualType name="Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider" type="Dhl\Shipping\Model\Service\Option\CompositeOptionProvider">
         <arguments>
             <argument name="providers" xsi:type="array">
@@ -224,5 +130,120 @@
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="Dhl\ParcelManagement\Api\Virtual\CheckoutApi" type="Dhl\ParcelManagement\Api\CheckoutApi"/>
+
+    <!-- argument di overrides -->
+    <type name="Dhl\Shipping\Model\Config\ConfigAccessor">
+        <arguments>
+            <argument name="systemConfigType" xsi:type="object">\Magento\Config\App\Config\Type\System</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Model\Service\CheckoutServiceProvider">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+            <argument name="compositeOptionProvider" xsi:type="object">Dhl\Shipping\Model\Service\Virtual\CheckoutOptionProvider</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Model\Service\Filter\CheckoutServiceFilter">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Model\Service\PackagingServiceProvider">
+        <arguments>
+            <argument name="compositeOptionProvider" xsi:type="object">Dhl\Shipping\Model\Service\Virtual\PackagingOptionProvider</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Model\Service\ServicePool">
+        <arguments>
+            <argument name="serviceProviders" xsi:type="array">
+                <item name="bcsServiceProvider" xsi:type="object">Dhl\Shipping\Service\Bcs\BcsServiceProvider</item>
+                <item name="glaServiceProvider" xsi:type="object">Dhl\Shipping\Service\Gla\GlaServiceProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Model\Shipping\Carrier">
+        <arguments>
+            <argument name="webserviceGateway" xsi:type="object">Dhl\Shipping\Webservice\GatewayInterface\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Observer\DisableCodPaymentObserver">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Webservice\Client\BcsSoapClient">
+        <arguments>
+            <argument name="wsdl" xsi:type="string">https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.2/geschaeftskundenversand-api-2.2.wsdl</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Webservice\Client\GlRestClient">
+        <arguments>
+            <argument name="zendClient" xsi:type="object">\Dhl\Shipping\Http\VirtualClient</argument>
+        </arguments>
+    </type>
+    <type name="Dhl\Shipping\Webservice\ParcelManagement">
+        <arguments>
+            <argument name="checkoutApi" xsi:type="object">Dhl\ParcelManagement\Api\Virtual\CheckoutApi</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="carriers/dhlshipping/bcs_account_signature" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_account_user" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_bankdata_account_owner" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_bankdata_account_reference" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_bankdata_bankname" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_bankdata_bic" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_bankdata_iban" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_bankdata_note1" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/bcs_bankdata_note2" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/gl_api_auth_password" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/gl_api_auth_username" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/gl_pickup_number" xsi:type="string">1</item>
+            </argument>
+            <argument name="environment" xsi:type="array">
+                <item name="carriers/dhlshipping/gl_customer_prefix" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/log_level" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/logging_enabled" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/sandbox_mode" xsi:type="string">1</item>
+                <item name="carriers/dhlshipping/shipment_autocreate_send_shippinginfo" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\HydratorPool">
+        <arguments>
+            <argument name="hydrators" xsi:type="array">
+                <item name="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+                <item name="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="Dhl\Shipping\Api\Data\OrderAddressExtensionInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">dhlshipping_order_address</item>
+                    <item name="identifierField" xsi:type="string">address_id</item>
+                </item>
+                <item name="Dhl\Shipping\Api\Data\QuoteAddressExtensionInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">dhlshipping_quote_address</item>
+                    <item name="identifierField" xsi:type="string">address_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Zend\Http\ClientFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">\Dhl\Shipping\Http\VirtualClient</argument>
+        </arguments>
+    </type>
+
+    <!-- interceptor plugins -->
+    <type name="Dhl\Shipping\Webservice\Adapter\AdapterChain">
+        <plugin name="logWsApiCalls" type="Dhl\Shipping\Plugin\AdapterChainPlugin"/>
+    </type>
+    <type name="Magento\Config\App\Config\Source\DumpConfigSourceAggregated">
+        <plugin name="unsetSandboxPaths" type="Dhl\Shipping\Plugin\UnsetSandboxPaths"/>
+    </type>
 </config>

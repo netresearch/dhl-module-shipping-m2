@@ -118,7 +118,7 @@ class DefaultProduct extends Value
     public function beforeSave()
     {
         $shippingConfig = $this->getData('groups/dhlshipping/fields');
-        $productConfig = $shippingConfig[$this->getData('field')];
+        $productConfig = $shippingConfig[$this->getData('field')] ?? [];
         $value = $this->convertProductNameToProductCode($productConfig);
 
         if (!empty($value)) {
