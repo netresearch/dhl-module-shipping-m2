@@ -65,7 +65,7 @@ class ApiType implements ArrayInterface
     public function toArray()
     {
         return [
-            self::API_TYPE_BCS => __('DHL Business Customer Shipping (DE, AT)'),
+            self::API_TYPE_BCS => __('DHL Paket Business Customer Shipping'),
             self::API_TYPE_GLA => __('DHL eCommerce Global API'),
             self::API_TYPE_NA => __('DHL Shipping Not Available'),
         ];
