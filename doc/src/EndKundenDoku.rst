@@ -51,7 +51,6 @@ Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Mod
 
 Folgende |mage2|-Versionen werden vom aktuellen Modul unterstützt:
 
-- Community Edition 2.1.4+
 - Community Edition 2.2.4+
 - Community Edition 2.3.0+
 
@@ -60,12 +59,12 @@ PHP
 
 Folgende PHP-Versionen werden vom aktuellen Modul unterstützt:
 
-- PHP 5.6.5+
 - PHP 7.0.2
 - PHP 7.0.4
 - PHP 7.0.6+
 - PHP 7.1.0+
 - PHP 7.2.0+
+- PHP 7.3.0+
 
 Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
 Webserver installiert und aktiviert sein.

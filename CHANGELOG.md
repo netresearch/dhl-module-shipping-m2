@@ -4,9 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## ???? - ???
+## 0.11.0 - 2019-11-25
+### Added
+- PHP 7.3 support (for Magento 2.3.3)
+
+### Fixed
+- config import and export via CLI, see [Issue #63](https://github.com/netresearch/dhl-module-shipping-m2/issues/63)
+- uninstaller missing instruction for database cleanup
+- compatibility to Mageplaza OnestepCheckout, see [Issue #60](https://github.com/netresearch/dhl-module-shipping-m2/issues/60)
+
 ### Changed
-- remove support for Austria(AT) as shipping origin
+- remove support for Austria (AT) as shipping origin (no new orders will be accepted for DHL, existing ones can still be processed)
+- dropped support for Magento 2.1 and PHP 5.6
+- reintegrated dhl/module-label-status-m2 as requirement (possible due to Magento 2.1 support drop)
+- updated installation instructions in README
 
 ## 0.10.3 - 2019-05-13
 ### Fixed

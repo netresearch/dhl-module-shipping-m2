@@ -55,7 +55,6 @@ The following requirements must be met for a smooth operation of the module.
 
 The following |mage2| versions are supported:
 
-- Community Edition 2.1.4+
 - Community Edition 2.2.4+
 - Community Edition 2.3.0+
 
@@ -64,12 +63,12 @@ PHP
 
 These PHP versions are supported:
 
-- PHP 5.6.5+
 - PHP 7.0.2
 - PHP 7.0.4
 - PHP 7.0.6+
 - PHP 7.1.0+
 - PHP 7.2.0+
+- PHP 7.3.0+
 
 To connect to the API (webservice), the PHP SOAP extension must be installed
 and enabled on the web server.

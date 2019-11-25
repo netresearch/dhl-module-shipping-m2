@@ -19,12 +19,13 @@ Requirements
 * PHP >= 7.0.6
 * PHP >= 7.1.0
 * PHP >= 7.2.0
+* PHP >= 7.3.0
 
 Compatibility
 -------------
 
-* Magento >= 2.2.0+
-* Magento >= 2.3.0+
+* Magento >= 2.2.4
+* Magento >= 2.3.0
 
 Installation Instructions
 -------------------------
@@ -127,7 +128,7 @@ Developer
 * Christoph Aßmann | [Netresearch GmbH & Co. KG](http://www.netresearch.de/) | [@mam08ixo](https://twitter.com/mam08ixo)
 * Sebastian Ertner | [Netresearch GmbH & Co. KG](http://www.netresearch.de/)
 * Benjamin Heuer | [Netresearch GmbH & Co. KG](http://www.netresearch.de/)
-* Paul Siedler | [Netresearch GmbH & Co. KG](http://www.netresearch.de/)
+* Paul Siedler | [Netresearch GmbH & Co. KG](http://www.netresearch.de/) | [@powlomat](https://twitter.com/powlomat)
 
 License
 -------
