@@ -26,8 +26,9 @@
         "magento/module-ui": "^101.0.0",
         "magento/zendframework1": "~1.13.0 || ~1.14.0",
         "azuyalabs/yasumi": "^1.8.0",
+        "php-http/curl-client": "^1.7.0",
         "dhl/lib-shipping-mx": "^0.11.1",
-        "dhl/sdk-api-parcel-management": "^0.1.0"
+        "dhl/sdk-api-parcel-management": "^1.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0.9",
@@ -58,7 +59,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-develop": "0.10.x-dev"
+            "dev-develop": "0.11.x-dev"
         }
     }
 }

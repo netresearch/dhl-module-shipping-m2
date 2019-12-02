@@ -25,11 +25,13 @@
 
 namespace Dhl\Shipping\Webservice;
 
-use Dhl\ParcelManagement\Api\CheckoutApi;
-use Dhl\ParcelManagement\ApiException;
-use Dhl\ParcelManagement\Model\AvailableServicesMap;
-use Dhl\Shipping\Model\Config\BcsConfig;
-use Dhl\Shipping\Util\Logger as BaseLogger;
+use Dhl\Sdk\Paket\ParcelManagement\Api\Data\CarrierServiceInterface;
+use Dhl\Sdk\Paket\ParcelManagement\Api\Data\TimeFrameOptionInterface;
+use Dhl\Sdk\Paket\ParcelManagement\Exception\ServiceException;
+use Dhl\Sdk\Paket\ParcelManagement\Service\ServiceFactory;
+use Dhl\Shipping\Config\BcsConfigInterface;
+use Dhl\Shipping\Model\Config\ModuleConfigInterface;
+use Dhl\Shipping\Util\Logger;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
@@ -42,65 +44,118 @@ use Magento\Framework\Exception\LocalizedException;
  */
 class ParcelManagement
 {
-    const API_KEY_IDENTIFIER = 'DPDHL-User-Authentication-Token';
-
     /**
-     * @var CheckoutApi
+     * @var ServiceFactory
      */
-    private $checkoutApi;
+    private $serviceFactory;
 
     /**
-     * @var BcsConfig
+     * @var ModuleConfigInterface
+     */
+    private $moduleConfig;
+
+    /**
+     * @var BcsConfigInterface
      */
     private $bcsConfig;
 
     /**
-     * @var null|AvailableServicesMap
-     */
-    private $serviceResponse = null;
-
-    /**
-     * @var BaseLogger
+     * @var Logger
      */
     private $logger;
 
     /**
+     * @var CarrierServiceInterface[][]
+     */
+    private $services = [];
+
+    /**
      * ParcelManagement constructor.
      *
-     * @param CheckoutApi $checkoutApi
-     * @param BcsConfig $bcsConfig
-     * @param BaseLogger $logger
+     * @param ServiceFactory $serviceFactory
+     * @param ModuleConfigInterface $moduleConfig
+     * @param BcsConfigInterface $bcsConfig
+     * @param Logger $logger
      */
-    public function __construct(CheckoutApi $checkoutApi, BcsConfig $bcsConfig, BaseLogger $logger)
-    {
-        $this->checkoutApi = $checkoutApi;
+    public function __construct(
+        ServiceFactory $serviceFactory,
+        ModuleConfigInterface $moduleConfig,
+        BcsConfigInterface $bcsConfig,
+        Logger $logger
+    ) {
+        $this->serviceFactory = $serviceFactory;
+        $this->moduleConfig = $moduleConfig;
         $this->bcsConfig = $bcsConfig;
         $this->logger = $logger;
     }
 
     /**
-     * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
+     * @param \DateTime $dropOffDate
      * @param string $postalCode
+     * @param int $storeId
+     * @return CarrierServiceInterface[]
+     * @throws LocalizedException
+     */
+    private function getCheckoutServices($dropOffDate, $postalCode, $storeId)
+    {
+        $checkoutService = $this->serviceFactory->createCheckoutService(
+            $this->bcsConfig->getAuthUsername($storeId),
+            $this->bcsConfig->getAuthPassword($storeId),
+            $this->bcsConfig->getAccountEkp($storeId),
+            $this->logger,
+            $this->moduleConfig->isSandboxModeEnabled($storeId)
+        );
+
+        try {
+            $carrierServices = $checkoutService->getCarrierServices($postalCode, $dropOffDate);
+        } catch (ServiceException $exception) {
+            throw new LocalizedException(__('Parcel Management API error occurred'), $exception);
+        }
+
+        // add service codes as array keys
+        $carrierServiceCodes = array_map(
+            function (CarrierServiceInterface $carrierService) {
+                return $carrierService->getCode();
+            },
+            $carrierServices
+        );
+
+        $carrierServices = array_combine($carrierServiceCodes, $carrierServices);
+
+        return $carrierServices;
+    }
+
+    /**
+     * @param \DateTime $dropOffDate Day when the shipment will be dropped by the sender in the DHL parcel center
+     * @param string $postalCode
+     * @param int $storeId
      * @return string[][]
      * @throws LocalizedException
      */
-    public function getPreferredDayOptions($dropOff, $postalCode)
+    public function getPreferredDayOptions($dropOffDate, $postalCode, $storeId)
     {
-        if ($this->serviceResponse === null) {
-            $this->serviceResponse = $this->getCheckoutServices($dropOff, $postalCode);
+        if (empty($this->services[$storeId])) {
+            $this->services[$storeId] = $this->getCheckoutServices($dropOffDate, $postalCode, $storeId);
         }
 
-        if (!$this->serviceResponse->getPreferredDay()->getAvailable()) {
+        if (!isset($this->services[$storeId]['preferredDay'])
+            || !$this->services[$storeId]['preferredDay']->isAvailable()) {
             throw new LocalizedException(__('There are no results for this service.'));
         }
 
         $options = [];
-        $validDays = $this->serviceResponse->getPreferredDay()->getValidDays();
+
+        $validDays = $this->services[$storeId]['preferredDay']->getOptions();
         foreach ($validDays as $validDay) {
-            $startDay = $validDay->getStart();
+            try {
+                $startDay = new \DateTime($validDay->getStart());
+            } catch (\Exception $e) {
+                continue;
+            }
+
             $options[] = [
-                'label' => __($startDay->format('D')).', '.$startDay->format('d.'),
-                'value' => $validDay->getStart()->format('Y-m-d'),
+                'label' => __($startDay->format('D')) . ', ' . $startDay->format('d.'),
+                'value' => $startDay->format('Y-m-d'),
                 'disable' => false,
             ];
         }
@@ -109,59 +164,27 @@ class ParcelManagement
     }
 
     /**
-     * @param \DateTime $date
+     * @param \DateTime $dropOffDate Day when the shipment will be dropped by the sender in the DHL parcel center
      * @param string $postalCode
-     * @return \Dhl\ParcelManagement\Model\AvailableServicesMap
-     * @throws LocalizedException
-     */
-    public function getCheckoutServices($date, $postalCode)
-    {
-        $ekp = $this->bcsConfig->getAccountEkp();
-        $userName = $this->bcsConfig->getAuthUsername();
-        $passWd = $this->bcsConfig->getAuthPassword();
-        $pmApiEndpoint = $this->bcsConfig->getParcelManagementEndpoint();
-        $apiKey = base64_encode($this->bcsConfig->getAccountUser() . ':' . $this->bcsConfig->getAccountSignature());
-
-        $this->checkoutApi->getConfig()
-                          ->setUsername($userName)
-                          ->setPassword($passWd)
-                          ->setHost($pmApiEndpoint)
-                          ->setApiKey(self::API_KEY_IDENTIFIER, $apiKey);
-
-        try {
-            $this->logger->debug(
-                'Calling Parcel Management API:' . PHP_EOL
-                . "EKP: $ekp, ZIP: $postalCode, Date: " . $date->format('Y-m-d')
-            );
-            $response = $this->checkoutApi->checkoutRecipientZipAvailableServicesGet($ekp, $postalCode, $date);
-            $this->logger->debug(
-                'Parcel Management API response:' . PHP_EOL . $response
-            );
-        } catch (ApiException $e) {
-            throw new LocalizedException(__('Parcel Management API error occured'), $e);
-        }
-
-        return $response;
-    }
-
-    /**
-     * @param \DateTime $dropOff Day when the shipment will be dropped by the sender in the DHL parcel center
-     * @param string $postalCode
+     * @param int $storeId
      * @return string[][]
      * @throws LocalizedException
      */
-    public function getPreferredTimeOptions($dropOff, $postalCode)
+    public function getPreferredTimeOptions($dropOffDate, $postalCode, $storeId)
     {
-        if ($this->serviceResponse === null) {
-            $this->serviceResponse = $this->getCheckoutServices($dropOff, $postalCode);
+        if (empty($this->services[$storeId])) {
+            $this->services[$storeId] = $this->getCheckoutServices($dropOffDate, $postalCode, $storeId);
         }
 
-        if (!$this->serviceResponse->getPreferredTime()->getAvailable()) {
+        if (!isset($this->services[$storeId]['preferredTime'])
+            || !$this->services[$storeId]['preferredTime']->isAvailable()) {
             throw new LocalizedException(__('There are no results for this service.'));
         }
 
         $options = [];
-        $timeFrames = $this->serviceResponse->getPreferredTime()->getTimeframes();
+
+        /** @var TimeFrameOptionInterface[] $timeFrames */
+        $timeFrames = $this->services[$storeId]['preferredTime']->getOptions();
         foreach ($timeFrames as $timeFrame) {
             $options[] = [
                 'label' => $timeFrame->getStart() . '-' . $timeFrame->getEnd(),

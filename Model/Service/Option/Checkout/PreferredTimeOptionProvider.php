@@ -80,14 +80,13 @@ class PreferredTimeOptionProvider implements OptionProviderInterface
      * @param string[] $service
      * @param string[] $args
      * @return string[]
-     * @throws \Dhl\ParcelManagement\ApiException
      * @throws \Exception
      */
     public function enhanceServiceWithOptions($service, $args)
     {
         $storeId = isset($args[self::ARGUMENT_STORE]) ? $args[self::ARGUMENT_STORE] : null;
         $startDate = $this->startDateModel->getStartDate($storeId);
-        $options = $this->parcelManagement->getPreferredTimeOptions($startDate, $args[self::POSTAL_CODE]);
+        $options = $this->parcelManagement->getPreferredTimeOptions($startDate, $args[self::POSTAL_CODE], $storeId);
         $options = array_merge([$this->nonOption], $options);
 
         $service[ServiceSettingsInterface::OPTIONS] = $options;
