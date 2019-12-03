@@ -83,6 +83,9 @@ class PersistServiceSelectionObserver implements ObserverInterface
     /**
      * Persist service selection with reference to an Order Address ID.
      *
+     * Event:
+     * - sales_model_service_quote_submit_success
+     *
      * @param EventObserver $observer
      * @return ObserverInterface
      * @throws \Magento\Framework\Exception\LocalizedException

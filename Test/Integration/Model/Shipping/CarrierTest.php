@@ -22,14 +22,16 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Shipping\Model\Shipping;
 
 use Dhl\Shipping\Test\Provider\ShipmentResponseProvider;
 use Dhl\Shipping\Webservice\Gateway;
 use Magento\Framework\DataObject;
+use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 use Magento\Store\Model\StoreManager;
 use Magento\TestFramework\ObjectManager;
-use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * CarrierTest
@@ -64,14 +66,19 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
 
         /** @var StoreManager $storeManager */
         $storeManager = $this->objectManager->get(StoreManager::class);
-        $this->carrier = $this->objectManager->create(Carrier::class, ['data' => [
-            'store' => $storeManager->getDefaultStoreView()
-        ]]);
+        $this->carrier = $this->objectManager->create(
+            Carrier::class,
+            [
+                'data' => [
+                    'store' => $storeManager->getDefaultStoreView(),
+                ],
+            ]
+        );
 
         $this->webserviceGateway = $this->getMockBuilder(Gateway::class)
-            ->setMethods(['createLabels', 'cancelLabels'])
-            ->disableOriginalConstructor()
-            ->getMock();
+                                        ->setMethods(['createLabels', 'cancelLabels'])
+                                        ->disableOriginalConstructor()
+                                        ->getMock();
     }
 
     /**
@@ -158,37 +165,53 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
             ->method('createLabels')
             ->willReturn($response);
 
-
+        $map = [
+            [true, new DataObject(['carrier_code' => 'foo', 'method_code' => 'bar'])],
+            [false, 'foo_bar'],
+        ];
         $orderId = $incrementId;
-        /** @var \Magento\Sales\Model\Order $order */
+        /** @var \Magento\Sales\Model\Order|MockObject $order */
         $order = $this->createMock(\Magento\Sales\Model\Order::class);
         $order->expects($this->any())
               ->method('getId')
               ->willReturn($orderId);
         $order->expects($this->any())
-            ->method('getShippingMethod')
-            ->willReturn(new DataObject(['carrier_code' => 'foo']));
+              ->method('getShippingMethod')
+              ->willReturnMap($map);
 
-        $shipment = $this->objectManager->create(DataObject::class, ['data' => [
-            'order' => $order,
-        ]]);
+        $shipment = $this->objectManager->create(
+            DataObject::class,
+            [
+                'data' => [
+                    'order' => $order,
+                ],
+            ]
+        );
         $package = [
             'params' => [
                 'container' => 'foo',
-                'weight' => 42
+                'weight' => 42,
             ],
             'items' => [],
         ];
 
         /** @var ShipmentRequest $request */
-        $request = $this->objectManager->create(ShipmentRequest::class, ['data' => [
-            'packages' => [$packageId => $package],
-            'order_shipment' => $shipment,
-        ]]);
+        $request = $this->objectManager->create(
+            ShipmentRequest::class,
+            [
+                'data' => [
+                    'packages' => [$packageId => $package],
+                    'order_shipment' => $shipment,
+                ],
+            ]
+        );
 
-        $this->carrier = $this->objectManager->create(Carrier::class, [
-            'webserviceGateway' => $this->webserviceGateway
-        ]);
+        $this->carrier = $this->objectManager->create(
+            Carrier::class,
+            [
+                'webserviceGateway' => $this->webserviceGateway,
+            ]
+        );
 
         $response = $this->carrier->requestToShipment($request);
         $this->assertEquals('Hard validation error occured.', $response->getData('errors'));
@@ -221,26 +244,39 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
               ->willReturn(new DataObject(['carrier_code' => 'dhlshipping']));
         $order->method('getIsVirtual')
               ->willReturn(1);
-        $shipment = $this->objectManager->create(DataObject::class, ['data' => [
-            'order' => $order,
-        ]]);
+        $shipment = $this->objectManager->create(
+            DataObject::class,
+            [
+                'data' => [
+                    'order' => $order,
+                ],
+            ]
+        );
         $package = [
             'params' => [
                 'container' => 'foo',
-                'weight' => 42
+                'weight' => 42,
             ],
             'items' => [],
         ];
 
         /** @var ShipmentRequest $request */
-        $request = $this->objectManager->create(ShipmentRequest::class, ['data' => [
-            'packages' => [$packageId => $package],
-            'order_shipment' => $shipment,
-        ]]);
+        $request = $this->objectManager->create(
+            ShipmentRequest::class,
+            [
+                'data' => [
+                    'packages' => [$packageId => $package],
+                    'order_shipment' => $shipment,
+                ],
+            ]
+        );
 
-        $this->carrier = $this->objectManager->create(Carrier::class, [
-            'webserviceGateway' => $this->webserviceGateway
-        ]);
+        $this->carrier = $this->objectManager->create(
+            Carrier::class,
+            [
+                'webserviceGateway' => $this->webserviceGateway,
+            ]
+        );
 
         $response = $this->carrier->requestToShipment($request);
         $info = $response->getData('info');

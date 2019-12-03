@@ -40,6 +40,9 @@ class AfterOrder implements ObserverInterface
     /**
      * Set payment fee to order
      *
+     * Event:
+     * - sales_model_service_quote_submit_before
+     *
      * @param \Magento\Framework\Event\Observer $observer
      * @return $this
      */
@@ -51,7 +54,7 @@ class AfterOrder implements ObserverInterface
         if (!$shipping || !$shippingBase) {
             return $this;
         }
-        
+
         $order = $observer->getData('order');
         $order->setData(Total::SERVICE_CHARGE_FIELD_NAME, $shipping);
         $order->setData(Total::SERVICE_CHARGE_BASE_FIELD_NAME, $shippingBase);

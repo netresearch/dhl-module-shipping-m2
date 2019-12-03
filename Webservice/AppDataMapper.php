@@ -26,7 +26,6 @@
 namespace Dhl\Shipping\Webservice;
 
 use Dhl\Shipping\Api\Data\ServiceInterface;
-use Dhl\Shipping\Api\Data\ShippingInfoInterface;
 use Dhl\Shipping\Api\OrderAddressExtensionRepositoryInterface;
 use Dhl\Shipping\Api\ServicePoolInterface;
 use Dhl\Shipping\Config\BcsConfigInterface;
@@ -34,8 +33,8 @@ use Dhl\Shipping\Config\GlConfigInterface;
 use Dhl\Shipping\Model\Service\LabelServiceProvider;
 use Dhl\Shipping\Model\Service\ServiceCollection;
 use Dhl\Shipping\Service\Bcs\Insurance;
-use Dhl\Shipping\Service\Gla\Insurance as InsuranceGla;
 use Dhl\Shipping\Service\Bcs\PrintOnlyIfCodeable;
+use Dhl\Shipping\Service\Gla\Insurance as InsuranceGla;
 use Dhl\Shipping\Util\ShippingProducts\BcsShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\GlShippingProductsInterface;
 use Dhl\Shipping\Util\ShippingProducts\ShippingProductsInterface;
@@ -63,6 +62,7 @@ use Dhl\Shipping\Webservice\RequestType\Generic\Package\DimensionsInterfaceFacto
 use Dhl\Shipping\Webservice\RequestType\Generic\Package\MonetaryValueInterfaceFactory;
 use Dhl\Shipping\Webservice\RequestType\Generic\Package\WeightInterfaceFactory;
 use Magento\Framework\DataObject;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Shipping\Model\Shipment\Request as ShipmentRequest;
 
 /**
@@ -371,15 +371,18 @@ class AppDataMapper implements AppDataMapperInterface
      * @param ShipmentRequest $request
      *
      * @return \Dhl\Shipping\Webservice\RequestType\CreateShipment\ShipmentOrder\Contact\ReceiverInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getReceiver(ShipmentRequest $request)
     {
         $storeId = $request->getOrderShipment()->getStoreId();
 
         $addressId = $request->getOrderShipment()->getOrder()->getShippingAddress()->getEntityId();
-        /** @var ShippingInfoInterface $shippingInfo */
-        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($addressId);
+        try {
+            $shippingInfo = $this->addressExtensionRepository->getShippingInfo($addressId);
+        } catch (NoSuchEntityException $e) {
+            $shippingInfo = null;
+        }
+
         if (!$shippingInfo) {
             $addressParts = $this->streetSplitter->splitStreet($request->getRecipientAddressStreet());
         } else {
@@ -543,7 +546,7 @@ class AppDataMapper implements AppDataMapperInterface
             $itemObject = new \Magento\Framework\DataObject($item);
             /** @var PackageItem $packageItem */
             $itemWeight = $this->packageWeightFactory->create([
-                'value' => $itemObject->getData('weight') ? : 0,
+                'value' => $itemObject->getData('weight') ?: 0,
                 'unitOfMeasurement' => $request->getData('package_params')->getData('weight_units'),
             ]);
 
@@ -672,7 +675,6 @@ class AppDataMapper implements AppDataMapperInterface
      *
      * @return ShipmentOrderInterface
      * @throws \Dhl\Shipping\Webservice\Exception\CreateShipmentValidationException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function mapShipmentRequest($request, $sequenceNumber)
     {
@@ -684,6 +686,7 @@ class AppDataMapper implements AppDataMapperInterface
                 break;
             }
         }
+
         $shipmentDetails = $this->getShipmentDetails($request, $printOnlyIfCodeable);
         $shipper         = $this->getShipper($request);
         $receiver        = $this->getReceiver($request);

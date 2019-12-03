@@ -110,8 +110,6 @@ class UpdateShippingInfoObserver implements ObserverInterface
      * - admin_sales_order_address_update
      *
      * @param Observer $observer
-     * @throws NoSuchEntityException
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function execute(Observer $observer)
     {
@@ -126,7 +124,13 @@ class UpdateShippingInfoObserver implements ObserverInterface
         $shippingAddress = $this->addressRepository->get($addressId);
 
         // load previous info data if available
-        $shippingInfo = $this->addressExtensionRepository->getShippingInfo($addressId);
+        try {
+            $shippingInfo = $this->addressExtensionRepository->getShippingInfo($addressId);
+        } catch (NoSuchEntityException $e) {
+            $this->shippingInfoBuilder->setShippingAddress($shippingAddress);
+            $shippingInfo = $this->shippingInfoBuilder->create();
+        }
+
         if ($shippingInfo instanceof ShippingInfoInterface) {
             $this->shippingInfoBuilder->setInfo(json_encode($shippingInfo));
         }
