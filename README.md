@@ -1,3 +1,5 @@
+**Warning: This extension is no longer supported and should not be used. You can find the official replacement extension [here on GitHub](https://github.com/netresearch/dhl-shipping-m2)**
+
 DHL Shipping Extension
 ======================
 
