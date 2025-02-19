@@ -13,7 +13,7 @@
         "php-http/curl-client": "^1.7.0",
         "dhl/module-label-status": "^1.1.0",
         "dhl/lib-shipping-mx": "^0.11.1",
-        "dhl/sdk-api-parcel-management": "^1.0.0",
+        "dhl/sdk-api-parcel-management": "^3.0.0",
         "magento/module-catalog-inventory": "^100.2.3",
         "magento/module-config": "^101.0.4",
         "magento/module-customer": "^101.0.4 || ^102.0.0",
