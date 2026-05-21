@@ -9,7 +9,7 @@
         "ext-json": "*",
         "ext-soap": "*",
         "ext-curl": "*",
-        "azuyalabs/yasumi": "^1.8.0",
+        "azuyalabs/yasumi": "^2.0.0",
         "php-http/curl-client": "^1.7.0",
         "dhl/module-label-status": "^1.1.0",
         "dhl/lib-shipping-mx": "^0.11.1",
